@@ -75,7 +75,7 @@ export default function Home() {
                         productivity.
                     </p>
                     <Link
-                        href={configs.routes.login}
+                        href={configs.routes.dashboard}
                         className="group relative flex items-center rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-3 pr-10 font-semibold leading-5 text-white transition-colors duration-300 focus:outline-none"
                     >
                         Discover Now
