@@ -75,8 +75,8 @@ export default function Home() {
                         productivity.
                     </p>
                     <Link
-                        href={configs.routes.login}
-                        className="group relative flex items-center rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-3 pr-10 font-semibold leading-5 text-black transition-colors duration-300 focus:outline-none"
+                        href={configs.routes.dashboard}
+                        className="group relative flex items-center rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-3 pr-10 font-semibold leading-5 text-white transition-colors duration-300 focus:outline-none"
                     >
                         Discover Now
                         <IoChevronForward className="absolute right-5 ml-2 transition-all duration-300 ease-in-out group-hover:right-4" />
