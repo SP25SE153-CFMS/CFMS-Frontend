@@ -56,7 +56,7 @@ export default function Home() {
 
                 <Link
                     href={configs.routes.login}
-                    className="rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-2 font-semibold leading-5 text-white transition-colors duration-300 focus:outline-none"
+                    className="rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-2 font-semibold leading-5 text-black transition-colors duration-300 focus:outline-none"
                 >
                     Login
                 </Link>
@@ -68,7 +68,7 @@ export default function Home() {
                     <h1 className="text-5xl font-bold">Chicken Farm Management System</h1>
                     <p className="my-7 max-w-lg text-center text-lg">
                         By monitoring chicken health,
-                        <strong className="mx-2 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
+                        <strong className="mx-2 text-primary bg-clip-text">
                             {CFMS}
                         </strong>
                         optimizes operations, feed schedules, and enhances overall farm
@@ -76,7 +76,7 @@ export default function Home() {
                     </p>
                     <Link
                         href={configs.routes.login}
-                        className="group relative flex items-center rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-3 pr-10 font-semibold leading-5 text-white transition-colors duration-300 focus:outline-none"
+                        className="group relative flex items-center rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-3 pr-10 font-semibold leading-5 text-black transition-colors duration-300 focus:outline-none"
                     >
                         Discover Now
                         <IoChevronForward className="absolute right-5 ml-2 transition-all duration-300 ease-in-out group-hover:right-4" />

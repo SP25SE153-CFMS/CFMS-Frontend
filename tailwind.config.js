@@ -10,6 +10,9 @@ module.exports = {
         './src/**/*.{js,ts,jsx,tsx,mdx}',
     ],
     theme: {
+        container: {
+            pm: '1300px',
+        },
         extend: {
             borderRadius: {
                 lg: 'var(--radius)',
@@ -27,10 +30,7 @@ module.exports = {
                     DEFAULT: 'hsl(var(--popover))',
                     foreground: 'hsl(var(--popover-foreground))',
                 },
-                primary: {
-                    DEFAULT: 'hsl(var(--primary))',
-                    foreground: 'hsl(var(--primary-foreground))',
-                },
+                primary: '#DC2626',
                 secondary: {
                     DEFAULT: 'hsl(var(--secondary))',
                     foreground: 'hsl(var(--secondary-foreground))',
@@ -57,6 +57,7 @@ module.exports = {
                     4: 'hsl(var(--chart-4))',
                     5: 'hsl(var(--chart-5))',
                 },
+                textPrimary: 'var(--text-primary)',
             },
         },
     },
