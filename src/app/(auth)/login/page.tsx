@@ -53,7 +53,7 @@ export default function Page() {
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
-                            className="flex flex-col items-center gap-5 w-full"
+                            className="flex flex-col items-center gap-y-[34px] w-full"
                         >
                             <FormField
                                 control={form.control}
@@ -95,12 +95,45 @@ export default function Page() {
 
                             <Button
                                 type="submit"
-                                className="w-[531px] h-[80px] text-xl font-bold rounded-lg bg-primary hover:bg-primary-dark transition duration-300"
+                                className="w-[531px] h-[80px] text-primary-text text-[24px] font-semibold rounded-[16px] bg-primary hover:bg-primary-dark not-italic leading-[normal]"
                             >
                                 Đăng nhập
                             </Button>
                         </form>
                     </Form>
+                    <div className="flex items-center gap-7 w-full">
+                        <span className="flex-1 w-[125px] h-[2px] bg-primary-sub-text" />
+                        <p className="text-primary-sub-text text-center text-[24px] not-italic font-medium">
+                            Hoặc đăng nhập với
+                        </p>
+                        <span className="flex-1 w-[125px] h-[2px] bg-primary-sub-text" />
+                    </div>
+                    <div className="flex gap-[43px]">
+                        <Button className="w-[244px] h-[80px] bg-transparent border-2 rounded-[16px] border-primary-sub-text text-[24px] not-italic font-medium leading-[normal]  gap-[31px]">
+                            <Image
+                                alt="Google"
+                                src="/assets/logo/google.png"
+                                width={34}
+                                height={34}
+                            />
+                            Google
+                        </Button>
+                        <Button className="w-[244px] h-[80px] bg-transparent border-2 rounded-[16px] border-primary-sub-text text-[24px] not-italic font-medium leading-[normal]  gap-[31px]">
+                            <Image
+                                alt="Facebook"
+                                src="/assets/logo/fb.png"
+                                width={34}
+                                height={34}
+                            />
+                            Facebook
+                        </Button>
+                    </div>
+                    <p className="text-center text-primary-sub-text text-[24px] not-italic font-bold leading-[normal]">
+                        Không có tài khoản? &nbsp;
+                        <span className="text-[24px] text-secondary-sub-text font-bold leading-[normal]">
+                            Đăng ký
+                        </span>
+                    </p>
                 </div>
             </div>
         </div>

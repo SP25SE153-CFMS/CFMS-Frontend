@@ -71,6 +71,7 @@ module.exports = {
                 'primary-bg': 'var(--bg-primary)',
                 'primary-sub-text': 'var(--sub-text-primary)',
                 'secondary-bg': 'var(--bg-second)',
+                'secondary-sub-text': 'var(--sub-text-secondary)',
             },
         },
     },
