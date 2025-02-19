@@ -56,7 +56,7 @@ export default function Home() {
 
                 <Link
                     href={configs.routes.login}
-                    className="rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-2 font-semibold leading-5 text-white transition-colors duration-300 focus:outline-none"
+                    className="rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-2 font-semibold leading-5 text-black transition-colors duration-300 focus:outline-none"
                 >
                     Login
                 </Link>
@@ -68,7 +68,7 @@ export default function Home() {
                     <h1 className="text-5xl font-bold">Chicken Farm Management System</h1>
                     <p className="my-7 max-w-lg text-center text-lg">
                         By monitoring chicken health,
-                        <strong className="mx-2 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
+                        <strong className="mx-2 text-primary bg-clip-text">
                             {CFMS}
                         </strong>
                         optimizes operations, feed schedules, and enhances overall farm
