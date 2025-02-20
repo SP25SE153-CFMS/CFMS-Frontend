@@ -2,7 +2,7 @@ const routes = {
     home: '/',
     login: '/login',
     dashboard: '/dashboard',
-    breadingArea: '/breeing-area',
+    breadingArea: '/breeding-area',
 }
 
 export default routes;
