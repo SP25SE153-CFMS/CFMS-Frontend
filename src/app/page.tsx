@@ -5,15 +5,15 @@ import { IoChevronForward, IoLockClosedSharp } from 'react-icons/io5';
 
 const NAV_BAR = [
     {
-        name: 'Home',
+        name: 'Trang chủ',
         href: '/',
     },
     {
-        name: 'About',
+        name: 'Giới thiệu',
         href: '#about',
     },
     {
-        name: 'Contact',
+        name: 'Liên hệ',
         href: '#contact',
     },
     {
@@ -56,29 +56,29 @@ export default function Home() {
 
                 <Link
                     href={configs.routes.login}
-                    className="rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-2 font-semibold leading-5 text-black transition-colors duration-300 focus:outline-none"
+                    className="w-36 rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-2 font-semibold leading-5 text-white transition-colors duration-300 focus:outline-none"
                 >
-                    Login
+                    Đăng nhập
                 </Link>
             </header>
 
             <main className="flex flex-col items-center">
                 <div className="mx-auto flex flex-col items-center py-16 text-center">
                     <div className="bg-[200%_200%]animate-glow pointer-events-none absolute top-[-320px] z-10 flex h-[400px] w-[min(600px,100vw)] scale-[1.5] items-center justify-center bg-gradient-to-r  from-primary to-secondary opacity-20 blur-[69px] will-change-transform" />
-                    <h1 className="text-5xl font-bold">Chicken Farm Management System</h1>
-                    <p className="my-7 max-w-lg text-center text-lg">
-                        By monitoring chicken health,
-                        <strong className="mx-2 text-primary bg-clip-text">
+                    <h1 className="text-5xl font-bold">Hệ Thống Quản Lý Trang Trại Gà</h1>
+                    <p className="my-7 max-w-xl text-center text-lg">
+                        Bằng cách theo dõi sức khỏe của gà,
+                        <strong className="mx-2 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
                             {CFMS}
                         </strong>
-                        optimizes operations, feed schedules, and enhances overall farm
-                        productivity.
+                        tối ưu hóa hoạt động, lịch cho ăn và nâng cao năng suất tổng thể của trang
+                        trại.
                     </p>
                     <Link
                         href={configs.routes.dashboard}
                         className="group relative flex items-center rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-3 pr-10 font-semibold leading-5 text-white transition-colors duration-300 focus:outline-none"
                     >
-                        Discover Now
+                        Khám Phá Ngay
                         <IoChevronForward className="absolute right-5 ml-2 transition-all duration-300 ease-in-out group-hover:right-4" />
                     </Link>
                 </div>
@@ -100,12 +100,149 @@ export default function Home() {
                     </div>
                     <Image
                         src="/coming-soon.png"
-                        alt="Coming soon"
+                        alt="Sắp ra mắt"
                         width="960"
                         height="520"
                         className="rounded-b-xl"
                     />
                 </div>
+
+                {/* About Section */}
+                <section id="about" className="w-full py-16 bg-gray-50">
+                    <div className="container mx-auto px-4">
+                        <h2 className="text-3xl font-bold text-center mb-8">Về CFMS</h2>
+                        <div className="flex flex-col md:flex-row items-center justify-between">
+                            <div className="md:w-1/2 mb-8 md:mb-0">
+                                <Image
+                                    src="/coming-soon.png"
+                                    alt="Về CFMS"
+                                    width={500}
+                                    height={300}
+                                    className="rounded-lg shadow-lg"
+                                />
+                            </div>
+                            <div className="md:w-1/2 md:pl-8">
+                                <p className="text-lg mb-4">
+                                    <strong className="mx-2 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
+                                        {CFMS}
+                                    </strong>
+                                    là Hệ Thống Quản Lý Trang Trại Gà tiên tiến được thiết kế để
+                                    cách mạng hóa ngành công nghiệp gia cầm. Hệ thống của chúng tôi
+                                    tận dụng công nghệ tiên tiến để theo dõi sức khỏe gà, tối ưu hóa
+                                    lịch cho ăn và nâng cao năng suất tổng thể của trang trại.
+                                </p>
+                                <p className="text-lg mb-4">
+                                    Với
+                                    <strong className="mx-2 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
+                                        {CFMS}
+                                    </strong>
+                                    , các nhà quản lý trang trại có thể đưa ra quyết định dựa trên
+                                    dữ liệu, giảm chi phí hoạt động và đảm bảo tiêu chuẩn cao nhất
+                                    về phúc lợi động vật. Sứ mệnh của chúng tôi là trao quyền cho
+                                    người chăn nuôi gà với các công cụ cần thiết để thành công trong
+                                    thị trường cạnh tranh ngày nay.
+                                </p>
+                                <Link
+                                    href="#"
+                                    className="inline-block bg-primary text-white font-semibold px-6 py-2 rounded-md hover:bg-secondary transition-colors duration-300"
+                                >
+                                    Tìm Hiểu Thêm
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Contact Section */}
+                <section id="contact" className="w-full py-16">
+                    <div className="container mx-auto px-4">
+                        <h2 className="text-3xl font-bold text-center mb-8">
+                            Liên Hệ Với Chúng Tôi
+                        </h2>
+                        <div className="max-w-2xl mx-auto">
+                            <form className="space-y-4">
+                                <div>
+                                    <label htmlFor="name" className="block mb-2 font-medium">
+                                        Họ Tên
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-slate-100"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="email" className="block mb-2 font-medium">
+                                        Email
+                                    </label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-slate-100"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="message" className="block mb-2 font-medium">
+                                        Tin Nhắn
+                                    </label>
+                                    <textarea
+                                        id="message"
+                                        rows={4}
+                                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-slate-100"
+                                        required
+                                    ></textarea>
+                                </div>
+                                <button
+                                    type="submit"
+                                    className="w-full bg-primary text-white font-semibold px-6 py-2 rounded-md hover:bg-secondary transition-colors duration-300"
+                                >
+                                    Gửi Tin Nhắn
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Blog Section */}
+                <section id="blog" className="w-full py-16 bg-gray-50">
+                    <div className="container mx-auto px-4">
+                        <h2 className="text-3xl font-bold text-center mb-8">Bài Viết Mới Nhất</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {[1, 2, 3].map((post) => (
+                                <div
+                                    key={post}
+                                    className="bg-white rounded-lg shadow-md overflow-hidden"
+                                >
+                                    <Image
+                                        src="/coming-soon.png"
+                                        alt={`Bài Viết ${post}`}
+                                        width={400}
+                                        height={200}
+                                        className="w-full h-48 object-cover"
+                                    />
+                                    <div className="p-6">
+                                        <h3 className="text-xl font-semibold mb-2">
+                                            Tiêu Đề Bài Viết {post}
+                                        </h3>
+                                        <p className="text-gray-600 mb-4">
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                            Sed do eiusmod tempor incididunt ut labore et dolore
+                                            magna aliqua.
+                                        </p>
+                                        <Link
+                                            href="#"
+                                            className="text-primary font-medium hover:text-secondary transition-colors duration-300"
+                                        >
+                                            Đọc Thêm
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
             </main>
         </>
     );

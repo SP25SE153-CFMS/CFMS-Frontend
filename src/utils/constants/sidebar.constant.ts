@@ -43,9 +43,9 @@ export const sidebarItems: NavGroup[] = [
                 path: basePath,
                 icon: House,
                 subItems: [
-                    { title: "Danh sách trang trại", path: config.routes.chickenFlock },
-                    { title: "Danh sách khu nuôi", path: config.routes.chickenFlock },
-                    { title: "Danh sách chuồng nuôi", path: config.routes.chickenFlock },
+                    { title: "Danh sách khu nuôi", path: config.routes.breadingArea },
+                    { title: "Danh sách chuồng nuôi", path: config.routes.breadingArea },
+                    { title: "Danh sách trang thiết bị", path: config.routes.breadingArea },
                 ]
             },
             {
@@ -53,16 +53,16 @@ export const sidebarItems: NavGroup[] = [
                 path: basePath,
                 icon: Egg,
                 subItems: [
-                    { title: "Danh sách đàn gà", path: config.routes.chickenFlock },
-                    { title: "Danh sách mục đích nuôi", path: config.routes.chickenFlock },
-                    { title: "Danh sách giống gà", path: config.routes.chickenFlock },
-                    { title: "Danh sách tiêu chí đánh giá sức khỏe gà", path: config.routes.chickenFlock },
-                    { title: "Danh sách bệnh gà", path: config.routes.chickenFlock },
-                    { title: "Danh mục vaccine", path: config.routes.chickenFlock },
-                    { title: "Nhật ký sức khỏe", path: config.routes.chickenFlock },
-                    { title: "Chế độ dinh dưỡng", path: config.routes.chickenFlock },
-                    { title: "Lịch sử tiêm phòng", path: config.routes.chickenFlock },
-                    { title: "Danh sách tiêu chí đánh giá sức khỏe gà", path: config.routes.chickenFlock },
+                    { title: "Danh sách đàn gà", path: config.routes.breadingArea },
+                    { title: "Danh sách mục đích nuôi", path: config.routes.breadingArea },
+                    { title: "Danh sách giống gà", path: config.routes.breadingArea },
+                    { title: "Danh sách tiêu chí đánh giá sức khỏe gà", path: config.routes.breadingArea },
+                    { title: "Danh sách bệnh gà", path: config.routes.breadingArea },
+                    { title: "Danh mục vaccine", path: config.routes.breadingArea },
+                    { title: "Nhật ký sức khỏe", path: config.routes.breadingArea },
+                    { title: "Chế độ dinh dưỡng", path: config.routes.breadingArea },
+                    { title: "Lịch sử tiêm phòng", path: config.routes.breadingArea },
+                    { title: "Danh sách tiêu chí đánh giá sức khỏe gà", path: config.routes.breadingArea },
                 ]
             },
             {
@@ -70,8 +70,8 @@ export const sidebarItems: NavGroup[] = [
                 path: basePath,
                 icon: UsersRound,
                 subItems: [
-                    { title: "Danh sách nhân công", path: config.routes.chickenFlock },
-                    { title: "Danh sách công việc", path: config.routes.chickenFlock },
+                    { title: "Danh sách nhân công", path: config.routes.breadingArea },
+                    { title: "Danh sách công việc", path: config.routes.breadingArea },
                 ]
             },
             {
@@ -79,8 +79,8 @@ export const sidebarItems: NavGroup[] = [
                 path: basePath,
                 icon: Warehouse,
                 subItems: [
-                    { title: "Kho thức ăn", path: config.routes.chickenFlock },
-                    { title: "Xuất/Nhập kho", path: config.routes.chickenFlock },
+                    { title: "Kho thức ăn", path: config.routes.breadingArea },
+                    { title: "Xuất/Nhập kho", path: config.routes.breadingArea },
                 ]
             },
         ],
@@ -91,12 +91,12 @@ export const sidebarItems: NavGroup[] = [
         items: [
             {
                 title: "Cài đặt ứng dụng",
-                path: config.routes.chickenFlock,
+                path: config.routes.breadingArea,
                 icon: Settings,
             },
             {
                 title: "Danh mục dùng chung",
-                path: config.routes.chickenFlock,
+                path: config.routes.breadingArea,
                 icon: File,
             },
         ],
