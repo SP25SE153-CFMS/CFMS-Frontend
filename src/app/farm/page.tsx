@@ -5,19 +5,7 @@ import { Tractor, MapPin, Phone, Globe, TreePine, Ruler, Scale3d } from 'lucide-
 import Image from 'next/image';
 import Link from 'next/link';
 import config from '@/configs';
-
-interface Farm {
-    farmId: string;
-    farmName: string;
-    farmCode: string;
-    type: string;
-    address: string;
-    area: number;
-    scale: string;
-    phoneNumber: string;
-    website: string;
-    farmImage: string;
-}
+import { Farm } from '@/utils/schemas/farm.schema';
 
 export default function TrangTraiList() {
     const farms: Farm[] = [
