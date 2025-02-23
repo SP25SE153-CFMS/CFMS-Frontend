@@ -18,12 +18,12 @@ export default function TrangTraiList() {
             area: 100,
             scale: 'Vừa',
             phoneNumber: '0123456789',
-            website: 'https://trangtraixanh.com',
+            website: '/dashboard',
             farmImage:
                 'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
         },
         {
-            farmId: '1',
+            farmId: '2',
             farmName: 'Trang trại Xanh',
             farmCode: 'TT001',
             type: 'Hữu cơ',
@@ -31,12 +31,12 @@ export default function TrangTraiList() {
             area: 100,
             scale: 'Vừa',
             phoneNumber: '0123456789',
-            website: 'https://trangtraixanh.com',
+            website: '/dashboard',
             farmImage:
                 'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
         },
         {
-            farmId: '1',
+            farmId: '3',
             farmName: 'Trang trại Xanh',
             farmCode: 'TT001',
             type: 'Hữu cơ',
@@ -44,7 +44,7 @@ export default function TrangTraiList() {
             area: 100,
             scale: 'Vừa',
             phoneNumber: '0123456789',
-            website: 'https://trangtraixanh.com',
+            website: '/dashboard',
             farmImage:
                 'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
         },
@@ -89,9 +89,8 @@ export default function TrangTraiList() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {farms.map((farm) => (
                         <Link
-                            href={farm.website}
+                            href={`${farm.website}?farmCode=${farm.farmCode}`}
                             key={farm.farmId}
-                            target="_blank"
                             rel="noopener noreferrer"
                         >
                             <Card className="hover:shadow-lg transition-shadow duration-300">
