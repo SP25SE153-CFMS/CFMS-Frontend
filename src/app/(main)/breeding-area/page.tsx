@@ -14,8 +14,9 @@ import {
 } from '@/components/ui/dialog';
 import { useState } from 'react';
 import BreedingAreaForm from '@/components/breeding-area-form';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
-export default function ChickenFlockPage() {
+export default function BreedingAreaPage() {
     const [open, setOpen] = useState(false);
 
     const openModal = () => setOpen(true);
@@ -45,7 +46,9 @@ export default function ChickenFlockPage() {
                                     Hãy nhập các thông tin dưới đây.
                                 </DialogDescription>
                             </DialogHeader>
-                            <BreedingAreaForm />
+                            <ScrollArea className="max-h-[600px]">
+                                <BreedingAreaForm />
+                            </ScrollArea>
                         </DialogContent>
                     </Dialog>
                 </div>

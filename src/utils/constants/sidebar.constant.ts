@@ -33,7 +33,7 @@ export const sidebarItems: NavGroup[] = [
                 icon: House,
                 subItems: [
                     { title: "Danh sách khu nuôi", path: config.routes.breadingArea },
-                    { title: "Danh sách chuồng nuôi", path: config.routes.breadingArea },
+                    { title: "Danh sách chuồng nuôi", path: config.routes.chickenCoop },
                     { title: "Danh sách trang thiết bị", path: config.routes.breadingArea },
                 ]
             },

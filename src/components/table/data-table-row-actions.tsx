@@ -9,9 +9,11 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { breedingAreaSchema } from '@/utils/data/table.data';
 import toast from 'react-hot-toast';
 import { Trash } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import config from '@/configs';
+import { breedingAreaSchema } from '@/utils/schemas/breeding-area.schema';
 
 interface DataTableRowActionsProps<TData> {
     row: Row<TData>;
@@ -20,7 +22,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
     const breadingArea = breedingAreaSchema.parse(row.original);
 
-    // const { setOpen, setCurrentRow } = useTasks();
+    const router = useRouter();
 
     return (
         <DropdownMenu modal={false}>
@@ -33,12 +35,18 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
             <DropdownMenuContent align="end" className="w-[160px]">
                 <DropdownMenuItem
                     onClick={() => {
+                        router.push(config.routes.chickenCoop);
+                    }}
+                >
+                    Xem khu nuôi
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => {
                         toast.success(`Đã chọn ${breadingArea.breedingAreaName}`);
                     }}
                 >
                     Cập nhật
                 </DropdownMenuItem>
-                <DropdownMenuItem disabled>Tạo bản sao</DropdownMenuItem>
                 <DropdownMenuItem disabled>Yêu thích</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
