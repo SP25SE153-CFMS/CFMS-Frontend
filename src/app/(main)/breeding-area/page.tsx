@@ -1,0 +1,58 @@
+'use client';
+
+import { DataTable } from '@/components/table/data-table';
+import { breedingAreas } from '@/utils/data/table.data';
+import { columns } from './columns';
+import { Button } from '@/components/ui/button';
+import { Download, Plus } from 'lucide-react';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+} from '@/components/ui/dialog';
+import { useState } from 'react';
+import BreedingAreaForm from '@/components/breeding-area-form';
+
+export default function ChickenFlockPage() {
+    const [open, setOpen] = useState(false);
+
+    const openModal = () => setOpen(true);
+    const onOpenChange = (val: boolean) => setOpen(val);
+
+    return (
+        <div>
+            <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
+                <div>
+                    <h2 className="text-2xl font-bold tracking-tight">Quản lý khu nuôi</h2>
+                    <p className="text-muted-foreground">
+                        Danh sách tất cả các khu nuôi trong trang trại
+                    </p>
+                </div>
+                <div className="flex gap-2">
+                    <Button variant="outline" className="space-x-1">
+                        <span>Nhập file</span> <Download size={18} />
+                    </Button>
+                    <Button className="space-x-1" onClick={openModal}>
+                        <span>Tạo</span> <Plus size={18} />
+                    </Button>
+                    <Dialog open={open} onOpenChange={onOpenChange}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Tạo khu nuôi mới</DialogTitle>
+                                <DialogDescription>
+                                    Hãy nhập các thông tin dưới đây.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <BreedingAreaForm />
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </div>
+            <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
+                <DataTable data={breedingAreas} columns={columns} />
+            </div>
+        </div>
+    );
+}

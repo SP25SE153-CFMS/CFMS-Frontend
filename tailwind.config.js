@@ -10,6 +10,9 @@ module.exports = {
         './src/**/*.{js,ts,jsx,tsx,mdx}',
     ],
     theme: {
+        container: {
+            pm: '1300px',
+        },
         extend: {
             borderRadius: {
                 lg: 'var(--radius)',
@@ -26,10 +29,6 @@ module.exports = {
                 popover: {
                     DEFAULT: 'hsl(var(--popover))',
                     foreground: 'hsl(var(--popover-foreground))',
-                },
-                primary: {
-                    DEFAULT: 'hsl(var(--primary))',
-                    foreground: 'hsl(var(--primary-foreground))',
                 },
                 secondary: {
                     DEFAULT: 'hsl(var(--secondary))',
@@ -67,6 +66,12 @@ module.exports = {
                     border: 'hsl(var(--sidebar-border))',
                     ring: 'hsl(var(--sidebar-ring))',
                 },
+                'primary-text': 'var(--text-primary)',
+                primary: 'var(--color-primary)',
+                'primary-bg': 'var(--bg-primary)',
+                'primary-sub-text': 'var(--sub-text-primary)',
+                'secondary-bg': 'var(--bg-second)',
+                'secondary-sub-text': 'var(--sub-text-secondary)',
             },
         },
     },

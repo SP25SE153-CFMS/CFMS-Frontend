@@ -100,9 +100,7 @@ export default function Dashboard() {
                             <Card className="col-span-2 lg:col-span-3">
                                 <CardHeader>
                                     <CardTitle>Danh sách đàn gà</CardTitle>
-                                    <CardDescription>
-                                        You made 265 sales this month.
-                                    </CardDescription>
+                                    <CardDescription>Hiện có tổng cộng 365 đàn gà</CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-8">
@@ -118,11 +116,11 @@ export default function Dashboard() {
                                                         {sale.name}
                                                     </p>
                                                     <p className="text-xs text-muted-foreground md:text-sm">
-                                                        {sale.email}
+                                                        Số lượng: {sale.amount}
                                                     </p>
                                                 </div>
                                                 <div className="ml-auto font-medium">
-                                                    {sale.amount}
+                                                    {sale.price}
                                                 </div>
                                             </div>
                                         ))}

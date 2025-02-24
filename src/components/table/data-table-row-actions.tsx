@@ -5,24 +5,20 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
     DropdownMenuSeparator,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
+    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-// import { useTasks } from '../context/tasks-context';
-// import { Trash } from 'lucide-react';
-import { labels, taskSchema } from '@/utils/data/table.data';
+import { breedingAreaSchema } from '@/utils/data/table.data';
+import toast from 'react-hot-toast';
+import { Trash } from 'lucide-react';
 
 interface DataTableRowActionsProps<TData> {
     row: Row<TData>;
 }
 
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
-    const task = taskSchema.parse(row.original);
+    const breadingArea = breedingAreaSchema.parse(row.original);
 
     // const { setOpen, setCurrentRow } = useTasks();
 
@@ -35,41 +31,26 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-                {/* <DropdownMenuItem
+                <DropdownMenuItem
                     onClick={() => {
-                        setCurrentRow(task);
-                        setOpen('update');
+                        toast.success(`Đã chọn ${breadingArea.breedingAreaName}`);
                     }}
                 >
-                    Edit
-                </DropdownMenuItem> */}
-                <DropdownMenuItem disabled>Make a copy</DropdownMenuItem>
-                <DropdownMenuItem disabled>Favorite</DropdownMenuItem>
+                    Cập nhật
+                </DropdownMenuItem>
+                <DropdownMenuItem disabled>Tạo bản sao</DropdownMenuItem>
+                <DropdownMenuItem disabled>Yêu thích</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
-                        <DropdownMenuRadioGroup value={task.label}>
-                            {labels.map((label) => (
-                                <DropdownMenuRadioItem key={label.value} value={label.value}>
-                                    {label.label}
-                                </DropdownMenuRadioItem>
-                            ))}
-                        </DropdownMenuRadioGroup>
-                    </DropdownMenuSubContent>
-                </DropdownMenuSub>
-                <DropdownMenuSeparator />
-                {/* <DropdownMenuItem
+                <DropdownMenuItem
                     onClick={() => {
-                        setCurrentRow(task);
-                        setOpen('delete');
+                        toast.success(`Đã xóa ${breadingArea.breedingAreaName} khỏi danh sách`);
                     }}
                 >
-                    Delete
+                    Xóa
                     <DropdownMenuShortcut>
                         <Trash size={16} />
                     </DropdownMenuShortcut>
-                </DropdownMenuItem> */}
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     );

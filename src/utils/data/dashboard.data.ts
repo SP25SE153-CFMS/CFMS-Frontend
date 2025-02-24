@@ -1,28 +1,28 @@
 export const salesData = [
     {
-        name: "Olivia Martin",
-        email: "olivia.martin@email.com",
-        amount: "+$1,999.00",
+        name: "Đàn gà A",
+        amount: 56,
+        price: "+$1,999.00",
     },
     {
-        name: "Jackson Lee",
-        email: "jackson.lee@email.com",
-        amount: "+$39.00",
+        name: "Đàn gà B",
+        amount: 56,
+        price: "+$39.00",
     },
     {
-        name: "Isabella Nguyen",
-        email: "isabella.nguyen@email.com",
-        amount: "+$299.00",
+        name: "Đàn gà C",
+        amount: 56,
+        price: "+$299.00",
     },
     {
-        name: "William Kim",
-        email: "will@email.com",
-        amount: "+$99.00",
+        name: "Đàn gà D",
+        amount: 56,
+        price: "+$99.00",
     },
     {
-        name: "Sofia Davis",
-        email: "sofia.davis@email.com",
-        amount: "+$39.00",
+        name: "Đàn gà E",
+        amount: 56,
+        price: "+$39.00",
     },
 ];
 
