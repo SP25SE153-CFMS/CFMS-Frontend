@@ -5,6 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { breedingAreas } from '@/utils/data/table.data';
+import Link from 'next/link';
 
 export const columns: ColumnDef<ChickenCoop>[] = [
     {
@@ -32,6 +33,11 @@ export const columns: ColumnDef<ChickenCoop>[] = [
         enableHiding: false,
     },
     {
+        accessorKey: 'chickenCoopId', // Ensure the data exists in the row
+        header: () => null, // No header
+        cell: () => null, // Hidden cell
+    },
+    {
         accessorKey: 'chickenCoopCode',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mã chuồng" />,
         cell: ({ row }) => <div className="w-[100px]">{row.getValue('chickenCoopCode')}</div>,
@@ -40,6 +46,11 @@ export const columns: ColumnDef<ChickenCoop>[] = [
     {
         accessorKey: 'chickenCoopName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên chuồng" />,
+        cell: ({ row }) => (
+            <Link href={`/chicken-coop/${row.getValue('chickenCoopId')}`}>
+                {row.getValue('chickenCoopName')}
+            </Link>
+        ),
     },
     {
         accessorKey: 'capacity',
