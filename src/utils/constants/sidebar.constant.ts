@@ -25,17 +25,6 @@ const basePath = "/";
 export const sidebarItems: NavGroup[] = [
     {
         id: 1,
-        label: "Tổng quan",
-        items: [
-            {
-                title: "Trang chủ",
-                path: config.routes.dashboard,
-                icon: PanelsTopLeft,
-            },
-        ],
-    },
-    {
-        id: 2,
         label: "Quản lý",
         items: [
             {
@@ -82,6 +71,17 @@ export const sidebarItems: NavGroup[] = [
                     { title: "Kho thức ăn", path: config.routes.breadingArea },
                     { title: "Xuất/Nhập kho", path: config.routes.breadingArea },
                 ]
+            },
+        ],
+    },
+    {
+        id: 2,
+        label: "Tổng quan",
+        items: [
+            {
+                title: "Trang chủ",
+                path: config.routes.dashboard,
+                icon: PanelsTopLeft,
             },
         ],
     },
