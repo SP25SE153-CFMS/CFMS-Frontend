@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { breedingAreaSchema } from '@/utils/data/table.data';
+import { breedingAreaSchema } from '@/utils/schemas/breeding-area.schema';
 
 export default function BreedingAreaForm() {
     const form = useForm<z.infer<typeof breedingAreaSchema>>({
@@ -37,7 +37,7 @@ export default function BreedingAreaForm() {
     });
 
     function onSubmit(values: z.infer<typeof breedingAreaSchema>) {
-        console.log('Dữ liệu gửi:', values);
+        console.log('Values :', values);
     }
 
     const fields = [
@@ -65,7 +65,7 @@ export default function BreedingAreaForm() {
                     <FormField
                         key={name}
                         control={form.control}
-                        name={name as any}
+                        name={name}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>{label}</FormLabel>

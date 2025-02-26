@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-export const BreedingAreaSchema = z.object({
+export const breedingAreaSchema = z.object({
     breedingAreaId: z
-        .string()
-        .uuid({ message: "ID khu nuôi không hợp lệ" }),
+        .string({ message: "ID khu nuôi không hợp lệ" }),
+    // .uuid({ message: "ID khu nuôi không hợp lệ" }),
     breedingAreaCode: z
         .string()
         .min(1, { message: "Mã khu nuôi là bắt buộc" })
@@ -44,4 +44,4 @@ export const BreedingAreaSchema = z.object({
         .min(1, { message: "Mục đích nuôi là bắt buộc" }),
 });
 
-export type BreedingArea = z.infer<typeof BreedingAreaSchema>;
+export type BreedingArea = z.infer<typeof breedingAreaSchema>;

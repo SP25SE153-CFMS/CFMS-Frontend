@@ -1,7 +1,7 @@
 'use client';
 
 import { DataTable } from '@/components/table/data-table';
-import { breedingAreas } from '@/utils/data/table.data';
+import { chickenCoops } from '@/utils/data/table.data';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
@@ -13,8 +13,8 @@ import {
     DialogDescription,
 } from '@/components/ui/dialog';
 import { useState } from 'react';
-import BreedingAreaForm from '@/components/breeding-area-form';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import ChickenCoopForm from '@/components/chicken-coop-form';
 
 export default function BreedingAreaPage() {
     const [open, setOpen] = useState(false);
@@ -26,9 +26,9 @@ export default function BreedingAreaPage() {
         <div>
             <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight">Quản lý khu nuôi</h2>
+                    <h2 className="text-2xl font-bold tracking-tight">Quản lý chuồng nuôi</h2>
                     <p className="text-muted-foreground">
-                        Danh sách tất cả các khu nuôi trong trang trại
+                        Danh sách tất cả các chuồng nuôi trong khu nuôi
                     </p>
                 </div>
                 <div className="flex gap-2">
@@ -41,20 +41,20 @@ export default function BreedingAreaPage() {
                     <Dialog open={open} onOpenChange={onOpenChange}>
                         <DialogContent>
                             <DialogHeader>
-                                <DialogTitle>Tạo khu nuôi mới</DialogTitle>
+                                <DialogTitle>Tạo chuồng nuôi mới</DialogTitle>
                                 <DialogDescription>
                                     Hãy nhập các thông tin dưới đây.
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <BreedingAreaForm />
+                                <ChickenCoopForm />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={breedingAreas} columns={columns} />
+                <DataTable data={chickenCoops} columns={columns} />
             </div>
         </div>
     );
