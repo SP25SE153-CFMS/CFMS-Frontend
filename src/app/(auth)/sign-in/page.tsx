@@ -3,10 +3,15 @@
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import config from '@/configs';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
+    const router = useRouter();
+
     const form = useForm({
         defaultValues: {
             email: '',
@@ -16,18 +21,19 @@ export default function Page() {
 
     const onSubmit = (data: any) => {
         console.log('Data: ', data);
+        router.push(config.routes.farm);
     };
 
     return (
         <div className="flex min-h-screen w-full items-center justify-center px-[70px] py-[62px]">
             <div className="flex w-[1300px] h-[900px] justify-center items-center gap-[40px] shrink-0 overflow-hidden">
-                <div className="flex flex-col w-1/2 relative items-start self-stretch columns-xl content-center px-[59px] py-[61px] rounded-[42px] bg-primary-bg">
-                    <h2 className="text-center text-[60px] text-primary-text not-italic font-bold leading-[normal]">
-                        Chicken Farm Management System
+                <div className="flex flex-col w-1/2 relative items-start self-stretch columns-xl content-center px-[59px] py-[61px] rounded-[42px] bg-primary">
+                    <h2 className="text-center text-[60px] text-white not-italic font-bold leading-[normal]">
+                        Hệ Thống Quản Lý Trang Trại Gà Với CFMS
                     </h2>
                     <div className="w-[483px] mt-12">
-                        <p className="text-[24px] mb-[56px] text-primary-text font-normal leading-normal">
-                            Pass đồ và thuê đồ một cách dễ dàng và tiện lợi hơn với EcoClothé
+                        <p className="text-[24px] mb-[56px] text-white font-normal leading-normal">
+                            Quản lý trang trại gà của bạn một cách dễ dàng, hiệu quả và nhanh chóng
                         </p>
                         <Image
                             className="absolute left-[150px] bottom-[72px]"
@@ -41,7 +47,7 @@ export default function Page() {
 
                 <div className="flex flex-col w-1/2 py-[12px] px-[53px] gap-y-[34px] gap-x-[43px] justify-center items-center content-center self-stretch">
                     <p className="text-[32px] text-center font-bold not-italic leading-[normal] whitespace-nowrap">
-                        <span className="text-primary">Chicken Farm</span> Management System
+                        Hệ Thống Quản Lý <span className="text-primary">Trang Trại Gà</span>
                     </p>
                     <p className="text-center text-[48px] not-italic font-bold leading-[normal]">
                         Mừng quay lại !
@@ -66,7 +72,7 @@ export default function Page() {
                                                 {...field}
                                                 type="email"
                                                 placeholder="Email"
-                                                className="w-[531px] h-[80px] bg-secondary-bg rounded-[16px] md:text-2xl px-[24px]"
+                                                className="w-[531px] h-[80px] bg-slate-100 rounded-[16px] md:text-2xl px-[24px]"
                                             />
                                         </FormControl>
                                     </FormItem>
@@ -84,7 +90,7 @@ export default function Page() {
                                                 {...field}
                                                 type="password"
                                                 placeholder="Mật khẩu"
-                                                className="w-[531px] h-[80px] bg-secondary-bg rounded-[16px] md:text-2xl px-[24px]"
+                                                className="w-[531px] h-[80px] bg-slate-100 rounded-[16px] md:text-2xl px-[24px]"
                                             />
                                         </FormControl>
                                     </FormItem>
@@ -97,7 +103,7 @@ export default function Page() {
 
                             <Button
                                 type="submit"
-                                className="w-[531px] h-[80px] text-primary-text text-[24px] font-semibold rounded-[16px] bg-primary hover:bg-primary-dark not-italic leading-[normal]"
+                                className="w-[531px] h-[80px] text-white text-[24px] font-semibold rounded-[16px] bg-primary hover:bg-primary-dark not-italic leading-[normal]"
                             >
                                 Đăng nhập
                             </Button>
@@ -111,7 +117,7 @@ export default function Page() {
                         <span className="flex-1 w-[125px] h-[2px] bg-primary-sub-text" />
                     </div>
                     <div className="flex gap-[43px]">
-                        <Button className="w-[244px] h-[80px] bg-transparent border-2 rounded-[16px] border-primary-sub-text text-[24px] not-italic font-medium leading-[normal]  gap-[31px]">
+                        <Button className="w-[244px] h-[80px] bg-transparent border-2 rounded-[16px] border-primary-sub-text text-[24px] not-italic font-medium leading-[normal] gap-[31px] text-black">
                             <Image
                                 alt="Google"
                                 src="/assets/logo/google.png"
@@ -120,7 +126,7 @@ export default function Page() {
                             />
                             Google
                         </Button>
-                        <Button className="w-[244px] h-[80px] bg-transparent border-2 rounded-[16px] border-primary-sub-text text-[24px] not-italic font-medium leading-[normal]  gap-[31px]">
+                        <Button className="w-[244px] h-[80px] bg-transparent border-2 rounded-[16px] border-primary-sub-text text-[24px] not-italic font-medium leading-[normal] gap-[31px] text-black">
                             <Image
                                 alt="Facebook"
                                 src="/assets/logo/fb.png"
@@ -132,9 +138,12 @@ export default function Page() {
                     </div>
                     <p className="text-center text-primary-sub-text text-[24px] not-italic font-bold leading-[normal]">
                         Không có tài khoản? &nbsp;
-                        <span className="text-[24px] text-secondary-sub-text font-bold leading-[normal]">
+                        <Link
+                            href={config.routes.signUp}
+                            className="text-[24px] text-primary font-bold leading-[normal]"
+                        >
                             Đăng ký
-                        </span>
+                        </Link>
                     </p>
                 </div>
             </div>

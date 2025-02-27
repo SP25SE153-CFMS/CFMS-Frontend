@@ -3,10 +3,15 @@
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import config from '@/configs';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 
 export default function SignUp() {
+    const router = useRouter();
+
     const form = useForm({
         defaultValues: {
             name: '',
@@ -18,6 +23,7 @@ export default function SignUp() {
 
     const onSubmit = (data: any) => {
         console.log('Data: ', data);
+        router.push(config.routes.signIn);
     };
 
     return (
@@ -25,7 +31,7 @@ export default function SignUp() {
             <div className="flex w-[1300px] h-[900px] justify-center items-center content-center gap-[40px] shrink-0 overflow-hidden">
                 <div className="flex flex-col w-1/2 relative items-center self-stretch columns-xl px-[53px] py-[12px] gap-y-[34px] gap-x-[43px]">
                     <p className="text-center text-[32px] not-italic font-bold leading-[normal] whitespace-nowrap">
-                        <span className="text-primary">Chicken Farm</span> Management System
+                        Hệ Thống Quản Lý <span className="text-primary">Trang Trại Gà</span>
                     </p>
 
                     <p className="text-center text-[48px] not-italic font-bold leading-[normal]">
@@ -51,7 +57,7 @@ export default function SignUp() {
                                             {...field}
                                             type="text"
                                             placeholder="Họ và tên"
-                                            className="w-[531px] h-[80px] bg-secondary-bg rounded-[16px] md:text-2xl px-[24px]"
+                                            className="w-[531px] h-[80px] bg-slate-100 rounded-[16px] md:text-2xl px-[24px]"
                                         />
                                     </FormItem>
                                 )}
@@ -67,7 +73,7 @@ export default function SignUp() {
                                             {...field}
                                             type="number"
                                             placeholder="Số điện thoại"
-                                            className="w-[531px] h-[80px] bg-secondary-bg rounded-[16px] md:text-2xl px-[24px]"
+                                            className="w-[531px] h-[80px] bg-slate-100 rounded-[16px] md:text-2xl px-[24px]"
                                         />
                                     </FormItem>
                                 )}
@@ -84,7 +90,7 @@ export default function SignUp() {
                                                 {...field}
                                                 type="email"
                                                 placeholder="Email"
-                                                className="w-[531px] h-[80px] bg-secondary-bg rounded-[16px] md:text-2xl px-[24px]"
+                                                className="w-[531px] h-[80px] bg-slate-100 rounded-[16px] md:text-2xl px-[24px]"
                                             />
                                         </FormControl>
                                     </FormItem>
@@ -102,7 +108,7 @@ export default function SignUp() {
                                                 {...field}
                                                 type="password"
                                                 placeholder="Mật khẩu"
-                                                className="w-[531px] h-[80px] bg-secondary-bg rounded-[16px] md:text-2xl px-[24px]"
+                                                className="w-[531px] h-[80px] bg-slate-100 rounded-[16px] md:text-2xl px-[24px]"
                                             />
                                         </FormControl>
                                     </FormItem>
@@ -115,7 +121,7 @@ export default function SignUp() {
 
                             <Button
                                 type="submit"
-                                className="w-[531px] h-[80px] text-primary-text text-[24px] font-semibold rounded-[16px] bg-primary hover:bg-primary-dark not-italic leading-[normal]"
+                                className="w-[531px] h-[80px] text-white text-[24px] font-semibold rounded-[16px] bg-primary hover:bg-primary-dark not-italic leading-[normal]"
                             >
                                 Đăng ký
                             </Button>
@@ -124,18 +130,21 @@ export default function SignUp() {
 
                     <p className="text-center text-[24px] text-primary-sub-text not-italic font-bold leading-[normal]">
                         Đã có tài khoản? &nbsp;
-                        <span className="text-[24px] text-secondary-sub-text not-italic font-bold leading-[normal]">
+                        <Link
+                            href={config.routes.signIn}
+                            className="text-[24px] text-primary not-italic font-bold leading-[normal]"
+                        >
                             Đăng nhập
-                        </span>
+                        </Link>
                     </p>
                 </div>
-                <div className="flex flex-col w-1/2 relative items-start self-stretch columns-xl px-[59px] py-[61px] rounded-[42px] bg-primary-bg">
-                    <h2 className="font-[Inter] text-center text-[60px] text-primary-text not-italic font-bold leading-[normal]">
-                        Chicken Farm Management System
+                <div className="flex flex-col w-1/2 relative items-start self-stretch columns-xl px-[59px] py-[61px] rounded-[42px] bg-primary">
+                    <h2 className="text-center text-[60px] text-white not-italic font-bold leading-[normal]">
+                        Hệ Thống Quản Lý Trang Trại Gà Với CFMS
                     </h2>
                     <div className="w-[483px] mt-12">
-                        <p className="text-[24px] mb-[56px] text-primary-text font-normal leading-normal">
-                            Pass đồ và thuê đồ một cách dễ dàng và tiện lợi hơn với EcoClothé
+                        <p className="text-[24px] mb-[56px] text-white font-normal leading-normal">
+                            Quản lý trang trại gà của bạn một cách dễ dàng, hiệu quả và nhanh chóng
                         </p>
                         <Image
                             className="absolute left-[150px] bottom-[72px]"

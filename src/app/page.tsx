@@ -55,7 +55,7 @@ export default function Home() {
                 </nav>
 
                 <Link
-                    href={configs.routes.login}
+                    href={configs.routes.signIn}
                     className="w-36 rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-2 font-semibold leading-5 text-white transition-colors duration-300 focus:outline-none"
                 >
                     Đăng nhập
