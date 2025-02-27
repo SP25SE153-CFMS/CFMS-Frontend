@@ -279,16 +279,17 @@ export default function Page() {
                             <TabsTrigger value="harvest">Thu hoạch</TabsTrigger>
                         </TabsList>
                         <TabsContent value="chickens">
-                            <CardComponent />
+                            <CardComponent title="Danh sách đàn gà" />
+                            <CardComponent title="Thông tin đàn gà" />
                         </TabsContent>
                         <TabsContent value="employees">
-                            <CardComponent />
+                            <CardComponent title="Danh sách nhân công" />
                         </TabsContent>
                         <TabsContent value="equipment">
-                            <CardComponent />
+                            <CardComponent title="Danh sách trang thiết bị" />
                         </TabsContent>
                         <TabsContent value="harvest">
-                            <CardComponent />
+                            <CardComponent title="Quản lý thu hoạch" />
                         </TabsContent>
                     </Tabs>
                 </div>
@@ -298,18 +299,18 @@ export default function Page() {
 }
 
 // TODO: Split to a new file
-const CardComponent = () => {
+const CardComponent = ({ title }: { title: string }) => {
     const [open, setOpen] = useState(false);
 
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
 
     return (
-        <Card className="p-6">
+        <Card className="p-6 mb-4">
             {/* Equipment List */}
-            <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
+            <div className="flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                 <div>
-                    <h2 className="text-xl font-bold tracking-tight">Danh sách trang thiết bị</h2>
+                    <h2 className="text-xl font-bold tracking-tight">{title}</h2>
                     <p className="text-muted-foreground">
                         Danh sách tất cả các trang thiết bị trong khu nuôi
                     </p>
