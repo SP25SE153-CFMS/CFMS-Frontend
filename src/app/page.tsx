@@ -32,7 +32,7 @@ export default function Home() {
                     className="relative z-[60] flex items-center gap-4"
                     href={configs.routes.home}
                 >
-                    <Image src="/logo.png" alt="Logo" width="46" height="46" />
+                    <Image src="/assets/logo/logo.png" alt="Logo" width="46" height="46" />
                     <h2 className="text-xl font-bold">CFMS</h2>
                 </Link>
 
