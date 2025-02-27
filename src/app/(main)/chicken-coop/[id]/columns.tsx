@@ -5,7 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import dayjs from 'dayjs';
 import { CoopEquipment } from '@/utils/schemas/equipment.schema';
-import { chickenCoops, equipments } from '@/utils/data/table.data';
+import { equipments } from '@/utils/data/table.data';
 
 export const columns: ColumnDef<CoopEquipment>[] = [
     {

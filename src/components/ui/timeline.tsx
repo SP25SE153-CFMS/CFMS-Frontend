@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use client';
 
 import * as React from 'react';
@@ -22,14 +23,14 @@ export interface TimelineElement {
     error?: string;
 }
 
-interface TimelineProps {
-    items: TimelineElement[];
-    size?: TimelineSize;
-    animate?: boolean;
-    iconColor?: TimelineColor;
-    connectorColor?: TimelineColor;
-    className?: string;
-}
+// interface TimelineProps {
+//     items: TimelineElement[];
+//     size?: TimelineSize;
+//     animate?: boolean;
+//     iconColor?: TimelineColor;
+//     connectorColor?: TimelineColor;
+//     className?: string;
+// }
 
 const timelineVariants = cva('flex flex-col relative', {
     variants: {
@@ -55,6 +56,7 @@ interface TimelineProps
         VariantProps<typeof timelineVariants> {
     /** Size of the timeline icons */
     iconsize?: 'sm' | 'md' | 'lg';
+    items: TimelineElement[];
 }
 
 /**
@@ -255,19 +257,7 @@ const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
         );
 
         // Filter out Framer Motion specific props
-        const {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            style,
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            onDrag,
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            onDragStart,
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            onDragEnd,
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            onAnimationStart,
-            ...filteredProps
-        } = props;
+        const { style, onDrag, onDragStart, onDragEnd, onAnimationStart, ...filteredProps } = props;
 
         return (
             <li ref={ref} className={commonClassName} {...filteredProps}>

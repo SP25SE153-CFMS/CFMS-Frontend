@@ -5,7 +5,7 @@ import { DataTable } from '@/components/table/data-table';
 import { breedingAreas, chickenCoops, coopEquipments } from '@/utils/data/table.data';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
-import { Download, Pen, Plus } from 'lucide-react';
+import { Download, AlignRight, Plus, Database } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -17,7 +17,7 @@ import { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useParams } from 'next/navigation';
 import dayjs from 'dayjs';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -28,7 +28,17 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import Image from 'next/image';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import PopoverWithOverlay from '@/components/popover-with-overlay';
+import { Chart } from './chart';
+
+const techinicalIndicators = [
+    { id: 1, name: 'NGÀY NUÔI', value: '9' },
+    { id: 2, name: 'TỔNG ĐÀN', value: '9820 con' },
+    { id: 3, name: 'CÂN NẶNG TB', value: '0.12kg' },
+    { id: 4, name: 'MẬT ĐỘ', value: '9.18 con/m2' },
+    { id: 5, name: 'SL THU HOẠCH', value: '136 (1,36%)' },
+];
 
 // TODO: Optimize and shorten the code
 export default function Page() {
@@ -76,16 +86,16 @@ export default function Page() {
                                 <h3 className="font-bold pl-3 text-lg relative before:content-[''] before:absolute before:top-[3px] before:left-0 before:w-[4px] before:h-full before:bg-primary inline-block">
                                     Thông tin chuồng nuôi
                                 </h3>
-                                <Popover>
+                                <PopoverWithOverlay>
                                     <PopoverTrigger>
-                                        <Pen size={20} />
+                                        <AlignRight size={20} />
                                     </PopoverTrigger>
-                                    <PopoverContent>
-                                        <Select>
+                                    <PopoverContent className="p-0">
+                                        <Select defaultOpen>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Đổi chuồng nuôi..." />
                                             </SelectTrigger>
-                                            <SelectContent>
+                                            <SelectContent className="h-72">
                                                 {chickenCoops.map((coop) => (
                                                     <SelectItem
                                                         key={coop.chickenCoopId}
@@ -97,7 +107,7 @@ export default function Page() {
                                             </SelectContent>
                                         </Select>
                                     </PopoverContent>
-                                </Popover>
+                                </PopoverWithOverlay>
                             </div>
 
                             <div className="flex gap-3 text-sm mb-4">
@@ -161,12 +171,12 @@ export default function Page() {
                                 <h3 className="font-bold pl-3 text-lg relative before:content-[''] before:absolute before:top-[3px] before:left-0 before:w-[4px] before:h-full before:bg-primary inline-block">
                                     Thông tin lứa nuôi
                                 </h3>
-                                <Popover>
+                                <PopoverWithOverlay>
                                     <PopoverTrigger>
-                                        <Pen size={20} />
+                                        <AlignRight size={20} />
                                     </PopoverTrigger>
-                                    <PopoverContent>
-                                        <Select>
+                                    <PopoverContent className="p-0">
+                                        <Select defaultOpen>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Đổi chuồng nuôi..." />
                                             </SelectTrigger>
@@ -182,7 +192,7 @@ export default function Page() {
                                             </SelectContent>
                                         </Select>
                                     </PopoverContent>
-                                </Popover>
+                                </PopoverWithOverlay>
                             </div>
 
                             <h3 className="mb-2 font-semibold">Lứa nuôi thứ 1</h3>
@@ -202,13 +212,71 @@ export default function Page() {
                             </Button>
                         </div>
                     </Card>
+
+                    {/* Expense Chart */}
+                    <Chart />
+
+                    {/* End Chicken Batch */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Kết thúc</CardTitle>
+                            <CardDescription>
+                                Ấn kết thúc khi lứa nuôi đã hoàn thành để có được thống kê hoạt động
+                                và bắt đầu một lứa nuôi mới.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Button variant="destructive" className="w-full">
+                                Kết thúc lứa nuôi
+                            </Button>
+                        </CardContent>
+                    </Card>
                 </div>
                 <div className="col-span-2">
+                    <Card className="p-6 mb-6">
+                        <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
+                            <div>
+                                <h2 className="text-xl font-bold tracking-tight">
+                                    Chỉ số kỹ thuật
+                                </h2>
+                                <p className="text-muted-foreground">
+                                    Danh sách tất cả chỉ số kỹ thuật của chuồng nuôi
+                                </p>
+                            </div>
+                            <div className="flex gap-2">
+                                <Button variant="outline" className="space-x-1">
+                                    <span>Mục tiêu</span> <Plus size={18} />
+                                </Button>
+                            </div>
+                        </div>
+                        <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
+                            <div className="flex justify-between">
+                                {techinicalIndicators.map((indicator) => (
+                                    <div
+                                        key={indicator.id}
+                                        className="flex-1 flex p-2 border gap-2 items-center"
+                                    >
+                                        <Database size={24} className="text-primary" />
+                                        <div>
+                                            <h4 className="text-xs uppercase font-semibold">
+                                                {indicator.name}
+                                            </h4>
+                                            <p className="text-xs text-muted-foreground">
+                                                {indicator.value}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </Card>
+
                     <Tabs defaultValue="chickens" className="w-auto">
-                        <TabsList className="grid w-full grid-cols-3">
-                            <TabsTrigger value="chickens">Quản lý đàn gà</TabsTrigger>
-                            <TabsTrigger value="employees">Quản lý nhân công</TabsTrigger>
-                            <TabsTrigger value="equipment">Danh sách trang thiết bị</TabsTrigger>
+                        <TabsList className="grid w-full grid-cols-4">
+                            <TabsTrigger value="chickens">Đàn gà</TabsTrigger>
+                            <TabsTrigger value="employees">Nhân công</TabsTrigger>
+                            <TabsTrigger value="equipment">Trang thiết bị</TabsTrigger>
+                            <TabsTrigger value="harvest">Thu hoạch</TabsTrigger>
                         </TabsList>
                         <TabsContent value="chickens">
                             <CardComponent />
@@ -217,6 +285,9 @@ export default function Page() {
                             <CardComponent />
                         </TabsContent>
                         <TabsContent value="equipment">
+                            <CardComponent />
+                        </TabsContent>
+                        <TabsContent value="harvest">
                             <CardComponent />
                         </TabsContent>
                     </Tabs>
@@ -238,7 +309,7 @@ const CardComponent = () => {
             {/* Equipment List */}
             <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight">Danh sách trang thiết bị</h2>
+                    <h2 className="text-xl font-bold tracking-tight">Danh sách trang thiết bị</h2>
                     <p className="text-muted-foreground">
                         Danh sách tất cả các trang thiết bị trong khu nuôi
                     </p>

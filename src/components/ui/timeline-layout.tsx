@@ -18,7 +18,6 @@ export const TimelineLayout = ({
     size = 'md',
     iconColor,
     customIcon,
-    animate = true,
     connectorColor,
     className,
 }: TimelineLayoutProps) => {
