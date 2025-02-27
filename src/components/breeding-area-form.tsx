@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -14,11 +13,11 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { breedingAreaSchema } from '@/utils/schemas/breeding-area.schema';
+import { BreedingArea, BreedingAreaSchema } from '@/utils/schemas/breeding-area.schema';
 
 export default function BreedingAreaForm() {
-    const form = useForm<z.infer<typeof breedingAreaSchema>>({
-        resolver: zodResolver(breedingAreaSchema),
+    const form = useForm<BreedingArea>({
+        resolver: zodResolver(BreedingAreaSchema),
         defaultValues: {
             breedingAreaId: '',
             breedingAreaCode: '',
@@ -36,7 +35,7 @@ export default function BreedingAreaForm() {
         },
     });
 
-    function onSubmit(values: z.infer<typeof breedingAreaSchema>) {
+    function onSubmit(values: BreedingArea) {
         console.log('Values :', values);
     }
 

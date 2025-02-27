@@ -41,7 +41,7 @@ export const sidebarItems: NavGroup[] = [
                 path: basePath,
                 icon: Egg,
                 subItems: [
-                    { title: "Danh sách đàn gà", path: config.routes.breadingArea },
+                    { title: "Danh sách đàn gà", path: config.routes.flock },
                     { title: "Danh sách mục đích nuôi", path: config.routes.breadingArea },
                     { title: "Danh sách giống gà", path: config.routes.breadingArea },
                     { title: "Danh sách tiêu chí đánh giá sức khỏe gà", path: config.routes.breadingArea },

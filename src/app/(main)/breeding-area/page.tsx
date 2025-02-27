@@ -33,7 +33,7 @@ export default function BreedingAreaPage() {
                 </div>
                 <div className="flex gap-2">
                     <Button variant="outline" className="space-x-1">
-                        <span>Nhập file</span> <Download size={18} />
+                        <span>Tải file</span> <Download size={18} />
                     </Button>
                     <Button className="space-x-1" onClick={openModal}>
                         <span>Tạo</span> <Plus size={18} />
