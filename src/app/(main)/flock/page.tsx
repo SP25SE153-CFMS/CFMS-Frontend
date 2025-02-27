@@ -41,7 +41,7 @@ export default function Page() {
                     <Dialog open={open} onOpenChange={onOpenChange}>
                         <DialogContent>
                             <DialogHeader>
-                                <DialogTitle>Tạo khu nuôi mới</DialogTitle>
+                                <DialogTitle>Tạo đàn gà mới</DialogTitle>
                                 <DialogDescription>
                                     Hãy nhập các thông tin dưới đây.
                                 </DialogDescription>
