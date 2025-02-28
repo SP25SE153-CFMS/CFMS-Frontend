@@ -5,7 +5,8 @@ const routes = {
     farm: '/farm',
     farmRegister: '/farm/register',
     breadingArea: '/breeding-area',
-    chickenCoop: 'chicken-coop'
+    chickenCoop: 'chicken-coop',
+    equipment: '/equipment',
 }
 
 export default routes;

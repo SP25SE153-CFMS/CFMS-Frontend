@@ -8,6 +8,7 @@ export const chickenCoopSchema = z.object({
     location: z.string().min(5, "Vị trí phải có ít nhất 5 ký tự"),
     status: z.enum(["AVAILABLE", "OCCUPIED", "UNDER_MAINTENANCE"]),
     breedingAreaId: z.string().min(1, "Vui lòng chọn khu vực chăn nuôi"),
+    image: z.string().url().nullable().optional(),
     createdAt: z.string().datetime(),
     updatedAt: z.string().datetime().nullable(),
 });

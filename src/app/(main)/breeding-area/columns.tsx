@@ -5,6 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { DataTableRowActions } from '@/components/table/data-table-row-actions';
+import Link from 'next/link';
 
 export const columns: ColumnDef<BreedingArea>[] = [
     {
@@ -32,6 +33,11 @@ export const columns: ColumnDef<BreedingArea>[] = [
         enableHiding: false,
     },
     {
+        accessorKey: 'breedingAreaId', // Ensure the data exists in the row
+        header: () => null, // No header
+        cell: () => null, // Hidden cell
+    },
+    {
         accessorKey: 'breedingAreaCode',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Code" />,
         cell: ({ row }) => <div className="w-[80px]">{row.getValue('breedingAreaCode')}</div>,
@@ -41,6 +47,11 @@ export const columns: ColumnDef<BreedingArea>[] = [
     {
         accessorKey: 'breedingAreaName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên khu nuôi" />,
+        cell: ({ row }) => (
+            <Link href={`/chicken-coop?breedingAreaId=${row.getValue('breedingAreaId')}`}>
+                {row.getValue('breedingAreaName')}
+            </Link>
+        ),
     },
     {
         accessorKey: 'humidity',
