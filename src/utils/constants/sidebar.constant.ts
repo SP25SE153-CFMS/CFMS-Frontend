@@ -66,7 +66,8 @@ export const sidebarItems: NavGroup[] = [
                 path: basePath,
                 icon: Warehouse,
                 subItems: [
-                    { title: "Kho thức ăn", path: config.routes.breadingArea },
+                    { title: "Kho thức ăn", path: config.routes.food },
+                    { title: "Kho trang thiết bị", path: config.routes.breadingArea },
                     { title: "Xuất/Nhập kho", path: config.routes.breadingArea },
                     { title: "Danh sách trang thiết bị", path: config.routes.equipment },
                     { title: "Danh sách phiếu yêu cầu", path: config.routes.request },

@@ -11,6 +11,7 @@ const routes = {
     flock: '/flock',
     request: '/request',
     createRequest: '/request/create',
-}
+    food: '/warehouse/foods',
+};
 
 export default routes;

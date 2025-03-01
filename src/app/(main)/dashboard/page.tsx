@@ -16,7 +16,7 @@ export default function Dashboard() {
                 <div className="flex-col items-center justify-between space-y-2 md:flex md:flex-row">
                     <h2 className="text-3xl font-bold tracking-tight">Trang chủ</h2>
                     <div className="flex-col items-center space-y-2 md:flex md:flex-row md:space-x-2 md:space-y-0">
-                        <Button className="w-full">Tải xuống</Button>
+                        <Button className="w-full text-primary-text">Tải xuống</Button>
                     </div>
                 </div>
                 <Tabs defaultValue="overview" className="space-y-4">
