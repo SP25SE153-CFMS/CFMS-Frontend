@@ -9,6 +9,7 @@ const routes = {
     chickenCoop: 'chicken-coop',
     equipment: '/equipment',
     flock: '/flock',
-}
+    food: '/warehouse/foods',
+};
 
 export default routes;
