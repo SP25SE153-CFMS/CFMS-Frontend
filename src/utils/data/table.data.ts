@@ -6,6 +6,7 @@ import { CoopEquipment, Equipment } from "../schemas/equipment.schema"
 import { Flock } from "../schemas/flock.schema"
 import { Farm } from "../schemas/farm.schema"
 import { ChickenBatch } from "../schemas/chicken-batch.schema"
+import { Request } from "../schemas/request.schema"
 
 export const labels = [
     {
@@ -72,7 +73,7 @@ export const farms: Farm[] = [
     {
         farmId: '1',
         farmName: 'Trang trại Xanh',
-        farmCode: 'TT001',
+        farmCode: 'TT002',
         type: 'Hữu cơ',
         address: 'Hà Nội',
         area: 100,
@@ -84,12 +85,12 @@ export const farms: Farm[] = [
     },
     {
         farmId: '2',
-        farmName: 'Trang trại Xanh',
-        farmCode: 'TT001',
+        farmName: 'Trang trại Việt',
+        farmCode: 'TT002',
         type: 'Hữu cơ',
         address: 'Hà Nội',
         area: 100,
-        scale: 'Vừa',
+        scale: 'Lớn',
         phoneNumber: '0123456789',
         website: '/dashboard',
         farmImage:
@@ -97,12 +98,12 @@ export const farms: Farm[] = [
     },
     {
         farmId: '3',
-        farmName: 'Trang trại Xanh',
-        farmCode: 'TT001',
+        farmName: 'Trang trại chuẩn Úc',
+        farmCode: 'TT003',
         type: 'Hữu cơ',
-        address: 'Hà Nội',
+        address: 'TP Hồ Chí Minh',
         area: 100,
-        scale: 'Vừa',
+        scale: 'Lớn',
         phoneNumber: '0123456789',
         website: '/dashboard',
         farmImage:
@@ -914,5 +915,98 @@ export const flocks: Flock[] = [
         purposeId: 2,
         breedId: 8,
         housingId: 5,
+    }
+];
+
+export const requests: Request[] = [
+    {
+        requestId: "550e8400-e29b-41d4-a716-446655440000",
+        requestType: "import",
+        createdAt: "2025-02-28T08:30:00Z",
+        status: "PENDING",
+        content: "Nhập lô gà giống từ nhà cung cấp A",
+        createdBy: "d5f68f1e-8f7a-4c62-bb3e-948c2a1095e1",
+        approvedBy: null
+    },
+    {
+        requestId: "d25c3a9a-b3c4-4f5b-a6cb-687ba7a5c6e3",
+        requestType: "export",
+        createdAt: "2025-02-28T09:15:00Z",
+        status: "APPROVED",
+        content: "Xuất 200 con gà đến cửa hàng B",
+        createdBy: "4f8b682c-85c7-41bc-b412-6f5f5e9c3f97",
+        approvedBy: "84b74c72-3f2e-4a9d-b52a-ec82e76e91a5"
+    },
+    {
+        requestId: "1a9e23d4-3f1d-4d8c-8b3e-2650fa3df3a7",
+        requestType: "maintenance",
+        createdAt: "2025-02-28T10:00:00Z",
+        status: "REJECTED",
+        content: "Bảo trì chuồng trại khu B",
+        createdBy: "b2a6c485-781c-4d92-a648-6a9d8a6b2f34",
+        approvedBy: "f6d4c72a-9c2e-4b7b-91f8-ff14de66f2d4"
+    },
+    {
+        requestId: "72b1f8a3-8e47-4b6e-a1a3-2c1c88b98f65",
+        requestType: "equipment",
+        createdAt: "2025-02-28T11:20:00Z",
+        status: "PENDING",
+        content: "Mua thêm hệ thống cho ăn tự động",
+        createdBy: "f7a2e9b3-4c47-4f75-9e8c-1d38b9b4a172",
+        approvedBy: null
+    },
+    {
+        requestId: "c9e2b6d7-3c5f-4c92-83a2-78fbd1a1fdb4",
+        requestType: "cancelMaintenance",
+        createdAt: "2025-02-28T12:45:00Z",
+        status: "APPROVED",
+        content: "Hủy bảo trì chuồng C do đã tự sửa chữa",
+        createdBy: "a4c58d92-2a6b-4b73-a4cd-6d5f8c2b93d6",
+        approvedBy: "f9e3d2a4-9b4e-4c2b-91f6-d5a8b72c3e87"
+    },
+    {
+        requestId: "81a5d4e2-7b3c-49f8-92e4-3f2d7a6c5b91",
+        requestType: "import",
+        createdAt: "2025-02-28T13:10:00Z",
+        status: "PENDING",
+        content: "Nhập thiết bị đo nhiệt độ mới",
+        createdBy: "b7c5a1d8-3f2e-4c9b-8d4a-65a9b23c7f12",
+        approvedBy: null
+    },
+    {
+        requestId: "e6b3a8d2-4c7f-4b9e-83a2-4d5c78f2b1a4",
+        requestType: "export",
+        createdAt: "2025-02-28T14:25:00Z",
+        status: "APPROVED",
+        content: "Xuất 50kg thức ăn cho trang trại đối tác",
+        createdBy: "f3a7c8d2-1b4e-4c9d-83a6-2d5f7b3a81d4",
+        approvedBy: "d2b3a8f7-4c1e-4c9a-92d4-7b5f2e3a6c81"
+    },
+    {
+        requestId: "a7b9d4e3-2c5f-49a8-93b1-7c2d4e6f8a52",
+        requestType: "maintenance",
+        createdAt: "2025-02-28T15:40:00Z",
+        status: "PENDING",
+        content: "Bảo trì hệ thống nước uống tự động",
+        createdBy: "c4d7a8b9-2e3f-4c5a-93d1-7b2f8a6c5e41",
+        approvedBy: null
+    },
+    {
+        requestId: "f3a7d8b2-4c9e-4b1a-93d2-7f5c2e3a81b6",
+        requestType: "equipment",
+        createdAt: "2025-02-28T16:55:00Z",
+        status: "APPROVED",
+        content: "Mua đèn sưởi mới cho gà con",
+        createdBy: "a4c7b2d9-1e3f-4c5a-92d1-7b5f8a6c3e48",
+        approvedBy: "c3d7a8b9-2e5f-4c1a-93d4-7f2b6a5c8e41"
+    },
+    {
+        requestId: "d7b3a8f2-4c9e-4b1d-93a6-2f5c7e3a81d5",
+        requestType: "cancelMaintenance",
+        createdAt: "2025-02-28T18:10:00Z",
+        status: "REJECTED",
+        content: "Hủy bảo trì hệ thống điện do vấn đề nghiêm trọng hơn",
+        createdBy: "b4d7a8c9-2e3f-4c5a-92d1-7f5b6a2c8e41",
+        approvedBy: "f3b7a8d2-1c9e-4b5a-93d4-7b2f6a5c8e41"
     }
 ];

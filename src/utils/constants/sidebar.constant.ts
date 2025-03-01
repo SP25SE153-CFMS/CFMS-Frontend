@@ -1,5 +1,5 @@
 import config from "@/configs";
-import { File, LucideIcon, PanelsTopLeft, Egg, House, UsersRound, Warehouse, Settings } from "lucide-react";
+import { File, LucideIcon, PanelsTopLeft, Egg, House, UsersRound, Warehouse } from "lucide-react";
 
 export interface NavSubItem {
     title: string;
@@ -42,15 +42,14 @@ export const sidebarItems: NavGroup[] = [
                 icon: Egg,
                 subItems: [
                     { title: "Danh sách đàn gà", path: config.routes.flock },
-                    { title: "Danh sách mục đích nuôi", path: config.routes.breadingArea },
+                    { title: "Mục đích nuôi", path: config.routes.breadingArea },
                     { title: "Danh sách giống gà", path: config.routes.breadingArea },
-                    { title: "Danh sách tiêu chí đánh giá sức khỏe gà", path: config.routes.breadingArea },
+                    { title: "Tiêu chí đánh giá SK", path: config.routes.breadingArea },
                     { title: "Danh sách bệnh gà", path: config.routes.breadingArea },
                     { title: "Danh mục vaccine", path: config.routes.breadingArea },
                     { title: "Nhật ký sức khỏe", path: config.routes.breadingArea },
                     { title: "Chế độ dinh dưỡng", path: config.routes.breadingArea },
                     { title: "Lịch sử tiêm phòng", path: config.routes.breadingArea },
-                    { title: "Danh sách tiêu chí đánh giá sức khỏe gà", path: config.routes.breadingArea },
                 ]
             },
             {
@@ -70,6 +69,7 @@ export const sidebarItems: NavGroup[] = [
                     { title: "Kho thức ăn", path: config.routes.breadingArea },
                     { title: "Xuất/Nhập kho", path: config.routes.breadingArea },
                     { title: "Danh sách trang thiết bị", path: config.routes.equipment },
+                    { title: "Danh sách phiếu yêu cầu", path: config.routes.request },
                 ]
             },
         ],
@@ -82,17 +82,6 @@ export const sidebarItems: NavGroup[] = [
                 title: "Trang chủ",
                 path: config.routes.dashboard,
                 icon: PanelsTopLeft,
-            },
-        ],
-    },
-    {
-        id: 3,
-        label: "Cấu hình",
-        items: [
-            {
-                title: "Cài đặt ứng dụng",
-                path: config.routes.breadingArea,
-                icon: Settings,
             },
             {
                 title: "Danh mục dùng chung",
