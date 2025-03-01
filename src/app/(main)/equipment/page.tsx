@@ -17,6 +17,8 @@ import EquipmentForm from '@/components/equipment-form';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getEquipments } from '@/services/equipment.service';
+import { Card } from '@/components/ui/card';
+import Image from 'next/image';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -40,7 +42,14 @@ export default function Page() {
 
     // Check if equipments is not null, undefined
     if (!equipments) {
-        return <></>;
+        return (
+            <Card className="max-w-xl mx-auto">
+                <div className="flex flex-col justify-center items-center h-[300px] gap-4">
+                    <Image src="/no-data.jpg" width={300} height={300} alt="Not Found" />
+                    <h1 className="text-2xl font-bold">Danh sách không tồn tại</h1>
+                </div>
+            </Card>
+        );
     }
 
     // Return the page

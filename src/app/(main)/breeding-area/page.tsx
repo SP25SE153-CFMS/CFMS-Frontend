@@ -1,9 +1,13 @@
 'use client';
 
-import { DataTable } from '@/components/table/data-table';
-import { columns } from './columns';
-import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import Image from 'next/image';
 import { Download, Plus } from 'lucide-react';
+
+import { columns } from './columns';
+
+import { DataTable } from '@/components/table/data-table';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -11,12 +15,12 @@ import {
     DialogTitle,
     DialogDescription,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
 import BreedingAreaForm from '@/components/breeding-area-form';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useQuery } from '@tanstack/react-query';
 import { getBreedingAreas } from '@/services/breeding-area.service';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { Card } from '@/components/ui/card';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -40,7 +44,14 @@ export default function Page() {
 
     // Check if breedingAreas is not null, undefined
     if (!breedingAreas) {
-        return <></>;
+        return (
+            <Card className="max-w-xl mx-auto">
+                <div className="flex flex-col justify-center items-center h-[300px] gap-4">
+                    <Image src="/no-data.jpg" width={300} height={300} alt="Not Found" />
+                    <h1 className="text-2xl font-bold">Danh sách không tồn tại</h1>
+                </div>
+            </Card>
+        );
     }
 
     // Return the page
