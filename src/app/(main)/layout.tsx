@@ -26,7 +26,7 @@ export default function Layout({ children }: LayoutProps) {
                             <ProfileDropdown />
                         </div>
                     </header>
-                    <div className="p-4 pt-0">{children}</div>
+                    <div className="p-4 pt-0 w-full h-full">{children}</div>
                 </SidebarInset>
             </SidebarProvider>
         </main>

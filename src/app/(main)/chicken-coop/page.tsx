@@ -1,7 +1,6 @@
 'use client';
 
 import { DataTable } from '@/components/table/data-table';
-import { chickenCoops } from '@/utils/data/table.data';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
@@ -15,13 +14,36 @@ import {
 import { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import ChickenCoopForm from '@/components/chicken-coop-form';
+import { useQuery } from '@tanstack/react-query';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { getChickenCoops } from '@/services/chicken-coop.service';
 
-export default function BreedingAreaPage() {
+export default function Page() {
     const [open, setOpen] = useState(false);
 
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
 
+    const { data: chickenCoops, isLoading } = useQuery({
+        queryKey: ['chickenCoops'],
+        queryFn: () => getChickenCoops(),
+    });
+
+    // Check if chickenCoops is loading
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <LoadingSpinner />;
+            </div>
+        );
+    }
+
+    // Check if chickenCoops is not null, undefined
+    if (!chickenCoops) {
+        return <></>;
+    }
+
+    // Return the page
     return (
         <div>
             <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">

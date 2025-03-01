@@ -1,7 +1,6 @@
 'use client';
 
 import { DataTable } from '@/components/table/data-table';
-import { breedingAreas } from '@/utils/data/table.data';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
@@ -15,13 +14,36 @@ import {
 import { useState } from 'react';
 import BreedingAreaForm from '@/components/breeding-area-form';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useQuery } from '@tanstack/react-query';
+import { getBreedingAreas } from '@/services/breeding-area.service';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
-export default function BreedingAreaPage() {
+export default function Page() {
     const [open, setOpen] = useState(false);
 
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
 
+    const { data: breedingAreas, isLoading } = useQuery({
+        queryKey: ['breedingAreas'],
+        queryFn: () => getBreedingAreas(),
+    });
+
+    // Check if breedingAreas is loading
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <LoadingSpinner />;
+            </div>
+        );
+    }
+
+    // Check if breedingAreas is not null, undefined
+    if (!breedingAreas) {
+        return <></>;
+    }
+
+    // Return the page
     return (
         <div>
             <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">

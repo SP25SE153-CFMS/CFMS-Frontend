@@ -4,6 +4,8 @@ import { BreedingArea } from "../schemas/breeding-area.schema"
 import { ChickenCoop } from "../schemas/chicken-coop.schema"
 import { CoopEquipment, Equipment } from "../schemas/equipment.schema"
 import { Flock } from "../schemas/flock.schema"
+import { Farm } from "../schemas/farm.schema"
+import { ChickenBatch } from "../schemas/chicken-batch.schema"
 
 export const labels = [
     {
@@ -65,6 +67,48 @@ export const priorities = [
         icon: ChevronUp,
     },
 ]
+
+export const farms: Farm[] = [
+    {
+        farmId: '1',
+        farmName: 'Trang trại Xanh',
+        farmCode: 'TT001',
+        type: 'Hữu cơ',
+        address: 'Hà Nội',
+        area: 100,
+        scale: 'Vừa',
+        phoneNumber: '0123456789',
+        website: '/dashboard',
+        farmImage:
+            'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
+    },
+    {
+        farmId: '2',
+        farmName: 'Trang trại Xanh',
+        farmCode: 'TT001',
+        type: 'Hữu cơ',
+        address: 'Hà Nội',
+        area: 100,
+        scale: 'Vừa',
+        phoneNumber: '0123456789',
+        website: '/dashboard',
+        farmImage:
+            'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
+    },
+    {
+        farmId: '3',
+        farmName: 'Trang trại Xanh',
+        farmCode: 'TT001',
+        type: 'Hữu cơ',
+        address: 'Hà Nội',
+        area: 100,
+        scale: 'Vừa',
+        phoneNumber: '0123456789',
+        website: '/dashboard',
+        farmImage:
+            'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
+    },
+];
 
 export const breedingAreas: BreedingArea[] = [
     {
@@ -596,6 +640,117 @@ export const coopEquipments: CoopEquipment[] = [
         maintainDate: "2024-07-25",
         status: "IN_USE",
         note: "Quạt chạy êm",
+    },
+];
+
+export const chickenBatches: ChickenBatch[] = [
+    {
+        chickenBatchId: "550e8400-e29b-41d4-a716-446655440000",
+        chickenCoopId: "d2e3f4a5-b6c7-8901-d2e3-f4a5b6c78901",
+        name: "Lứa Xuân Sớm",
+        startDate: "2024-01-10",
+        endDate: "2024-05-15",
+        note: "Lứa nuôi mùa xuân, thời tiết mát mẻ.",
+        status: "completed",
+    },
+    {
+        chickenBatchId: "6a1f73b6-1dd2-11b2-87f3-fda0b64f5d9e",
+        chickenCoopId: "d2e3f4a5-b6c7-8901-d2e3-f4a5b6c78901",
+        name: "Lứa Gà Đồi",
+        startDate: "2024-02-05",
+        endDate: "2024-06-20",
+        note: "Gà thả đồi, chất lượng thịt thơm ngon.",
+        status: "completed",
+    },
+    {
+        chickenBatchId: "7c5d4e2a-45b6-4c8f-83d5-8c529ac7a73e",
+        chickenCoopId: "d2e3f4a5-b6c7-8901-d2e3-f4a5b6c78901",
+        name: "Lứa Gà Tre",
+        startDate: "2024-03-01",
+        endDate: "2024-07-10",
+        note: "Nuôi gà tre, thịt chắc và dai.",
+        status: "completed",
+    },
+    {
+        chickenBatchId: "9d8a7e6b-2b4c-4a1f-9573-66e3d5b9cdef",
+        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        name: "Lứa Gà Ta",
+        startDate: "2024-04-15",
+        endDate: "2024-08-30",
+        note: "Nuôi gà ta truyền thống.",
+        status: "completed",
+    },
+    {
+        chickenBatchId: "2e4b6c7d-8a9f-5b3e-4c2d-1f6e7a8d9c5b",
+        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        name: "Lứa Gà Chọi",
+        startDate: "2024-05-10",
+        endDate: "2024-09-25",
+        note: "Lứa gà chọi giống Bình Định.",
+        status: "completed",
+    },
+    {
+        chickenBatchId: "6e7f8d9c-5b4e-3a2d-1f9b7c6d8a4e",
+        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        name: "Lứa Gà Công Nghiệp",
+        startDate: "2024-06-20",
+        endDate: "2024-10-15",
+        note: "Nuôi gà công nghiệp, thời gian nuôi nhanh.",
+        status: "active",
+    },
+    {
+        chickenBatchId: "1f6e7a8d-9c5b-4e3a-2d7c8b6d9a4f",
+        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        name: "Lứa Gà Siêu Trứng",
+        startDate: "2024-07-05",
+        endDate: null,
+        note: "Lứa nuôi chuyên lấy trứng.",
+        status: "active",
+    },
+    {
+        chickenBatchId: "3e9d7c6b-5a4f-2d1b-8c6e7a9d8c4f",
+        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        name: "Lứa Gà Giống",
+        startDate: "2024-08-10",
+        endDate: null,
+        note: "Nuôi gà giống phục vụ nhân giống.",
+        status: "active",
+    },
+    {
+        chickenBatchId: "4e7d8c9a-5b6f-3a2d-1b9c7d6e8a4f",
+        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        name: "Lứa Gà Tết",
+        startDate: "2024-09-15",
+        endDate: "2025-01-20",
+        note: "Lứa nuôi phục vụ thị trường Tết Nguyên Đán.",
+        status: "inactive",
+    },
+    {
+        chickenBatchId: "5e9d7c6b-4a3f-2d1b-8c7a9d6e8f4b",
+        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        name: "Lứa Gà Thả Vườn",
+        startDate: "2024-10-01",
+        endDate: null,
+        note: "Nuôi gà thả vườn, thịt săn chắc.",
+        status: "active",
+    },
+    {
+        chickenBatchId: "6e8d9c7b-5a4f-3a2d-1b9c7d6e8a4f",
+        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        name: "Lứa Gà Hè",
+        startDate: "2024-11-10",
+        endDate: "2025-03-15",
+        note: "Lứa nuôi hè, cần chú ý chống nóng.",
+        status: "inactive",
+    },
+    {
+        chickenBatchId: "7e9d6c5b-4a3f-2d1b-8c7a9d6e8f4b",
+        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        name: "Lứa Gà Đông",
+        startDate: "2024-12-05",
+        endDate: "2025-04-20",
+        note: "Lứa gà nuôi mùa đông, chú ý giữ ấm.",
+        status: "inactive",
     },
 ];
 

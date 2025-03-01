@@ -2,7 +2,12 @@
 
 import EquipmentForm from '@/components/equipment-form';
 import { DataTable } from '@/components/table/data-table';
-import { breedingAreas, chickenCoops, coopEquipments } from '@/utils/data/table.data';
+import {
+    breedingAreas,
+    chickenBatches,
+    chickenCoops,
+    coopEquipments,
+} from '@/utils/data/table.data';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
 import { Download, AlignRight, Plus, Database } from 'lucide-react';
@@ -17,7 +22,7 @@ import { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useParams } from 'next/navigation';
 import dayjs from 'dayjs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -31,6 +36,17 @@ import Image from 'next/image';
 import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import PopoverWithOverlay from '@/components/popover-with-overlay';
 import { Chart } from './chart';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const techinicalIndicators = [
     { id: 1, name: 'NGÀY NUÔI', value: '9' },
@@ -45,6 +61,9 @@ export default function Page() {
     const { id: chickenCoopId } = useParams();
 
     const currentCoop = chickenCoops.find((coop) => coop.chickenCoopId === chickenCoopId);
+    const currentChickenBatch = chickenBatches.find(
+        (batch) => batch.chickenCoopId === chickenCoopId,
+    );
 
     if (!currentCoop) {
         return (
@@ -178,15 +197,15 @@ export default function Page() {
                                     <PopoverContent className="p-0">
                                         <Select defaultOpen>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Đổi chuồng nuôi..." />
+                                                <SelectValue placeholder="Đổi lứa nuôi..." />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {chickenCoops.map((coop) => (
+                                                {chickenBatches.map((batch) => (
                                                     <SelectItem
-                                                        key={coop.chickenCoopId}
-                                                        value={coop.chickenCoopId}
+                                                        key={batch.chickenBatchId}
+                                                        value={batch.chickenBatchId}
                                                     >
-                                                        {coop.chickenCoopName}
+                                                        {batch.name}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
@@ -195,42 +214,52 @@ export default function Page() {
                                 </PopoverWithOverlay>
                             </div>
 
-                            <h3 className="mb-2 font-semibold">Lứa nuôi thứ 1</h3>
+                            <h3 className="mb-2 font-semibold">{currentChickenBatch?.name}</h3>
                             <div className="flex gap-3 text-sm mb-2">
                                 Thời gian từ:{' '}
-                                <strong className="flex-1 text-right">01/02/2025</strong>
+                                <strong className="flex-1 text-right">
+                                    {dayjs(currentChickenBatch?.startDate).format('DD/MM/YYYY')}
+                                </strong>
                             </div>
                             <div className="flex gap-3 text-sm mb-2">
                                 Trạng thái:{' '}
                                 <strong className="flex-1 text-right">
-                                    <Badge>Đang hoạt động</Badge>
+                                    <Badge>{currentChickenBatch?.status?.toUpperCase()}</Badge>
                                 </strong>
                             </div>
+                        </div>
 
-                            <Button variant="outline" className="space-x-1">
+                        <CardFooter className="flex flex-col gap-2">
+                            <Button variant="outline" className="w-full space-x-1">
                                 <span>Tải file Excel</span> <Download size={18} />
                             </Button>
-                        </div>
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button variant="destructive" className="w-full">
+                                        Kết thúc lứa nuôi
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>
+                                            Bạn có chắc chắn muốn kết thúc lứa nuôi này?
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            Ấn kết thúc khi lứa nuôi đã hoàn thành để có được thống
+                                            kê hoạt động và bắt đầu một lứa nuôi mới.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Hủy</AlertDialogCancel>
+                                        <AlertDialogAction>Kết thúc</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        </CardFooter>
                     </Card>
 
                     {/* Expense Chart */}
                     <Chart />
-
-                    {/* End Chicken Batch */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Kết thúc</CardTitle>
-                            <CardDescription>
-                                Ấn kết thúc khi lứa nuôi đã hoàn thành để có được thống kê hoạt động
-                                và bắt đầu một lứa nuôi mới.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <Button variant="destructive" className="w-full">
-                                Kết thúc lứa nuôi
-                            </Button>
-                        </CardContent>
-                    </Card>
                 </div>
                 <div className="col-span-2">
                     <Card className="p-6 mb-6">

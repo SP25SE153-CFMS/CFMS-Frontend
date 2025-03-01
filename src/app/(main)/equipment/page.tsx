@@ -1,7 +1,6 @@
 'use client';
 
 import { DataTable } from '@/components/table/data-table';
-import { equipments } from '@/utils/data/table.data';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
@@ -15,6 +14,9 @@ import {
 import { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import EquipmentForm from '@/components/equipment-form';
+import { useQuery } from '@tanstack/react-query';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { getEquipments } from '@/services/equipment.service';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -22,6 +24,26 @@ export default function Page() {
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
 
+    const { data: equipments, isLoading } = useQuery({
+        queryKey: ['equipments'],
+        queryFn: () => getEquipments(),
+    });
+
+    // Check if equipments is loading
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <LoadingSpinner />;
+            </div>
+        );
+    }
+
+    // Check if equipments is not null, undefined
+    if (!equipments) {
+        return <></>;
+    }
+
+    // Return the page
     return (
         <div>
             <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">

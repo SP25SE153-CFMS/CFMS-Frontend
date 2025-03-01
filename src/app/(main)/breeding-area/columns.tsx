@@ -4,7 +4,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
-import { DataTableRowActions } from '@/components/table/data-table-row-actions';
 import Link from 'next/link';
 
 export const columns: ColumnDef<BreedingArea>[] = [
@@ -82,8 +81,9 @@ export const columns: ColumnDef<BreedingArea>[] = [
             <div className="w-[80px]">{row.getValue('covered') ? 'Có' : 'Không'}</div>
         ),
     },
-    {
-        id: 'actions',
-        cell: ({ row }) => <DataTableRowActions row={row} />,
-    },
+    // Uncomment this to add actions column
+    // {
+    //     id: 'actions',
+    //     cell: ({ row }) => <DataTableRowActions row={row} />,
+    // },
 ];

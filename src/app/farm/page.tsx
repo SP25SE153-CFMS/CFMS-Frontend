@@ -5,51 +5,9 @@ import { Tractor, MapPin, Phone, Globe, TreePine, Ruler, Scale3d, Plus } from 'l
 import Image from 'next/image';
 import Link from 'next/link';
 import config from '@/configs';
-import { Farm } from '@/utils/schemas/farm.schema';
+import { farms } from '@/utils/data/table.data';
 
-export default function TrangTraiList() {
-    const farms: Farm[] = [
-        {
-            farmId: '1',
-            farmName: 'Trang trại Xanh',
-            farmCode: 'TT001',
-            type: 'Hữu cơ',
-            address: 'Hà Nội',
-            area: 100,
-            scale: 'Vừa',
-            phoneNumber: '0123456789',
-            website: '/dashboard',
-            farmImage:
-                'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
-        },
-        {
-            farmId: '2',
-            farmName: 'Trang trại Xanh',
-            farmCode: 'TT001',
-            type: 'Hữu cơ',
-            address: 'Hà Nội',
-            area: 100,
-            scale: 'Vừa',
-            phoneNumber: '0123456789',
-            website: '/dashboard',
-            farmImage:
-                'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
-        },
-        {
-            farmId: '3',
-            farmName: 'Trang trại Xanh',
-            farmCode: 'TT001',
-            type: 'Hữu cơ',
-            address: 'Hà Nội',
-            area: 100,
-            scale: 'Vừa',
-            phoneNumber: '0123456789',
-            website: '/dashboard',
-            farmImage:
-                'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
-        },
-    ];
-
+export default function Page() {
     if (farms.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center h-[70vh]">
