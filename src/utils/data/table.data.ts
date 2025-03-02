@@ -7,6 +7,7 @@ import { Flock } from "../schemas/flock.schema"
 import { Farm } from "../schemas/farm.schema"
 import { ChickenBatch } from "../schemas/chicken-batch.schema"
 import { Request } from "../schemas/request.schema"
+import { Category, SubCategory } from "../schemas/category.schema"
 
 export const labels = [
     {
@@ -1008,5 +1009,140 @@ export const requests: Request[] = [
         content: "Hủy bảo trì hệ thống điện do vấn đề nghiêm trọng hơn",
         createdBy: "b4d7a8c9-2e3f-4c5a-92d1-7f5b6a2c8e41",
         approvedBy: "f3b7a8d2-1c9e-4b5a-93d4-7b2f6a5c8e41"
+    }
+];
+
+export const categories: Category[] = [
+    {
+        categoryId: "f3b7a8d2-1c9e-4b5a-93d4-7b2f6a5c8e41",
+        categoryName: "Chỉ số môi trường",
+        categoryType: "Môi trường",
+        categoryCode: "ENV_INDEX",
+        description: "Các chỉ số quan trọng của môi trường nuôi",
+        status: "ACTIVE"
+    },
+    {
+        categoryId: "a6c2b9d8-7e4a-4c8f-91d2-3b5a7e6f8c21",
+        categoryName: "Chỉ số vật nuôi",
+        categoryType: "Sức khỏe vật nuôi",
+        categoryCode: "ANIMAL_INDEX",
+        description: "Các chỉ số theo dõi sức khỏe vật nuôi",
+        status: "ACTIVE"
+    },
+    {
+        categoryId: "c9e7b5a8-2f3d-4b1c-92d6-7a5c8e4f3b21",
+        categoryName: "Loại thu hoạch",
+        categoryType: "Sản phẩm thu hoạch",
+        categoryCode: "HARVEST_TYPE",
+        description: "Các loại sản phẩm thu hoạch từ chăn nuôi",
+        status: "ACTIVE"
+    },
+    {
+        categoryId: "e4b7a5c9-1d2f-4c8e-93b6-2a7f5d3b6c21",
+        categoryName: "Quyền hạn người dùng",
+        categoryType: "Phân quyền",
+        categoryCode: "USER_PERMISSION",
+        description: "Phân quyền cho người dùng hệ thống",
+        status: "INACTIVE"
+    },
+    {
+        categoryId: "b3c7d9a5-2f1e-4b8c-91d4-7a6f2e5c8b21",
+        categoryName: "Vai trò nhân công",
+        categoryType: "Nhân công",
+        categoryCode: "WORKER_ROLE",
+        description: "Các vai trò của nhân công trong trang trại",
+        status: "INACTIVE"
+    },
+    {
+        categoryId: "d2e4a7b5-3c1f-4b9c-92d8-6a5f2e3c7b21",
+        categoryName: "Vai trò khu nuôi",
+        categoryType: "Quản lý khu nuôi",
+        categoryCode: "FARM_ROLE",
+        description: "Các chức năng của khu vực chăn nuôi",
+        status: "ACTIVE"
+    },
+    {
+        categoryId: "f6b2c9a8-1d4e-4b7c-93d5-2a3f7e5c8b21",
+        categoryName: "Vai trò kho hàng",
+        categoryType: "Quản lý kho",
+        categoryCode: "WAREHOUSE_ROLE",
+        description: "Các vị trí trong hệ thống kho hàng",
+        status: "ACTIVE"
+    }
+];
+
+
+export const subCategories: SubCategory[] = [
+    {
+        subCategoryId: "a1b2c3d4-5e6f-7g8h-9i0j-k1l2m3n4o5p6",
+        subCategoryName: "Nhiệt độ",
+        description: "Nhiệt độ lý tưởng cho chuồng trại",
+        status: "ACTIVE",
+        dataType: "number",
+        createdDate: new Date(),
+        categoryId: "f3b7a8d2-1c9e-4b5a-93d4-7b2f6a5c8e41"
+    },
+    {
+        subCategoryId: "b2c3d4e5-6f7g-8h9i-0j1k-l2m3n4o5p6q7",
+        subCategoryName: "Độ ẩm",
+        description: "Mức độ ẩm phù hợp cho chăn nuôi",
+        status: "ACTIVE",
+        dataType: "number",
+        createdDate: new Date(),
+        categoryId: "f3b7a8d2-1c9e-4b5a-93d4-7b2f6a5c8e41"
+    },
+    {
+        subCategoryId: "c3d4e5f6-7g8h-9i0j-1k2l-m3n4o5p6q7r8",
+        subCategoryName: "Chỉ số tăng trưởng",
+        description: "Đánh giá mức tăng trưởng của gà",
+        status: "ACTIVE",
+        dataType: "number",
+        createdDate: new Date(),
+        categoryId: "a6c2b9d8-7e4a-4c8f-91d2-3b5a7e6f8c21"
+    },
+    {
+        subCategoryId: "d4e5f6g7-8h9i-0j1k-2l3m-n4o5p6q7r8s9",
+        subCategoryName: "Sức khỏe tổng thể",
+        description: "Chỉ số sức khỏe chung của vật nuôi",
+        status: "ACTIVE",
+        dataType: "string",
+        createdDate: new Date(),
+        categoryId: "a6c2b9d8-7e4a-4c8f-91d2-3b5a7e6f8c21"
+    },
+    {
+        subCategoryId: "e5f6g7h8-9i0j-1k2l-3m4n-o5p6q7r8s9t0",
+        subCategoryName: "Trứng gà",
+        description: "Thu hoạch trứng từ gà mái",
+        status: "ACTIVE",
+        dataType: "string",
+        createdDate: new Date(),
+        categoryId: "c9e7b5a8-2f3d-4b1c-92d6-7a5c8e4f3b21"
+    },
+    {
+        subCategoryId: "f6g7h8i9-0j1k-2l3m-4n5o-p6q7r8s9t0u1",
+        subCategoryName: "Gà thịt",
+        description: "Thu hoạch gà để chế biến thực phẩm",
+        status: "ACTIVE",
+        dataType: "string",
+        createdDate: new Date(),
+        categoryId: "c9e7b5a8-2f3d-4b1c-92d6-7a5c8e4f3b21"
+    },
+    {
+        subCategoryId: "g7h8i9j0-1k2l-3m4n-5o6p-q7r8s9t0u1v2",
+        subCategoryName: "Quản trị viên",
+        description: "Người có quyền quản lý toàn hệ thống",
+        status: "ACTIVE",
+        dataType: "string",
+        createdDate: new Date(),
+        categoryId: "e4b7a5c9-1d2f-4c8e-93b6-2a7f5d3b6c21"
+    },
+    {
+        subCategoryId: "h8i9j0k1-2l3m-4n5o-6p7q-r8s9t0u1v2w3",
+        subCategoryName: "Nhân viên",
+        description: "Nhân viên vận hành hệ thống",
+        status: "ACTIVE",
+        dataType: "string",
+        createdDate: new Date(),
+        categoryId: "e4b7a5c9-1d2f-4c8e-93b6-2a7f5d3b6c21"
     }
 ];

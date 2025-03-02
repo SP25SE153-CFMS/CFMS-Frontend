@@ -2,12 +2,12 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Flock } from '@/utils/schemas/flock.schema';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
+import { Category } from '@/utils/schemas/category.schema';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 
-export const columns: ColumnDef<Flock>[] = [
+export const columns: ColumnDef<Category>[] = [
     {
         id: 'select',
         header: ({ table }) => (
@@ -33,49 +33,47 @@ export const columns: ColumnDef<Flock>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: 'flockId',
-        header: () => null,
-        cell: () => null,
+        accessorKey: 'categoryId',
+        header: () => null, // No header
+        cell: () => null, // Hidden cell
     },
     {
-        accessorKey: 'name',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tên đàn" />,
+        accessorKey: 'categoryCode',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Mã danh mục" />,
+        cell: ({ row }) => <div className="w-[100px]">{row.getValue('categoryCode')}</div>,
+        enableSorting: true,
+    },
+    {
+        accessorKey: 'categoryName',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Tên danh mục" />,
         cell: ({ row }) => (
-            <Link href={`/flock/details/${row.getValue('flockId')}`}>{row.getValue('name')}</Link>
+            <Link href={`/category/${row.getValue('categoryId')}`}>
+                {row.getValue('categoryName')}
+            </Link>
         ),
     },
     {
-        accessorKey: 'quantity',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng" />,
+        accessorKey: 'categoryType',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại danh mục" />,
+    },
+    {
+        accessorKey: 'description',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Mô tả" />,
     },
     {
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
         cell: ({ row }) => {
             const status = row.getValue('status') as string;
-            return <Badge>{status?.toUpperCase()}</Badge>;
+            const statusLabels: Record<string, string> = {
+                ACTIVE: 'Hoạt động',
+                INACTIVE: 'Không hoạt động',
+            };
+            return (
+                <Badge variant={status === 'ACTIVE' ? 'default' : 'outline'}>
+                    {statusLabels[status]}
+                </Badge>
+            );
         },
-    },
-    {
-        accessorKey: 'avgWeight',
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Trọng lượng TB (kg)" />
-        ),
-    },
-    {
-        accessorKey: 'mortalityRate',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tỷ lệ tử vong (%)" />,
-    },
-    {
-        accessorKey: 'startDate',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày bắt đầu" />,
-    },
-    {
-        accessorKey: 'endDate',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày kết thúc" />,
-    },
-    {
-        accessorKey: 'housingId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Chuồng trại" />,
     },
 ];
