@@ -31,7 +31,7 @@ jobs:
 
     pull-image:
         runs-on: self-hosted
-        needs: deploy-image
+        # needs: deploy-image
 
         steps:
             - name: Pull Docker
