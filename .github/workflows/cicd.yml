@@ -34,13 +34,13 @@ jobs:
     needs: deploy-image
 
     steps:
-      - name: Pull Docker image
+      - name: Pull Docker
         run: docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
       - name: Create docker-compose.yml file
         run: nano ${{ secrets.DOCKER_COMPOSE_FILE }} >> docker-compose.yml
-      - name: Stop Docker image
+      - name: Stop Docker
         run: docker-compose down
-      - name: Run Docker image
+      - name: Run Docker
         run: docker-compose up -d
       - name: Remove docker-compose.yml file
         run: rm docker-compose.yml
