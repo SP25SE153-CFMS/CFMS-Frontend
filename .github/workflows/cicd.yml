@@ -37,7 +37,7 @@ jobs:
             - name: Pull Docker
               run: docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
             - name: Create docker-compose.yml file
-              run: nano ${{ secrets.DOCKER_COMPOSE_FILE }} >> docker-compose.yml
+              run: sudo nano ${{ secrets.DOCKER_COMPOSE_FILE }} >> docker-compose.yml
             - name: Stop Docker
               run: docker compose down
             - name: Run Docker
