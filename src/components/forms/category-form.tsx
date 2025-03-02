@@ -32,10 +32,7 @@ export default function CategoryForm() {
 
     return (
         <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="grid grid-cols-1 md:grid-cols-2 gap-6"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-4">
                 {/* Mã danh mục */}
                 <FormField
                     control={form.control}
