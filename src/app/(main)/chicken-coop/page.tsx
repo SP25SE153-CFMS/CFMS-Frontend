@@ -62,7 +62,7 @@ export default function Page() {
         <div>
             <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight">Danh sách chuồng nuôi</h2>
+                    <h2 className="text-2xl font-bold tracking-tight">Danh sách chuồng nuôi 123</h2>
                     <p className="text-muted-foreground">
                         Danh sách tất cả các chuồng nuôi trong khu nuôi
                     </p>
