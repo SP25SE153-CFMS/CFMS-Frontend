@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Equipment Schema
-export const equipmentSchema = z.object({
+export const EquipmentSchema = z.object({
     equipmentId: z.string().uuid(),
     equipmentCode: z.string().min(3, "Mã thiết bị phải có ít nhất 3 ký tự"),
     equipmentName: z.string().min(3, "Tên thiết bị phải có ít nhất 3 ký tự"),
@@ -26,5 +26,5 @@ export const coopEquipmentSchema = z.object({
     note: z.string().optional().nullable(),
 });
 
-export type Equipment = z.infer<typeof equipmentSchema>;
+export type Equipment = z.infer<typeof EquipmentSchema>;
 export type CoopEquipment = z.infer<typeof coopEquipmentSchema>;
