@@ -12,7 +12,7 @@ export default function Search({ onSearch }: { onSearch: (value: string) => void
     return (
         <Input
             value={searchValue}
-            className="max-w-[462px]"
+            className="max-w-[460px]"
             placeholder="Search..."
             onChange={handleChange}
         />
