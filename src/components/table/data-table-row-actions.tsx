@@ -13,14 +13,14 @@ import toast from 'react-hot-toast';
 import { Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import config from '@/configs';
-import { breedingAreaSchema } from '@/utils/schemas/breeding-area.schema';
+import { BreedingAreaSchema } from '@/utils/schemas/breeding-area.schema';
 
 interface DataTableRowActionsProps<TData> {
     row: Row<TData>;
 }
 
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
-    const breadingArea = breedingAreaSchema.parse(row.original);
+    const breadingArea = BreedingAreaSchema.parse(row.original);
 
     const router = useRouter();
 

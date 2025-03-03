@@ -19,26 +19,30 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Equipment, EquipmentSchema } from '@/utils/schemas/equipment.schema';
+import { Flock, FlockSchema } from '@/utils/schemas/flock.schema';
 
-export default function EquipmentForm() {
-    const form = useForm<Equipment>({
-        resolver: zodResolver(EquipmentSchema),
+export default function FlockForm() {
+    const form = useForm<Flock>({
+        resolver: zodResolver(FlockSchema),
         defaultValues: {
-            equipmentId: '',
-            equipmentCode: '',
-            equipmentName: '',
-            purchaseDate: new Date().toISOString(),
-            warrantyPeriod: 12,
-            status: 'AVAILABLE',
-            cost: 0,
-            quantity: 1,
-            createdAt: new Date().toISOString(),
-            updatedAt: null,
+            flockId: 1,
+            quantity: 0,
+            name: '',
+            startDate: new Date().toISOString(),
+            status: 'in_farm',
+            description: '',
+            endDate: null,
+            avgWeight: 0,
+            mortalityRate: 0,
+            lastHealthCheck: null,
+            gender: 'mixed',
+            purposeId: 1,
+            breedId: 1,
+            housingId: 1,
         },
     });
 
-    function onSubmit(values: Equipment) {
+    function onSubmit(values: Flock) {
         console.log('Dữ liệu gửi:', values);
     }
 
@@ -48,60 +52,30 @@ export default function EquipmentForm() {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="grid grid-cols-1 md:grid-cols-2 gap-6"
             >
-                {/* Mã thiết bị */}
+                {/* Tên đàn */}
                 <FormField
                     control={form.control}
-                    name="equipmentCode"
+                    name="name"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Mã thiết bị</FormLabel>
+                            <FormLabel>Tên đàn</FormLabel>
                             <FormControl>
-                                <Input type="text" placeholder="Nhập mã thiết bị" {...field} />
+                                <Input type="text" placeholder="Nhập tên đàn" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
 
-                {/* Tên thiết bị */}
+                {/* Số lượng */}
                 <FormField
                     control={form.control}
-                    name="equipmentName"
+                    name="quantity"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Tên thiết bị</FormLabel>
+                            <FormLabel>Số lượng</FormLabel>
                             <FormControl>
-                                <Input type="text" placeholder="Nhập tên thiết bị" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                {/* Ngày mua */}
-                <FormField
-                    control={form.control}
-                    name="purchaseDate"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Ngày mua</FormLabel>
-                            <FormControl>
-                                <Input type="datetime-local" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                {/* Thời gian bảo hành */}
-                <FormField
-                    control={form.control}
-                    name="warrantyPeriod"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Thời gian bảo hành (tháng)</FormLabel>
-                            <FormControl>
-                                <Input type="number" placeholder="Nhập số tháng" {...field} />
+                                <Input type="number" placeholder="Nhập số lượng" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -121,10 +95,10 @@ export default function EquipmentForm() {
                                         <SelectValue placeholder="Chọn trạng thái" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="IN_USE">Đang sử dụng</SelectItem>
-                                        <SelectItem value="BROKEN">Hỏng</SelectItem>
-                                        <SelectItem value="AVAILABLE">Sẵn sàng</SelectItem>
-                                        <SelectItem value="UNDER_MAINTENANCE">Bảo trì</SelectItem>
+                                        <SelectItem value="in_farm">Trong trang trại</SelectItem>
+                                        <SelectItem value="sold">Đã bán</SelectItem>
+                                        <SelectItem value="removed">Đã loại bỏ</SelectItem>
+                                        <SelectItem value="dead">Đã chết</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </FormControl>
@@ -133,30 +107,34 @@ export default function EquipmentForm() {
                     )}
                 />
 
-                {/* Chi phí */}
+                {/* Trọng lượng trung bình */}
                 <FormField
                     control={form.control}
-                    name="cost"
+                    name="avgWeight"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Chi phí</FormLabel>
+                            <FormLabel>Trọng lượng trung bình (kg)</FormLabel>
                             <FormControl>
-                                <Input type="number" placeholder="Nhập chi phí" {...field} />
+                                <Input
+                                    type="number"
+                                    placeholder="Nhập trọng lượng trung bình"
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
 
-                {/* Số lượng */}
+                {/* Tỷ lệ tử vong */}
                 <FormField
                     control={form.control}
-                    name="quantity"
+                    name="mortalityRate"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Số lượng</FormLabel>
+                            <FormLabel>Tỷ lệ tử vong (%)</FormLabel>
                             <FormControl>
-                                <Input type="number" placeholder="Nhập số lượng" {...field} />
+                                <Input type="number" placeholder="Nhập tỷ lệ tử vong" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

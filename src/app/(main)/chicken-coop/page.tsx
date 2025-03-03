@@ -1,7 +1,6 @@
 'use client';
 
 import { DataTable } from '@/components/table/data-table';
-import { chickenCoops } from '@/utils/data/table.data';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
@@ -15,13 +14,45 @@ import {
 import { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import ChickenCoopForm from '@/components/chicken-coop-form';
+import { useQuery } from '@tanstack/react-query';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { getChickenCoops } from '@/services/chicken-coop.service';
+import { Card } from '@/components/ui/card';
+import Image from 'next/image';
 
-export default function BreedingAreaPage() {
+export default function Page() {
     const [open, setOpen] = useState(false);
 
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
 
+    const { data: chickenCoops, isLoading } = useQuery({
+        queryKey: ['chickenCoops'],
+        queryFn: () => getChickenCoops(),
+    });
+
+    // Check if chickenCoops is loading
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <LoadingSpinner />;
+            </div>
+        );
+    }
+
+    // Check if chickenCoops is not null, undefined
+    if (!chickenCoops) {
+        return (
+            <Card className="max-w-xl mx-auto">
+                <div className="flex flex-col justify-center items-center h-[300px] gap-4">
+                    <Image src="/no-data.jpg" width={300} height={300} alt="Not Found" />
+                    <h1 className="text-2xl font-bold">Danh sách không tồn tại</h1>
+                </div>
+            </Card>
+        );
+    }
+
+    // Return the page
     return (
         <div>
             <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
@@ -33,7 +64,7 @@ export default function BreedingAreaPage() {
                 </div>
                 <div className="flex gap-2">
                     <Button variant="outline" className="space-x-1">
-                        <span>Nhập file</span> <Download size={18} />
+                        <span>Tải file</span> <Download size={18} />
                     </Button>
                     <Button className="space-x-1" onClick={openModal}>
                         <span>Tạo</span> <Plus size={18} />

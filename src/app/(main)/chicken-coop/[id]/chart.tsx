@@ -19,6 +19,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from '@/components/ui/chart';
+import { formatCurrency, formatLargeNumber } from '@/utils/functions/number.function';
 const chartData = [
     { browser: 'chrome', visitors: 275, fill: 'var(--color-chrome)' },
     { browser: 'safari', visitors: 200, fill: 'var(--color-safari)' },
@@ -54,9 +55,9 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const data = [
-    { label: 'DOANH THU', value: '22.500.000đ' },
-    { label: 'CHÍ PHÍ', value: '18.000.000đ' },
-    { label: 'LỢI NHUẬN', value: '4.500.000đ' },
+    { label: 'DOANH THU', value: 22500000 },
+    { label: 'CHÍ PHÍ', value: 18000000 },
+    { label: 'LỢI NHUẬN', value: 4500000 },
 ];
 
 export function Chart() {
@@ -93,9 +94,9 @@ export function Chart() {
                                                 <tspan
                                                     x={viewBox.cx}
                                                     y={viewBox.cy}
-                                                    className="fill-foreground text-sm font-bold"
+                                                    className="fill-foreground font-bold text-lg"
                                                 >
-                                                    {data[0].value}
+                                                    {formatLargeNumber(data[0].value)}
                                                 </tspan>
                                                 <tspan
                                                     x={viewBox.cx}
@@ -121,7 +122,9 @@ export function Chart() {
                 {data.map((item, index) => (
                     <div key={index} className="flex flex-1 flex-col p-2 border gap-2">
                         <h4 className="text-xs uppercase font-semibold">{item.label}</h4>
-                        <p className="text-xs text-muted-foreground">{item.value}</p>
+                        <p className="text-xs text-muted-foreground">
+                            {formatCurrency(item.value)}
+                        </p>
                     </div>
                 ))}
             </CardFooter>

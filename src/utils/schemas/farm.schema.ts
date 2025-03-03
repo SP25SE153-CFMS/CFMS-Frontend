@@ -3,36 +3,57 @@ import { z } from "zod";
 export const FarmSchema = z.object({
     farmId: z
         .string()
-        .uuid({ message: "ID trang trại không hợp lệ" }),
+        .uuid({ message: "ID trang trại không hợp lệ, phải là UUID" }),
+
     farmName: z
         .string()
-        .min(1, { message: "Tên trang trại là bắt buộc" })
-        .max(100, { message: "Tên trang trại quá dài" }),
+        .trim()
+        .min(3, { message: "Tên trang trại phải có ít nhất 3 ký tự" })
+        .max(100, { message: "Tên trang trại không được dài quá 100 ký tự" }),
+
     farmCode: z
         .string()
-        .min(1, { message: "Mã trang trại là bắt buộc" })
-        .max(50, { message: "Mã trang trại quá dài" }),
+        .trim()
+        .min(3, { message: "Mã trang trại phải có ít nhất 3 ký tự" })
+        .max(50, { message: "Mã trang trại không được dài quá 50 ký tự" }),
+
     type: z
         .string()
-        .min(1, { message: "Loại trang trại là bắt buộc" }),
+        .trim()
+        .min(3, { message: "Loại trang trại phải có ít nhất 3 ký tự" })
+        .max(50, { message: "Loại trang trại không được dài quá 50 ký tự" }),
+
     address: z
         .string()
-        .min(1, { message: "Địa chỉ là bắt buộc" }),
+        .trim()
+        .min(5, { message: "Địa chỉ phải có ít nhất 5 ký tự" })
+        .max(200, { message: "Địa chỉ không được dài quá 200 ký tự" }),
+
     area: z
         .number()
-        .positive({ message: "Diện tích phải là số dương" }),
+        .positive({ message: "Diện tích phải là số dương" })
+        .max(1_000_000, { message: "Diện tích không được vượt quá 1,000,000 m²" }),
+
     scale: z
         .string()
-        .min(1, { message: "Quy mô là bắt buộc" }),
+        .trim()
+        .min(3, { message: "Quy mô phải có ít nhất 3 ký tự" })
+        .max(50, { message: "Quy mô không được dài quá 50 ký tự" }),
+
     phoneNumber: z
         .string()
-        .regex(/^\+?\d{10,15}$/, { message: "Số điện thoại không hợp lệ" }),
+        .trim()
+        .regex(/^\+?\d{10}$/, { message: "Số điện thoại không hợp lệ, phải có 10 chữ số" }),
+
     website: z
         .string()
+        .trim()
         .url({ message: "Địa chỉ website không hợp lệ" })
         .or(z.literal("")),
+
     farmImage: z
         .string()
+        .trim()
         .url({ message: "Hình ảnh trang trại phải là URL hợp lệ" }),
 });
 

@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -20,13 +19,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { chickenCoopSchema } from '@/utils/schemas/chicken-coop.schema';
+import { ChickenCoop, ChickenCoopSchema } from '@/utils/schemas/chicken-coop.schema';
 import { breedingAreas } from '@/utils/data/table.data';
 import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 
 export default function ChickenCoopForm() {
-    const form = useForm<z.infer<typeof chickenCoopSchema>>({
-        resolver: zodResolver(chickenCoopSchema),
+    const form = useForm<ChickenCoop>({
+        resolver: zodResolver(ChickenCoopSchema),
         defaultValues: {
             chickenCoopCode: '',
             chickenCoopName: '',
@@ -39,7 +38,7 @@ export default function ChickenCoopForm() {
         },
     });
 
-    function onSubmit(values: z.infer<typeof chickenCoopSchema>) {
+    function onSubmit(values: ChickenCoop) {
         console.log('Dữ liệu gửi:', values);
     }
 

@@ -15,6 +15,7 @@ export const env = createEnv({
 
     client: {
         PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
+        PUBLIC_API_URL: z.string().url().optional()
     },
 
     /**
