@@ -709,5 +709,16 @@ export const warehouseProduct: WarehouseProduct[]= [
         expiry: "2025-07-30T00:00:00Z",
         dateToImport: "2025-02-28T00:00:00Z",
         supplier: "Công ty TNHH Cargill",
+    },
+    {
+        productId: "prd11",
+        productCode: "GA011",
+        productName: "Lúa nguyên hạt",
+        currentQuantity: 800,
+        unit: "bao",
+        area: "Kho E",
+        expiry: "2025-12-20T00:00:00Z",
+        dateToImport: "2025-02-28T00:00:00Z",
+        supplier: "Công ty TNHH Cargill",
     }
 ]
