@@ -9,6 +9,8 @@ const routes = {
     chickenCoop: 'chicken-coop',
     equipment: '/equipment',
     flock: '/flock',
+    request: '/request',
+    createRequest: '/request/create',
     food: '/warehouse/foods',
 };
 

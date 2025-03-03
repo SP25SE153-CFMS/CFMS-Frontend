@@ -16,12 +16,7 @@ import { TeamSwitcher } from './team-switcher';
 import { sidebarItems } from '@/utils/constants/sidebar.constant';
 import SidebarFooterMenu from './sidebar-footer-menu';
 import SidebarNavigation from './sidebar-navigation';
-
-const user = {
-    name: 'shadcn',
-    email: 'm@example.com',
-    avatar: '',
-};
+import { currentUser } from '@/utils/data/mock.data';
 
 const teams = [
     {
@@ -61,6 +56,12 @@ const projects = [
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const user = {
+        name: currentUser.fullName,
+        email: currentUser.mail,
+        avatar: currentUser.avatar,
+    };
+
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
