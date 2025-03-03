@@ -9,6 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Undo2 } from 'lucide-react';
 
 interface DataTableColumnHeaderProps<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
     column: Column<TData, TValue>;
@@ -52,6 +53,11 @@ export function DataTableColumnHeader<TData, TValue>({
                         <ArrowDownIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                         Desc
                     </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => column.clearSorting()}>
+                        <Undo2 className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+                        Initial
+                    </DropdownMenuItem>
+
                     {column.getCanHide() && (
                         <>
                             <DropdownMenuSeparator />
