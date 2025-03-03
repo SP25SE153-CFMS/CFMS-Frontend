@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const warehouseProductSchema = z
+export const WarehouseProductSchema = z
     .object({
         productId: z.string().uuid(),
         productCode: z.string().min(3, 'Mã hàng có ít nhất 3 ký tự'),
@@ -19,4 +19,4 @@ export const warehouseProductSchema = z
         path: ['dateToImport'],
     });
 
-export type WarehouseProduct = z.infer<typeof warehouseProductSchema>;
+export type WarehouseProduct = z.infer<typeof WarehouseProductSchema>;
