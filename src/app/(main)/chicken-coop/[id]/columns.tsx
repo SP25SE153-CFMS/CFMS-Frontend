@@ -5,7 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import dayjs from 'dayjs';
 import { CoopEquipment } from '@/utils/schemas/equipment.schema';
-import { chickenCoops, equipments } from '@/utils/data/table.data';
+import { equipments } from '@/utils/data/table.data';
 
 export const columns: ColumnDef<CoopEquipment>[] = [
     {
@@ -32,23 +32,6 @@ export const columns: ColumnDef<CoopEquipment>[] = [
         enableSorting: false,
         enableHiding: false,
     },
-    // Uncomment this block to show the coop equipment ID column
-    // {
-    //     accessorKey: 'coopEquipmentId',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="ID thiết bị" />,
-    //     cell: ({ row }) => (
-    //         <div className="w-[200px] truncate">{row.getValue('coopEquipmentId')}</div>
-    //     ),
-    // },
-    {
-        accessorKey: 'chickenCoopId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Chuồng gà" />,
-        cell: ({ row }) => {
-            const chickenCoopId = row.getValue('chickenCoopId');
-            const chickenCoop = chickenCoops.find((coop) => coop.chickenCoopId === chickenCoopId);
-            return <div className="w-[150px]">{chickenCoop?.chickenCoopName}</div>;
-        },
-    },
     {
         accessorKey: 'equipmentId',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Thiết bị" />,
@@ -72,18 +55,18 @@ export const columns: ColumnDef<CoopEquipment>[] = [
             </div>
         ),
     },
-    {
-        accessorKey: 'maintainDate',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày bảo trì" />,
-        cell: ({ row }) => {
-            const maintainDate = new Date(row.getValue('maintainDate'));
-            return (
-                <div className="w-[150px]">
-                    {maintainDate ? dayjs(maintainDate).format('DD/MM/YYYY') : '-'}
-                </div>
-            );
-        },
-    },
+    // {
+    //     accessorKey: 'maintainDate',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày bảo trì" />,
+    //     cell: ({ row }) => {
+    //         const maintainDate = new Date(row.getValue('maintainDate'));
+    //         return (
+    //             <div className="w-[150px]">
+    //                 {maintainDate ? dayjs(maintainDate).format('DD/MM/YYYY') : '-'}
+    //             </div>
+    //         );
+    //     },
+    // },
     {
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,

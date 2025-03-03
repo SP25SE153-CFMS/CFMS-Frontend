@@ -32,7 +32,7 @@ export default function Home() {
                     className="relative z-[60] flex items-center gap-4"
                     href={configs.routes.home}
                 >
-                    <Image src="/logo.png" alt="Logo" width="46" height="46" />
+                    <Image src="/assets/logo/logo.png" alt="Logo" width="46" height="46" />
                     <h2 className="text-xl font-bold">CFMS</h2>
                 </Link>
 
@@ -55,7 +55,7 @@ export default function Home() {
                 </nav>
 
                 <Link
-                    href={configs.routes.login}
+                    href={configs.routes.signIn}
                     className="w-36 rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-2 font-semibold leading-5 text-white transition-colors duration-300 focus:outline-none"
                 >
                     Đăng nhập

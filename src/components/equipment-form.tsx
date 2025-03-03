@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -20,11 +19,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { EquipmentSchema } from '@/utils/schemas/equipment.schema';
+import { Equipment, equipmentSchema } from '@/utils/schemas/equipment.schema';
 
 export default function EquipmentForm() {
-    const form = useForm<z.infer<typeof EquipmentSchema>>({
-        resolver: zodResolver(EquipmentSchema),
+    const form = useForm<Equipment>({
+        resolver: zodResolver(equipmentSchema),
         defaultValues: {
             equipmentId: '',
             equipmentCode: '',
@@ -39,7 +38,7 @@ export default function EquipmentForm() {
         },
     });
 
-    function onSubmit(values: z.infer<typeof EquipmentSchema>) {
+    function onSubmit(values: Equipment) {
         console.log('Dữ liệu gửi:', values);
     }
 

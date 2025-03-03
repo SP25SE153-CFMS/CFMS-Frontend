@@ -8,11 +8,11 @@ import { chartData } from '@/utils/constants/dummy-data.constant';
 const chartConfig = {
     desktop: {
         label: 'Desktop',
-        color: 'red',
+        color: 'hsl(var(--chart-1))',
     },
     mobile: {
         label: 'Mobile',
-        color: 'orange',
+        color: 'hsl(var(--chart-2))',
     },
 } satisfies ChartConfig;
 

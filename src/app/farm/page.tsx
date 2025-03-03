@@ -1,7 +1,7 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tractor, MapPin, Phone, Globe, TreePine, Ruler, Scale3d } from 'lucide-react';
+import { Tractor, MapPin, Phone, Globe, TreePine, Ruler, Scale3d, Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import config from '@/configs';
@@ -81,10 +81,17 @@ export default function TrangTraiList() {
 
     return (
         <div className="container mx-auto p-4">
-            <h1 className="text-3xl font-bold mb-6 flex items-center">
-                <Tractor className="mr-2" />
-                Danh sách Trang trại
-            </h1>
+            <div className="flex justify-between">
+                <h1 className="text-3xl font-bold mb-6 flex items-center">
+                    <Tractor className="mr-2" />
+                    Danh sách Trang trại
+                </h1>
+                <Link href={config.routes.farmRegister}>
+                    <Button>
+                        <span>Thêm trang trại</span> <Plus size={18} />
+                    </Button>
+                </Link>
+            </div>
             <ScrollArea className="h-[70vh]">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {farms.map((farm) => (
