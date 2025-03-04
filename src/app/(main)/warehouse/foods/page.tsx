@@ -22,9 +22,10 @@ export default function Foods() {
     const filteredData = warehouseProduct.filter((product) => {
         const matchesSearch =
             product.productName.toLowerCase().startsWith(searchValue.toLowerCase()) ||
-            product.productCode.toLowerCase().startsWith(searchValue.toLowerCase());
+            product.productCode.toLowerCase().includes(searchValue.toLowerCase()) ||
+            product.supplier.toLowerCase().includes(searchValue.toLowerCase());
 
-        const matchesArea = selectedArea === 'all' || product.area === selectedArea;
+        const matchesArea = selectedArea === 'all' || product.area === selectedArea; // all lấy hết còn
 
         return matchesSearch && matchesArea;
     });
