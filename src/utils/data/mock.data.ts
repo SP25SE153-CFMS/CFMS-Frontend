@@ -9,6 +9,6 @@ export const currentUser = {
     CCCD: '0742123456',
     mail: 'dangthse171362@fpt.edu.vn',
     avatar: 'https://i.pravatar.cc/300',
-    roleName: 'admin',
+    roleName: 'manager',
 
 }

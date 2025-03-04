@@ -38,7 +38,7 @@ export const columns: ColumnDef<BreedingArea>[] = [
     },
     {
         accessorKey: 'breedingAreaCode',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Code" />,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Mã khu nuôi" />,
         cell: ({ row }) => <div className="w-[80px]">{row.getValue('breedingAreaCode')}</div>,
         enableSorting: false,
         enableHiding: false,
