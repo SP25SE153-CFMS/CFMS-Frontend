@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { DataTable } from '@/components/table/data-table';
 import { warehouseProduct } from '@/utils/data/table.data';
 import { columns } from './columns';
-import Search from '@/components/search/search';
+import Search from '@/components/search';
 import {
     Select,
     SelectContent,

@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import ChickenCoopForm from '@/components/chicken-coop-form';
+import ChickenCoopForm from '@/components/forms/chicken-coop-form';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getChickenCoops } from '@/services/chicken-coop.service';
@@ -43,12 +43,17 @@ export default function Page() {
     // Check if chickenCoops is not null, undefined
     if (!chickenCoops) {
         return (
-            <Card className="max-w-xl mx-auto">
-                <div className="flex flex-col justify-center items-center h-[300px] gap-4">
-                    <Image src="/no-data.jpg" width={300} height={300} alt="Not Found" />
-                    <h1 className="text-2xl font-bold">Danh sách không tồn tại</h1>
-                </div>
-            </Card>
+            <div className="w-full h-full flex items-center justify-center">
+                <Card className="px-36 py-8">
+                    <div className="flex flex-col justify-center items-center h-[300px] gap-4">
+                        <Image src="/no-data.jpg" width={300} height={300} alt="Not Found" />
+                        <h1 className="text-2xl font-bold">Danh sách không tồn tại</h1>
+                        <Button variant="outline" onClick={() => window.history.back()}>
+                            Quay lại
+                        </Button>
+                    </div>
+                </Card>
+            </div>
         );
     }
 

@@ -6,6 +6,7 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import dayjs from 'dayjs';
 import { CoopEquipment } from '@/utils/schemas/equipment.schema';
 import { equipments } from '@/utils/data/table.data';
+import { Badge } from '@/components/ui/badge';
 
 export const columns: ColumnDef<CoopEquipment>[] = [
     {
@@ -77,7 +78,11 @@ export const columns: ColumnDef<CoopEquipment>[] = [
                 BROKEN: 'Hỏng',
                 UNDER_MAINTENANCE: 'Bảo trì',
             };
-            return <div className="w-[150px]">{statusLabels[status]}</div>;
+            return (
+                <Badge variant={status === 'IN_USE' ? 'default' : 'outline'}>
+                    {statusLabels[status]}
+                </Badge>
+            );
         },
     },
     // Uncomment this block to show the note column
