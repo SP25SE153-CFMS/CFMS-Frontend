@@ -38,9 +38,6 @@ export default function Search({
 
     return (
         <div className={`relative max-w-[460px] ${className}`}>
-            <label htmlFor="search-input" className="block text-sm font-medium text-gray-700 mb-1">
-                Tìm kiếm
-            </label>
             <div className="relative">
                 <Input
                     id="search-input"
