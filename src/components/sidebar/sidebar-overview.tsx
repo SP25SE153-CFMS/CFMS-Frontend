@@ -25,24 +25,6 @@ export default function SidebarOverview() {
         queryFn: () => getCategories(),
     });
 
-    // Check if categories are loading
-    if (isLoading) {
-        return (
-            <SidebarMenu>
-                {Array.from({ length: 5 }).map((_, index) => (
-                    <SidebarMenuItem key={index}>
-                        <SidebarMenuSkeleton showIcon />
-                    </SidebarMenuItem>
-                ))}
-            </SidebarMenu>
-        );
-    }
-
-    // Check if categories data exists
-    if (!categories) {
-        return <></>;
-    }
-
     // Return the page
     return (
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -78,18 +60,28 @@ export default function SidebarOverview() {
                                             </Link>
                                         </SidebarMenuSubButton>
                                     </SidebarMenuSubItem>
-                                    {categories.map((category) => (
-                                        <SidebarMenuSubItem
-                                            key={category.categoryId}
-                                            className="flex items-center justify-between"
-                                        >
-                                            <SidebarMenuSubButton asChild>
-                                                <Link href={`/category/${category.categoryId}`}>
-                                                    <span>{category.categoryType}</span>
-                                                </Link>
-                                            </SidebarMenuSubButton>
-                                        </SidebarMenuSubItem>
-                                    ))}
+                                    {isLoading || !categories ? (
+                                        <SidebarMenu>
+                                            {Array.from({ length: 5 }).map((_, index) => (
+                                                <SidebarMenuItem key={index}>
+                                                    <SidebarMenuSkeleton showIcon />
+                                                </SidebarMenuItem>
+                                            ))}
+                                        </SidebarMenu>
+                                    ) : (
+                                        categories.map((category) => (
+                                            <SidebarMenuSubItem
+                                                key={category.categoryId}
+                                                className="flex items-center justify-between"
+                                            >
+                                                <SidebarMenuSubButton asChild>
+                                                    <Link href={`/category/${category.categoryId}`}>
+                                                        <span>{category.categoryType}</span>
+                                                    </Link>
+                                                </SidebarMenuSubButton>
+                                            </SidebarMenuSubItem>
+                                        ))
+                                    )}
                                 </SidebarMenuSub>
                             </CollapsibleContent>
                         </SidebarMenuItem>
