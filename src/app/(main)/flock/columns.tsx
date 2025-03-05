@@ -6,6 +6,7 @@ import { Flock } from '@/utils/schemas/flock.schema';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import config from '@/configs';
 
 export const columns: ColumnDef<Flock>[] = [
     {
@@ -41,7 +42,9 @@ export const columns: ColumnDef<Flock>[] = [
         accessorKey: 'name',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên đàn" />,
         cell: ({ row }) => (
-            <Link href={`/flock/details/${row.getValue('flockId')}`}>{row.getValue('name')}</Link>
+            <Link href={`${config.routes.flock}/${row.getValue('flockId')}`}>
+                {row.getValue('name')}
+            </Link>
         ),
     },
     {

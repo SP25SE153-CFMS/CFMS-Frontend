@@ -170,7 +170,9 @@ export default function Page() {
                             <div className="flex gap-3 text-sm mb-4">
                                 Ngày cập nhật:{' '}
                                 <strong className="flex-1 text-right">
-                                    {dayjs(currentCoop?.updatedAt)?.format('DD/MM/YYYY')}
+                                    {currentCoop?.updatedAt
+                                        ? dayjs(currentCoop?.updatedAt)?.format('DD/MM/YYYY')
+                                        : '-'}
                                 </strong>
                             </div>
 

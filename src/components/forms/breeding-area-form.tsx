@@ -14,6 +14,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { BreedingArea, BreedingAreaSchema } from '@/utils/schemas/breeding-area.schema';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { useQuery } from '@tanstack/react-query';
+import { Skeleton } from '../ui/skeleton';
+import { getFarms } from '@/services/farm.service';
 
 export default function BreedingAreaForm() {
     const form = useForm<BreedingArea>({
@@ -39,15 +43,18 @@ export default function BreedingAreaForm() {
         console.log('Values :', values);
     }
 
+    const { data: farms, isLoading } = useQuery({
+        queryKey: ['farms'],
+        queryFn: () => getFarms(),
+    });
+
     const fields = [
-        { name: 'breedingAreaId', label: 'Mã khu vực chăn nuôi', type: 'text' },
-        { name: 'breedingAreaCode', label: 'Mã số khu vực', type: 'text' },
-        { name: 'breedingAreaName', label: 'Tên khu vực chăn nuôi', type: 'text' },
+        { name: 'breedingAreaCode', label: 'Mã khu nuôi', type: 'text' },
+        { name: 'breedingAreaName', label: 'Tên khu nuôi', type: 'text' },
         { name: 'humidity', label: 'Độ ẩm (%)', type: 'text' },
         { name: 'temperature', label: 'Nhiệt độ (°C)', type: 'text' },
         { name: 'image', label: 'Đường dẫn hình ảnh', type: 'text' },
         { name: 'notes', label: 'Ghi chú', type: 'text' },
-        { name: 'farmId', label: 'Mã trang trại', type: 'text' },
         { name: 'breedingPurpose', label: 'Mục đích chăn nuôi', type: 'text' },
         { name: 'mealsPerDay', label: 'Số bữa ăn mỗi ngày', type: 'number' },
         { name: 'width', label: 'Chiều rộng (m)', type: 'number' },
@@ -56,45 +63,80 @@ export default function BreedingAreaForm() {
 
     return (
         <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="grid grid-cols-1 md:grid-cols-2 gap-6"
-            >
-                {fields.map(({ name, label, type }) => (
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+                <div className="grid grid-cols-2 gap-6">
+                    {fields.map(({ name, label, type }) => (
+                        <FormField
+                            key={name}
+                            control={form.control}
+                            name={name}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>{label}</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type={type}
+                                            placeholder={`Nhập ${label.toLowerCase()}`}
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    ))}
+
+                    {/* FarmID */}
                     <FormField
-                        key={name}
                         control={form.control}
-                        name={name}
+                        name="farmId"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>{label}</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type={type}
-                                        placeholder={`Nhập ${label.toLowerCase()}`}
-                                        {...field}
-                                    />
-                                </FormControl>
+                                <FormLabel>Mã trang trại</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn trang trại" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {!farms || isLoading ? (
+                                            <Skeleton />
+                                        ) : (
+                                            farms.map((farm) => (
+                                                <SelectItem key={farm.farmId} value={farm.farmId}>
+                                                    {farm.farmName}
+                                                </SelectItem>
+                                            ))
+                                        )}
+                                    </SelectContent>
+                                </Select>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                ))}
 
-                <FormField
-                    control={form.control}
-                    name="covered"
-                    render={({ field }) => (
-                        <FormItem className="flex items-center space-x-2">
-                            <FormControl>
-                                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                            </FormControl>
-                            <FormLabel>Khu vực có mái che</FormLabel>
-                        </FormItem>
-                    )}
-                />
+                    {/* Covered */}
+                    <FormField
+                        control={form.control}
+                        name="covered"
+                        render={({ field }) => (
+                            <FormItem className="flex items-center space-x-2">
+                                <FormControl>
+                                    <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                                <FormLabel className="!mt-0">Khu vực có mái che</FormLabel>
+                            </FormItem>
+                        )}
+                    />
+                </div>
 
-                <Button type="submit">Gửi</Button>
+                <Button type="submit" className="mx-auto mt-6 w-60">
+                    Gửi
+                </Button>
             </form>
         </Form>
     );
