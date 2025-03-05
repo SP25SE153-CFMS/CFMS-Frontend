@@ -1,6 +1,6 @@
 'use client';
 
-import EquipmentForm from '@/components/equipment-form';
+import EquipmentForm from '@/components/forms/equipment-form';
 import { DataTable } from '@/components/table/data-table';
 import {
     breedingAreas,
@@ -58,7 +58,7 @@ const techinicalIndicators = [
 
 // TODO: Optimize and shorten the code
 export default function Page() {
-    const { id: chickenCoopId } = useParams();
+    const { chickenCoopId } = useParams();
 
     const currentCoop = chickenCoops.find((coop) => coop.chickenCoopId === chickenCoopId);
     const currentChickenBatch = chickenBatches.find(
@@ -67,12 +67,17 @@ export default function Page() {
 
     if (!currentCoop) {
         return (
-            <Card className="max-w-xl mx-auto">
-                <div className="flex flex-col justify-center items-center h-[300px] gap-4">
-                    <Image src="/no-data.jpg" width={300} height={300} alt="Not Found" />
-                    <h1 className="text-2xl font-bold">Chuồng nuôi không tồn tại</h1>
-                </div>
-            </Card>
+            <div className="w-full h-full flex items-center justify-center">
+                <Card className="px-36 py-8">
+                    <div className="flex flex-col justify-center items-center h-[300px] gap-4">
+                        <Image src="/no-data.jpg" width={300} height={300} alt="Not Found" />
+                        <h1 className="text-2xl font-bold">Chuồng nuôi không tồn tại</h1>
+                        <Button variant="outline" onClick={() => window.history.back()}>
+                            Quay lại
+                        </Button>
+                    </div>
+                </Card>
+            </div>
         );
     }
 

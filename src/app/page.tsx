@@ -33,7 +33,7 @@ export default function Home() {
                     href={configs.routes.home}
                 >
                     <Image src="/assets/logo/logo.png" alt="Logo" width="46" height="46" />
-                    <h2 className="text-xl font-bold">CFMS</h2>
+                    <h2 className="text-xl font-bold">{CFMS}</h2>
                 </Link>
 
                 <nav className="pointer-events-auto hidden items-center justify-end lg:flex xl:w-full">
