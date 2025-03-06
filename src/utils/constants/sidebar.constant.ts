@@ -1,5 +1,5 @@
 import config from '@/configs';
-import { File, LucideIcon, PanelsTopLeft, Egg, House, UsersRound, Warehouse } from 'lucide-react';
+import { LucideIcon, Egg, House, UsersRound, Warehouse } from 'lucide-react';
 
 export interface NavSubItem {
     title: string;
@@ -66,28 +66,11 @@ export const sidebarItems: NavGroup[] = [
                 path: basePath,
                 icon: Warehouse,
                 subItems: [
-                    { title: 'Kho thức ăn', path: config.routes.food },
-                    { title: 'Kho trang thiết bị', path: config.routes.breadingArea },
+                    { title: 'Danh sách thức ăn', path: config.routes.food },
                     { title: 'Xuất/Nhập kho', path: config.routes.breadingArea },
                     { title: 'Danh sách trang thiết bị', path: config.routes.equipment },
                     { title: 'Danh sách phiếu yêu cầu', path: config.routes.request },
                 ],
-            },
-        ],
-    },
-    {
-        id: 2,
-        label: 'Tổng quan',
-        items: [
-            {
-                title: 'Trang chủ',
-                path: config.routes.dashboard,
-                icon: PanelsTopLeft,
-            },
-            {
-                title: 'Danh mục dùng chung',
-                path: config.routes.breadingArea,
-                icon: File,
             },
         ],
     },

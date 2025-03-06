@@ -54,7 +54,7 @@ export default function ChickenCoopForm() {
                     name="chickenCoopCode"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Mã chuồng</FormLabel>
+                            <FormLabel>Mã chuồng gà</FormLabel>
                             <FormControl>
                                 <Input type="text" placeholder="Nhập mã chuồng" {...field} />
                             </FormControl>

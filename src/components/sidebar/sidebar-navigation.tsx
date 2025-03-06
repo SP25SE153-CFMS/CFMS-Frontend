@@ -14,6 +14,7 @@ import {
     SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import { NavGroup } from '@/utils/constants/sidebar.constant';
+import Link from 'next/link';
 
 export default function SidebarNavigation({ sidebarItems }: { readonly sidebarItems: NavGroup[] }) {
     return (
@@ -45,9 +46,9 @@ export default function SidebarNavigation({ sidebarItems }: { readonly sidebarIt
                                                 {item.subItems.map((subItem) => (
                                                     <SidebarMenuSubItem key={subItem.title}>
                                                         <SidebarMenuSubButton asChild>
-                                                            <a href={subItem.path}>
+                                                            <Link href={subItem.path}>
                                                                 <span>{subItem.title}</span>
-                                                            </a>
+                                                            </Link>
                                                         </SidebarMenuSubButton>
                                                     </SidebarMenuSubItem>
                                                 ))}

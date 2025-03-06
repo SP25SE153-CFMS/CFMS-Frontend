@@ -6,6 +6,7 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { breedingAreas } from '@/utils/data/table.data';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
 
 export const columns: ColumnDef<ChickenCoop>[] = [
     {
@@ -71,7 +72,11 @@ export const columns: ColumnDef<ChickenCoop>[] = [
                 OCCUPIED: 'Đang sử dụng',
                 UNDER_MAINTENANCE: 'Bảo trì',
             };
-            return <div className="w-[150px]">{statusLabels[status]}</div>;
+            return (
+                <Badge variant={status === 'AVAILABLE' ? 'default' : 'outline'}>
+                    {statusLabels[status]}
+                </Badge>
+            );
         },
     },
     {

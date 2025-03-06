@@ -12,6 +12,8 @@ const routes = {
     request: '/request',
     createRequest: '/request/create',
     food: '/warehouse/foods',
+    category: '/category',
+    categoryAll: '/category/all',
 };
 
 export default routes;

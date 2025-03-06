@@ -19,6 +19,7 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from '@/components/ui/sidebar';
+import initials from 'initials';
 
 export default function SidebarFooterMenu({
     user,
@@ -43,7 +44,7 @@ export default function SidebarFooterMenu({
                             <Avatar className="size-8 rounded-lg">
                                 <AvatarImage src={user.avatar} alt={user.name} />
                                 <AvatarFallback className="rounded-lg">
-                                    {user.name[0]}
+                                    {initials(user.name)}
                                 </AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">

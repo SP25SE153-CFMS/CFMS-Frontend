@@ -11,6 +11,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { currentUser } from '@/utils/data/mock.data';
+import initials from 'initials';
 import Link from 'next/link';
 
 export function ProfileDropdown() {
@@ -20,7 +21,7 @@ export function ProfileDropdown() {
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
                         <AvatarImage src={currentUser.avatar} alt={currentUser.fullName} />
-                        <AvatarFallback>{currentUser.fullName[0]}</AvatarFallback>
+                        <AvatarFallback>{initials(currentUser.fullName)}</AvatarFallback>
                     </Avatar>
                 </Button>
             </DropdownMenuTrigger>

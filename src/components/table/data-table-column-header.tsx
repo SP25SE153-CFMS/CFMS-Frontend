@@ -55,7 +55,7 @@ export function DataTableColumnHeader<TData, TValue>({
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => column.clearSorting()}>
                         <Undo2 className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-                        Initial
+                        Bỏ sắp xếp
                     </DropdownMenuItem>
 
                     {column.getCanHide() && (
