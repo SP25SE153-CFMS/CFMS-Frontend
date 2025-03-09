@@ -43,7 +43,7 @@ const techinicalIndicators = [
 export default function Page() {
     const { flockId } = useParams();
 
-    const currentFlock = flocks.find((flock) => flock.flockId === Number(flockId));
+    const currentFlock = flocks.find((flock) => flock.flockId === flockId);
 
     if (!currentFlock) {
         return (

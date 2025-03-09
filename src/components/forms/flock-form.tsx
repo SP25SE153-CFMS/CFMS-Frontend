@@ -25,7 +25,7 @@ export default function FlockForm() {
     const form = useForm<Flock>({
         resolver: zodResolver(FlockSchema),
         defaultValues: {
-            flockId: 1,
+            flockId: '',
             quantity: 0,
             name: '',
             startDate: new Date().toISOString(),

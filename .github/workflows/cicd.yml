@@ -1,11 +1,7 @@
-name: Node.js CI
+name: Build, push and deploy Docker image
 
 on:
     push:
-        branches:
-            - main
-            - dev
-    pull_request:
         branches:
             - main
             - dev
