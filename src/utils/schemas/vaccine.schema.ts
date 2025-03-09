@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Schema Vaccine
-const VaccineSchema = z.object({
+export const VaccineSchema = z.object({
     vaccineId: z.string().uuid("ID vắc-xin phải là UUID hợp lệ"),
     name: z.string().min(1, "Tên vắc-xin không được để trống"),
     notes: z.string().optional(),
@@ -27,7 +27,7 @@ const VaccineSchema = z.object({
 });
 
 // Schema Vaccination Log
-const VaccinationLogSchema = z.object({
+export const VaccinationLogSchema = z.object({
     vLogId: z.string().uuid("ID nhật ký phải là UUID hợp lệ"),
     vaccinationDate: z.coerce.date().refine((date) => !isNaN(date.getTime()), {
         message: "Ngày tiêm không hợp lệ",

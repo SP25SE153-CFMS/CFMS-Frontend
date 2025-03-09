@@ -18,6 +18,7 @@ import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { categories, subCategories } from '@/utils/data/table.data';
 import SubCategoryForm from '@/components/forms/sub-category-form';
+import { downloadCSV } from '@/utils/functions/download-csv.function';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -62,7 +63,13 @@ export default function Page() {
                     </p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" className="space-x-1">
+                    <Button
+                        variant="outline"
+                        className="space-x-1"
+                        onClick={() =>
+                            downloadCSV(currentSubCategories, `${currentCategory.categoryType}.csv`)
+                        }
+                    >
                         <span>Tải file</span> <Download size={18} />
                     </Button>
                     <Button className="space-x-1" onClick={openModal}>
@@ -79,7 +86,7 @@ export default function Page() {
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <SubCategoryForm />
+                                <SubCategoryForm closeDialog={() => setOpen(false)} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>

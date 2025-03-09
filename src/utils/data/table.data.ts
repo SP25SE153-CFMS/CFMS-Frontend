@@ -299,7 +299,7 @@ export const breedingAreas: BreedingArea[] = [
 
 export const chickenCoops: ChickenCoop[] = [
     {
-        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        chickenCoopId: "d2e3f4a5-b6c7-8901-d2e3-f4a5b6c78900",
         chickenCoopCode: "CN001",
         chickenCoopName: "Chuồng Gà 1",
         capacity: 50,

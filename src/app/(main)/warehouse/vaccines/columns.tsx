@@ -3,6 +3,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Vaccine } from '@/utils/schemas/vaccine.schema';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
+import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<Vaccine>[] = [
     {
@@ -46,5 +47,9 @@ export const columns: ColumnDef<Vaccine>[] = [
         accessorKey: 'supplierId',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Nhà cung cấp" />,
         cell: ({ row }) => <div>{row.getValue('supplierId') ? 'Nhà cung cấp THD' : '-'}</div>,
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => <DataTableRowActions row={row} />,
     },
 ];

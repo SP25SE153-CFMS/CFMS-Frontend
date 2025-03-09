@@ -115,12 +115,6 @@ export default function Page() {
                             </div>
 
                             <div className="flex gap-3 text-sm mb-4">
-                                Mã đàn:{' '}
-                                <strong className="flex-1 text-right">
-                                    {currentFlock?.flockId}
-                                </strong>
-                            </div>
-                            <div className="flex gap-3 text-sm mb-4">
                                 Số lượng:{' '}
                                 <strong className="flex-1 text-right">
                                     {currentFlock?.quantity} con
@@ -191,15 +185,16 @@ export default function Page() {
                     <Tabs defaultValue="nutritions" className="w-auto">
                         <TabsList className="grid w-full grid-cols-4">
                             <TabsTrigger value="nutritions">Chế độ dinh dưỡng</TabsTrigger>
-                            <TabsTrigger value="calendar">Lịch cho ăn</TabsTrigger>
+                            <TabsTrigger value="vaccine">Nhật ký tiêm phòng</TabsTrigger>
                             <TabsTrigger value="health">Nhật ký sức khỏe</TabsTrigger>
                             <TabsTrigger value="quantity">Nhật ký số lượng</TabsTrigger>
                         </TabsList>
                         <TabsContent value="nutritions">
-                            <CardComponent title="Chế độ dinh dưỡng" />
-                        </TabsContent>
-                        <TabsContent value="calendar">
+                            <CardComponent title="Thức ăn" />
                             <CardComponent title="Lịch cho ăn" />
+                        </TabsContent>
+                        <TabsContent value="vaccine">
+                            <CardComponent title="Nhật ký tiêm phòng" />
                         </TabsContent>
                         <TabsContent value="health">
                             <CardComponent title="Nhật ký sức khỏe" />
@@ -247,7 +242,7 @@ const CardComponent = ({ title }: { title: string }) => {
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <EquipmentForm />
+                                <EquipmentForm closeDialog={() => setOpen(false)} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>

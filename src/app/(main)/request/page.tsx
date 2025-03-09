@@ -11,6 +11,7 @@ import Image from 'next/image';
 import { getRequests } from '@/services/request.service';
 import Link from 'next/link';
 import config from '@/configs';
+import { downloadCSV } from '@/utils/functions/download-csv.function';
 
 export default function Page() {
     const { data: requests, isLoading } = useQuery({
@@ -57,7 +58,11 @@ export default function Page() {
                     </p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" className="space-x-1">
+                    <Button
+                        variant="outline"
+                        className="space-x-1"
+                        onClick={() => downloadCSV(requests, 'requests.csv')}
+                    >
                         <span>Tải file</span> <Download size={18} />
                     </Button>
                     <Link href={config.routes.createRequest}>

@@ -30,3 +30,6 @@ export const SubCategorySchema = z.object({
 
 export type Category = z.infer<typeof CategorySchema>;
 export type SubCategory = z.infer<typeof SubCategorySchema>;
+
+export const CreateCategorySchema = CategorySchema.omit({ categoryId: true });
+export const CreateSubCategorySchema = SubCategorySchema.omit({ subCategoryId: true });

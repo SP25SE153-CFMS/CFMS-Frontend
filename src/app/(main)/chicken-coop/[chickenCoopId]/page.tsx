@@ -367,7 +367,7 @@ const CardComponent = ({ title }: { title: string }) => {
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <EquipmentForm />
+                                <EquipmentForm closeDialog={() => setOpen(false)} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>

@@ -19,6 +19,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getChickenCoops } from '@/services/chicken-coop.service';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
+import { downloadCSV } from '@/utils/functions/download-csv.function';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -68,7 +69,11 @@ export default function Page() {
                     </p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" className="space-x-1">
+                    <Button
+                        variant="outline"
+                        className="space-x-1"
+                        onClick={() => downloadCSV(chickenCoops, 'chicken-coops.csv')}
+                    >
                         <span>Tải file</span> <Download size={18} />
                     </Button>
                     <Button className="space-x-1" onClick={openModal}>
@@ -83,7 +88,7 @@ export default function Page() {
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <ChickenCoopForm />
+                                <ChickenCoopForm closeDialog={() => setOpen(false)} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>

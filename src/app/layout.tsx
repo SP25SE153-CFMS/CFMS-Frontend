@@ -25,8 +25,10 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={inter.className}>
-                <TanstackProvider>{children}</TanstackProvider>
-                <Toaster toastOptions={{ duration: 3000 }} />
+                <TanstackProvider>
+                    {children}
+                    <Toaster toastOptions={{ duration: 3000 }} />
+                </TanstackProvider>
             </body>
         </html>
     );

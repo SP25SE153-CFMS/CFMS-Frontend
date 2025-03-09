@@ -4,7 +4,7 @@ export const FlockSchema = z.object({
     flockId: z
         .string()
         .uuid({ message: "ID chuồng gà không hợp lệ, phải là UUID" }),
-    quantity: z.number().int().min(0, "Số lượng phải lớn hơn hoặc bằng 0"),
+    quantity: z.coerce.number().int().min(0, "Số lượng phải lớn hơn hoặc bằng 0"),
     name: z.string().min(1, "Tên là bắt buộc").max(255, "Tên không được dài quá 255 ký tự"),
     startDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
         message: "Ngày bắt đầu không hợp lệ",
@@ -19,8 +19,9 @@ export const FlockSchema = z.object({
         .refine((date) => !date || !isNaN(Date.parse(date)), {
             message: "Ngày kết thúc không hợp lệ",
         }),
-    avgWeight: z.number().min(0, "Trọng lượng trung bình phải lớn hơn hoặc bằng 0"),
+    avgWeight: z.coerce.number().min(0, "Trọng lượng trung bình phải lớn hơn hoặc bằng 0"),
     mortalityRate: z
+        .coerce
         .number()
         .min(0, "Tỷ lệ tử vong không thể nhỏ hơn 0")
         .max(100, "Tỷ lệ tử vong không thể lớn hơn 100"),
@@ -39,3 +40,5 @@ export const FlockSchema = z.object({
 });
 
 export type Flock = z.infer<typeof FlockSchema>;
+
+export const CreateFlockSchema = FlockSchema.omit({ flockId: true });

@@ -12,27 +12,53 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Category, CategorySchema } from '@/utils/schemas/category.schema';
+import { Category, CategorySchema, CreateCategorySchema } from '@/utils/schemas/category.schema';
+import { createCategory, updateCategory } from '@/services/category.service';
+import { Textarea } from '../ui/textarea';
+import toast from 'react-hot-toast';
 
-export default function CategoryForm() {
+interface CategoryFormProps {
+    defaultValues?: Partial<Category>;
+    closeDialog: () => void;
+}
+
+export default function CategoryForm({ defaultValues, closeDialog }: CategoryFormProps) {
+    // Initialize form
     const form = useForm<Category>({
-        resolver: zodResolver(CategorySchema),
+        resolver: zodResolver(defaultValues ? CategorySchema : CreateCategorySchema),
         defaultValues: {
             categoryCode: '',
             categoryName: '',
             categoryType: '',
             description: '',
             status: 'ACTIVE',
+            ...defaultValues,
         },
     });
 
-    function onSubmit(values: Category) {
-        console.log('Category data:', values);
+    // Form submit handler
+    async function onSubmit(values: Category) {
+        if (defaultValues) {
+            await updateCategory(values);
+            toast.success('Cập nhật danh mục thành công');
+        } else {
+            await createCategory(values);
+            toast.success('Tạo danh mục thành công');
+        }
+        closeDialog();
     }
+
+    // Form error handler
+    const onError = (error: any) => {
+        console.error(error);
+    };
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-4">
+            <form
+                onSubmit={form.handleSubmit(onSubmit, onError)}
+                className="grid grid-cols-1 gap-4 px-1"
+            >
                 {/* Mã danh mục */}
                 <FormField
                     control={form.control}
@@ -86,7 +112,7 @@ export default function CategoryForm() {
                         <FormItem>
                             <FormLabel>Mô tả</FormLabel>
                             <FormControl>
-                                <Input type="text" placeholder="Nhập mô tả" {...field} />
+                                <Textarea placeholder="Nhập mô tả" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
