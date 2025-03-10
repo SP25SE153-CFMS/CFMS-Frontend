@@ -6,6 +6,7 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import { Category } from '@/utils/schemas/category.schema';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<Category>[] = [
     {
@@ -75,5 +76,9 @@ export const columns: ColumnDef<Category>[] = [
                 </Badge>
             );
         },
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => <DataTableRowActions row={row} />,
     },
 ];

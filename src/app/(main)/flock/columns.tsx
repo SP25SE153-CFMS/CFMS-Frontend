@@ -7,6 +7,7 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import config from '@/configs';
+import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<Flock>[] = [
     {
@@ -70,15 +71,11 @@ export const columns: ColumnDef<Flock>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tỷ lệ tử vong (%)" />,
     },
     {
-        accessorKey: 'startDate',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày bắt đầu" />,
-    },
-    {
-        accessorKey: 'endDate',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày kết thúc" />,
-    },
-    {
         accessorKey: 'housingId',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Chuồng trại" />,
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => <DataTableRowActions row={row} />,
     },
 ];

@@ -21,11 +21,13 @@ import { useQuery } from '@tanstack/react-query';
 import { getBreedingAreas } from '@/services/breeding-area.service';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
+import { downloadCSV } from '@/utils/functions/download-csv.function';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
 
     const openModal = () => setOpen(true);
+    const closeDialog = () => setOpen(false);
     const onOpenChange = (val: boolean) => setOpen(val);
 
     const { data: breedingAreas, isLoading } = useQuery({
@@ -70,14 +72,18 @@ export default function Page() {
                     </p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" className="space-x-1">
+                    <Button
+                        variant="outline"
+                        className="space-x-1"
+                        onClick={() => downloadCSV(breedingAreas, 'breeding-areas.csv')}
+                    >
                         <span>Tải file</span> <Download size={18} />
                     </Button>
                     <Button className="space-x-1" onClick={openModal}>
                         <span>Tạo</span> <Plus size={18} />
                     </Button>
                     <Dialog open={open} onOpenChange={onOpenChange}>
-                        <DialogContent>
+                        <DialogContent className="max-w-3xl">
                             <DialogHeader>
                                 <DialogTitle>Tạo khu nuôi mới</DialogTitle>
                                 <DialogDescription>
@@ -85,7 +91,7 @@ export default function Page() {
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <BreedingAreaForm />
+                                <BreedingAreaForm closeDialog={closeDialog} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>

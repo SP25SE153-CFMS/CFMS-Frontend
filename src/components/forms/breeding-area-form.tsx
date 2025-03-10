@@ -13,17 +13,28 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { BreedingArea, BreedingAreaSchema } from '@/utils/schemas/breeding-area.schema';
+import {
+    BreedingArea,
+    BreedingAreaSchema,
+    CreateBreedingAreaSchema,
+} from '@/utils/schemas/breeding-area.schema';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from '../ui/skeleton';
 import { getFarms } from '@/services/farm.service';
+import { createBreedingArea, updateBreedingArea } from '@/services/breeding-area.service';
+import toast from 'react-hot-toast';
 
-export default function BreedingAreaForm() {
+interface BreedingAreaFormProps {
+    defaultValues?: Partial<BreedingArea>;
+    closeDialog: () => void;
+}
+
+export default function BreedingAreaForm({ defaultValues, closeDialog }: BreedingAreaFormProps) {
+    // Initialize form
     const form = useForm<BreedingArea>({
-        resolver: zodResolver(BreedingAreaSchema),
+        resolver: zodResolver(defaultValues ? BreedingAreaSchema : CreateBreedingAreaSchema),
         defaultValues: {
-            breedingAreaId: '',
             breedingAreaCode: '',
             breedingAreaName: '',
             mealsPerDay: 0,
@@ -36,18 +47,34 @@ export default function BreedingAreaForm() {
             covered: false,
             farmId: '',
             breedingPurpose: '',
+            ...defaultValues,
         },
     });
 
-    function onSubmit(values: BreedingArea) {
-        console.log('Values :', values);
-    }
+    // Form submit handler
+    const onSubmit = async (values: BreedingArea) => {
+        if (defaultValues) {
+            await updateBreedingArea(values);
+            toast.success('Cập nhật khu nuôi thành công');
+        } else {
+            await createBreedingArea(values);
+            toast.success('Tạo khu nuôi thành công');
+        }
+        closeDialog();
+    };
 
+    // Form error handler
+    const onError = (error: any) => {
+        console.error(error);
+    };
+
+    // Fetch farms
     const { data: farms, isLoading } = useQuery({
         queryKey: ['farms'],
         queryFn: () => getFarms(),
     });
 
+    // Form fields
     const fields = [
         { name: 'breedingAreaCode', label: 'Mã khu nuôi', type: 'text' },
         { name: 'breedingAreaName', label: 'Tên khu nuôi', type: 'text' },
@@ -63,8 +90,8 @@ export default function BreedingAreaForm() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
-                <div className="grid grid-cols-2 gap-6">
+            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
                     {fields.map(({ name, label, type }) => (
                         <FormField
                             key={name}
@@ -100,10 +127,10 @@ export default function BreedingAreaForm() {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {!farms || isLoading ? (
+                                        {isLoading ? (
                                             <Skeleton />
                                         ) : (
-                                            farms.map((farm) => (
+                                            farms?.map((farm) => (
                                                 <SelectItem key={farm.farmId} value={farm.farmId}>
                                                     {farm.farmName}
                                                 </SelectItem>

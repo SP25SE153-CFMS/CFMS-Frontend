@@ -5,6 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import Link from 'next/link';
+import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<BreedingArea>[] = [
     {
@@ -81,9 +82,8 @@ export const columns: ColumnDef<BreedingArea>[] = [
             <div className="w-[80px]">{row.getValue('covered') ? 'Có' : 'Không'}</div>
         ),
     },
-    // Uncomment this to add actions column
-    // {
-    //     id: 'actions',
-    //     cell: ({ row }) => <DataTableRowActions row={row} />,
-    // },
+    {
+        id: 'actions',
+        cell: ({ row }) => <DataTableRowActions row={row} />,
+    },
 ];

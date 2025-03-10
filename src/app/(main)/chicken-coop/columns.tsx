@@ -7,6 +7,7 @@ import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { breedingAreas } from '@/utils/data/table.data';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<ChickenCoop>[] = [
     {
@@ -90,9 +91,8 @@ export const columns: ColumnDef<ChickenCoop>[] = [
             </div>
         ),
     },
-    // TODO: Uncomment this block when the DataTableRowActions component for ChickenCoop is ready
-    // {
-    //     id: 'actions',
-    //     cell: ({ row }) => <DataTableRowActions row={row} />,
-    // },
+    {
+        id: 'actions',
+        cell: ({ row }) => <DataTableRowActions row={row} />,
+    },
 ];
