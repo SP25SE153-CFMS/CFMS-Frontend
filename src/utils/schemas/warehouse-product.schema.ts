@@ -5,7 +5,7 @@ export const WarehouseProductSchema = z
         productId: z.string().uuid(),
         productCode: z.string().min(3, 'Mã hàng có ít nhất 3 ký tự'),
         productName: z.string().min(3, 'Tên hàng có ít nhất 3 ký tự'),
-        currentQuantity: z.number().nonnegative(), // số lượng tồn kho
+        quantity: z.number().nonnegative(), // số lượng tồn kho
         unit: z.string().min(1, 'Đơn vị không được để trống'), //đơn vị
         area: z.string(), // khu vực
         expiry: z.string().datetime({ message: 'Hạn sử dụng phải là ngày hợp lệ' }), // hạn sử dụng

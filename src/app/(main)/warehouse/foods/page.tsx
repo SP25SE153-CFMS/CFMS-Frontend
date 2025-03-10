@@ -12,10 +12,17 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
+import { DialogTitle } from '@radix-ui/react-dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function Foods() {
     const [searchValue, setSearchValue] = useState('');
     const [selectedArea, setSelectedArea] = useState('all');
+    const [open, setOpen] = useState(false);
+
+    const openModal = () => setOpen(true);
 
     const uniqueAreas = Array.from(new Set(warehouseProduct.map((product) => product.area)));
 
@@ -25,7 +32,7 @@ export default function Foods() {
             product.productCode.toLowerCase().includes(searchValue.toLowerCase()) ||
             product.supplier.toLowerCase().includes(searchValue.toLowerCase());
 
-        const matchesArea = selectedArea === 'all' || product.area === selectedArea; // all lấy hết còn
+        const matchesArea = selectedArea === 'all' || product.area === selectedArea; // all lấy hết
 
         return matchesSearch && matchesArea;
     });
@@ -34,7 +41,7 @@ export default function Foods() {
         <div className="flex flex-col gap-y-5">
             <h1 className="text-2xl font-bold tracking-tight">Quản lý kho thức ăn</h1>
 
-            <div className="flex gap-x-4 items-center">
+            <div className="flex relative gap-x-4 items-center">
                 <p className="font-semibold whitespace-nowrap">Tìm kiếm:</p>
                 <Search onSearch={setSearchValue} />
 
@@ -52,6 +59,24 @@ export default function Foods() {
                         ))}
                     </SelectContent>
                 </Select>
+
+                <div className="absolute right-0">
+                    <Button onClick={openModal}>Add product</Button>
+
+                    <Dialog open={open}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Tạo hàng hóa</DialogTitle>
+                                <DialogDescription>
+                                    Nhập đầy đủ các thông tin dưới.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <ScrollArea className='max-h-[600px]'>
+                                
+                            </ScrollArea>
+                        </DialogContent>
+                    </Dialog>
+                </div>
             </div>
 
             <DataTable data={filteredData} columns={columns} />
