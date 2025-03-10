@@ -45,9 +45,9 @@ export const columns: ColumnDef<WarehouseProduct>[] = [
         cell: ({ row }) => <div>{row.getValue('productName')}</div>,
     },
     {
-        accessorKey: 'currentQuantity',
+        accessorKey: 'quantity',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng hiện tại" />,
-        cell: ({ row }) => <div>{row.getValue('currentQuantity')}</div>,
+        cell: ({ row }) => <div>{row.getValue('quantity')}</div>,
     },
     {
         accessorKey: 'unit',
