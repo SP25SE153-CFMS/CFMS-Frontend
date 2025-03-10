@@ -5,7 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
-import { Select, SelectTrigger, SelectValue } from '../ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Skeleton } from '../ui/skeleton';
 
 export default function WarehouseProductForm() {
     const form = useForm<WarehouseProduct>({
@@ -36,7 +37,7 @@ export default function WarehouseProductForm() {
         <Form {...form}>
             <form>
                 <div>
-                    {fields.map(({ name, label, type }) => (
+                    {fields.map(({ name, label, type, options}) => (
                         <FormField
                             key={name}
                             control={form.control}
@@ -45,11 +46,18 @@ export default function WarehouseProductForm() {
                                 <FormItem>
                                     <FormLabel>{label}</FormLabel>
                                     <FormControl>
-                                        {type === 'select' ? (
+                                        {type === 'select' && options ? (
                                             <Select>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder="Chọn đơn vị" />
+                                                    <SelectValue placeholder={`Chọn ${label}`} />
                                                 </SelectTrigger>
+                                                <SelectContent>
+                                                    {options.map((option) => (
+                                                        <SelectItem key={option} value={option}>
+                                                            {option}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
                                             </Select>
                                         ) : (
                                             <Input
