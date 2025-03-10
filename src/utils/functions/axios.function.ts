@@ -23,7 +23,7 @@ export const request = <T>(
     const accessToken = getCookie(config.cookies.accessToken)
 
     return axios({
-        url: env.PUBLIC_API_URL + endpoint,
+        url: env.NEXT_PUBLIC_API_URL + endpoint,
         method: method,
         headers: Object.assign({}, headers, accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         params: Object.assign(params),
