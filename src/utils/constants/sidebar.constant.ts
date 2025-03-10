@@ -46,10 +46,6 @@ export const sidebarItems: NavGroup[] = [
                     { title: 'Danh sách giống gà', path: config.routes.breadingArea },
                     { title: 'Tiêu chí đánh giá SK', path: config.routes.breadingArea },
                     { title: 'Danh sách bệnh gà', path: config.routes.breadingArea },
-                    { title: 'Danh mục vaccine', path: config.routes.breadingArea },
-                    { title: 'Nhật ký sức khỏe', path: config.routes.breadingArea },
-                    { title: 'Chế độ dinh dưỡng', path: config.routes.breadingArea },
-                    { title: 'Lịch sử tiêm phòng', path: config.routes.breadingArea },
                 ],
             },
             {
@@ -70,6 +66,7 @@ export const sidebarItems: NavGroup[] = [
                     { title: 'Xuất/Nhập kho', path: config.routes.breadingArea },
                     { title: 'Danh sách trang thiết bị', path: config.routes.equipment },
                     { title: 'Danh sách phiếu yêu cầu', path: config.routes.request },
+                    { title: 'Danh mục vaccine', path: config.routes.vaccine },
                 ],
             },
         ],

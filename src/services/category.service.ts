@@ -12,3 +12,23 @@ export const getCategories = async (): Promise<Category[]> => {
 
     return data;
 };
+
+export const createCategory = async (category: Category): Promise<Category> => {
+    // Mock API call
+    categories.push(category);
+    return category;
+};
+
+export const updateCategory = async (category: Category): Promise<Category> => {
+    // Mock API call
+    const index = categories.findIndex((item) => item.categoryId === category.categoryId);
+    categories[index] = category;
+    return category;
+};
+
+export const deleteCategory = async (id: string): Promise<string> => {
+    // Mock API call
+    const index = categories.findIndex((item) => item.categoryId === id);
+    categories.splice(index, 1);
+    return id;
+};

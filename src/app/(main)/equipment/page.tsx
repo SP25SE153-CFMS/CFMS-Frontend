@@ -19,6 +19,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getEquipments } from '@/services/equipment.service';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
+import { downloadCSV } from '@/utils/functions/download-csv.function';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -68,14 +69,18 @@ export default function Page() {
                     </p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" className="space-x-1">
+                    <Button
+                        variant="outline"
+                        className="space-x-1"
+                        onClick={() => downloadCSV(equipments, 'equipments.csv')}
+                    >
                         <span>Tải file</span> <Download size={18} />
                     </Button>
                     <Button className="space-x-1" onClick={openModal}>
                         <span>Tạo</span> <Plus size={18} />
                     </Button>
                     <Dialog open={open} onOpenChange={onOpenChange}>
-                        <DialogContent>
+                        <DialogContent className="max-w-2xl">
                             <DialogHeader>
                                 <DialogTitle>Tạo trang thiết bị mới</DialogTitle>
                                 <DialogDescription>
@@ -83,7 +88,7 @@ export default function Page() {
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <EquipmentForm />
+                                <EquipmentForm closeDialog={() => setOpen(false)} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>

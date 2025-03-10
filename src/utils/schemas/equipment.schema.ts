@@ -23,6 +23,7 @@ export const EquipmentSchema = z.object({
         .datetime({ message: "Ngày mua không hợp lệ, phải là định dạng ngày giờ hợp lệ" }),
 
     warrantyPeriod: z
+        .coerce
         .number()
         .int({ message: "Thời gian bảo hành phải là số nguyên" })
         .positive({ message: "Thời gian bảo hành phải là số nguyên dương" })
@@ -33,6 +34,7 @@ export const EquipmentSchema = z.object({
     }),
 
     cost: z
+        .coerce
         .number()
         .positive({ message: "Chi phí phải là số dương" })
         .max(1_000_000_000, { message: "Chi phí không được vượt quá 1 tỷ" }),
@@ -98,3 +100,5 @@ export const CoopEquipmentSchema = z.object({
 
 export type Equipment = z.infer<typeof EquipmentSchema>;
 export type CoopEquipment = z.infer<typeof CoopEquipmentSchema>;
+
+export const CreateEquipmentSchema = EquipmentSchema.omit({ equipmentId: true, createdAt: true, updatedAt: true });

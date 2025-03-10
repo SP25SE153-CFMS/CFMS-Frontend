@@ -18,6 +18,7 @@ export const BreedingAreaSchema = z.object({
         .max(100, { message: "Tên khu nuôi quá dài, tối đa 100 ký tự" }),
 
     mealsPerDay: z
+        .coerce
         .number()
         .int()
         .min(1, { message: "Số bữa ăn mỗi ngày phải ít nhất là 1" })
@@ -34,11 +35,13 @@ export const BreedingAreaSchema = z.object({
         .regex(/^(-?\d+(\.\d+)?)°C$/, { message: "Nhiệt độ phải có đơn vị °C (VD: 25°C)" }),
 
     width: z
+        .coerce
         .number()
         .positive({ message: "Chiều rộng phải là số dương" })
         .max(100, { message: "Chiều rộng không thể vượt quá 100m" }),
 
     height: z
+        .coerce
         .number()
         .positive({ message: "Chiều cao phải là số dương" })
         .max(50, { message: "Chiều cao không thể vượt quá 50m" }),
@@ -67,3 +70,6 @@ export const BreedingAreaSchema = z.object({
 });
 
 export type BreedingArea = z.infer<typeof BreedingAreaSchema>;
+
+// Schema for creating a new breeding area (without breedingAreaId)
+export const CreateBreedingAreaSchema = BreedingAreaSchema.omit({ breedingAreaId: true });

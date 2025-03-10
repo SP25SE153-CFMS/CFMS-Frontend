@@ -9,6 +9,7 @@ import { Farm } from "../schemas/farm.schema"
 import { ChickenBatch } from "../schemas/chicken-batch.schema"
 import { Request } from "../schemas/request.schema"
 import { Category, SubCategory } from "../schemas/category.schema"
+import { VaccinationLog, Vaccine } from "../schemas/vaccine.schema"
 
 export const labels = [
     {
@@ -73,7 +74,7 @@ export const priorities = [
 
 export const farms: Farm[] = [
     {
-        farmId: '1',
+        farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801',
         farmName: 'Trang trại Xanh',
         farmCode: 'TT002',
         type: 'Hữu cơ',
@@ -86,7 +87,7 @@ export const farms: Farm[] = [
             'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
     },
     {
-        farmId: '2',
+        farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
         farmName: 'Trang trại Việt',
         farmCode: 'TT002',
         type: 'Hữu cơ',
@@ -99,7 +100,7 @@ export const farms: Farm[] = [
             'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
     },
     {
-        farmId: '3',
+        farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
         farmName: 'Trang trại chuẩn Úc',
         farmCode: 'TT003',
         type: 'Hữu cơ',
@@ -186,7 +187,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: "Cần đèn sưởi vào ban đêm",
         height: 2.0,
         covered: true,
-        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67804",
+        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803",
         breedingPurpose: "Nuôi gà con",
     },
     {
@@ -201,7 +202,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: "Giống gà nhỏ nhưng thịt ngon",
         height: 2.3,
         covered: true,
-        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67805",
+        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801",
         breedingPurpose: "Nuôi gà đặc sản",
     },
     {
@@ -216,7 +217,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: "Cần chuồng rộng để vận động",
         height: 2.5,
         covered: true,
-        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67806",
+        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802",
         breedingPurpose: "Nuôi gà thịt",
     },
     {
@@ -231,7 +232,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: "Gà nhỏ, nuôi để làm cảnh",
         height: 2.0,
         covered: true,
-        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67807",
+        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803",
         breedingPurpose: "Nuôi gà cảnh",
     },
     {
@@ -246,7 +247,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: "Dành cho gà chọi",
         height: 2.4,
         covered: true,
-        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67808",
+        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802",
         breedingPurpose: "Nuôi gà đá",
     },
     {
@@ -261,7 +262,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: "Cần nhiều không gian để chạy",
         height: 2.7,
         covered: true,
-        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67809",
+        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801",
         breedingPurpose: "Nuôi gà đá",
     },
     {
@@ -276,7 +277,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: "Sử dụng hệ thống ăn tự động",
         height: 3.0,
         covered: true,
-        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67810",
+        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802",
         breedingPurpose: "Nuôi lấy thịt số lượng lớn",
     },
     {
@@ -291,14 +292,14 @@ export const breedingAreas: BreedingArea[] = [
         notes: "Chọn giống tốt để nhân giống",
         height: 2.6,
         covered: true,
-        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67811",
+        farmId: "c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803",
         breedingPurpose: "Nhân giống gà",
     }
 ];
 
 export const chickenCoops: ChickenCoop[] = [
     {
-        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        chickenCoopId: "d2e3f4a5-b6c7-8901-d2e3-f4a5b6c78900",
         chickenCoopCode: "CN001",
         chickenCoopName: "Chuồng Gà 1",
         capacity: 50,
@@ -885,7 +886,7 @@ export const chickenBatches: ChickenBatch[] = [
 
 export const flocks: Flock[] = [
     {
-        flockId: 1,
+        flockId: "7e9d6c5b-4a3f-2d1b-8c7a9d6e8f41",
         quantity: 150,
         name: "Đàn gà giống lứa 1",
         startDate: "2025-02-01",
@@ -901,7 +902,7 @@ export const flocks: Flock[] = [
         housingId: 3,
     },
     {
-        flockId: 2,
+        flockId: "7e9d6c5b-4a3f-2d1b-8c7a9d6e8f42",
         quantity: 200,
         name: "Đàn gà thịt lứa đầu",
         startDate: "2025-01-15",
@@ -917,7 +918,7 @@ export const flocks: Flock[] = [
         housingId: 1,
     },
     {
-        flockId: 3,
+        flockId: "7e9d6c5b-4a3f-2d1b-8c7a9d6e8f43",
         quantity: 120,
         name: "Đàn gà đẻ trứng",
         startDate: "2024-12-10",
@@ -933,7 +934,7 @@ export const flocks: Flock[] = [
         housingId: 2,
     },
     {
-        flockId: 4,
+        flockId: "7e9d6c5b-4a3f-2d1b-8c7a9d6e8f44",
         quantity: 80,
         name: "Đàn gà ta thả vườn",
         startDate: "2025-01-05",
@@ -949,7 +950,7 @@ export const flocks: Flock[] = [
         housingId: 5,
     },
     {
-        flockId: 5,
+        flockId: "7e9d6c5b-4a3f-2d1b-8c7a9d6e8f45",
         quantity: 300,
         name: "Đàn gà thịt lứa 2",
         startDate: "2025-02-01",
@@ -965,7 +966,7 @@ export const flocks: Flock[] = [
         housingId: 4,
     },
     {
-        flockId: 6,
+        flockId: "7e9d6c5b-4a3f-2d1b-8c7a9d6e8f46",
         quantity: 50,
         name: "Đàn gà giống nhập mới",
         startDate: "2025-02-10",
@@ -981,7 +982,7 @@ export const flocks: Flock[] = [
         housingId: 3,
     },
     {
-        flockId: 7,
+        flockId: "7e9d6c5b-4a3f-2d1b-8c7a9d6e8f47",
         quantity: 180,
         name: "Đàn gà thả vườn cao sản",
         startDate: "2024-11-20",
@@ -997,7 +998,7 @@ export const flocks: Flock[] = [
         housingId: 2,
     },
     {
-        flockId: 8,
+        flockId: "7e9d6c5b-4a3f-2d1b-8c7a9d6e8f48",
         quantity: 100,
         name: "Đàn gà lấy trứng hữu cơ",
         startDate: "2024-10-01",
@@ -1013,7 +1014,7 @@ export const flocks: Flock[] = [
         housingId: 6,
     },
     {
-        flockId: 9,
+        flockId: "7e9d6c5b-4a3f-2d1b-8c7a9d6e8f49",
         quantity: 90,
         name: "Đàn gà bị dịch bệnh",
         startDate: "2024-12-25",
@@ -1029,7 +1030,7 @@ export const flocks: Flock[] = [
         housingId: 1,
     },
     {
-        flockId: 10,
+        flockId: "7e9d6c5b-4a3f-2d1b-8c7a9d6e8f41",
         quantity: 130,
         name: "Đàn gà thịt cao cấp",
         startDate: "2025-01-10",
@@ -1207,7 +1208,7 @@ export const subCategories: SubCategory[] = [
         status: "ACTIVE",
         dataType: "number",
         createdDate: new Date(),
-        categoryId: "f3b7a8d2-1c9e-4b5a-93d4-7b2f6a5c8e41"
+        categoryId: categories[0].categoryId
     },
     {
         subCategoryId: "b2c3d4e5-6f7g-8h9i-0j1k-l2m3n4o5p6q7",
@@ -1216,7 +1217,7 @@ export const subCategories: SubCategory[] = [
         status: "ACTIVE",
         dataType: "number",
         createdDate: new Date(),
-        categoryId: "f3b7a8d2-1c9e-4b5a-93d4-7b2f6a5c8e41"
+        categoryId: categories[0].categoryId
     },
     {
         subCategoryId: "c3d4e5f6-7g8h-9i0j-1k2l-m3n4o5p6q7r8",
@@ -1225,7 +1226,7 @@ export const subCategories: SubCategory[] = [
         status: "ACTIVE",
         dataType: "number",
         createdDate: new Date(),
-        categoryId: "a6c2b9d8-7e4a-4c8f-91d2-3b5a7e6f8c21"
+        categoryId: categories[1].categoryId
     },
     {
         subCategoryId: "d4e5f6g7-8h9i-0j1k-2l3m-n4o5p6q7r8s9",
@@ -1234,7 +1235,7 @@ export const subCategories: SubCategory[] = [
         status: "ACTIVE",
         dataType: "string",
         createdDate: new Date(),
-        categoryId: "a6c2b9d8-7e4a-4c8f-91d2-3b5a7e6f8c21"
+        categoryId: categories[1].categoryId
     },
     {
         subCategoryId: "e5f6g7h8-9i0j-1k2l-3m4n-o5p6q7r8s9t0",
@@ -1243,7 +1244,7 @@ export const subCategories: SubCategory[] = [
         status: "ACTIVE",
         dataType: "string",
         createdDate: new Date(),
-        categoryId: "c9e7b5a8-2f3d-4b1c-92d6-7a5c8e4f3b21"
+        categoryId: categories[2].categoryId
     },
     {
         subCategoryId: "f6g7h8i9-0j1k-2l3m-4n5o-p6q7r8s9t0u1",
@@ -1252,7 +1253,7 @@ export const subCategories: SubCategory[] = [
         status: "ACTIVE",
         dataType: "string",
         createdDate: new Date(),
-        categoryId: "c9e7b5a8-2f3d-4b1c-92d6-7a5c8e4f3b21"
+        categoryId: categories[2].categoryId
     },
     {
         subCategoryId: "g7h8i9j0-1k2l-3m4n-5o6p-q7r8s9t0u1v2",
@@ -1261,7 +1262,7 @@ export const subCategories: SubCategory[] = [
         status: "ACTIVE",
         dataType: "string",
         createdDate: new Date(),
-        categoryId: "e4b7a5c9-1d2f-4c8e-93b6-2a7f5d3b6c21"
+        categoryId: categories[4].categoryId
     },
     {
         subCategoryId: "h8i9j0k1-2l3m-4n5o-6p7q-r8s9t0u1v2w3",
@@ -1270,6 +1271,119 @@ export const subCategories: SubCategory[] = [
         status: "ACTIVE",
         dataType: "string",
         createdDate: new Date(),
-        categoryId: "e4b7a5c9-1d2f-4c8e-93b6-2a7f5d3b6c21"
+        categoryId: categories[4].categoryId
     }
+];
+
+export const vaccines: Vaccine[] = [
+    {
+        vaccineId: "550e8400-e29b-41d4-a716-446655440001",
+        name: "Vắc-xin Newcastle",
+        notes: "Bảo quản lạnh ở 2-8°C",
+        productionDate: new Date("2024-01-10"),
+        expiryDate: new Date("2025-01-10"),
+        dosage: "0.5 ml/con",
+        instructions: "Tiêm dưới da hoặc nhỏ mắt",
+        batchNumber: "NCW-202401",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        supplierId: "8f42f2d0-5d98-4bff-9c71-6a2c44b5e002",
+        diseaseId: 1,
+    },
+    {
+        vaccineId: "550e8400-e29b-41d4-a716-446655440002",
+        name: "Vắc-xin Gumboro",
+        notes: "Sử dụng trong 2 giờ sau khi pha",
+        productionDate: new Date("2024-02-15"),
+        expiryDate: new Date("2025-02-15"),
+        dosage: "1 ml/con",
+        instructions: "Pha vào nước uống",
+        batchNumber: "GBR-202402",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        supplierId: "8f42f2d0-5d98-4bff-9c71-6a2c44b5e003",
+        diseaseId: 2,
+    },
+    {
+        vaccineId: "550e8400-e29b-41d4-a716-446655440003",
+        name: "Vắc-xin Marek",
+        notes: "Sử dụng ngay sau khi rã đông",
+        productionDate: new Date("2024-03-01"),
+        expiryDate: new Date("2025-03-01"),
+        dosage: "0.2 ml/con",
+        instructions: "Tiêm dưới da ngày đầu tiên",
+        batchNumber: "MRK-202403",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        supplierId: "8f42f2d0-5d98-4bff-9c71-6a2c44b5e004",
+        diseaseId: 3,
+    },
+];
+
+export const vaccinationLogs: VaccinationLog[] = [
+    {
+        vLogId: "a1b2c3d4-e5f6-4789-9abc-def123456701",
+        vaccinationDate: new Date("2024-03-01"),
+        dosage: "0.5 ml/con",
+        notes: "Tiêm vào buổi sáng",
+        quantity: 500,
+        status: "đã tiêm",
+        reaction: "Không có phản ứng phụ",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        vaccineId: vaccines[0].vaccineId,
+        flockId: flocks[0].flockId,
+    },
+    {
+        vLogId: "a1b2c3d4-e5f6-4789-9abc-def123456702",
+        vaccinationDate: new Date("2024-03-05"),
+        dosage: "1 ml/con",
+        notes: "Pha nước uống",
+        quantity: 700,
+        status: "chưa tiêm",
+        reaction: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        vaccineId: vaccines[1].vaccineId,
+        flockId: flocks[1].flockId,
+    },
+    {
+        vLogId: "a1b2c3d4-e5f6-4789-9abc-def123456703",
+        vaccinationDate: new Date("2024-03-10"),
+        dosage: "0.2 ml/con",
+        notes: "Tiêm ngày đầu tiên",
+        quantity: 300,
+        status: "đã tiêm",
+        reaction: "Một số con có sưng nhẹ",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        vaccineId: vaccines[2].vaccineId,
+        flockId: flocks[2].flockId,
+    },
+    {
+        vLogId: "a1b2c3d4-e5f6-4789-9abc-def123456704",
+        vaccinationDate: new Date("2024-03-15"),
+        dosage: "1 ml/con",
+        notes: "Dùng trong nước uống",
+        quantity: 1000,
+        status: "đã tiêm",
+        reaction: "Không có phản ứng",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        vaccineId: vaccines[1].vaccineId,
+        flockId: flocks[3].flockId,
+    },
+    {
+        vLogId: "a1b2c3d4-e5f6-4789-9abc-def123456705",
+        vaccinationDate: new Date("2024-03-20"),
+        dosage: "0.5 ml/con",
+        notes: "Tiêm lặp lại sau 2 tuần",
+        quantity: 800,
+        status: "chưa tiêm",
+        reaction: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        vaccineId: vaccines[0].vaccineId,
+        flockId: flocks[4].flockId,
+    },
 ];

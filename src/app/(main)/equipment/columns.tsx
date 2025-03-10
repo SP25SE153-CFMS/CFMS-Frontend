@@ -5,6 +5,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { Equipment } from '@/utils/schemas/equipment.schema';
+import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<Equipment>[] = [
     {
@@ -63,5 +64,9 @@ export const columns: ColumnDef<Equipment>[] = [
     {
         accessorKey: 'quantity',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng" />,
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => <DataTableRowActions row={row} />,
     },
 ];

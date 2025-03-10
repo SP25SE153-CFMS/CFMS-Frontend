@@ -55,3 +55,9 @@ export const ChickenCoopSchema = z.object({
 });
 
 export type ChickenCoop = z.infer<typeof ChickenCoopSchema>;
+
+export const CreateChickenCoopSchema = ChickenCoopSchema.omit({
+    chickenCoopId: true,
+    createdAt: true,
+    updatedAt: true,
+});
