@@ -38,8 +38,6 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
             breedingAreaCode: '',
             breedingAreaName: '',
             mealsPerDay: 0,
-            humidity: '',
-            temperature: '',
             width: 0,
             image: '',
             notes: '',
@@ -78,8 +76,6 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
     const fields = [
         { name: 'breedingAreaCode', label: 'Mã khu nuôi', type: 'text' },
         { name: 'breedingAreaName', label: 'Tên khu nuôi', type: 'text' },
-        { name: 'humidity', label: 'Độ ẩm (%)', type: 'text' },
-        { name: 'temperature', label: 'Nhiệt độ (°C)', type: 'text' },
         { name: 'image', label: 'Đường dẫn hình ảnh', type: 'text' },
         { name: 'notes', label: 'Ghi chú', type: 'text' },
         { name: 'breedingPurpose', label: 'Mục đích chăn nuôi', type: 'text' },

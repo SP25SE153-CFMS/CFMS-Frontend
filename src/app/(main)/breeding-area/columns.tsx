@@ -6,6 +6,7 @@ import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import Link from 'next/link';
 import { DataTableRowActions } from './data-table-row-actions';
+import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 
 export const columns: ColumnDef<BreedingArea>[] = [
     {
@@ -54,26 +55,18 @@ export const columns: ColumnDef<BreedingArea>[] = [
         ),
     },
     {
-        accessorKey: 'humidity',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Độ ẩm" />,
-    },
-    {
         accessorKey: 'mealsPerDay',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Bữa ăn/ngày" />,
     },
     {
-        accessorKey: 'temperature',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Nhiệt độ" />,
-    },
-    {
         accessorKey: 'width',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Chiều rộng" />,
-        cell: ({ row }) => <div className="w-[80px]">{row.getValue('width')}m</div>,
+        cell: ({ row }) => <div className="w-[80px]">{row.getValue('width') ?? 0}m</div>,
     },
     {
         accessorKey: 'height',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Chiều cao" />,
-        cell: ({ row }) => <div className="w-[80px]">{row.getValue('height')}m</div>,
+        cell: ({ row }) => <div className="w-[80px]">{row.getValue('height') ?? 0}m</div>,
     },
     {
         accessorKey: 'covered',
@@ -81,6 +74,14 @@ export const columns: ColumnDef<BreedingArea>[] = [
         cell: ({ row }) => (
             <div className="w-[80px]">{row.getValue('covered') ? 'Có' : 'Không'}</div>
         ),
+    },
+    {
+        id: 'count',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Số chuồng nuôi" />,
+        cell: ({ row }) => {
+            const chickenCoops = row.getValue('chickenCoops') as ChickenCoop[];
+            return <div className="w-[80px]">{chickenCoops?.length ?? 0}</div>;
+        },
     },
     {
         id: 'actions',

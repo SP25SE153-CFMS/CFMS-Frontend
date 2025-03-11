@@ -24,16 +24,6 @@ export const BreedingAreaSchema = z.object({
         .min(1, { message: "Số bữa ăn mỗi ngày phải ít nhất là 1" })
         .max(10, { message: "Số bữa ăn mỗi ngày không thể quá 10" }),
 
-    humidity: z
-        .string()
-        .trim()
-        .regex(/^(\d{1,2}(\.\d{1,2})?|100)%$/, { message: "Độ ẩm phải từ 0% đến 100% (VD: 50%)" }),
-
-    temperature: z
-        .string()
-        .trim()
-        .regex(/^(-?\d+(\.\d+)?)°C$/, { message: "Nhiệt độ phải có đơn vị °C (VD: 25°C)" }),
-
     width: z
         .coerce
         .number()

@@ -1,32 +1,35 @@
-import { chickenCoops } from "@/utils/data/table.data";
 import { ChickenCoop } from "@/utils/schemas/chicken-coop.schema";
+import { get, post, put, remove } from "@/utils/functions/axios.function";
+import { Response } from "@/utils/types";
+
+const PREFIX = '/api/ChickenCoop';
 
 export const getChickenCoops = async () => {
-    // Mock API call
-    return chickenCoops;
+    const endpoint = PREFIX
+    const response = await get<Response<ChickenCoop[]>>(endpoint);
+    return response.data.data;
 };
 
 export const getChickenCoopById = async (id: string) => {
-    // Mock API call
-    return chickenCoops.find((coop) => coop.chickenCoopId === id);
+    const endpoint = PREFIX + '/' + id;
+    const response = await get<Response<ChickenCoop>>(endpoint);
+    return response.data.data;
 };
 
 export const createChickenCoop = async (chickenCoop: ChickenCoop) => {
-    // Mock API call
-    chickenCoops.push(chickenCoop);
-    return chickenCoop;
+    const endpoint = PREFIX
+    const response = await post(endpoint, chickenCoop);
+    return response.data;
 }
 
 export const updateChickenCoop = async (chickenCoop: ChickenCoop) => {
-    // Mock API call
-    const index = chickenCoops.findIndex((coop) => coop.chickenCoopId === chickenCoop.chickenCoopId);
-    chickenCoops[index] = chickenCoop;
-    return chickenCoop;
+    const endpoint = PREFIX
+    const response = await put(endpoint, chickenCoop);
+    return response.data;
 }
 
 export const deleteChickenCoop = async (id: string) => {
-    // Mock API call
-    const index = chickenCoops.findIndex((coop) => coop.chickenCoopId === id);
-    chickenCoops.splice(index, 1);
-    return id;
+    const endpoint = PREFIX + '/' + id;
+    const response = await remove(endpoint);
+    return response.data;
 }

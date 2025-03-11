@@ -1,32 +1,35 @@
-import { equipments } from "@/utils/data/table.data";
 import { Equipment } from "@/utils/schemas/equipment.schema";
+import { Response } from "@/utils/types";
+import { get, post, put, remove } from "@/utils/functions/axios.function";
+
+const PREFIX = '/api/Equipment';
 
 export const getEquipments = async () => {
-    // Mock API call
-    return equipments;
+    const endpoint = PREFIX
+    const response = await get<Response<Equipment[]>>(endpoint);
+    return response.data.data;
 };
 
 export const getEquipmentById = async (id: string) => {
-    // Mock API call
-    return equipments.find((equipment) => equipment.equipmentId === id);
+    const endpoint = PREFIX + '/' + id;
+    const response = await get<Response<Equipment>>(endpoint);
+    return response.data.data;
 };
 
 export const createEquipment = async (equipment: Equipment) => {
-    // Mock API call
-    equipments.push(equipment);
-    return equipment;
+    const endpoint = PREFIX
+    const response = await post(endpoint, equipment);
+    return response.data;
 };
 
 export const updateEquipment = async (equipment: Equipment) => {
-    // Mock API call
-    const index = equipments.findIndex((equip) => equip.equipmentId === equipment.equipmentId);
-    equipments[index] = equipment;
-    return equipment;
+    const endpoint = PREFIX
+    const response = await put(endpoint, equipment);
+    return response.data;
 };
 
 export const deleteEquipment = async (id: string) => {
-    // Mock API call
-    const index = equipments.findIndex((equip) => equip.equipmentId === id);
-    equipments.splice(index, 1);
-    return id;
+    const endpoint = PREFIX + '/' + id;
+    const response = await remove(endpoint);
+    return response.data;
 }
