@@ -1,7 +1,5 @@
 'use client';
 
-import type from 'react';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
@@ -26,6 +24,7 @@ import toast from 'react-hot-toast';
 import { Card, CardContent } from '@/components/ui/card';
 import { UploadCloud, X } from 'lucide-react';
 import { useState } from 'react';
+import Image from 'next/image';
 
 interface BreedingAreaFormProps {
     defaultValues?: Partial<BreedingArea>;
@@ -212,7 +211,7 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                                             <div className="flex flex-col items-center">
                                                 {imagePreview ? (
                                                     <div className="relative w-full h-40 mb-4">
-                                                        <img
+                                                        <Image
                                                             src={imagePreview || '/placeholder.svg'}
                                                             alt="Preview"
                                                             className="w-full h-full object-contain rounded-md"
