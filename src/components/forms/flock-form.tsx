@@ -22,6 +22,7 @@ import {
 import { CreateFlockSchema, Flock, FlockSchema } from '@/utils/schemas/flock.schema';
 import { createFlock, updateFlock } from '@/services/flock.service';
 import toast from 'react-hot-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface FlockFormProps {
     defaultValues?: Partial<Flock>;
@@ -51,16 +52,26 @@ export default function FlockForm({ defaultValues, closeDialog }: FlockFormProps
         },
     });
 
+    // Query client
+    const queryClient = useQueryClient();
+
+    // Mutations for creating and updating
+    const mutation = useMutation({
+        mutationFn: defaultValues ? updateFlock : createFlock,
+        onSuccess: () => {
+            closeDialog();
+            queryClient.invalidateQueries({ queryKey: ['flocks'] });
+            toast.success(defaultValues ? 'Cập nhật đàn thành công' : 'Tạo đàn thành công');
+        },
+        onError: (error: any) => {
+            console.error(error);
+            toast.error(error?.response?.data?.message);
+        },
+    });
+
     // Form submit handler
     async function onSubmit(values: Flock) {
-        if (defaultValues) {
-            await updateFlock(values);
-            toast.success('Cập nhật đàn thành công');
-        } else {
-            await createFlock(values);
-            toast.success('Tạo đàn thành công');
-        }
-        closeDialog();
+        mutation.mutate(values);
     }
 
     // Form error handler

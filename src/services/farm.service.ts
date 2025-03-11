@@ -16,20 +16,20 @@ export const getFarmById = async (id: string) => {
     return response.data.data;
 }
 
-export const createFarm = async (farm: Farm) => {
+export const createFarm = async (body: Farm) => {
     const endpoint = PREFIX
-    const response = await post(endpoint, farm);
+    const response = await post<Response<string>>(endpoint, body);
     return response.data;
 }
 
-export const updateFarm = async (farm: Farm) => {
+export const updateFarm = async (body: Farm) => {
     const endpoint = PREFIX
-    const response = await put(endpoint, farm);
+    const response = await put<Response<string>>(endpoint, body);
     return response.data;
 }
 
 export const deleteFarm = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
-    const response = await remove(endpoint);
+    const response = await remove<Response<string>>(endpoint);
     return response.data;
 }

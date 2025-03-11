@@ -1,13 +1,16 @@
 import { Vaccine } from "@/utils/schemas/vaccine.schema";
 import { get, post, put, remove } from "@/utils/functions/axios.function";
 import { Response } from "@/utils/types";
+import { vaccines } from "@/utils/data/table.data";
 
 const PREFIX = '/api/Vaccine';
 
 export const getVaccines = async () => {
+    /* eslint-disable no-unused-vars */
     const endpoint = PREFIX
-    const response = await get<Response<Vaccine[]>>(endpoint);
-    return response.data.data;
+    // const response = await get<Response<Vaccine[]>>(endpoint);
+    // return response.data.data;
+    return vaccines;
 };
 
 export const getVaccineById = async (id: string) => {
@@ -16,20 +19,20 @@ export const getVaccineById = async (id: string) => {
     return response.data.data;
 };
 
-export const createVaccine = async (vaccine: Vaccine) => {
+export const createVaccine = async (body: Vaccine) => {
     const endpoint = PREFIX
-    const response = await post(endpoint, vaccine);
+    const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };
 
-export const updateVaccine = async (vaccine: Vaccine) => {
+export const updateVaccine = async (body: Vaccine) => {
     const endpoint = PREFIX
-    const response = await put(endpoint, vaccine);
+    const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };
 
 export const deleteVaccine = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
-    const response = await remove(endpoint);
+    const response = await remove<Response<string>>(endpoint);
     return response.data;
 };

@@ -1,13 +1,16 @@
 import { Request } from "@/utils/schemas/request.schema";
 import { get, post, put, remove } from "@/utils/functions/axios.function";
 import { Response } from "@/utils/types";
+import { requests } from "@/utils/data/table.data";
 
 const PREFIX = '/api/Request';
 
 export const getRequests = async () => {
+    /* eslint-disable no-unused-vars */
     const endpoint = PREFIX
-    const response = await get<Response<Request[]>>(endpoint);
-    return response.data.data;
+    // const response = await get<Response<Request[]>>(endpoint);
+    // return response.data.data;
+    return requests;
 };
 
 export const getRequestById = async (id: string) => {
@@ -16,20 +19,20 @@ export const getRequestById = async (id: string) => {
     return response.data.data;
 };
 
-export const createRequest = async (request: Request) => {
+export const createRequest = async (body: Request) => {
     const endpoint = PREFIX
-    const response = await post(endpoint, request);
+    const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };
 
-export const updateRequest = async (request: Request) => {
+export const updateRequest = async (body: Request) => {
     const endpoint = PREFIX
-    const response = await put(endpoint, request);
+    const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };
 
 export const deleteRequest = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
-    const response = await remove(endpoint);
+    const response = await remove<Response<string>>(endpoint);
     return response.data;
 }

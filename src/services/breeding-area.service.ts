@@ -16,20 +16,20 @@ export const getBreedingAreaById = async (id: string) => {
     return response.data.data;
 };
 
-export const createBreedingArea = async (breedingArea: BreedingArea) => {
+export const createBreedingArea = async (body: BreedingArea) => {
     const endpoint = PREFIX
-    const response = await post(endpoint, breedingArea);
+    const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };
 
-export const updateBreedingArea = async (breedingArea: BreedingArea) => {
+export const updateBreedingArea = async (body: BreedingArea) => {
     const endpoint = PREFIX
-    const response = await put(endpoint, breedingArea);
+    const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };
 
 export const deleteBreedingArea = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
-    const response = await remove(endpoint);
+    const response = await remove<Response<string>>(endpoint);
     return response.data;
 };

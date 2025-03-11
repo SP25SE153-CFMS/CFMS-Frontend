@@ -9,7 +9,7 @@ export const BreedingAreaSchema = z.object({
         .string()
         .trim()
         .min(1, { message: "Mã khu nuôi là bắt buộc" })
-        .max(50, { message: "Mã khu nuôi quá dài, tối đa 50 ký tự" }),
+        .max(10, { message: "Mã khu nuôi quá dài, tối đa 10 ký tự" }),
 
     breedingAreaName: z
         .string()
@@ -24,17 +24,10 @@ export const BreedingAreaSchema = z.object({
         .min(1, { message: "Số bữa ăn mỗi ngày phải ít nhất là 1" })
         .max(10, { message: "Số bữa ăn mỗi ngày không thể quá 10" }),
 
-    width: z
+    area: z
         .coerce
         .number()
-        .positive({ message: "Chiều rộng phải là số dương" })
-        .max(100, { message: "Chiều rộng không thể vượt quá 100m" }),
-
-    height: z
-        .coerce
-        .number()
-        .positive({ message: "Chiều cao phải là số dương" })
-        .max(50, { message: "Chiều cao không thể vượt quá 50m" }),
+        .positive({ message: "Diện tích phải là số dương" }),
 
     image: z
         .string()
@@ -46,17 +39,9 @@ export const BreedingAreaSchema = z.object({
         .max(500, { message: "Ghi chú không được vượt quá 500 ký tự" })
         .optional(),
 
-    covered: z.boolean(),
-
     farmId: z
         .string()
         .uuid({ message: "ID trang trại không hợp lệ, phải là UUID" }),
-
-    breedingPurpose: z
-        .string()
-        .trim()
-        .min(1, { message: "Mục đích nuôi là bắt buộc" })
-        .max(200, { message: "Mục đích nuôi không được dài quá 200 ký tự" }),
 });
 
 export type BreedingArea = z.infer<typeof BreedingAreaSchema>;
