@@ -1,7 +1,7 @@
 'use client';
 
 import { CaretSortIcon, ComponentPlaceholderIcon } from '@radix-ui/react-icons';
-import { BadgeCheck, Bell, LogOut, Sparkles } from 'lucide-react';
+import { BadgeCheck, Bell, LogOut } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -20,6 +20,8 @@ import {
     useSidebar,
 } from '@/components/ui/sidebar';
 import initials from 'initials';
+import Link from 'next/link';
+import config from '@/configs';
 
 export default function SidebarFooterMenu({
     user,
@@ -73,31 +75,39 @@ export default function SidebarFooterMenu({
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
+                        {/* <DropdownMenuGroup>
                             <DropdownMenuItem>
                                 <Sparkles />
                                 Upgrade to Pro
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator /> */}
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <BadgeCheck />
-                                Account
+                            <DropdownMenuItem asChild>
+                                <Link href={config.routes.signIn}>
+                                    <BadgeCheck />
+                                    Tài khoản
+                                </Link>
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <ComponentPlaceholderIcon />
-                                Billing
+                            <DropdownMenuItem asChild>
+                                <Link href={config.routes.signIn}>
+                                    <ComponentPlaceholderIcon />
+                                    Thanh toán
+                                </Link>
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <Bell />
-                                Notifications
+                            <DropdownMenuItem asChild>
+                                <Link href={config.routes.signIn}>
+                                    <Bell />
+                                    Thông báo
+                                </Link>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                            <LogOut />
-                            Log out
+                        <DropdownMenuItem asChild>
+                            <Link href={config.routes.signIn}>
+                                <LogOut />
+                                Đăng xuất
+                            </Link>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

@@ -77,10 +77,9 @@ export const farms: Farm[] = [
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801',
         farmName: 'Trang trại Xanh',
         farmCode: 'TT002',
-        type: 'Hữu cơ',
         address: 'Hà Nội',
         area: 100,
-        scale: 'Vừa',
+        scale: 0,
         phoneNumber: '0123456789',
         website: '/dashboard',
         farmImage:
@@ -90,10 +89,9 @@ export const farms: Farm[] = [
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
         farmName: 'Trang trại Việt',
         farmCode: 'TT002',
-        type: 'Hữu cơ',
         address: 'Hà Nội',
         area: 100,
-        scale: 'Lớn',
+        scale: 0,
         phoneNumber: '0123456789',
         website: '/dashboard',
         farmImage:
@@ -103,10 +101,9 @@ export const farms: Farm[] = [
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
         farmName: 'Trang trại chuẩn Úc',
         farmCode: 'TT003',
-        type: 'Hữu cơ',
         address: 'TP Hồ Chí Minh',
         area: 100,
-        scale: 'Lớn',
+        scale: 0,
         phoneNumber: '0123456789',
         website: '/dashboard',
         farmImage:
@@ -714,7 +711,7 @@ export const warehouseProduct: WarehouseProduct[] = [
 export const chickenBatches: ChickenBatch[] = [
     {
         chickenBatchId: "550e8400-e29b-41d4-a716-446655440000",
-        chickenCoopId: "d2e3f4a5-b6c7-8901-d2e3-f4a5b6c78901",
+        chickenCoopId: chickenCoops[0].chickenCoopId,
         name: "Lứa Xuân Sớm",
         startDate: "2024-01-10",
         endDate: "2024-05-15",
@@ -723,7 +720,7 @@ export const chickenBatches: ChickenBatch[] = [
     },
     {
         chickenBatchId: "6a1f73b6-1dd2-11b2-87f3-fda0b64f5d9e",
-        chickenCoopId: "d2e3f4a5-b6c7-8901-d2e3-f4a5b6c78901",
+        chickenCoopId: chickenCoops[0].chickenCoopId,
         name: "Lứa Gà Đồi",
         startDate: "2024-02-05",
         endDate: "2024-06-20",
@@ -732,7 +729,7 @@ export const chickenBatches: ChickenBatch[] = [
     },
     {
         chickenBatchId: "7c5d4e2a-45b6-4c8f-83d5-8c529ac7a73e",
-        chickenCoopId: "d2e3f4a5-b6c7-8901-d2e3-f4a5b6c78901",
+        chickenCoopId: chickenCoops[2].chickenCoopId,
         name: "Lứa Gà Tre",
         startDate: "2024-03-01",
         endDate: "2024-07-10",
@@ -741,7 +738,7 @@ export const chickenBatches: ChickenBatch[] = [
     },
     {
         chickenBatchId: "9d8a7e6b-2b4c-4a1f-9573-66e3d5b9cdef",
-        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        chickenCoopId: chickenCoops[1].chickenCoopId,
         name: "Lứa Gà Ta",
         startDate: "2024-04-15",
         endDate: "2024-08-30",
@@ -750,7 +747,7 @@ export const chickenBatches: ChickenBatch[] = [
     },
     {
         chickenBatchId: "2e4b6c7d-8a9f-5b3e-4c2d-1f6e7a8d9c5b",
-        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        chickenCoopId: chickenCoops[1].chickenCoopId,
         name: "Lứa Gà Chọi",
         startDate: "2024-05-10",
         endDate: "2024-09-25",
@@ -759,7 +756,7 @@ export const chickenBatches: ChickenBatch[] = [
     },
     {
         chickenBatchId: "6e7f8d9c-5b4e-3a2d-1f9b7c6d8a4e",
-        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        chickenCoopId: chickenCoops[3].chickenCoopId,
         name: "Lứa Gà Công Nghiệp",
         startDate: "2024-06-20",
         endDate: "2024-10-15",
@@ -768,7 +765,7 @@ export const chickenBatches: ChickenBatch[] = [
     },
     {
         chickenBatchId: "1f6e7a8d-9c5b-4e3a-2d7c8b6d9a4f",
-        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        chickenCoopId: chickenCoops[4].chickenCoopId,
         name: "Lứa Gà Siêu Trứng",
         startDate: "2024-07-05",
         endDate: null,
@@ -777,7 +774,7 @@ export const chickenBatches: ChickenBatch[] = [
     },
     {
         chickenBatchId: "3e9d7c6b-5a4f-2d1b-8c6e7a9d8c4f",
-        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        chickenCoopId: chickenCoops[1].chickenCoopId,
         name: "Lứa Gà Giống",
         startDate: "2024-08-10",
         endDate: null,
@@ -786,7 +783,7 @@ export const chickenBatches: ChickenBatch[] = [
     },
     {
         chickenBatchId: "4e7d8c9a-5b6f-3a2d-1b9c7d6e8a4f",
-        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        chickenCoopId: chickenCoops[1].chickenCoopId,
         name: "Lứa Gà Tết",
         startDate: "2024-09-15",
         endDate: "2025-01-20",
@@ -795,7 +792,7 @@ export const chickenBatches: ChickenBatch[] = [
     },
     {
         chickenBatchId: "5e9d7c6b-4a3f-2d1b-8c7a9d6e8f4b",
-        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        chickenCoopId: chickenCoops[1].chickenCoopId,
         name: "Lứa Gà Thả Vườn",
         startDate: "2024-10-01",
         endDate: null,
@@ -804,7 +801,7 @@ export const chickenBatches: ChickenBatch[] = [
     },
     {
         chickenBatchId: "6e8d9c7b-5a4f-3a2d-1b9c7d6e8a4f",
-        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        chickenCoopId: chickenCoops[1].chickenCoopId,
         name: "Lứa Gà Hè",
         startDate: "2024-11-10",
         endDate: "2025-03-15",
@@ -813,7 +810,7 @@ export const chickenBatches: ChickenBatch[] = [
     },
     {
         chickenBatchId: "7e9d6c5b-4a3f-2d1b-8c7a9d6e8f4b",
-        chickenCoopId: "1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890",
+        chickenCoopId: chickenCoops[1].chickenCoopId,
         name: "Lứa Gà Đông",
         startDate: "2024-12-05",
         endDate: "2025-04-20",
@@ -1324,4 +1321,12 @@ export const vaccinationLogs: VaccinationLog[] = [
         vaccineId: vaccines[0].vaccineId,
         flockId: flocks[4].flockId,
     },
+];
+
+export const techinicalIndicators = [
+    { id: 1, name: 'NGÀY NUÔI', value: '9' },
+    { id: 2, name: 'TỔNG ĐÀN', value: '9820 con' },
+    { id: 3, name: 'CÂN NẶNG TB', value: '0.12kg' },
+    { id: 4, name: 'MẬT ĐỘ', value: '9.18 con/m2' },
+    { id: 5, name: 'SL THU HOẠCH', value: '136 (1,36%)' },
 ];
