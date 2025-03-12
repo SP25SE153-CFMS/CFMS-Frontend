@@ -649,9 +649,8 @@ export const coopEquipments: CoopEquipment[] = [
 
 export const warehouseProducts: WarehouseProduct[] = [
     {
-        productId: 'prd1',
-        productCode: 'GA001',
-        productName: 'Thức ăn hỗn hợp cho gà con',
+        productCode: 'gA001',
+        productName: 'thức ăn hỗn hợp cho gà con',
         quantity: 500,
         unit: 'bao',
         area: 'Kho A',
@@ -660,7 +659,6 @@ export const warehouseProducts: WarehouseProduct[] = [
         supplier: 'Công ty CP GreenFeed',
     },
     {
-        productId: 'prd2',
         productCode: 'GA002',
         productName: 'Cám gà siêu tăng trưởng',
         quantity: 300,
@@ -671,7 +669,6 @@ export const warehouseProducts: WarehouseProduct[] = [
         supplier: 'Công ty TNHH Cargill',
     },
     {
-        productId: 'prd3',
         productCode: 'GA003',
         productName: 'Thức ăn viên cao cấp',
         quantity: 250,
@@ -682,7 +679,6 @@ export const warehouseProducts: WarehouseProduct[] = [
         supplier: 'Công ty CP Vina',
     },
     {
-        productId: 'prd4',
         productCode: 'GA004',
         productName: 'Bột cá làm thức ăn cho gà',
         quantity: 450,
@@ -693,7 +689,6 @@ export const warehouseProducts: WarehouseProduct[] = [
         supplier: 'Công ty TNHH Japfa',
     },
     {
-        productId: 'prd5',
         productCode: 'GA005',
         productName: 'Thức ăn gà đẻ trứng',
         quantity: 600,
@@ -704,7 +699,6 @@ export const warehouseProducts: WarehouseProduct[] = [
         supplier: 'Công ty CP Vina',
     },
     {
-        productId: 'prd6',
         productCode: 'GA006',
         productName: 'Thức ăn gà thịt siêu tốc',
         quantity: 350,
@@ -715,7 +709,6 @@ export const warehouseProducts: WarehouseProduct[] = [
         supplier: 'Công ty TNHH Cargill',
     },
     {
-        productId: 'prd7',
         productCode: 'GA007',
         productName: 'Thức ăn hữu cơ cho gà',
         quantity: 200,
@@ -726,7 +719,6 @@ export const warehouseProducts: WarehouseProduct[] = [
         supplier: 'Công ty CP GreenFeed',
     },
     {
-        productId: 'prd8',
         productCode: 'GA008',
         productName: 'Cám gà cao cấp',
         quantity: 400,
@@ -737,7 +729,6 @@ export const warehouseProducts: WarehouseProduct[] = [
         supplier: 'Công ty TNHH Japfa',
     },
     {
-        productId: 'prd9',
         productCode: 'GA009',
         productName: 'Thức ăn dinh dưỡng cho gà con',
         quantity: 700,
@@ -748,7 +739,6 @@ export const warehouseProducts: WarehouseProduct[] = [
         supplier: 'Công ty CP Vina',
     },
     {
-        productId: 'prd10',
         productCode: 'GA010',
         productName: 'Cám gà hữu cơ 100%',
         quantity: 300,
@@ -759,7 +749,6 @@ export const warehouseProducts: WarehouseProduct[] = [
         supplier: 'Công ty TNHH Cargill',
     },
     {
-        productId: 'prd11',
         productCode: 'GA011',
         productName: 'Lúa nguyên hạt',
         quantity: 800,

@@ -3,7 +3,7 @@
 import { WarehouseProduct, WarehouseProductSchema } from '@/utils/schemas/warehouse-product.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Form, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import { createProducts } from '@/services/warehouse-product.service';
 import toast from 'react-hot-toast';
@@ -16,9 +16,7 @@ interface WarehouseProductFormProps {
 export default function WarehouseProductForm({ closeModal }: WarehouseProductFormProps) {
     const form = useForm<WarehouseProduct>({
         resolver: zodResolver(WarehouseProductSchema),
-        criteriaMode: 'all', // Dùng để bắt lỗi cho tất cả các điều kiện
         defaultValues: {
-            productId: '',
             productCode: '',
             productName: '',
             area: '',
@@ -26,18 +24,24 @@ export default function WarehouseProductForm({ closeModal }: WarehouseProductFor
             unit: '',
             expiry: '',
             supplier: '',
+            dateToImport: new Date().toISOString(),
         },
+        mode: 'onChange',
     });
 
     // Error
     const onError = (error: any) => {
-        console.error(error);
+        console.log('Lỗi form:', error);
     };
 
     // Submit
     const onSubmit = async (values: WarehouseProduct) => {
         try {
-            await createProducts(values);
+            const dataToSubmit = {
+                ...values,
+                dateToImport: new Date().toISOString(),
+            };
+            await createProducts(dataToSubmit);
             toast.success('Tạo khu nuôi thành công');
             closeModal();
         } catch (error) {
@@ -64,23 +68,25 @@ export default function WarehouseProductForm({ closeModal }: WarehouseProductFor
                             key={name}
                             control={form.control}
                             name={name}
-                            render={(field) => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>{label}</FormLabel>
-                                    {type === 'number' ? (
-                                        <Input
-                                            type="number"
-                                            min={0} // Không được nhập số âm ở UI
-                                            placeholder={`Nhập ${label.toLowerCase()}`}
-                                            {...field}
-                                        />
-                                    ) : (
-                                        <Input
-                                            type={type}
-                                            placeholder={`Nhập ${label.toLowerCase()}`}
-                                            {...field}
-                                        />
-                                    )}
+                                    <FormControl>
+                                        {type === 'number' ? (
+                                            <Input
+                                                type="number"
+                                                min={1} // Không được nhập số âm ở UI
+                                                placeholder={`Nhập ${label.toLowerCase()}`}
+                                                {...field}
+                                            />
+                                        ) : (
+                                            <Input
+                                                type={type}
+                                                placeholder={`Nhập ${label.toLowerCase()}`}
+                                                {...field}
+                                            />
+                                        )}
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
