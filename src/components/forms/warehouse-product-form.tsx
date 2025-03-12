@@ -3,14 +3,20 @@
 import { WarehouseProduct, WarehouseProductSchema } from '@/utils/schemas/warehouse-product.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import { Form, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Skeleton } from '../ui/skeleton';
+import { createProducts } from '@/services/warehouse-product.service';
+import toast from 'react-hot-toast';
+import { Button } from '../ui/button';
 
-export default function WarehouseProductForm() {
+interface WarehouseProductFormProps {
+    defaultValues?: Partial<WarehouseProduct>;
+    closeModal: () => void;
+}
+export default function WarehouseProductForm({ closeModal }: WarehouseProductFormProps) {
     const form = useForm<WarehouseProduct>({
         resolver: zodResolver(WarehouseProductSchema),
+        criteriaMode: 'all', // Dùng để bắt lỗi cho tất cả các điều kiện
         defaultValues: {
             productId: '',
             productCode: '',
@@ -23,21 +29,37 @@ export default function WarehouseProductForm() {
         },
     });
 
+    // Error
+    const onError = (error: any) => {
+        console.error(error);
+    };
+
+    // Submit
+    const onSubmit = async (values: WarehouseProduct) => {
+        try {
+            await createProducts(values);
+            toast.success('Tạo khu nuôi thành công');
+            closeModal();
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const fields = [
         { name: 'productCode', label: 'Mã hàng', type: 'text' },
         { name: 'productName', label: 'Tên hàng', type: 'text' },
         { name: 'area', label: 'Khu vực', type: 'text' },
         { name: 'quantity', label: 'Số lượng', type: 'number' },
-        { name: 'unit', label: 'Đơn vị', type: 'select', options: ['Kg', 'Bao'] },
+        { name: 'unit', label: 'Đơn vị', type: 'text' },
         { name: 'expiry', label: 'Hạn sử dụng', type: 'date' },
         { name: 'supplier', label: 'Nhà cung cấp', type: 'text' },
     ] as const;
 
     return (
         <Form {...form}>
-            <form>
-                <div>
-                    {fields.map(({ name, label, type, options}) => (
+            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
+                    {fields.map(({ name, label, type }) => (
                         <FormField
                             key={name}
                             control={form.control}
@@ -45,34 +67,30 @@ export default function WarehouseProductForm() {
                             render={(field) => (
                                 <FormItem>
                                     <FormLabel>{label}</FormLabel>
-                                    <FormControl>
-                                        {type === 'select' && options ? (
-                                            <Select>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder={`Chọn ${label}`} />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {options.map((option) => (
-                                                        <SelectItem key={option} value={option}>
-                                                            {option}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        ) : (
-                                            <Input
-                                                type={type}
-                                                placeholder={`Nhập ${label}`}
-                                                {...field}
-                                            />
-                                        )}
-                                    </FormControl>
+                                    {type === 'number' ? (
+                                        <Input
+                                            type="number"
+                                            min={0} // Không được nhập số âm ở UI
+                                            placeholder={`Nhập ${label.toLowerCase()}`}
+                                            {...field}
+                                        />
+                                    ) : (
+                                        <Input
+                                            type={type}
+                                            placeholder={`Nhập ${label.toLowerCase()}`}
+                                            {...field}
+                                        />
+                                    )}
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
                     ))}
                 </div>
+
+                <Button type="submit" className="ml-auto mt-6 w-40 flex">
+                    Tạo
+                </Button>
             </form>
         </Form>
     );

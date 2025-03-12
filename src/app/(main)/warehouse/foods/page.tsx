@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { DataTable } from '@/components/table/data-table';
-import { warehouseProduct } from '@/utils/data/table.data';
+import { warehouseProducts } from '@/utils/data/table.data';
 import { columns } from './columns';
 import Search from '@/components/search';
 import {
@@ -16,6 +16,8 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Plus } from 'lucide-react';
+import WarehouseProductForm from '@/components/forms/warehouse-product-form';
 
 export default function Foods() {
     const [searchValue, setSearchValue] = useState('');
@@ -23,10 +25,12 @@ export default function Foods() {
     const [open, setOpen] = useState(false);
 
     const openModal = () => setOpen(true);
+    const closeModal = () => setOpen(false);
+    const onOpenChange = (val: boolean) => setOpen(val);
 
-    const uniqueAreas = Array.from(new Set(warehouseProduct.map((product) => product.area)));
+    const uniqueAreas = Array.from(new Set(warehouseProducts.map((product) => product.area)));
 
-    const filteredData = warehouseProduct.filter((product) => {
+    const filteredData = warehouseProducts.filter((product) => {
         const matchesSearch =
             product.productName.toLowerCase().startsWith(searchValue.toLowerCase()) ||
             product.productCode.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -61,18 +65,20 @@ export default function Foods() {
                 </Select>
 
                 <div className="absolute right-0">
-                    <Button onClick={openModal}>Add product</Button>
+                    <Button onClick={openModal}>
+                        <span>Tạo</span> <Plus size={18} />
+                    </Button>
 
-                    <Dialog open={open}>
+                    <Dialog open={open} onOpenChange={onOpenChange}>
                         <DialogContent>
                             <DialogHeader>
-                                <DialogTitle>Tạo hàng hóa</DialogTitle>
+                                <DialogTitle className="font-semibold">Tạo hàng hóa</DialogTitle>
                                 <DialogDescription>
                                     Nhập đầy đủ các thông tin dưới.
                                 </DialogDescription>
                             </DialogHeader>
-                            <ScrollArea className='max-h-[600px]'>
-                                
+                            <ScrollArea className="max-h-[600px]">
+                                <WarehouseProductForm closeModal={closeModal} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>

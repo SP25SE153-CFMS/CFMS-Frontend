@@ -17,6 +17,10 @@ export const WarehouseProductSchema = z
     .refine((data) => new Date(data.dateToImport) < new Date(data.expiry), {
         message: 'Quá hạn sử dụng',
         path: ['dateToImport'],
+    })
+    .refine((data) => new Date(data.expiry) > new Date(), {
+        message: 'Quá hạn sử dụng',
+        path: ['expiry']
     });
 
 export type WarehouseProduct = z.infer<typeof WarehouseProductSchema>;
