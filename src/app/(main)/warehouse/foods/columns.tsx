@@ -4,6 +4,7 @@ import { capitalizeFirstLetter } from '@/utils/functions';
 import { WarehouseProduct } from '@/utils/schemas/warehouse-product.schema';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
+import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<WarehouseProduct>[] = [
     {
@@ -39,7 +40,7 @@ export const columns: ColumnDef<WarehouseProduct>[] = [
         accessorKey: 'productCode',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mã hàng" />,
         cell: ({ row }) => (
-            <div className="w-[40px]">{capitalizeFirstLetter(row.getValue('productCode'))}</div>
+            <div className="w-[40px]">{String(row.getValue('productCode')).toUpperCase()}</div>
         ),
     },
     {
@@ -60,7 +61,7 @@ export const columns: ColumnDef<WarehouseProduct>[] = [
     {
         accessorKey: 'area',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Khu vực" />,
-        cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('area'))}</div>,
+        cell: ({ row }) => <div>Kho {capitalizeFirstLetter(row.getValue('area'))}</div>,
     },
     {
         accessorKey: 'expiry',
@@ -84,8 +85,7 @@ export const columns: ColumnDef<WarehouseProduct>[] = [
         cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('supplier'))}</div>,
     },
     {
-        accessorKey: 'supplier',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Nhà cung cấp" />,
-        cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('supplier'))}</div>,
+        id: "action",
+        cell: ({ row }) => <DataTableRowActions row={row}/>,
     },
 ];

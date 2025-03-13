@@ -1,11 +1,11 @@
 'use client';
 
-import { WarehouseProduct, WarehouseProductSchema } from '@/utils/schemas/warehouse-product.schema';
+import { CreateProductSchema, WarehouseProduct, WarehouseProductSchema } from '@/utils/schemas/warehouse-product.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
-import { createProducts } from '@/services/warehouse-product.service';
+import { createProduct } from '@/services/warehouse-product.service';
 import toast from 'react-hot-toast';
 import { Button } from '../ui/button';
 
@@ -13,9 +13,9 @@ interface WarehouseProductFormProps {
     defaultValues?: Partial<WarehouseProduct>;
     closeModal: () => void;
 }
-export default function WarehouseProductForm({ closeModal }: WarehouseProductFormProps) {
+export default function WarehouseProductForm({ defaultValues, closeModal }: WarehouseProductFormProps) {
     const form = useForm<WarehouseProduct>({
-        resolver: zodResolver(WarehouseProductSchema),
+        resolver: zodResolver(defaultValues ? WarehouseProductSchema : CreateProductSchema),
         defaultValues: {
             productCode: '',
             productName: '',
@@ -25,6 +25,7 @@ export default function WarehouseProductForm({ closeModal }: WarehouseProductFor
             expiry: '',
             supplier: '',
             dateToImport: new Date().toISOString(),
+            ...defaultValues
         },
         mode: 'onChange',
     });
@@ -41,7 +42,7 @@ export default function WarehouseProductForm({ closeModal }: WarehouseProductFor
                 ...values,
                 dateToImport: new Date().toISOString(),
             };
-            await createProducts(dataToSubmit);
+            await createProduct(dataToSubmit);
             toast.success('Tạo khu nuôi thành công');
             closeModal();
         } catch (error) {

@@ -60,7 +60,7 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
             await createBreedingArea(values);
             toast.success('Tạo khu nuôi thành công');
         }
-        closeDialog();
+        closeDialog();  
     };
 
     // Form error handler
