@@ -1,9 +1,14 @@
 import { farms } from "@/utils/data/table.data";
 import { Farm } from "@/utils/schemas/farm.schema";
+import { get, post } from "@/utils/functions/axios.function";
+import { Response } from "@/utils/types";
 
-export const getFarms = async (): Promise<Farm[]> => {
-    // Mock API call
-    return farms;
+const PREFIX = '/api/Farm';
+
+export const getFarms = async () => {
+    const endpoint = PREFIX
+    const response = await get<Response<Farm[]>>(endpoint);
+    return response.data.data;
 };
 
 export const getFarmById = async (id: string) => {
@@ -12,9 +17,9 @@ export const getFarmById = async (id: string) => {
 }
 
 export const createFarm = async (farm: Farm) => {
-    // Mock API call
-    farms.push(farm);
-    return farm;
+    const endpoint = PREFIX
+    const response = await post(endpoint, farm);
+    return response.data;
 }
 
 export const updateFarm = async (farm: Farm) => {
