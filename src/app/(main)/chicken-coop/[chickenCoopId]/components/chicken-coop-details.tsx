@@ -3,13 +3,18 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import config from '@/configs';
+import { useChickenCoopStore } from '@/store/use-chicken-coop';
 import { chickenCoops } from '@/utils/data/table.data';
-import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { Select } from '@radix-ui/react-select';
 import dayjs from 'dayjs';
 import { AlignRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
-const ChickenCoopDetails = ({ currentCoop }: { currentCoop: ChickenCoop }) => {
+const ChickenCoopDetails = () => {
+    const { chickenCoop, setChickenCoop } = useChickenCoopStore();
+    const router = useRouter();
+
     return (
         <Card>
             <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4">
@@ -22,7 +27,18 @@ const ChickenCoopDetails = ({ currentCoop }: { currentCoop: ChickenCoop }) => {
                             <AlignRight size={20} />
                         </PopoverTrigger>
                         <PopoverContent className="p-0">
-                            <Select defaultOpen>
+                            <Select
+                                defaultOpen
+                                onValueChange={(coopId) => {
+                                    const selectedCoop = chickenCoops.find(
+                                        (coop) => coop.chickenCoopId === coopId,
+                                    );
+                                    if (selectedCoop) {
+                                        setChickenCoop(selectedCoop);
+                                        router.push(`${config.routes.chickenCoop}/${coopId}`);
+                                    }
+                                }}
+                            >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Đổi chuồng nuôi..." />
                                 </SelectTrigger>
@@ -43,33 +59,33 @@ const ChickenCoopDetails = ({ currentCoop }: { currentCoop: ChickenCoop }) => {
 
                 <div className="flex gap-3 text-sm mb-4">
                     Mã chuồng gà:{' '}
-                    <strong className="flex-1 text-right">{currentCoop?.chickenCoopCode}</strong>
+                    <strong className="flex-1 text-right">{chickenCoop?.chickenCoopCode}</strong>
                 </div>
                 <div className="flex gap-3 text-sm mb-4">
                     Tên chuồng gà:{' '}
-                    <strong className="flex-1 text-right">{currentCoop?.chickenCoopName}</strong>
+                    <strong className="flex-1 text-right">{chickenCoop?.chickenCoopName}</strong>
                 </div>
                 <div className="flex gap-3 text-sm mb-4">
                     Số lượng:{' '}
-                    <strong className="flex-1 text-right">{currentCoop?.capacity} con</strong>
+                    <strong className="flex-1 text-right">{chickenCoop?.capacity} con</strong>
                 </div>
                 <div className="flex gap-3 text-sm mb-4">
-                    Vị trí: <strong className="flex-1 text-right">{currentCoop?.location}</strong>
+                    Vị trí: <strong className="flex-1 text-right">{chickenCoop?.location}</strong>
                 </div>
                 <div className="flex gap-3 text-sm mb-4 items-center justify-between">
-                    Trạng thái: <Badge>{currentCoop?.status}</Badge>
+                    Trạng thái: <Badge>{chickenCoop?.status}</Badge>
                 </div>
                 <div className="flex gap-3 text-sm mb-4">
                     Ngày tạo:{' '}
                     <strong className="flex-1 text-right">
-                        {dayjs(currentCoop?.createdAt).format('DD/MM/YYYY')}
+                        {dayjs(chickenCoop?.createdAt).format('DD/MM/YYYY')}
                     </strong>
                 </div>
                 <div className="flex gap-3 text-sm mb-4">
                     Ngày cập nhật:{' '}
                     <strong className="flex-1 text-right">
-                        {currentCoop?.updatedAt
-                            ? dayjs(currentCoop?.updatedAt)?.format('DD/MM/YYYY')
+                        {chickenCoop?.updatedAt
+                            ? dayjs(chickenCoop?.updatedAt)?.format('DD/MM/YYYY')
                             : '-'}
                     </strong>
                 </div>

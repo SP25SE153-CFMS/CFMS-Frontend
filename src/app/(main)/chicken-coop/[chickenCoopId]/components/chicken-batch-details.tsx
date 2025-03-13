@@ -26,6 +26,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { getChickenBatches } from '@/services/chicken-batch.service';
 import { useQuery } from '@tanstack/react-query';
+import { downloadCSV } from '@/utils/functions/download-csv.function';
+import { ChickenBatch } from '@/utils/schemas/chicken-batch.schema';
+import { useState } from 'react';
 
 const ChickenBatchDetails = ({ chickenCoopId }: { chickenCoopId: string }) => {
     const { data: chickenBatches } = useQuery({
@@ -33,8 +36,8 @@ const ChickenBatchDetails = ({ chickenCoopId }: { chickenCoopId: string }) => {
         queryFn: () => getChickenBatches(),
     });
 
-    const currentChickenBatch = chickenBatches?.find(
-        (batch) => batch.chickenCoopId === chickenCoopId,
+    const [currentChickenBatch, setCurrentChickenBatch] = useState<ChickenBatch | undefined>(
+        chickenBatches?.find((batch) => batch.chickenCoopId === chickenCoopId),
     );
 
     return (
@@ -49,7 +52,16 @@ const ChickenBatchDetails = ({ chickenCoopId }: { chickenCoopId: string }) => {
                             <AlignRight size={20} />
                         </PopoverTrigger>
                         <PopoverContent className="p-0">
-                            <Select defaultOpen>
+                            <Select
+                                defaultOpen
+                                onValueChange={(batchId) =>
+                                    setCurrentChickenBatch(
+                                        chickenBatches?.find(
+                                            (batch) => batch.chickenBatchId === batchId,
+                                        ),
+                                    )
+                                }
+                            >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Đổi lứa nuôi..." />
                                 </SelectTrigger>
@@ -84,7 +96,11 @@ const ChickenBatchDetails = ({ chickenCoopId }: { chickenCoopId: string }) => {
             </div>
 
             <CardFooter className="flex flex-col gap-2">
-                <Button variant="outline" className="w-full space-x-1">
+                <Button
+                    variant="outline"
+                    className="w-full space-x-1"
+                    onClick={() => downloadCSV(chickenBatches || [], 'chicken-batches.csv')}
+                >
                     <span>Tải file Excel</span> <Download size={18} />
                 </Button>
                 <AlertDialog>

@@ -18,6 +18,7 @@ import { Download, Plus } from 'lucide-react';
 import AddEquipmentForm from './form';
 import { getFlocks } from '@/services/flock.service';
 import { useQuery } from '@tanstack/react-query';
+import { downloadCSV } from '@/utils/functions/download-csv.function';
 
 export default function CardFlock() {
     const [open, setOpen] = useState(false);
@@ -40,7 +41,11 @@ export default function CardFlock() {
                     </p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" className="space-x-1">
+                    <Button
+                        variant="outline"
+                        className="space-x-1"
+                        onClick={() => downloadCSV(flocks || [], 'flocks.csv')}
+                    >
                         <span>Tải file</span> <Download size={18} />
                     </Button>
                     <Button className="space-x-1" onClick={openModal}>

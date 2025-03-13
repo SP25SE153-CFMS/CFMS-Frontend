@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -5,49 +6,41 @@ import { Plus, Database } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import Image from 'next/image';
 import { Chart } from './chart';
 import CardEquipment from './components/equipments/card';
 import ChickenCoopDetails from './components/chicken-coop-details';
 import ChickenBatchDetails from './components/chicken-batch-details';
 import { techinicalIndicators } from '@/utils/data/table.data';
-import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
-import { getBreedingAreas } from '@/services/breeding-area.service';
-import { useQuery } from '@tanstack/react-query';
 import CardFlock from './components/flock/card';
 import CardEmployee from './components/employee/card';
 import CardHarvest from './components/harvest/card';
+import { useEffect } from 'react';
+import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
+import { useChickenCoopStore } from '@/store/use-chicken-coop';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 export default function Page() {
     const { chickenCoopId } = useParams();
+    const { chickenCoop, setChickenCoop } = useChickenCoopStore();
 
-    const chickenCoops: ChickenCoop[] = JSON.parse(sessionStorage.getItem('chickenCoops') || '[]');
-    const currentCoop = chickenCoops.find((coop) => coop.chickenCoopId === chickenCoopId);
+    // Fetch chicken coop data from session storage
+    useEffect(() => {
+        const chickenCoops: ChickenCoop[] = JSON.parse(
+            sessionStorage.getItem('chickenCoops') || '[]',
+        );
 
-    const { data: breedingAreas } = useQuery({
-        queryKey: ['breedingAreas'],
-        queryFn: () => getBreedingAreas(),
-    });
+        const foundCoop = chickenCoops.find((coop) => coop.chickenCoopId === chickenCoopId);
 
-    if (!currentCoop) {
+        if (foundCoop) {
+            setChickenCoop(foundCoop);
+        }
+    }, [chickenCoopId, setChickenCoop]);
+
+    if (!chickenCoop) {
         return (
-            <div className="w-full h-full flex items-center justify-center">
-                <Card className="px-36 py-8">
-                    <div className="flex flex-col justify-center items-center h-[300px] gap-4">
-                        <Image src="/no-data.jpg" width={300} height={300} alt="Not Found" />
-                        <h1 className="text-2xl font-bold">Chuồng nuôi không tồn tại</h1>
-                        <Button variant="outline" onClick={() => window.history.back()}>
-                            Quay lại
-                        </Button>
-                    </div>
-                </Card>
+            <div className="flex items-center justify-center h-full">
+                <LoadingSpinner />;
             </div>
         );
     }
@@ -57,25 +50,13 @@ export default function Page() {
             <div className="flex justify-between">
                 <h1 className="text-3xl font-bold tracking-tight">
                     Thông tin chuồng nuôi
-                    <span className="text-primary ml-2">{currentCoop?.chickenCoopName}</span>
+                    <span className="text-primary ml-2">{chickenCoop?.chickenCoopName}</span>
                 </h1>
-                <Select>
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Đổi khu nuôi..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {breedingAreas?.map((area) => (
-                            <SelectItem key={area.breedingAreaId} value={area.breedingAreaId}>
-                                {area.breedingAreaName}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-6">
                 <div className="flex flex-col gap-4">
-                    <ChickenCoopDetails currentCoop={currentCoop} />
+                    <ChickenCoopDetails currentCoop={chickenCoop} />
                     <ChickenBatchDetails chickenCoopId={chickenCoopId as string} />
                     <Chart />
                 </div>

@@ -67,44 +67,4 @@ export const columns: ColumnDef<Flock>[] = [
             );
         },
     },
-    // {
-    //     accessorKey: 'avgWeight',
-    //     header: ({ column }) => (
-    //         <DataTableColumnHeader column={column} title="Trọng lượng trung bình (kg)" />
-    //     ),
-    //     cell: ({ row }) => <div className="w-[120px] text-center">{row.getValue('avgWeight')}</div>,
-    // },
-    // {
-    //     accessorKey: 'mortalityRate',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Tỷ lệ tử vong (%)" />,
-    //     cell: ({ row }) => (
-    //         <div className="w-[120px] text-center">{row.getValue('mortalityRate')}%</div>
-    //     ),
-    // },
-    // {
-    //     accessorKey: 'lastHealthCheck',
-    //     header: ({ column }) => (
-    //         <DataTableColumnHeader column={column} title="Lần kiểm tra sức khỏe cuối" />
-    //     ),
-    //     cell: ({ row }) => (
-    //         <div className="w-[150px]">
-    //             {row.getValue('lastHealthCheck')
-    //                 ? dayjs(row.getValue('lastHealthCheck')).format('DD/MM/YYYY')
-    //                 : '-'}
-    //         </div>
-    //     ),
-    // },
-    // {
-    //     accessorKey: 'gender',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Giới tính" />,
-    //     cell: ({ row }) => {
-    //         const genderLabels: Record<string, string> = {
-    //             male: 'Trống',
-    //             female: 'Mái',
-    //             mixed: 'Hỗn hợp',
-    //         };
-    //         const gender: string = row.getValue('gender');
-    //         return <div className="w-[100px] text-center">{genderLabels[gender]}</div>;
-    //     },
-    // },
 ];
