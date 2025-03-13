@@ -2,14 +2,16 @@ import { z } from 'zod';
 
 export const WarehouseProductSchema = z
     .object({
-        productCode: z.string().min(3, 'Mã hàng có ít nhất 3 ký tự'),
-        productName: z.string().min(3, 'Tên hàng có ít nhất 3 ký tự'),
-        quantity: z.preprocess(
-            (val) => Number(val),
-            z.number().min(1, 'Số lượng không được bé hơn 1'),
-        ), // số lượng tồn kho
-        unit: z.string().min(1, 'Đơn vị không được để trống'), //đơn vị
-        area: z.string(), // khu vực
+        productCode: z.string().min(3, 'Mã hàng có ít nhất 3 ký tự.').trim(),
+        productName: z.string().min(3, 'Tên hàng có ít nhất 3 ký tự.').trim(),
+        quantity: z.preprocess((val) => Number(val), z.number().positive()), // số lượng trong kho
+        unit: z.string().min(1, 'Đơn vị không được để trống.').trim(), //đơn vị
+        area: z
+            .string()
+            .min(1, 'Khu vực không được để trống.')
+            .regex(/^[A-Za-z]/, 'Ký tự đầu tiên phải là chữ cái.')
+            .trim(),
+        // khu vực
         expiry: z.preprocess(
             (val) => {
                 if (typeof val === 'string' && val.trim() !== '') {
@@ -17,10 +19,10 @@ export const WarehouseProductSchema = z
                 }
                 return undefined; // Nếu giá trị rỗng, trả về undefined để báo lỗi
             },
-            z.string().datetime({ message: 'Hạn sử dụng không hợp lệ' }),
+            z.string().datetime({ message: 'Hạn sử dụng không hợp lệ.' }),
         ),
-        dateToImport: z.string().datetime({ message: 'Ngày nhập kho phải là ngày hợp lệ' }), // ngày nhập kho
-        supplier: z.string().trim().min(1, 'Không được để trống'), // nhà cung cấp
+        dateToImport: z.string().datetime({ message: 'Ngày nhập kho phải là ngày hợp lệ.' }), // ngày nhập kho
+        supplier: z.string().trim().min(1, 'Không được để trống').trim(), // nhà cung cấp
         // minimum: z.number().min(100, 'Số lượng tối thiểu là 100'), // tối thiểu
         // maximum: z.number().max(2000, 'Số lượng tối đa là 2000 '), // tối đa
     })

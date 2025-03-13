@@ -83,4 +83,9 @@ export const columns: ColumnDef<WarehouseProduct>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Nhà cung cấp" />,
         cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('supplier'))}</div>,
     },
+    {
+        accessorKey: 'supplier',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Nhà cung cấp" />,
+        cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('supplier'))}</div>,
+    },
 ];
