@@ -55,7 +55,7 @@ export const sidebarItems: NavGroup[] = [
                 subItems: [
                     { title: 'Danh sách nhân công', path: config.routes.employee },
                     { title: 'Danh sách công việc', path: config.routes.breadingArea },
-                    { title: 'Nhân công trong trang trại', path: config.routes.farmEmployee },
+                    { title: 'Nhân công trong tr.trại', path: config.routes.farmEmployee },
                 ],
             },
             {

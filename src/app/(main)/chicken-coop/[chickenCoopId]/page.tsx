@@ -20,7 +20,7 @@ import { useChickenCoopStore } from '@/store/use-chicken-coop';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 export default function Page() {
-    const { chickenCoopId } = useParams();
+    const { chickenCoopId }: { chickenCoopId: string } = useParams();
     const { chickenCoop, setChickenCoop } = useChickenCoopStore();
 
     // Fetch chicken coop data from session storage
@@ -56,7 +56,7 @@ export default function Page() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-6">
                 <div className="flex flex-col gap-4">
                     <ChickenCoopDetails />
-                    <ChickenBatchDetails chickenCoopId={chickenCoopId as string} />
+                    <ChickenBatchDetails chickenCoopId={chickenCoopId} />
                     <Chart />
                 </div>
                 <div className="col-span-2">
@@ -112,10 +112,10 @@ export default function Page() {
                             <CardFlock />
                         </TabsContent>
                         <TabsContent value="task">
-                            <CardTask />
+                            <CardTask chickenCoopId={chickenCoopId} />
                         </TabsContent>
                         <TabsContent value="equipment">
-                            <CardEquipment />
+                            <CardEquipment chickenCoopId={chickenCoopId} />
                         </TabsContent>
                         <TabsContent value="harvest">
                             <CardHarvest />

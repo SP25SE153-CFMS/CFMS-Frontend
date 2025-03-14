@@ -17,6 +17,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
 import AddEquipmentForm from './form';
+import { downloadCSV } from '@/utils/functions/download-csv.function';
 
 export default function CardHarvest() {
     const [open, setOpen] = useState(false);
@@ -34,7 +35,11 @@ export default function CardHarvest() {
                     </p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" className="space-x-1">
+                    <Button
+                        variant="outline"
+                        className="space-x-1"
+                        onClick={() => downloadCSV(coopEquipments, 'coop-equipments.csv')}
+                    >
                         <span>Tải file</span> <Download size={18} />
                     </Button>
                     <Button className="space-x-1" onClick={openModal}>

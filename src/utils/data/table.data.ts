@@ -12,6 +12,7 @@ import { Category, SubCategory } from '../schemas/category.schema';
 import { VaccinationLog, Vaccine } from '../schemas/vaccine.schema';
 import { FarmEmployee } from '../schemas/farm-employee.schema';
 import { User } from '../schemas/user.schema';
+import { TaskDetail, TaskLog } from '../schemas/task-log.schema';
 
 export const labels = [
     {
@@ -491,7 +492,7 @@ export const equipments: Equipment[] = [
 export const coopEquipments: CoopEquipment[] = [
     {
         coopEquipmentId: 'ce1',
-        chickenCoopId: '1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890',
+        chickenCoopId: chickenCoops[0].chickenCoopId,
         equipmentId: 'e1',
         quantity: 2,
         assignedDate: '2023-07-15',
@@ -501,7 +502,7 @@ export const coopEquipments: CoopEquipment[] = [
     },
     {
         coopEquipmentId: 'ce2',
-        chickenCoopId: 'd2e3f4a5-b6c7-8901-d2e3-f4a5b6c78901',
+        chickenCoopId: chickenCoops[1].chickenCoopId,
         equipmentId: 'e2',
         quantity: 1,
         assignedDate: '2023-06-01',
@@ -511,7 +512,7 @@ export const coopEquipments: CoopEquipment[] = [
     },
     {
         coopEquipmentId: 'ce3',
-        chickenCoopId: '1a2b3d4-e5f6-7890-a1b2-c3d4e5f67890',
+        chickenCoopId: chickenCoops[1].chickenCoopId,
         equipmentId: 'e3',
         quantity: 3,
         assignedDate: '2023-08-20',
@@ -521,7 +522,7 @@ export const coopEquipments: CoopEquipment[] = [
     },
     {
         coopEquipmentId: 'ce4',
-        chickenCoopId: 'd2e3f4a5-b6c7-8901-d2e3-f4a5b6c78901',
+        chickenCoopId: chickenCoops[0].chickenCoopId,
         equipmentId: 'e4',
         quantity: 5,
         assignedDate: '2023-09-10',
@@ -531,7 +532,7 @@ export const coopEquipments: CoopEquipment[] = [
     },
     {
         coopEquipmentId: 'ce5',
-        chickenCoopId: 'd2e3f4a5-b6c7-8901-d2e3-f4a5b6c78901',
+        chickenCoopId: chickenCoops[2].chickenCoopId,
         equipmentId: 'e5',
         quantity: 4,
         assignedDate: '2023-10-05',
@@ -541,7 +542,7 @@ export const coopEquipments: CoopEquipment[] = [
     },
     {
         coopEquipmentId: 'ce6',
-        chickenCoopId: 'f5a6b7c8-d9e0-1234-a5b6-c7d8e9f01234',
+        chickenCoopId: chickenCoops[3].chickenCoopId,
         equipmentId: 'e6',
         quantity: 2,
         assignedDate: '2023-11-12',
@@ -551,7 +552,7 @@ export const coopEquipments: CoopEquipment[] = [
     },
     {
         coopEquipmentId: 'ce7',
-        chickenCoopId: 'f5a6b7c8-d9e0-1234-a5b6-c7d8e9f01234',
+        chickenCoopId: chickenCoops[3].chickenCoopId,
         equipmentId: 'e7',
         quantity: 1,
         assignedDate: '2023-12-15',
@@ -561,7 +562,7 @@ export const coopEquipments: CoopEquipment[] = [
     },
     {
         coopEquipmentId: 'ce8',
-        chickenCoopId: 'f5a6b7c8-d9e0-1234-a5b6-c7d8e9f01234',
+        chickenCoopId: chickenCoops[4].chickenCoopId,
         equipmentId: 'e8',
         quantity: 3,
         assignedDate: '2023-07-25',
@@ -1430,5 +1431,81 @@ export const farmEmployees: FarmEmployee[] = [
         endDate: null,
         status: '1',
         roleName: 'Nhân viên kho',
+    },
+];
+
+export const taskLogs: TaskLog[] = [
+    {
+        taskLogId: '550e8400-e29b-41d4-a716-446655440000',
+        type: 'Thu hoạch trứng',
+        chickenCoopId: chickenCoops[0].chickenCoopId,
+        startDate: '2025-03-14T08:00:00Z',
+        endDate: '2025-03-14T10:00:00Z',
+    },
+    {
+        taskLogId: '6d7f9a8c-d2d1-4a45-b1d8-7b9a7c59c1a5',
+        type: 'Vệ sinh chuồng',
+        chickenCoopId: chickenCoops[1].chickenCoopId,
+        startDate: '2025-03-15T07:00:00Z',
+        endDate: '2025-03-15T09:30:00Z',
+    },
+    {
+        taskLogId: '1b4e28ba-2fa1-11d2-883f-0016d3cca427',
+        type: 'Kiểm tra sức khỏe gà',
+        chickenCoopId: chickenCoops[0].chickenCoopId,
+        startDate: '2025-03-16T06:00:00Z',
+        endDate: '2025-03-16T08:30:00Z',
+    },
+    {
+        taskLogId: '3d594650-90b5-4b63-9904-1a2c3c0ed5da',
+        type: 'Bổ sung thức ăn',
+        chickenCoopId: chickenCoops[2].chickenCoopId,
+        startDate: '2025-03-17T09:00:00Z',
+        endDate: '2025-03-17T10:30:00Z',
+    },
+    {
+        taskLogId: '5a5aa5a5-5a5a-5a5a-5a5a-5a5aa5a5a5a5',
+        type: 'Tiêm phòng bệnh',
+        chickenCoopId: chickenCoops[2].chickenCoopId,
+        startDate: '2025-03-18T07:30:00Z',
+        endDate: '2025-03-18T09:00:00Z',
+    },
+];
+
+export const taskDetails: TaskDetail[] = [
+    {
+        taskDetailId: '9a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p',
+        taskLogId: taskLogs[0].taskLogId,
+        typeProductId: '0f1e2d3c-4b5a-6978-90ab-cdef12345678',
+        quantity: 100,
+        note: 'Trứng loại 1',
+    },
+    {
+        taskDetailId: '123e4567-e89b-12d3-a456-426614174000',
+        taskLogId: taskLogs[1].taskLogId,
+        typeProductId: '223e4567-e89b-12d3-a456-426614174000',
+        quantity: 50,
+        note: 'Vệ sinh toàn bộ chuồng',
+    },
+    {
+        taskDetailId: '323e4567-e89b-12d3-a456-426614174000',
+        taskLogId: taskLogs[2].taskLogId,
+        typeProductId: '423e4567-e89b-12d3-a456-426614174000',
+        quantity: 20,
+        note: 'Gà có dấu hiệu bệnh cần kiểm tra thêm',
+    },
+    {
+        taskDetailId: '523e4567-e89b-12d3-a456-426614174000',
+        taskLogId: taskLogs[3].taskLogId,
+        typeProductId: '623e4567-e89b-12d3-a456-426614174000',
+        quantity: 200,
+        note: 'Bổ sung thức ăn loại đặc biệt',
+    },
+    {
+        taskDetailId: '723e4567-e89b-12d3-a456-426614174000',
+        taskLogId: taskLogs[4].taskLogId,
+        typeProductId: '823e4567-e89b-12d3-a456-426614174000',
+        quantity: 30,
+        note: 'Tiêm phòng đầy đủ cho đàn gà',
     },
 ];

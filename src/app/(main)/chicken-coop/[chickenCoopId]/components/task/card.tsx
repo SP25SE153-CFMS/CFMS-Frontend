@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { farmEmployees } from '@/utils/data/table.data';
+import { taskLogs } from '@/utils/data/table.data';
 import { DataTable } from '@/components/table/data-table';
 import {
     Dialog,
@@ -15,30 +15,31 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { columns } from './columns';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Download, Plus } from 'lucide-react';
-import AddEmployeeForm from './form';
+import { Download } from 'lucide-react';
+import AddTaskLogForm from './form';
+import { downloadCSV } from '@/utils/functions/download-csv.function';
 
-export default function CardTask() {
+export default function CardTask({ chickenCoopId }: { chickenCoopId: string }) {
     const [open, setOpen] = useState(false);
 
-    const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
+
+    const currentTaskLogs = taskLogs.filter((tasklog) => tasklog.chickenCoopId === chickenCoopId);
 
     return (
         <Card className="p-6 mb-4">
             <div className="flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                 <div>
                     <h2 className="text-xl font-bold tracking-tight">Nhật ký công việc</h2>
-                    <p className="text-muted-foreground">
-                        Danh sách tất cả các nhật ký công việc trong chuồng nuôi
-                    </p>
+                    <p className="text-muted-foreground">Danh sách tất cả các nhật ký công việc</p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" className="space-x-1">
+                    <Button
+                        variant="outline"
+                        className="space-x-1"
+                        onClick={() => downloadCSV(currentTaskLogs, 'task-logs.csv')}
+                    >
                         <span>Tải file</span> <Download size={18} />
-                    </Button>
-                    <Button className="space-x-1" onClick={openModal}>
-                        <span>Thêm nhật ký</span> <Plus size={18} />
                     </Button>
                     <Dialog open={open} onOpenChange={onOpenChange}>
                         <DialogContent>
@@ -49,14 +50,14 @@ export default function CardTask() {
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <AddEmployeeForm closeDialog={() => setOpen(false)} />
+                                <AddTaskLogForm closeDialog={() => setOpen(false)} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={farmEmployees} columns={columns} />
+                <DataTable data={currentTaskLogs} columns={columns} />
             </div>
         </Card>
     );
