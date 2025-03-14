@@ -28,7 +28,8 @@ import { getChickenBatches } from '@/services/chicken-batch.service';
 import { useQuery } from '@tanstack/react-query';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { ChickenBatch } from '@/utils/schemas/chicken-batch.schema';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { chickenBatchStatusLabels, chickenBatchStatusVariant } from '@/utils/enum/status.enum';
 
 const ChickenBatchDetails = ({ chickenCoopId }: { chickenCoopId: string }) => {
     const { data: chickenBatches } = useQuery({
@@ -36,9 +37,21 @@ const ChickenBatchDetails = ({ chickenCoopId }: { chickenCoopId: string }) => {
         queryFn: () => getChickenBatches(),
     });
 
-    const [currentChickenBatch, setCurrentChickenBatch] = useState<ChickenBatch | undefined>(
-        chickenBatches?.find((batch) => batch.chickenCoopId === chickenCoopId),
+    console.log(
+        chickenBatches?.find((batch) => batch.chickenCoopId === chickenCoopId) ||
+            chickenBatches?.[0],
     );
+
+    const [currentChickenBatch, setCurrentChickenBatch] = useState<ChickenBatch>();
+
+    useEffect(() => {
+        if (chickenBatches) {
+            setCurrentChickenBatch(
+                chickenBatches.find((batch) => batch.chickenCoopId === chickenCoopId) ||
+                    chickenBatches[0],
+            );
+        }
+    }, [chickenBatches, chickenCoopId]);
 
     return (
         <Card>
@@ -90,7 +103,13 @@ const ChickenBatchDetails = ({ chickenCoopId }: { chickenCoopId: string }) => {
                 <div className="flex gap-3 text-sm mb-2">
                     Trạng thái:{' '}
                     <strong className="flex-1 text-right">
-                        <Badge>{currentChickenBatch?.status?.toUpperCase()}</Badge>
+                        {currentChickenBatch?.status ? (
+                            <Badge variant={chickenBatchStatusVariant[currentChickenBatch?.status]}>
+                                {chickenBatchStatusLabels[currentChickenBatch?.status]}
+                            </Badge>
+                        ) : (
+                            '-'
+                        )}
                     </strong>
                 </div>
             </div>

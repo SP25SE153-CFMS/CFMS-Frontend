@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { coopEquipments } from '@/utils/data/table.data';
+import { farmEmployees } from '@/utils/data/table.data';
 import { DataTable } from '@/components/table/data-table';
 import {
     Dialog,
@@ -16,9 +16,9 @@ import { columns } from './columns';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
-import AddEquipmentForm from './form';
+import AddEmployeeForm from './form';
 
-export default function CardEmployee() {
+export default function CardTask() {
     const [open, setOpen] = useState(false);
 
     const openModal = () => setOpen(true);
@@ -28,9 +28,9 @@ export default function CardEmployee() {
         <Card className="p-6 mb-4">
             <div className="flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                 <div>
-                    <h2 className="text-xl font-bold tracking-tight">Danh sách nhân công</h2>
+                    <h2 className="text-xl font-bold tracking-tight">Nhật ký công việc</h2>
                     <p className="text-muted-foreground">
-                        Danh sách tất cả các nhân công trong chuồng nuôi
+                        Danh sách tất cả các nhật ký công việc trong chuồng nuôi
                     </p>
                 </div>
                 <div className="flex gap-2">
@@ -38,27 +38,25 @@ export default function CardEmployee() {
                         <span>Tải file</span> <Download size={18} />
                     </Button>
                     <Button className="space-x-1" onClick={openModal}>
-                        <span>Thêm nhân công</span> <Plus size={18} />
+                        <span>Thêm nhật ký</span> <Plus size={18} />
                     </Button>
                     <Dialog open={open} onOpenChange={onOpenChange}>
                         <DialogContent>
                             <DialogHeader>
-                                <DialogTitle>Thêm nhân công mới</DialogTitle>
+                                <DialogTitle>Thêm nhật ký công việc mới</DialogTitle>
                                 <DialogDescription>
                                     Hãy nhập các thông tin dưới đây.
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                {/* TODO: Update this */}
-                                <AddEquipmentForm closeDialog={() => setOpen(false)} />
+                                <AddEmployeeForm closeDialog={() => setOpen(false)} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                {/* TODO: Update this */}
-                <DataTable data={coopEquipments} columns={columns} />
+                <DataTable data={farmEmployees} columns={columns} />
             </div>
         </Card>
     );

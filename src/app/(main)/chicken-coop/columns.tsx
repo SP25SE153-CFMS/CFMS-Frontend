@@ -8,6 +8,11 @@ import { breedingAreas } from '@/utils/data/table.data';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { DataTableRowActions } from './data-table-row-actions';
+import {
+    ChickenCoopStatus,
+    chickenCoopStatusLabels,
+    chickenCoopStatusVariant,
+} from '@/utils/enum/status.enum';
 
 export const columns: ColumnDef<ChickenCoop>[] = [
     {
@@ -66,22 +71,13 @@ export const columns: ColumnDef<ChickenCoop>[] = [
         cell: ({ row }) => <div className="w-[80px]">{row.getValue('capacity')} con</div>,
     },
     {
-        accessorKey: 'location',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Vị trí" />,
-    },
-    {
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
         cell: ({ row }) => {
-            const status = row.getValue('status') as string;
-            const statusLabels: Record<string, string> = {
-                AVAILABLE: 'Còn trống',
-                OCCUPIED: 'Đang sử dụng',
-                UNDER_MAINTENANCE: 'Bảo trì',
-            };
+            const status = row.getValue('status') as ChickenCoopStatus;
             return (
-                <Badge variant={status === 'AVAILABLE' ? 'default' : 'outline'}>
-                    {statusLabels[status]}
+                <Badge variant={chickenCoopStatusVariant[status]}>
+                    {chickenCoopStatusLabels[status]}
                 </Badge>
             );
         },

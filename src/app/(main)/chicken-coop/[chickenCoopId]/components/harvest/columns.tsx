@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import { CoopEquipment } from '@/utils/schemas/equipment.schema';
 import { equipments } from '@/utils/data/table.data';
 import { Badge } from '@/components/ui/badge';
+import { equipmentStatusLabels, equipmentStatusVariant } from '@/utils/enum/status.enum';
 
 export const columns: ColumnDef<CoopEquipment>[] = [
     {
@@ -73,14 +74,9 @@ export const columns: ColumnDef<CoopEquipment>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
         cell: ({ row }) => {
             const status = row.getValue('status') as string;
-            const statusLabels: Record<string, string> = {
-                IN_USE: 'Đang sử dụng',
-                BROKEN: 'Hỏng',
-                UNDER_MAINTENANCE: 'Bảo trì',
-            };
             return (
-                <Badge variant={status === 'IN_USE' ? 'default' : 'outline'}>
-                    {statusLabels[status]}
+                <Badge variant={equipmentStatusVariant[status]}>
+                    {equipmentStatusLabels[status]}
                 </Badge>
             );
         },

@@ -23,13 +23,13 @@ export const ChickenCoopSchema = z.object({
         .positive({ message: "Sức chứa phải là số nguyên dương" })
         .max(500, { message: "Sức chứa tối đa là 500 con" }),
 
-    location: z
-        .string()
-        .trim()
-        .min(5, { message: "Vị trí phải có ít nhất 5 ký tự" })
-        .max(200, { message: "Vị trí không được dài quá 200 ký tự" }),
+    // location: z
+    //     .string()
+    //     .trim()
+    //     .min(5, { message: "Vị trí phải có ít nhất 5 ký tự" })
+    //     .max(200, { message: "Vị trí không được dài quá 200 ký tự" }),
 
-    status: z.enum(["AVAILABLE", "OCCUPIED", "UNDER_MAINTENANCE"], {
+    status: z.enum(["0", "1", "2"], {
         message: "Trạng thái không hợp lệ",
     }),
 

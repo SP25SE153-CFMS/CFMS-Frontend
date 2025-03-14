@@ -4,9 +4,12 @@ import { Card } from '@/components/ui/card';
 import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import config from '@/configs';
+import { getBreedingAreas } from '@/services/breeding-area.service';
 import { useChickenCoopStore } from '@/store/use-chicken-coop';
-import { chickenCoops } from '@/utils/data/table.data';
+import { chickenBatchStatusVariant, chickenCoopStatusLabels } from '@/utils/enum/status.enum';
+import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { Select } from '@radix-ui/react-select';
+import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { AlignRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -14,6 +17,24 @@ import { useRouter } from 'next/navigation';
 const ChickenCoopDetails = () => {
     const { chickenCoop, setChickenCoop } = useChickenCoopStore();
     const router = useRouter();
+    const chickenCoops: ChickenCoop[] = JSON.parse(sessionStorage.getItem('chickenCoops') ?? '[]');
+
+    const { data: breedingAreas } = useQuery({
+        queryKey: ['breedingAreas'],
+        queryFn: () => getBreedingAreas(),
+    });
+
+    const currentBreedingArea = breedingAreas?.find(
+        (area) => area.breedingAreaId === chickenCoop?.breedingAreaId,
+    );
+
+    const handleCoopChange = (coopId: string) => {
+        const selectedCoop = chickenCoops.find((coop) => coop.chickenCoopId === coopId);
+        if (selectedCoop) {
+            setChickenCoop(selectedCoop);
+            router.push(`${config.routes.chickenCoop}/${coopId}`);
+        }
+    };
 
     return (
         <Card>
@@ -29,15 +50,7 @@ const ChickenCoopDetails = () => {
                         <PopoverContent className="p-0">
                             <Select
                                 defaultOpen
-                                onValueChange={(coopId) => {
-                                    const selectedCoop = chickenCoops.find(
-                                        (coop) => coop.chickenCoopId === coopId,
-                                    );
-                                    if (selectedCoop) {
-                                        setChickenCoop(selectedCoop);
-                                        router.push(`${config.routes.chickenCoop}/${coopId}`);
-                                    }
-                                }}
+                                onValueChange={(coopId) => handleCoopChange(coopId)}
                             >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Đổi chuồng nuôi..." />
@@ -70,10 +83,20 @@ const ChickenCoopDetails = () => {
                     <strong className="flex-1 text-right">{chickenCoop?.capacity} con</strong>
                 </div>
                 <div className="flex gap-3 text-sm mb-4">
-                    Vị trí: <strong className="flex-1 text-right">{chickenCoop?.location}</strong>
+                    Khu nuôi:{' '}
+                    <strong className="flex-1 text-right">
+                        {currentBreedingArea?.breedingAreaName ?? '-'}
+                    </strong>
                 </div>
                 <div className="flex gap-3 text-sm mb-4 items-center justify-between">
-                    Trạng thái: <Badge>{chickenCoop?.status}</Badge>
+                    Trạng thái:{' '}
+                    {chickenCoop?.status ? (
+                        <Badge variant={chickenBatchStatusVariant[chickenCoop?.status]}>
+                            {chickenCoopStatusLabels[chickenCoop?.status]}
+                        </Badge>
+                    ) : (
+                        '-'
+                    )}
                 </div>
                 <div className="flex gap-3 text-sm mb-4">
                     Ngày tạo:{' '}

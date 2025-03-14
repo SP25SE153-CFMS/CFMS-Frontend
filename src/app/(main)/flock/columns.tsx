@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import config from '@/configs';
 import { DataTableRowActions } from './data-table-row-actions';
+import { flockStatusLabels, flockStatusVariant } from '@/utils/enum/status.enum';
 
 export const columns: ColumnDef<Flock>[] = [
     {
@@ -42,8 +43,14 @@ export const columns: ColumnDef<Flock>[] = [
     {
         accessorKey: 'name',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên đàn" />,
-        cell: ({ row }) => (
-            <Link href={`${config.routes.flock}/${row.getValue('flockId')}`}>
+        cell: ({ row, table }) => (
+            <Link
+                href={`${config.routes.flock}/${row.getValue('flockId')}`}
+                onClick={() => {
+                    const flocks = table.getCoreRowModel().rows.map((row) => row.original);
+                    sessionStorage.setItem('flocks', JSON.stringify(flocks));
+                }}
+            >
                 {row.getValue('name')}
             </Link>
         ),
@@ -57,7 +64,7 @@ export const columns: ColumnDef<Flock>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
         cell: ({ row }) => {
             const status = row.getValue('status') as string;
-            return <Badge>{status?.toUpperCase()}</Badge>;
+            return <Badge variant={flockStatusVariant[status]}>{flockStatusLabels[status]}</Badge>;
         },
     },
     {

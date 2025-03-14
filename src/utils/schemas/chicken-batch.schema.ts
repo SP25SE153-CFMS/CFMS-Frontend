@@ -16,7 +16,7 @@ export const ChickenBatchSchema = z.object({
             message: "Ngày kết thúc không hợp lệ",
         }),
     note: z.string().max(255, "Ghi chú không được vượt quá 255 ký tự").optional(),
-    status: z.enum(["active", "inactive", "completed", "cancelled"], {
+    status: z.enum(["0", "1", "2", "3"], {
         message: "Trạng thái không hợp lệ",
     }),
 }).refine((data) => !data.endDate || new Date(data.endDate) >= new Date(data.startDate), {

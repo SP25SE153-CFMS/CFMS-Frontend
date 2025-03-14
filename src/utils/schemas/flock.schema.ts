@@ -9,7 +9,7 @@ export const FlockSchema = z.object({
     startDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
         message: "Ngày bắt đầu không hợp lệ",
     }),
-    status: z.enum(["in_farm", "sold", "removed", "dead"], {
+    status: z.enum(["0", "1", "2"], {
         errorMap: () => ({ message: "Trạng thái không hợp lệ" }),
     }),
     description: z.string().max(500, "Mô tả không được dài quá 500 ký tự").optional(),

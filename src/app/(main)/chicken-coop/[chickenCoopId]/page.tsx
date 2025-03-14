@@ -6,14 +6,13 @@ import { Plus, Database } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import Image from 'next/image';
 import { Chart } from './chart';
 import CardEquipment from './components/equipments/card';
 import ChickenCoopDetails from './components/chicken-coop-details';
 import ChickenBatchDetails from './components/chicken-batch-details';
 import { techinicalIndicators } from '@/utils/data/table.data';
 import CardFlock from './components/flock/card';
-import CardEmployee from './components/employee/card';
+import CardTask from './components/task/card';
 import CardHarvest from './components/harvest/card';
 import { useEffect } from 'react';
 import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
@@ -102,7 +101,7 @@ export default function Page() {
                     <Tabs defaultValue="flock" className="w-auto">
                         <TabsList className="grid w-full grid-cols-4">
                             <TabsTrigger value="flock">Đàn gà</TabsTrigger>
-                            <TabsTrigger value="employees">Nhân công</TabsTrigger>
+                            <TabsTrigger value="task">Nhật ký công việc</TabsTrigger>
                             <TabsTrigger value="equipment">Trang thiết bị</TabsTrigger>
                             <TabsTrigger value="harvest">Thu hoạch</TabsTrigger>
                         </TabsList>
@@ -112,8 +111,8 @@ export default function Page() {
                             {/* Thông tin đàn gà */}
                             <CardFlock />
                         </TabsContent>
-                        <TabsContent value="employees">
-                            <CardEmployee />
+                        <TabsContent value="task">
+                            <CardTask />
                         </TabsContent>
                         <TabsContent value="equipment">
                             <CardEquipment />
@@ -127,5 +126,3 @@ export default function Page() {
         </div>
     );
 }
-
-// TODO: Split to a new file
