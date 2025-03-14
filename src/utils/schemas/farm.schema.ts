@@ -17,12 +17,6 @@ export const FarmSchema = z.object({
         .min(3, { message: "Mã trang trại phải có ít nhất 3 ký tự" })
         .max(50, { message: "Mã trang trại không được dài quá 50 ký tự" }),
 
-    type: z
-        .string()
-        .trim()
-        .min(3, { message: "Loại trang trại phải có ít nhất 3 ký tự" })
-        .max(50, { message: "Loại trang trại không được dài quá 50 ký tự" }),
-
     address: z
         .string()
         .trim()
@@ -35,10 +29,9 @@ export const FarmSchema = z.object({
         .max(1_000_000, { message: "Diện tích không được vượt quá 1,000,000 m²" }),
 
     scale: z
-        .string()
-        .trim()
-        .min(3, { message: "Quy mô phải có ít nhất 3 ký tự" })
-        .max(50, { message: "Quy mô không được dài quá 50 ký tự" }),
+        .coerce
+        .number()
+        .positive({ message: "Quy mô phải là số dương" }),
 
     phoneNumber: z
         .string()

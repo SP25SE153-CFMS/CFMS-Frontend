@@ -48,6 +48,12 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
         });
     };
 
+    const handleClickDetail = () => {
+        router.push(config.routes.chickenCoop + '/' + (row.original as ChickenCoop).chickenCoopId);
+        const chickenCoops = row.getAllCells().map((cell) => cell.row.original);
+        sessionStorage.setItem('chickenCoops', JSON.stringify(chickenCoops));
+    };
+
     return (
         <>
             <DropdownMenu modal={false}>
@@ -58,17 +64,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <DropdownMenuItem
-                        onClick={() =>
-                            router.push(
-                                config.routes.chickenCoop +
-                                    '/' +
-                                    (row.original as ChickenCoop).chickenCoopId,
-                            )
-                        }
-                    >
-                        Xem chi tiết
-                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleClickDetail}>Xem chi tiết</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                         Cập nhật
                     </DropdownMenuItem>

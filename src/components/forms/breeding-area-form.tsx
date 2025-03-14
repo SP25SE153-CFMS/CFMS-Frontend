@@ -219,6 +219,8 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                                                 {imagePreview ? (
                                                     <div className="relative w-full h-40 mb-4">
                                                         <Image
+                                                            width="40"
+                                                            height="40"
                                                             src={imagePreview || '/placeholder.svg'}
                                                             alt="Preview"
                                                             className="w-full h-full object-contain rounded-md"

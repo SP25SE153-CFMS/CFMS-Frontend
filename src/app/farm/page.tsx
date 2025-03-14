@@ -18,7 +18,6 @@ import {
     MapPin,
     Phone,
     Globe,
-    TreePine,
     Ruler,
     Scale3d,
     Plus,
@@ -43,16 +42,9 @@ export default function Page() {
 
     // Filter states
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedType, setSelectedType] = useState<string>('');
-    const [selectedScale, setSelectedScale] = useState<string>('');
+    const [selectedScale, setSelectedScale] = useState<number>(0);
     const [areaRange, setAreaRange] = useState<[number, number]>([0, 100]);
     const [showFilters, setShowFilters] = useState(true);
-
-    // Get unique farm types and scales for filter options
-    const farmTypes = useMemo(() => {
-        if (!farms) return [];
-        return Array.from(new Set(farms.map((farm) => farm.type))).filter(Boolean);
-    }, [farms]);
 
     const farmScales = useMemo(() => {
         if (!farms) return [];
@@ -69,8 +61,7 @@ export default function Page() {
     // Reset all filters
     const resetFilters = () => {
         setSearchTerm('');
-        setSelectedType('');
-        setSelectedScale('');
+        setSelectedScale(0);
         setAreaRange([0, maxArea]);
     };
 
@@ -85,28 +76,24 @@ export default function Page() {
                 farm.farmName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 farm.farmCode.toLowerCase().includes(searchTerm.toLowerCase());
 
-            // Farm type filter
-            const matchesType = selectedType === '' || farm.type === selectedType;
-
             // Scale filter
-            const matchesScale = selectedScale === '' || farm.scale === selectedScale;
+            const matchesScale = selectedScale === 0 || farm.scale === selectedScale;
 
             // Area range filter
             const matchesArea = farm.area >= areaRange[0] && farm.area <= areaRange[1];
 
-            return matchesSearch && matchesType && matchesScale && matchesArea;
+            return matchesSearch && matchesScale && matchesArea;
         });
-    }, [farms, searchTerm, selectedType, selectedScale, areaRange]);
+    }, [farms, searchTerm, selectedScale, areaRange]);
 
     // Active filter count
     const activeFilterCount = useMemo(() => {
         let count = 0;
         if (searchTerm) count++;
-        if (selectedType) count++;
         if (selectedScale) count++;
         if (areaRange[0] > 0 || areaRange[1] < maxArea) count++;
         return count;
-    }, [searchTerm, selectedType, selectedScale, areaRange, maxArea]);
+    }, [searchTerm, selectedScale, areaRange, maxArea]);
 
     // Check if flocks is loading
     if (isLoading) {
@@ -196,7 +183,7 @@ export default function Page() {
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                                 {/* Search by name or code */}
                                 <div className="space-y-2">
                                     <Label htmlFor="search">Tìm kiếm</Label>
@@ -212,35 +199,20 @@ export default function Page() {
                                     </div>
                                 </div>
 
-                                {/* Filter by type */}
-                                <div className="space-y-2">
-                                    <Label htmlFor="type">Loại hình</Label>
-                                    <Select value={selectedType} onValueChange={setSelectedType}>
-                                        <SelectTrigger id="type">
-                                            <SelectValue placeholder="Tất cả loại hình" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="all">Tất cả loại hình</SelectItem>
-                                            {farmTypes.map((type) => (
-                                                <SelectItem key={type} value={type}>
-                                                    {type}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-
                                 {/* Filter by scale */}
                                 <div className="space-y-2">
                                     <Label htmlFor="scale">Quy mô</Label>
-                                    <Select value={selectedScale} onValueChange={setSelectedScale}>
+                                    <Select
+                                        value={selectedScale.toString()}
+                                        onValueChange={(value) => setSelectedScale(Number(value))}
+                                    >
                                         <SelectTrigger id="scale">
                                             <SelectValue placeholder="Tất cả quy mô" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="all">Tất cả quy mô</SelectItem>
                                             {farmScales.map((scale) => (
-                                                <SelectItem key={scale} value={scale}>
+                                                <SelectItem key={scale} value={scale.toString()}>
                                                     {scale}
                                                 </SelectItem>
                                             ))}
@@ -293,7 +265,7 @@ export default function Page() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {filteredFarms.map((farm) => (
                                 <Link
-                                    href={`${farm.website}?farmCode=${farm.farmCode}`}
+                                    href={`${config.routes.dashboard}?farmCode=${farm.farmCode}`}
                                     key={farm.farmId}
                                     rel="noopener noreferrer"
                                     onClick={() => {
@@ -308,7 +280,7 @@ export default function Page() {
                                                 </CardTitle>
                                                 <Image
                                                     src={farm.farmImage || '/placeholder.svg'}
-                                                    alt={farm.farmName}
+                                                    alt={farm.farmCode}
                                                     width={50}
                                                     height={50}
                                                     className="rounded-md object-cover"
@@ -318,9 +290,6 @@ export default function Page() {
                                         <CardContent>
                                             <div className="text-sm text-muted-foreground mb-2">
                                                 Mã: {farm.farmCode}
-                                            </div>
-                                            <div className="flex items-center mb-1">
-                                                <TreePine className="mr-2 h-4 w-4" /> {farm.type}
                                             </div>
                                             <div className="flex items-center mb-1">
                                                 <MapPin className="mr-2 h-4 w-4" /> {farm.address}

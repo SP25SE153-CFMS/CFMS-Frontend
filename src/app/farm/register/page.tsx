@@ -1,4 +1,5 @@
 'use client';
+
 import { useState } from 'react';
 import {
     Card,
@@ -47,7 +48,7 @@ export default function Page() {
             farmCode: '',
             address: '',
             area: 0,
-            scale: '',
+            scale: 0,
             phoneNumber: '',
             website: '',
             farmImage: '',
@@ -77,7 +78,7 @@ export default function Page() {
     };
 
     return (
-        <div className="w-full min-h-screen flex flex-col items-center justify-center">
+        <section className="w-full min-h-screen flex flex-col items-center justify-center">
             <Card className="min-w-2xl mx-auto">
                 <CardHeader>
                     <CardTitle className="text-2xl flex items-center">
@@ -106,6 +107,7 @@ export default function Page() {
                                         </FormItem>
                                     )}
                                 />
+
                                 <FormField
                                     control={form.control}
                                     name="farmCode"
@@ -123,33 +125,7 @@ export default function Page() {
                                     )}
                                 />
                             </div>
-                            <FormField
-                                control={form.control}
-                                name="type"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Loại hình</FormLabel>
-                                        <Select
-                                            onValueChange={field.onChange}
-                                            defaultValue={field.value}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Chọn loại hình trang trại" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="organic">Hữu cơ</SelectItem>
-                                                <SelectItem value="traditional">
-                                                    Truyền thống
-                                                </SelectItem>
-                                                <SelectItem value="mixed">Kết hợp</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+
                             <FormField
                                 control={form.control}
                                 name="address"
@@ -166,6 +142,7 @@ export default function Page() {
                                     </FormItem>
                                 )}
                             />
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <FormField
                                     control={form.control}
@@ -187,6 +164,7 @@ export default function Page() {
                                         </FormItem>
                                     )}
                                 />
+
                                 <FormField
                                     control={form.control}
                                     name="scale"
@@ -195,7 +173,7 @@ export default function Page() {
                                             <FormLabel>Quy mô</FormLabel>
                                             <Select
                                                 onValueChange={field.onChange}
-                                                defaultValue={field.value}
+                                                defaultValue={field.value.toString()}
                                             >
                                                 <FormControl>
                                                     <SelectTrigger>
@@ -203,9 +181,9 @@ export default function Page() {
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    <SelectItem value="small">Nhỏ</SelectItem>
-                                                    <SelectItem value="medium">Vừa</SelectItem>
-                                                    <SelectItem value="large">Lớn</SelectItem>
+                                                    <SelectItem value="1">Nhỏ</SelectItem>
+                                                    <SelectItem value="2">Vừa</SelectItem>
+                                                    <SelectItem value="3">Lớn</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                             <FormMessage />
@@ -213,6 +191,7 @@ export default function Page() {
                                     )}
                                 />
                             </div>
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <FormField
                                     control={form.control}
@@ -231,6 +210,7 @@ export default function Page() {
                                         </FormItem>
                                     )}
                                 />
+
                                 <FormField
                                     control={form.control}
                                     name="website"
@@ -249,6 +229,7 @@ export default function Page() {
                                     )}
                                 />
                             </div>
+
                             <FormField
                                 control={form.control}
                                 name="farmImage"
@@ -283,6 +264,6 @@ export default function Page() {
                     </form>
                 </Form>
             </Card>
-        </div>
+        </section>
     );
 }
