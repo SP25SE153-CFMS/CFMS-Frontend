@@ -42,8 +42,14 @@ export const columns: ColumnDef<Flock>[] = [
     {
         accessorKey: 'name',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên đàn" />,
-        cell: ({ row }) => (
-            <Link href={`${config.routes.flock}/${row.getValue('flockId')}`}>
+        cell: ({ row, table }) => (
+            <Link
+                href={`${config.routes.flock}/${row.getValue('flockId')}`}
+                onClick={() => {
+                    const flocks = table.getCoreRowModel().rows.map((row) => row.original);
+                    sessionStorage.setItem('flocks', JSON.stringify(flocks));
+                }}
+            >
                 {row.getValue('name')}
             </Link>
         ),

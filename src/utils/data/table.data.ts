@@ -10,6 +10,8 @@ import { ChickenBatch } from "../schemas/chicken-batch.schema"
 import { Request } from "../schemas/request.schema"
 import { Category, SubCategory } from "../schemas/category.schema"
 import { VaccinationLog, Vaccine } from "../schemas/vaccine.schema"
+import { FarmEmployee } from "../schemas/farm-employee.schema"
+import { User } from "../schemas/user.schema"
 
 export const labels = [
     {
@@ -1329,4 +1331,121 @@ export const techinicalIndicators = [
     { id: 3, name: 'CÂN NẶNG TB', value: '0.12kg' },
     { id: 4, name: 'MẬT ĐỘ', value: '9.18 con/m2' },
     { id: 5, name: 'SL THU HOẠCH', value: '136 (1,36%)' },
+];
+
+export const users: User[] = [
+    {
+        userId: "550e8400-e29b-41d4-a716-446655440000",
+        fullName: "Nguyễn Văn A",
+        phoneNumber: "0987654321",
+        mail: "nguyenvana@example.com",
+        avatar: "https://i.pravatar.cc/150?img=1",
+        dateOfBirth: "1990-05-15T00:00:00.000Z",
+        startDate: "2022-01-10T00:00:00.000Z",
+        status: "1",
+        address: "123 Đường Nguyễn Trãi, Quận 1, TP. Hồ Chí Minh",
+        cccd: "012345678901",
+        roleName: "Quản lý",
+    },
+    {
+        userId: "660e8400-e29b-41d4-a716-446655440001",
+        fullName: "Trần Thị B",
+        phoneNumber: "0912345678",
+        mail: "tranthib@example.com",
+        avatar: "https://i.pravatar.cc/150?img=2",
+        dateOfBirth: "1995-08-20T00:00:00.000Z",
+        startDate: "2023-03-12T00:00:00.000Z",
+        status: "1",
+        address: "456 Đường Lê Lợi, Quận 3, TP. Hồ Chí Minh",
+        cccd: "098765432109",
+        roleName: "Nhân viên",
+    },
+    {
+        userId: "770e8400-e29b-41d4-a716-446655440002",
+        fullName: "Phạm Văn C",
+        phoneNumber: "0905123456",
+        mail: "phamvanc@example.com",
+        avatar: "https://i.pravatar.cc/150?img=3",
+        dateOfBirth: "1988-12-10T00:00:00.000Z",
+        startDate: "2021-06-25T00:00:00.000Z",
+        status: "0",
+        address: "789 Đường Hai Bà Trưng, Quận 5, TP. Hồ Chí Minh",
+        cccd: "102938475601",
+        roleName: "Kế toán",
+    },
+    {
+        userId: "880e8400-e29b-41d4-a716-446655440003",
+        fullName: "Lê Thị D",
+        phoneNumber: "0978567890",
+        mail: "lethid@example.com",
+        avatar: "https://i.pravatar.cc/150?img=4",
+        dateOfBirth: "2000-07-05T00:00:00.000Z",
+        startDate: "2024-02-01T00:00:00.000Z",
+        status: "1",
+        address: "567 Đường Trần Hưng Đạo, Quận 10, TP. Hồ Chí Minh",
+        cccd: "564738291012",
+        roleName: "Nhân viên kỹ thuật",
+    },
+    {
+        userId: "990e8400-e29b-41d4-a716-446655440004",
+        fullName: "Đặng Quốc E",
+        phoneNumber: "0934561234",
+        mail: "dangquoce@example.com",
+        avatar: "https://i.pravatar.cc/150?img=5",
+        dateOfBirth: "1992-11-30T00:00:00.000Z",
+        startDate: "2020-09-15T00:00:00.000Z",
+        status: "0",
+        address: "678 Đường Võ Văn Kiệt, Quận Bình Thạnh, TP. Hồ Chí Minh",
+        cccd: "675849302112",
+        roleName: "Bảo vệ",
+    }
+];
+
+
+export const farmEmployees: FarmEmployee[] = [
+    {
+        farmEmployeeId: "550e8400-e29b-41d4-a716-446655440000",
+        farmId: farms[0].farmId,
+        employeeId: users[0].userId,
+        startDate: "2025-01-10T08:30:00Z",
+        endDate: null,
+        status: "1",
+        roleName: "Quản lý trang trại",
+    },
+    {
+        farmEmployeeId: "660e8301-a99b-41f4-b816-556655440111",
+        farmId: farms[2].farmId,
+        employeeId: users[1].userId,
+        startDate: "2024-12-05T09:00:00Z",
+        endDate: "2025-02-15T17:00:00Z",
+        status: "0",
+        roleName: "Nhân viên chăm sóc gà",
+    },
+    {
+        farmEmployeeId: "770e8402-c99b-41a4-c916-667755440222",
+        farmId: farms[1].farmId,
+        employeeId: users[2].userId,
+        startDate: "2023-06-15T07:45:00Z",
+        endDate: null,
+        status: "1",
+        roleName: "Nhân viên thú y",
+    },
+    {
+        farmEmployeeId: "880e8503-d99b-42b4-d017-778855440333",
+        farmId: farms[0].farmId,
+        employeeId: users[1].userId,
+        startDate: "2024-02-20T10:15:00Z",
+        endDate: "2024-11-30T16:45:00Z",
+        status: "0",
+        roleName: "Kế toán nông trại",
+    },
+    {
+        farmEmployeeId: "990e8604-e99b-43c4-e118-889955440444",
+        farmId: farms[0].farmId,
+        employeeId: users[3].userId,
+        startDate: "2025-03-01T06:30:00Z",
+        endDate: null,
+        status: "1",
+        roleName: "Nhân viên kho",
+    },
 ];

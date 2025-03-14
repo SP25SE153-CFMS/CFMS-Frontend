@@ -15,6 +15,7 @@ const routes = {
     category: '/category',
     categoryAll: '/category/all',
     vaccine: '/warehouse/vaccines',
+    employee: '/employee',
 };
 
 export default routes;

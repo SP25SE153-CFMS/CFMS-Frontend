@@ -4,11 +4,11 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import dayjs from 'dayjs';
-import { CoopEquipment } from '@/utils/schemas/equipment.schema';
-import { equipments } from '@/utils/data/table.data';
 import { Badge } from '@/components/ui/badge';
+import { FarmEmployee } from '@/utils/schemas/farm-employee.schema';
+import { farms, users } from '@/utils/data/table.data';
 
-export const columns: ColumnDef<CoopEquipment>[] = [
+export const columns: ColumnDef<FarmEmployee>[] = [
     {
         id: 'select',
         header: ({ table }) => (
@@ -34,61 +34,49 @@ export const columns: ColumnDef<CoopEquipment>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: 'equipmentId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Thiết bị" />,
+        accessorKey: 'farmId',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Trang trại" />,
         cell: ({ row }) => {
-            const equipmentId = row.getValue('equipmentId');
-            const equipment = equipments.find((equip) => equip.equipmentId === equipmentId);
-            return <div className="w-[150px]">{equipment?.equipmentName}</div>;
+            const farm = farms.find((farm) => farm.farmId === row.getValue('farmId'));
+            return <div>{farm?.farmName}</div>;
         },
     },
     {
-        accessorKey: 'quantity',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng" />,
-        cell: ({ row }) => <div className="w-[80px]">{row.getValue('quantity')}</div>,
+        accessorKey: 'employeeId',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Nhân viên" />,
+        cell: ({ row }) => {
+            const employee = users.find((user) => user.userId === row.getValue('employeeId'));
+            return <div>{employee?.fullName}</div>;
+        },
     },
     {
-        accessorKey: 'assignedDate',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày phân bổ" />,
-        cell: ({ row }) => (
-            <div className="w-[150px]">
-                {dayjs(row.getValue('assignedDate')).format('DD/MM/YYYY')}
-            </div>
-        ),
+        accessorKey: 'startDate',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày bắt đầu" />,
+        cell: ({ row }) => <div>{dayjs(row.getValue('startDate')).format('DD/MM/YYYY')}</div>,
     },
-    // {
-    //     accessorKey: 'maintainDate',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày bảo trì" />,
-    //     cell: ({ row }) => {
-    //         const maintainDate = new Date(row.getValue('maintainDate'));
-    //         return (
-    //             <div className="w-[150px]">
-    //                 {maintainDate ? dayjs(maintainDate).format('DD/MM/YYYY') : '-'}
-    //             </div>
-    //         );
-    //     },
-    // },
+    {
+        accessorKey: 'endDate',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày kết thúc" />,
+        cell: ({ row }) => {
+            const endDate = row.getValue('endDate') as Date;
+            return <div>{endDate ? dayjs(endDate).format('DD/MM/YYYY') : '-'}</div>;
+        },
+    },
     {
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
         cell: ({ row }) => {
             const status = row.getValue('status') as string;
-            const statusLabels: Record<string, string> = {
-                IN_USE: 'Đang sử dụng',
-                BROKEN: 'Hỏng',
-                UNDER_MAINTENANCE: 'Bảo trì',
-            };
             return (
-                <Badge variant={status === 'IN_USE' ? 'default' : 'outline'}>
-                    {statusLabels[status]}
+                <Badge variant={status === '1' ? 'default' : 'outline'}>
+                    {status === '1' ? 'Đang làm việc' : 'Nghỉ việc'}
                 </Badge>
             );
         },
     },
-    // Uncomment this block to show the note column
     // {
-    //     accessorKey: 'note',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Ghi chú" />,
-    //     cell: ({ row }) => <div className="w-[250px] truncate">{row.getValue('note') || '-'}</div>,
+    //     accessorKey: 'roleName',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Vai trò" />,
+    //     cell: ({ row }) => <div>{row.getValue('roleName')}</div>,
     // },
 ];

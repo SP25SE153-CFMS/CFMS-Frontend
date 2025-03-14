@@ -6,7 +6,6 @@ import { Plus, Database } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import Image from 'next/image';
 import { Chart } from './chart';
 import CardEquipment from './components/equipments/card';
 import ChickenCoopDetails from './components/chicken-coop-details';
@@ -127,5 +126,3 @@ export default function Page() {
         </div>
     );
 }
-
-// TODO: Split to a new file

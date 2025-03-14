@@ -15,6 +15,14 @@ const ChickenCoopDetails = () => {
     const { chickenCoop, setChickenCoop } = useChickenCoopStore();
     const router = useRouter();
 
+    const handleCoopChange = (coopId: string) => {
+        const selectedCoop = chickenCoops.find((coop) => coop.chickenCoopId === coopId);
+        if (selectedCoop) {
+            setChickenCoop(selectedCoop);
+            router.push(`${config.routes.chickenCoop}/${coopId}`);
+        }
+    };
+
     return (
         <Card>
             <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4">
@@ -29,15 +37,7 @@ const ChickenCoopDetails = () => {
                         <PopoverContent className="p-0">
                             <Select
                                 defaultOpen
-                                onValueChange={(coopId) => {
-                                    const selectedCoop = chickenCoops.find(
-                                        (coop) => coop.chickenCoopId === coopId,
-                                    );
-                                    if (selectedCoop) {
-                                        setChickenCoop(selectedCoop);
-                                        router.push(`${config.routes.chickenCoop}/${coopId}`);
-                                    }
-                                }}
+                                onValueChange={(coopId) => handleCoopChange(coopId)}
                             >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Đổi chuồng nuôi..." />

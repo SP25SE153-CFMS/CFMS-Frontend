@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { coopEquipments } from '@/utils/data/table.data';
+import { farmEmployees } from '@/utils/data/table.data';
 import { DataTable } from '@/components/table/data-table';
 import {
     Dialog,
@@ -16,7 +16,7 @@ import { columns } from './columns';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
-import AddEquipmentForm from './form';
+import AddEmployeeForm from './form';
 
 export default function CardEmployee() {
     const [open, setOpen] = useState(false);
@@ -49,16 +49,14 @@ export default function CardEmployee() {
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                {/* TODO: Update this */}
-                                <AddEquipmentForm closeDialog={() => setOpen(false)} />
+                                <AddEmployeeForm closeDialog={() => setOpen(false)} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                {/* TODO: Update this */}
-                <DataTable data={coopEquipments} columns={columns} />
+                <DataTable data={farmEmployees} columns={columns} />
             </div>
         </Card>
     );

@@ -13,9 +13,9 @@ import {
     DialogTitle,
     DialogDescription,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -30,6 +30,8 @@ import {
 import Image from 'next/image';
 import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import PopoverWithOverlay from '@/components/popover-with-overlay';
+import { Flock } from '@/utils/schemas/flock.schema';
+import config from '@/configs';
 
 const techinicalIndicators = [
     { id: 1, name: 'GÀ CHẾT', value: '9 con' },
@@ -42,8 +44,27 @@ const techinicalIndicators = [
 // TODO: Optimize and shorten the code
 export default function Page() {
     const { flockId } = useParams();
+    const router = useRouter();
 
-    const currentFlock = flocks.find((flock) => flock.flockId === flockId);
+    const [currentFlock, setCurrentFlock] = useState<Flock>();
+
+    // Fetch flock data from session storage
+    useEffect(() => {
+        const flocks: Flock[] = JSON.parse(sessionStorage.getItem('flocks') || '[]');
+        const foundFlock = flocks.find((flock) => flock.flockId === flockId);
+
+        if (foundFlock) {
+            setCurrentFlock(foundFlock);
+        }
+    }, [flockId, setCurrentFlock]);
+
+    const handleFlockChange = (flockId: string) => {
+        const selectedFlock = flocks.find((flock) => flock.flockId === flockId);
+        if (selectedFlock) {
+            setCurrentFlock(selectedFlock);
+            router.push(`${config.routes.flock}/${flockId}`);
+        }
+    };
 
     if (!currentFlock) {
         return (
@@ -95,7 +116,10 @@ export default function Page() {
                                         <AlignRight size={20} />
                                     </PopoverTrigger>
                                     <PopoverContent className="p-0">
-                                        <Select defaultOpen>
+                                        <Select
+                                            defaultOpen
+                                            onValueChange={(flockId) => handleFlockChange(flockId)}
+                                        >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Đổi đàn gà..." />
                                             </SelectTrigger>

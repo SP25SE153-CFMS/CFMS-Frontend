@@ -12,7 +12,6 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
@@ -23,36 +22,30 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
-import {
-    CreateEquipmentSchema,
-    type Equipment,
-    EquipmentSchema,
-} from '@/utils/schemas/equipment.schema';
+import { FarmEmployeeSchema, type FarmEmployee } from '@/utils/schemas/farm-employee.schema';
 import dayjs from 'dayjs';
-import { createEquipment, updateEquipment } from '@/services/equipment.service';
+import { createFarmEmployee, updateFarmEmployee } from '@/services/farm-employee.service';
 import toast from 'react-hot-toast';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getFarms } from '@/services/farm.service';
+import { getUsers } from '@/services/user.service';
 
-interface AddEquipmentFormProps {
-    defaultValues?: Partial<Equipment>;
+interface AddEmployeeFormProps {
+    defaultValues?: Partial<FarmEmployee>;
     closeDialog: () => void;
 }
 
-export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEquipmentFormProps) {
+export default function AddEmployeeForm({ defaultValues, closeDialog }: AddEmployeeFormProps) {
     // Initialize form
-    const form = useForm<Equipment>({
-        resolver: zodResolver(defaultValues ? EquipmentSchema : CreateEquipmentSchema),
+    const form = useForm<FarmEmployee>({
+        resolver: zodResolver(FarmEmployeeSchema),
         defaultValues: {
-            equipmentId: '',
-            equipmentCode: '',
-            equipmentName: '',
-            purchaseDate: new Date().toISOString(),
-            warrantyPeriod: 12,
-            status: 'AVAILABLE',
-            cost: 0,
-            quantity: 1,
-            createdAt: new Date().toISOString(),
-            updatedAt: null,
+            farmId: '',
+            employeeId: '',
+            startDate: new Date().toISOString(),
+            endDate: null,
+            status: '1',
+            roleName: '',
             ...defaultValues,
         },
     });
@@ -62,12 +55,12 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
 
     // Mutations for creating and updating
     const mutation = useMutation({
-        mutationFn: defaultValues ? updateEquipment : createEquipment,
+        mutationFn: defaultValues ? updateFarmEmployee : createFarmEmployee,
         onSuccess: () => {
             closeDialog();
-            queryClient.invalidateQueries({ queryKey: ['equipments'] });
+            queryClient.invalidateQueries({ queryKey: ['farmEmployees'] });
             toast.success(
-                defaultValues ? 'Cập nhật thiết bị thành công' : 'Tạo thiết bị thành công',
+                defaultValues ? 'Cập nhật nhân viên thành công' : 'Thêm nhân viên thành công',
             );
         },
         onError: (error: any) => {
@@ -77,65 +70,95 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
     });
 
     // Form submit handler
-    async function onSubmit(values: Equipment) {
+    async function onSubmit(values: FarmEmployee) {
         mutation.mutate(values);
     }
 
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
+    const { data: farms } = useQuery({
+        queryKey: ['farms'],
+        queryFn: () => getFarms(),
+    });
+
+    const { data: users } = useQuery({
+        queryKey: ['users'],
+        queryFn: () => getUsers(),
+    });
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
-                    {/* Mã thiết bị */}
+                    {/* Chọn trang trại */}
                     <FormField
                         control={form.control}
-                        name="equipmentCode"
+                        name="farmId"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Mã thiết bị</FormLabel>
+                                <FormLabel>Trang trại</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập mã thiết bị" {...field} />
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn trang trại" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {farms?.map((farm) => (
+                                                <SelectItem key={farm.farmId} value={farm.farmId}>
+                                                    {farm.farmName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
 
-                    {/* Tên thiết bị */}
+                    {/* Chọn nhân viên */}
                     <FormField
                         control={form.control}
-                        name="equipmentName"
+                        name="employeeId"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Tên thiết bị</FormLabel>
+                                <FormLabel>Nhân viên</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập tên thiết bị" {...field} />
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn nhân viên" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {users?.map((user) => (
+                                                <SelectItem key={user.userId} value={user.userId}>
+                                                    {user.fullName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
 
-                    {/* Ngày mua */}
+                    {/* Ngày bắt đầu */}
                     <FormField
                         control={form.control}
-                        name="purchaseDate"
+                        name="startDate"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Ngày mua</FormLabel>
+                                <FormLabel>Ngày bắt đầu</FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
                                         <FormControl>
                                             <Button
                                                 variant={'outline'}
-                                                className={cn(
-                                                    'w-full pl-3 text-left font-normal',
-                                                    !field.value && 'text-muted-foreground',
-                                                )}
+                                                className={cn('w-full pl-3 text-left font-normal')}
                                             >
                                                 {dayjs(new Date(field.value)).format('DD/MM/YYYY')}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
@@ -145,107 +168,12 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
                                     <PopoverContent className="w-auto p-0" align="start">
                                         <Calendar
                                             mode="single"
-                                            selected={
-                                                field.value ? new Date(field.value) : undefined
-                                            }
-                                            onSelect={(date) => {
-                                                field.onChange(date ? date.toISOString() : '');
-                                            }}
+                                            selected={new Date(field.value)}
+                                            onSelect={(date) => field.onChange(date?.toISOString())}
                                             initialFocus
                                         />
                                     </PopoverContent>
                                 </Popover>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Thời gian bảo hành */}
-                    <FormField
-                        control={form.control}
-                        name="warrantyPeriod"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Thời gian bảo hành (tháng)</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="number"
-                                        placeholder="Nhập số tháng"
-                                        min={1}
-                                        max={12}
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Trạng thái */}
-                    <FormField
-                        control={form.control}
-                        name="status"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Trạng thái</FormLabel>
-                                <FormControl>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Chọn trạng thái" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="IN_USE">Đang sử dụng</SelectItem>
-                                            <SelectItem value="BROKEN">Hỏng</SelectItem>
-                                            <SelectItem value="AVAILABLE">Sẵn sàng</SelectItem>
-                                            <SelectItem value="UNDER_MAINTENANCE">
-                                                Bảo trì
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Chi phí */}
-                    <FormField
-                        control={form.control}
-                        name="cost"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Chi phí</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="number"
-                                        placeholder="Nhập chi phí"
-                                        min={0}
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Số lượng */}
-                    <FormField
-                        control={form.control}
-                        name="quantity"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Số lượng</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="number"
-                                        placeholder="Nhập số lượng"
-                                        {...field}
-                                        min={0}
-                                    />
-                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
