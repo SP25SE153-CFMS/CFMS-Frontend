@@ -1,29 +1,12 @@
-'use client';
-
-import { useState } from 'react';
-
 import { taskLogs } from '@/utils/data/table.data';
 import { DataTable } from '@/components/table/data-table';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-} from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { columns } from './columns';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
-import AddTaskLogForm from './form';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 
 export default function CardTask({ chickenCoopId }: { chickenCoopId: string }) {
-    const [open, setOpen] = useState(false);
-
-    const onOpenChange = (val: boolean) => setOpen(val);
-
     const currentTaskLogs = taskLogs.filter((tasklog) => tasklog.chickenCoopId === chickenCoopId);
 
     return (
@@ -41,19 +24,6 @@ export default function CardTask({ chickenCoopId }: { chickenCoopId: string }) {
                     >
                         <span>Tải file</span> <Download size={18} />
                     </Button>
-                    <Dialog open={open} onOpenChange={onOpenChange}>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Thêm nhật ký công việc mới</DialogTitle>
-                                <DialogDescription>
-                                    Hãy nhập các thông tin dưới đây.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <ScrollArea className="max-h-[600px]">
-                                <AddTaskLogForm closeDialog={() => setOpen(false)} />
-                            </ScrollArea>
-                        </DialogContent>
-                    </Dialog>
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">

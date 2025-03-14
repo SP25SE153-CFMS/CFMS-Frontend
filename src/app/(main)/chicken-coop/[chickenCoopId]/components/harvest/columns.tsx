@@ -4,12 +4,10 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import dayjs from 'dayjs';
-import { CoopEquipment } from '@/utils/schemas/equipment.schema';
-import { equipments } from '@/utils/data/table.data';
-import { Badge } from '@/components/ui/badge';
-import { equipmentStatusLabels, equipmentStatusVariant } from '@/utils/enum/status.enum';
+import { HarvestLog } from '@/utils/schemas/harvest-log.schema';
+import { chickenCoops } from '@/utils/data/table.data';
 
-export const columns: ColumnDef<CoopEquipment>[] = [
+export const columns: ColumnDef<HarvestLog>[] = [
     {
         id: 'select',
         header: ({ table }) => (
@@ -34,57 +32,42 @@ export const columns: ColumnDef<CoopEquipment>[] = [
         enableSorting: false,
         enableHiding: false,
     },
-    {
-        accessorKey: 'equipmentId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Thiết bị" />,
-        cell: ({ row }) => {
-            const equipmentId = row.getValue('equipmentId');
-            const equipment = equipments.find((equip) => equip.equipmentId === equipmentId);
-            return <div className="w-[150px]">{equipment?.equipmentName}</div>;
-        },
-    },
-    {
-        accessorKey: 'quantity',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng" />,
-        cell: ({ row }) => <div className="w-[80px]">{row.getValue('quantity')}</div>,
-    },
-    {
-        accessorKey: 'assignedDate',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày phân bổ" />,
-        cell: ({ row }) => (
-            <div className="w-[150px]">
-                {dayjs(row.getValue('assignedDate')).format('DD/MM/YYYY')}
-            </div>
-        ),
-    },
     // {
-    //     accessorKey: 'maintainDate',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày bảo trì" />,
-    //     cell: ({ row }) => {
-    //         const maintainDate = new Date(row.getValue('maintainDate'));
-    //         return (
-    //             <div className="w-[150px]">
-    //                 {maintainDate ? dayjs(maintainDate).format('DD/MM/YYYY') : '-'}
-    //             </div>
-    //         );
-    //     },
+    //     accessorKey: 'harvestLogId',
+    //     header: ({ column }) => (
+    //         <DataTableColumnHeader column={column} title="Mã nhật ký thu hoạch" />
+    //     ),
+    //     cell: ({ row }) => <div className="w-[150px]">{row.getValue('harvestLogId')}</div>,
     // },
     {
-        accessorKey: 'status',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
+        accessorKey: 'chickenCoopId',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Mã chuồng gà" />,
         cell: ({ row }) => {
-            const status = row.getValue('status') as string;
-            return (
-                <Badge variant={equipmentStatusVariant[status]}>
-                    {equipmentStatusLabels[status]}
-                </Badge>
-            );
+            const chickenCoopId = row.getValue('chickenCoopId') as string;
+            const chickenCoop = chickenCoops.find((coop) => coop.chickenCoopId === chickenCoopId);
+            return <div className="w-[150px]">{chickenCoop?.chickenCoopName}</div>;
         },
     },
-    // Uncomment this block to show the note column
+    {
+        accessorKey: 'date',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày thu hoạch" />,
+        cell: ({ row }) => (
+            <div className="w-[150px]">{dayjs(row.getValue('date')).format('DD/MM/YYYY')}</div>
+        ),
+    },
+    {
+        accessorKey: 'type',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại thu hoạch" />,
+        cell: ({ row }) => <div className="w-[150px]">{row.getValue('type')}</div>,
+    },
+    {
+        accessorKey: 'total',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Tổng số lượng" />,
+        cell: ({ row }) => <div className="w-[100px]">{row.getValue('total')}</div>,
+    },
     // {
     //     accessorKey: 'note',
     //     header: ({ column }) => <DataTableColumnHeader column={column} title="Ghi chú" />,
-    //     cell: ({ row }) => <div className="w-[250px] truncate">{row.getValue('note') || '-'}</div>,
+    //     cell: ({ row }) => <div className="w-[100px]">{row.getValue('note')}</div>,
     // },
 ];
