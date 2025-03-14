@@ -7,6 +7,7 @@ import Image from 'next/image';
 import dayjs from 'dayjs';
 import { Badge } from '@/components/ui/badge';
 import { User } from '@/utils/schemas/user.schema';
+import { employeeStatusLabels, employeeStatusVariant } from '@/utils/enum/status.enum';
 
 export const columns: ColumnDef<User>[] = [
     {
@@ -94,13 +95,9 @@ export const columns: ColumnDef<User>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
         cell: ({ row }) => {
             const status = row.getValue('status') as string;
-            const statusLabels: Record<string, string> = {
-                '1': 'Đang hoạt động',
-                '0': 'Ngừng hoạt động',
-            };
             return (
-                <Badge variant={status === '1' ? 'default' : 'outline'}>
-                    {statusLabels[status]}
+                <Badge variant={employeeStatusVariant[status]}>
+                    {employeeStatusLabels[status]}
                 </Badge>
             );
         },

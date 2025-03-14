@@ -6,6 +6,11 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import { SubCategory } from '@/utils/schemas/category.schema';
 import dayjs from 'dayjs';
 import { Badge } from '@/components/ui/badge';
+import {
+    CategoryStatus,
+    categoryStatusLabels,
+    categoryStatusVariant,
+} from '@/utils/enum/status.enum';
 
 export const columns: ColumnDef<SubCategory>[] = [
     {
@@ -51,14 +56,10 @@ export const columns: ColumnDef<SubCategory>[] = [
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
         cell: ({ row }) => {
-            const status = row.getValue('status') as string;
-            const statusLabels: Record<string, string> = {
-                ACTIVE: 'Hoạt động',
-                INACTIVE: 'Không hoạt động',
-            };
+            const status = row.getValue('status') as CategoryStatus;
             return (
-                <Badge variant={status === 'ACTIVE' ? 'default' : 'outline'}>
-                    {statusLabels[status]}
+                <Badge variant={categoryStatusVariant[status]}>
+                    {categoryStatusLabels[status]}
                 </Badge>
             );
         },

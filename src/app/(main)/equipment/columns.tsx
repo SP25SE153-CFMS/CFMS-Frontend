@@ -6,6 +6,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { Equipment } from '@/utils/schemas/equipment.schema';
 import { DataTableRowActions } from './data-table-row-actions';
+import { equipmentStatusLabels, equipmentStatusVariant } from '@/utils/enum/status.enum';
+import { Badge } from '@/components/ui/badge';
 
 export const columns: ColumnDef<Equipment>[] = [
     {
@@ -55,6 +57,14 @@ export const columns: ColumnDef<Equipment>[] = [
     {
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
+        cell: ({ row }) => {
+            const status = row.getValue('status') as string;
+            return (
+                <Badge variant={equipmentStatusVariant[status]}>
+                    {equipmentStatusLabels[status]}
+                </Badge>
+            );
+        },
     },
     {
         accessorKey: 'cost',

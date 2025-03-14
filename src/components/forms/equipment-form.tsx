@@ -48,7 +48,7 @@ export default function EquipmentForm({ defaultValues, closeDialog }: EquipmentF
             equipmentName: '',
             purchaseDate: new Date().toISOString(),
             warrantyPeriod: 12,
-            status: 'AVAILABLE',
+            status: '0',
             cost: 0,
             quantity: 1,
             createdAt: new Date().toISOString(),

@@ -32,6 +32,7 @@ import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import PopoverWithOverlay from '@/components/popover-with-overlay';
 import { Flock } from '@/utils/schemas/flock.schema';
 import config from '@/configs';
+import { flockStatusLabels, flockStatusVariant } from '@/utils/enum/status.enum';
 
 const techinicalIndicators = [
     { id: 1, name: 'GÀ CHẾT', value: '9 con' },
@@ -145,7 +146,14 @@ export default function Page() {
                                 </strong>
                             </div>
                             <div className="flex gap-3 text-sm mb-4 justify-between">
-                                Trạng thái: <Badge>{currentFlock?.status.toUpperCase()}</Badge>
+                                Trạng thái:{' '}
+                                {currentFlock?.status ? (
+                                    <Badge variant={flockStatusVariant[currentFlock?.status]}>
+                                        {flockStatusLabels[currentFlock?.status]}
+                                    </Badge>
+                                ) : (
+                                    '-'
+                                )}
                             </div>
                             <div className="flex gap-3 text-sm mb-4">
                                 Ngày bắt đầu:{' '}

@@ -7,6 +7,11 @@ import { Category } from '@/utils/schemas/category.schema';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { DataTableRowActions } from './data-table-row-actions';
+import {
+    CategoryStatus,
+    categoryStatusLabels,
+    categoryStatusVariant,
+} from '@/utils/enum/status.enum';
 
 export const columns: ColumnDef<Category>[] = [
     {
@@ -65,14 +70,10 @@ export const columns: ColumnDef<Category>[] = [
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
         cell: ({ row }) => {
-            const status = row.getValue('status') as string;
-            const statusLabels: Record<string, string> = {
-                ACTIVE: 'Hoạt động',
-                INACTIVE: 'Không hoạt động',
-            };
+            const status = row.getValue('status') as CategoryStatus;
             return (
-                <Badge variant={status === 'ACTIVE' ? 'default' : 'outline'}>
-                    {statusLabels[status]}
+                <Badge variant={categoryStatusVariant[status]}>
+                    {categoryStatusLabels[status]}
                 </Badge>
             );
         },

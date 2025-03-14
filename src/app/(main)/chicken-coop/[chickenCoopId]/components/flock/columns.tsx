@@ -6,6 +6,9 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import dayjs from 'dayjs';
 import { Badge } from '@/components/ui/badge';
 import { Flock } from '@/utils/schemas/flock.schema';
+import Link from 'next/link';
+import config from '@/configs';
+import { flockStatusLabels, flockStatusVariant } from '@/utils/enum/status.enum';
 
 export const columns: ColumnDef<Flock>[] = [
     {
@@ -33,9 +36,24 @@ export const columns: ColumnDef<Flock>[] = [
         enableHiding: false,
     },
     {
+        accessorKey: 'flockId',
+        header: () => null, // No header
+        cell: () => null, // Hidden cell
+    },
+    {
         accessorKey: 'name',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên đàn gà" />,
-        cell: ({ row }) => <div className="w-[200px] font-medium">{row.getValue('name')}</div>,
+        cell: ({ row, table }) => (
+            <Link
+                href={`${config.routes.flock}/${row.getValue('flockId')}`}
+                onClick={() => {
+                    const flocks = table.getCoreRowModel().rows.map((row) => row.original);
+                    sessionStorage.setItem('flocks', JSON.stringify(flocks));
+                }}
+            >
+                {row.getValue('name')}
+            </Link>
+        ),
     },
     {
         accessorKey: 'quantity',
@@ -54,17 +72,7 @@ export const columns: ColumnDef<Flock>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
         cell: ({ row }) => {
             const status = row.getValue('status') as string;
-            const statusLabels: Record<string, string> = {
-                in_farm: 'Trong trang trại',
-                sold: 'Đã bán',
-                removed: 'Đã loại bỏ',
-                dead: 'Đã chết',
-            };
-            return (
-                <Badge variant={status === 'in_farm' ? 'default' : 'outline'}>
-                    {statusLabels[status]}
-                </Badge>
-            );
+            return <Badge variant={flockStatusVariant[status]}>{flockStatusLabels[status]}</Badge>;
         },
     },
 ];

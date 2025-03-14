@@ -38,7 +38,7 @@ export default function FlockForm({ defaultValues, closeDialog }: FlockFormProps
             quantity: 0,
             name: '',
             startDate: new Date().toISOString(),
-            status: 'in_farm',
+            status: '0',
             description: '',
             endDate: null,
             avgWeight: 0,

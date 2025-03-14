@@ -43,8 +43,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
             chickenCoopCode: '',
             chickenCoopName: '',
             capacity: 0,
-            location: '',
-            status: 'AVAILABLE',
+            status: '0',
             breedingAreaId: '',
             createdAt: new Date().toISOString(),
             updatedAt: null,
@@ -129,21 +128,6 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                         min={0}
                                         {...field}
                                     />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Vị trí */}
-                    <FormField
-                        control={form.control}
-                        name="location"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Vị trí</FormLabel>
-                                <FormControl>
-                                    <Input type="text" placeholder="Nhập vị trí" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

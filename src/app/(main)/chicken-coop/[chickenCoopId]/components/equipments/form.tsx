@@ -48,7 +48,7 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
             equipmentName: '',
             purchaseDate: new Date().toISOString(),
             warrantyPeriod: 12,
-            status: 'AVAILABLE',
+            status: '0',
             cost: 0,
             quantity: 1,
             createdAt: new Date().toISOString(),

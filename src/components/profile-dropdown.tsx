@@ -40,9 +40,6 @@ export function ProfileDropdown() {
                         <Link href={config.routes.signIn}>Thông tin cá nhân</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <Link href={config.routes.signIn}>Thanh toán</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
                         <Link href={config.routes.signIn}>Cài đặt</Link>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>

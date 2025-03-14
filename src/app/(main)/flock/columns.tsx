@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import config from '@/configs';
 import { DataTableRowActions } from './data-table-row-actions';
+import { flockStatusLabels, flockStatusVariant } from '@/utils/enum/status.enum';
 
 export const columns: ColumnDef<Flock>[] = [
     {
@@ -63,7 +64,7 @@ export const columns: ColumnDef<Flock>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
         cell: ({ row }) => {
             const status = row.getValue('status') as string;
-            return <Badge>{status?.toUpperCase()}</Badge>;
+            return <Badge variant={flockStatusVariant[status]}>{flockStatusLabels[status]}</Badge>;
         },
     },
     {

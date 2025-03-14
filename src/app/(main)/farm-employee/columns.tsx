@@ -7,6 +7,11 @@ import dayjs from 'dayjs';
 import { Badge } from '@/components/ui/badge';
 import { FarmEmployee } from '@/utils/schemas/farm-employee.schema';
 import { farms, users } from '@/utils/data/table.data';
+import {
+    EmployeeStatus,
+    employeeStatusLabels,
+    employeeStatusVariant,
+} from '@/utils/enum/status.enum';
 
 export const columns: ColumnDef<FarmEmployee>[] = [
     {
@@ -66,10 +71,10 @@ export const columns: ColumnDef<FarmEmployee>[] = [
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
         cell: ({ row }) => {
-            const status = row.getValue('status') as string;
+            const status = row.getValue('status') as EmployeeStatus;
             return (
-                <Badge variant={status === '1' ? 'default' : 'outline'}>
-                    {status === '1' ? 'Đang làm việc' : 'Nghỉ việc'}
+                <Badge variant={employeeStatusVariant[status]}>
+                    {employeeStatusLabels[status]}
                 </Badge>
             );
         },

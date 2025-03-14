@@ -29,7 +29,7 @@ export const EquipmentSchema = z.object({
         .positive({ message: "Thời gian bảo hành phải là số nguyên dương" })
         .max(120, { message: "Thời gian bảo hành không được quá 120 tháng (10 năm)" }),
 
-    status: z.enum(["IN_USE", "BROKEN", "AVAILABLE", "UNDER_MAINTENANCE"], {
+    status: z.enum(["0", "1", "2", "3"], {
         message: "Trạng thái thiết bị không hợp lệ",
     }),
 
@@ -86,7 +86,7 @@ export const CoopEquipmentSchema = z.object({
         .nullable()
         .optional(),
 
-    status: z.enum(["IN_USE", "BROKEN", "UNDER_MAINTENANCE"], {
+    status: z.enum(["0", "1", "2"], {
         message: "Trạng thái thiết bị chuồng không hợp lệ",
     }),
 
