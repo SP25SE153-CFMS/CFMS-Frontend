@@ -35,6 +35,7 @@ export default function Page() {
         queryFn: () => getBreedingAreas(),
     });
 
+
     // Check if breedingAreas is loading
     if (isLoading) {
         return (

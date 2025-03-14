@@ -5,16 +5,16 @@ export const getProducts = async (): Promise<WarehouseProduct[]> => {
     return warehouseProducts;
 };
 
-
-// Create 
+// Create
 export const createProduct = async (warehouseProduct: WarehouseProduct) => {
     // Mock API call
     warehouseProducts.push(warehouseProduct);
     return warehouseProduct;
 };
 
-
 // Delete
 export const deleteProduct = async (id: string) => {
-    // const index = warehouseProducts.findIndex(())
-}
+    const index = warehouseProducts.findIndex((product) => product.productId === id);
+    warehouseProducts.splice(index, 1);
+    return id;
+};
