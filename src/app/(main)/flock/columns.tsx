@@ -78,4 +78,30 @@ export const columns: ColumnDef<Flock>[] = [
         id: 'actions',
         cell: ({ row }) => <DataTableRowActions row={row} />,
     },
+    // {
+    //     accessorKey: 'lastHealthCheck',
+    //     header: ({ column }) => (
+    //         <DataTableColumnHeader column={column} title="Lần kiểm tra sức khỏe cuối" />
+    //     ),
+    //     cell: ({ row }) => (
+    //         <div className="w-[150px]">
+    //             {row.getValue('lastHealthCheck')
+    //                 ? dayjs(row.getValue('lastHealthCheck')).format('DD/MM/YYYY')
+    //                 : '-'}
+    //         </div>
+    //     ),
+    // },
+    // {
+    //     accessorKey: 'gender',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Giới tính" />,
+    //     cell: ({ row }) => {
+    //         const genderLabels: Record<string, string> = {
+    //             male: 'Trống',
+    //             female: 'Mái',
+    //             mixed: 'Hỗn hợp',
+    //         };
+    //         const gender: string = row.getValue('gender');
+    //         return <div className="w-[100px] text-center">{genderLabels[gender]}</div>;
+    //     },
+    // },
 ];

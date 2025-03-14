@@ -29,12 +29,15 @@ import toast from 'react-hot-toast';
 import { deleteFlock } from '@/services/flock.service';
 import { Flock } from '@/utils/schemas/flock.schema';
 import FlockForm from '@/components/forms/flock-form';
+import { useRouter } from 'next/navigation';
+import config from '@/configs';
 
 interface Props<T> {
     row: Row<T>;
 }
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
+    const router = useRouter();
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
@@ -55,6 +58,13 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
+                    <DropdownMenuItem
+                        onClick={() =>
+                            router.push(`${config.routes.flock}/${row.getValue('flockId')}`)
+                        }
+                    >
+                        Xem chi tiết
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                         Cập nhật
                     </DropdownMenuItem>

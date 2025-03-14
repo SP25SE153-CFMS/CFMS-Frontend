@@ -7,9 +7,9 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import config from '@/configs';
 import { currentUser } from '@/utils/data/mock.data';
 import initials from 'initials';
 import Link from 'next/link';
@@ -37,29 +37,18 @@ export function ProfileDropdown() {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
-                        <Link href="/settings">
-                            Profile
-                            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                        </Link>
+                        <Link href={config.routes.signIn}>Thông tin cá nhân</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <Link href="/settings">
-                            Billing
-                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                        </Link>
+                        <Link href={config.routes.signIn}>Thanh toán</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <Link href="/settings">
-                            Settings
-                            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                        </Link>
+                        <Link href={config.routes.signIn}>Cài đặt</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>New Team</DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                    Log out
-                    <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                    <Link href={config.routes.signIn}>Đăng xuất</Link>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
