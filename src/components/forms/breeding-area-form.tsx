@@ -66,7 +66,14 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
 
     // Form submit handler
     const onSubmit = async (values: BreedingArea) => {
-        mutation.mutate(values);
+        if (defaultValues) {
+            await updateBreedingArea(values);
+            toast.success('Cập nhật khu nuôi thành công');
+        } else {
+            await createBreedingArea(values);
+            toast.success('Tạo khu nuôi thành công');
+        }
+        closeDialog();  
     };
 
     // Form error handler
