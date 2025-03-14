@@ -296,6 +296,9 @@ export default function Page() {
                                     href={`${farm.website}?farmCode=${farm.farmCode}`}
                                     key={farm.farmId}
                                     rel="noopener noreferrer"
+                                    onClick={() => {
+                                        sessionStorage.setItem('farmId', farm.farmId);
+                                    }}
                                 >
                                     <Card className="hover:shadow-lg transition-shadow duration-300">
                                         <CardHeader>

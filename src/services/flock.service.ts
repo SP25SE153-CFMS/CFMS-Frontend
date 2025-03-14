@@ -1,32 +1,38 @@
-import { flocks } from "@/utils/data/table.data";
 import { Flock } from "@/utils/schemas/flock.schema";
+import { get, post, put, remove } from "@/utils/functions/axios.function";
+import { Response } from "@/utils/types";
+import { flocks } from "@/utils/data/table.data";
+
+const PREFIX = '/api/Flock';
 
 export const getFlocks = async () => {
-    // Mock API call
+    /* eslint-disable no-unused-vars */
+    const endpoint = PREFIX
+    // const response = await get<Response<Flock[]>>(endpoint);
+    // return response.data.data;
     return flocks;
 };
 
 export const getFlockById = async (id: string) => {
-    // Mock API call
-    return flocks.find((flock) => flock.flockId === id);
+    const endpoint = PREFIX + '/' + id;
+    const response = await get<Response<Flock>>(endpoint);
+    return response.data.data;
 };
 
-export const createFlock = async (flock: Flock) => {
-    // Mock API call
-    flocks.push(flock);
-    return flock;
+export const createFlock = async (body: Flock) => {
+    const endpoint = PREFIX
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
 };
 
-export const updateFlock = async (flock: Flock) => {
-    // Mock API call
-    const index = flocks.findIndex((flock) => flock.flockId === flock.flockId);
-    flocks[index] = flock;
-    return flock;
+export const updateFlock = async (body: Flock) => {
+    const endpoint = PREFIX
+    const response = await put<Response<string>>(endpoint, body);
+    return response.data;
 };
 
 export const deleteFlock = async (id: string) => {
-    // Mock API call
-    const index = flocks.findIndex((flock) => flock.flockId === id);
-    flocks.splice(index, 1);
-    return id;
+    const endpoint = PREFIX + '/' + id;
+    const response = await remove<Response<string>>(endpoint);
+    return response.data;
 };

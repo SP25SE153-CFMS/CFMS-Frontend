@@ -31,6 +31,7 @@ import {
 import dayjs from 'dayjs';
 import { createEquipment, updateEquipment } from '@/services/equipment.service';
 import toast from 'react-hot-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface EquipmentFormProps {
     defaultValues?: Partial<Equipment>;
@@ -56,16 +57,28 @@ export default function EquipmentForm({ defaultValues, closeDialog }: EquipmentF
         },
     });
 
+    // Query client
+    const queryClient = useQueryClient();
+
+    // Mutations for creating and updating
+    const mutation = useMutation({
+        mutationFn: defaultValues ? updateEquipment : createEquipment,
+        onSuccess: () => {
+            closeDialog();
+            queryClient.invalidateQueries({ queryKey: ['equipments'] });
+            toast.success(
+                defaultValues ? 'Cập nhật thiết bị thành công' : 'Tạo thiết bị thành công',
+            );
+        },
+        onError: (error: any) => {
+            console.error(error);
+            toast.error(error?.response?.data?.message);
+        },
+    });
+
     // Form submit handler
     async function onSubmit(values: Equipment) {
-        if (defaultValues) {
-            await updateEquipment(values);
-            toast.success('Cập nhật thiết bị thành công');
-        } else {
-            await createEquipment(values);
-            toast.success('Tạo thiết bị thành công');
-        }
-        closeDialog();
+        mutation.mutate(values);
     }
 
     // Form error handler

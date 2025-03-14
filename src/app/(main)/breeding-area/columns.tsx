@@ -6,6 +6,8 @@ import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import Link from 'next/link';
 import { DataTableRowActions } from './data-table-row-actions';
+import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
+import config from '@/configs';
 
 export const columns: ColumnDef<BreedingArea>[] = [
     {
@@ -48,39 +50,29 @@ export const columns: ColumnDef<BreedingArea>[] = [
         accessorKey: 'breedingAreaName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên khu nuôi" />,
         cell: ({ row }) => (
-            <Link href={`/chicken-coop?breedingAreaId=${row.getValue('breedingAreaId')}`}>
+            <Link
+                href={`${config.routes.chickenCoop}?breedingAreaId=${row.getValue('breedingAreaId')}`}
+            >
                 {row.getValue('breedingAreaName')}
             </Link>
         ),
-    },
-    {
-        accessorKey: 'humidity',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Độ ẩm" />,
     },
     {
         accessorKey: 'mealsPerDay',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Bữa ăn/ngày" />,
     },
     {
-        accessorKey: 'temperature',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Nhiệt độ" />,
+        accessorKey: 'area',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Diện tích" />,
+        cell: ({ row }) => <div className="w-[80px]">{row.getValue('area') ?? 0} m²</div>,
     },
     {
-        accessorKey: 'width',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Chiều rộng" />,
-        cell: ({ row }) => <div className="w-[80px]">{row.getValue('width')}m</div>,
-    },
-    {
-        accessorKey: 'height',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Chiều cao" />,
-        cell: ({ row }) => <div className="w-[80px]">{row.getValue('height')}m</div>,
-    },
-    {
-        accessorKey: 'covered',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Mái che" />,
-        cell: ({ row }) => (
-            <div className="w-[80px]">{row.getValue('covered') ? 'Có' : 'Không'}</div>
-        ),
+        accessorKey: 'chickenCoops',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Số chuồng nuôi" />,
+        cell: ({ row }) => {
+            const chickenCoops = row.getValue('chickenCoops') as ChickenCoop[];
+            return <div className="w-[80px]">{chickenCoops?.length ?? 0}</div>;
+        },
     },
     {
         id: 'actions',

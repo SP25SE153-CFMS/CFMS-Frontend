@@ -1,27 +1,38 @@
-import { vaccines } from "@/utils/data/table.data";
 import { Vaccine } from "@/utils/schemas/vaccine.schema";
+import { get, post, put, remove } from "@/utils/functions/axios.function";
+import { Response } from "@/utils/types";
+import { vaccines } from "@/utils/data/table.data";
+
+const PREFIX = '/api/Vaccine';
 
 export const getVaccines = async () => {
-    // Mock API call
+    /* eslint-disable no-unused-vars */
+    const endpoint = PREFIX
+    // const response = await get<Response<Vaccine[]>>(endpoint);
+    // return response.data.data;
     return vaccines;
 };
 
-export const createVaccine = async (vaccine: Vaccine) => {
-    // Mock API call
-    vaccines.push(vaccine);
-    return vaccine;
+export const getVaccineById = async (id: string) => {
+    const endpoint = PREFIX + '/' + id;
+    const response = await get<Response<Vaccine>>(endpoint);
+    return response.data.data;
 };
 
-export const updateVaccine = async (vaccine: Vaccine) => {
-    // Mock API call
-    const index = vaccines.findIndex((v) => v.vaccineId === vaccine.vaccineId);
-    vaccines[index] = vaccine;
-    return vaccine;
+export const createVaccine = async (body: Vaccine) => {
+    const endpoint = PREFIX
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const updateVaccine = async (body: Vaccine) => {
+    const endpoint = PREFIX
+    const response = await put<Response<string>>(endpoint, body);
+    return response.data;
 };
 
 export const deleteVaccine = async (id: string) => {
-    // Mock API call
-    const index = vaccines.findIndex((v) => v.vaccineId === id);
-    vaccines.splice(index, 1);
-    return id;
+    const endpoint = PREFIX + '/' + id;
+    const response = await remove<Response<string>>(endpoint);
+    return response.data;
 };
