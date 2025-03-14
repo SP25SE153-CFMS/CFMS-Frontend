@@ -16,6 +16,7 @@ import { Category, CategorySchema, CreateCategorySchema } from '@/utils/schemas/
 import { createCategory, updateCategory } from '@/services/category.service';
 import { Textarea } from '../ui/textarea';
 import toast from 'react-hot-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface CategoryFormProps {
     defaultValues?: Partial<Category>;
@@ -36,16 +37,28 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
         },
     });
 
+    // Query client
+    const queryClient = useQueryClient();
+
+    // Mutations for creating and updating
+    const mutation = useMutation({
+        mutationFn: defaultValues ? updateCategory : createCategory,
+        onSuccess: () => {
+            closeDialog();
+            queryClient.invalidateQueries({ queryKey: ['categories'] });
+            toast.success(
+                defaultValues ? 'Cập nhật danh mục thành công' : 'Tạo danh mục thành công',
+            );
+        },
+        onError: (error: any) => {
+            console.error(error);
+            toast.error(error?.response?.data?.message);
+        },
+    });
+
     // Form submit handler
     async function onSubmit(values: Category) {
-        if (defaultValues) {
-            await updateCategory(values);
-            toast.success('Cập nhật danh mục thành công');
-        } else {
-            await createCategory(values);
-            toast.success('Tạo danh mục thành công');
-        }
-        closeDialog();
+        mutation.mutate(values);
     }
 
     // Form error handler

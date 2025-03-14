@@ -58,7 +58,13 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <DropdownMenuItem onClick={() => router.push(config.routes.breadingArea)}>
+                    <DropdownMenuItem
+                        onClick={() =>
+                            router.push(
+                                `${config.routes.chickenCoop}?breedingAreaId=${row.getValue('breedingAreaId')}`,
+                            )
+                        }
+                    >
                         Xem chi tiết
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpenUpdate(true)}>

@@ -28,6 +28,7 @@ import { breedingAreas } from '@/utils/data/table.data';
 import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import { createChickenCoop, updateChickenCoop } from '@/services/chicken-coop.service';
 import toast from 'react-hot-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface ChickenCoopFormProps {
     defaultValues?: Partial<ChickenCoop>;
@@ -51,16 +52,28 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
         },
     });
 
+    // Query client
+    const queryClient = useQueryClient();
+
+    // Mutations for creating and updating
+    const mutation = useMutation({
+        mutationFn: defaultValues ? updateChickenCoop : createChickenCoop,
+        onSuccess: () => {
+            closeDialog();
+            queryClient.invalidateQueries({ queryKey: ['chicken-coops'] });
+            toast.success(
+                defaultValues ? 'Cập nhật chuồng gà thành công' : 'Tạo chuồng gà thành công',
+            );
+        },
+        onError: (error: any) => {
+            console.error(error);
+            toast.error(error?.response?.data?.message);
+        },
+    });
+
     // Form submit handler
     async function onSubmit(values: ChickenCoop) {
-        if (defaultValues) {
-            await updateChickenCoop(values);
-            toast.success('Cập nhật chuồng gà thành công');
-        } else {
-            await createChickenCoop(values);
-            toast.success('Tạo chuồng gà thành công');
-        }
-        closeDialog();
+        mutation.mutate(values);
     }
 
     // Form error handler

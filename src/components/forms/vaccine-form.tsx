@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Vaccine, VaccineSchema } from '@/utils/schemas/vaccine.schema';
 import { createVaccine, updateVaccine } from '@/services/vaccine.service';
 import toast from 'react-hot-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface VaccineFormProps {
     defaultValues?: Partial<Vaccine>;
@@ -43,16 +44,26 @@ export default function VaccineForm({ defaultValues, closeDialog }: VaccineFormP
         },
     });
 
+    // Query client
+    const queryClient = useQueryClient();
+
+    // Mutations for creating and updating
+    const mutation = useMutation({
+        mutationFn: defaultValues ? updateVaccine : createVaccine,
+        onSuccess: () => {
+            closeDialog();
+            queryClient.invalidateQueries({ queryKey: ['vaccines'] });
+            toast.success(defaultValues ? 'Cập nhật vắc-xin thành công' : 'Tạo vắc-xin thành công');
+        },
+        onError: (error: any) => {
+            console.error(error);
+            toast.error(error?.response?.data?.message);
+        },
+    });
+
     // Form submit handler
     async function onSubmit(values: Vaccine) {
-        if (defaultValues) {
-            await updateVaccine(values);
-            toast.success('Cập nhật vắc-xin thành công');
-        } else {
-            await createVaccine(values);
-            toast.success('Tạo vắc-xin thành công');
-        }
-        closeDialog();
+        mutation.mutate(values);
     }
 
     // Form error handler

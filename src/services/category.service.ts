@@ -1,34 +1,39 @@
-import { categories, subCategories } from "@/utils/data/table.data";
+
 import { Category } from "@/utils/schemas/category.schema";
+import { get, post, put, remove } from "@/utils/functions/axios.function";
+import { Response } from "@/utils/types";
+import { categories } from "@/utils/data/table.data";
 
-export const getCategories = async (): Promise<Category[]> => {
-    // Mock API call
-    const data = categories.map((category) => (
-        {
-            ...category,
-            subCategory: subCategories.filter((subCategory) => subCategory.categoryId === category.categoryId)
-        }
-    ))
+const PREFIX = '/api/Category';
 
-    return data;
+export const getCategories = async () => {
+    /* eslint-disable no-unused-vars */
+    const endpoint = PREFIX
+    // const response = await get<Response<Category[]>>(endpoint);
+    // return response.data.data;
+    return categories
 };
 
-export const createCategory = async (category: Category): Promise<Category> => {
-    // Mock API call
-    categories.push(category);
-    return category;
+export const getCategoryById = async (id: string) => {
+    const endpoint = PREFIX + '/' + id;
+    const response = await get<Response<Category>>(endpoint);
+    return response.data.data;
 };
 
-export const updateCategory = async (category: Category): Promise<Category> => {
-    // Mock API call
-    const index = categories.findIndex((item) => item.categoryId === category.categoryId);
-    categories[index] = category;
-    return category;
+export const createCategory = async (body: Category) => {
+    const endpoint = PREFIX
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
 };
 
-export const deleteCategory = async (id: string): Promise<string> => {
-    // Mock API call
-    const index = categories.findIndex((item) => item.categoryId === id);
-    categories.splice(index, 1);
-    return id;
+export const updateCategory = async (body: Category) => {
+    const endpoint = PREFIX
+    const response = await put<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const deleteCategory = async (id: string) => {
+    const endpoint = PREFIX + '/' + id;
+    const response = await remove<Response<string>>(endpoint);
+    return response.data;
 };

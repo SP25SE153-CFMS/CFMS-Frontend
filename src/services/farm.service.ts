@@ -1,32 +1,35 @@
-import { farms } from "@/utils/data/table.data";
 import { Farm } from "@/utils/schemas/farm.schema";
+import { get, post, put, remove } from "@/utils/functions/axios.function";
+import { Response } from "@/utils/types";
 
-export const getFarms = async (): Promise<Farm[]> => {
-    // Mock API call
-    return farms;
+const PREFIX = '/api/Farm';
+
+export const getFarms = async () => {
+    const endpoint = PREFIX
+    const response = await get<Response<Farm[]>>(endpoint);
+    return response.data.data;
 };
 
 export const getFarmById = async (id: string) => {
-    // Mock API call
-    return farms.find((farm) => farm.farmId === id);
+    const endpoint = PREFIX + '/' + id;
+    const response = await get<Response<Farm>>(endpoint);
+    return response.data.data;
 }
 
-export const createFarm = async (farm: Farm) => {
-    // Mock API call
-    farms.push(farm);
-    return farm;
+export const createFarm = async (body: Farm) => {
+    const endpoint = PREFIX
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
 }
 
-export const updateFarm = async (farm: Farm) => {
-    // Mock API call
-    const index = farms.findIndex((farm) => farm.farmId === farm.farmId);
-    farms[index] = farm;
-    return farm;
+export const updateFarm = async (body: Farm) => {
+    const endpoint = PREFIX
+    const response = await put<Response<string>>(endpoint, body);
+    return response.data;
 }
 
 export const deleteFarm = async (id: string) => {
-    // Mock API call
-    const index = farms.findIndex((farm) => farm.farmId === id);
-    farms.splice(index, 1);
-    return id;
+    const endpoint = PREFIX + '/' + id;
+    const response = await remove<Response<string>>(endpoint);
+    return response.data;
 }

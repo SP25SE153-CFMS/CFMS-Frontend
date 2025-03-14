@@ -1,32 +1,38 @@
-import { requests } from "@/utils/data/table.data";
 import { Request } from "@/utils/schemas/request.schema";
+import { get, post, put, remove } from "@/utils/functions/axios.function";
+import { Response } from "@/utils/types";
+import { requests } from "@/utils/data/table.data";
+
+const PREFIX = '/api/Request';
 
 export const getRequests = async () => {
-    // Mock API call
+    /* eslint-disable no-unused-vars */
+    const endpoint = PREFIX
+    // const response = await get<Response<Request[]>>(endpoint);
+    // return response.data.data;
     return requests;
 };
 
 export const getRequestById = async (id: string) => {
-    // Mock API call
-    return requests.find((request) => request.requestId === id);
+    const endpoint = PREFIX + '/' + id;
+    const response = await get<Response<Request>>(endpoint);
+    return response.data.data;
 };
 
-export const createRequest = async (request: Request) => {
-    // Mock API call
-    requests.push(request);
-    return request;
+export const createRequest = async (body: Request) => {
+    const endpoint = PREFIX
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
 };
 
-export const updateRequest = async (request: Request) => {
-    // Mock API call
-    const index = requests.findIndex((req) => req.requestId === request.requestId);
-    requests[index] = request;
-    return request;
+export const updateRequest = async (body: Request) => {
+    const endpoint = PREFIX
+    const response = await put<Response<string>>(endpoint, body);
+    return response.data;
 };
 
 export const deleteRequest = async (id: string) => {
-    // Mock API call
-    const index = requests.findIndex((req) => req.requestId === id);
-    requests.splice(index, 1);
-    return id;
+    const endpoint = PREFIX + '/' + id;
+    const response = await remove<Response<string>>(endpoint);
+    return response.data;
 }
