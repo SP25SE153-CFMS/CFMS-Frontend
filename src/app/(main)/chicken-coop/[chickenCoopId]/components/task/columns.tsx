@@ -4,16 +4,10 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import dayjs from 'dayjs';
-import { Badge } from '@/components/ui/badge';
-import { FarmEmployee } from '@/utils/schemas/farm-employee.schema';
-import { farms, users } from '@/utils/data/table.data';
-import {
-    EmployeeStatus,
-    employeeStatusLabels,
-    employeeStatusVariant,
-} from '@/utils/enum/status.enum';
+import { chickenCoops } from '@/utils/data/table.data';
+import { TaskLog } from '@/utils/schemas/task-log.schema';
 
-export const columns: ColumnDef<FarmEmployee>[] = [
+export const columns: ColumnDef<TaskLog>[] = [
     {
         id: 'select',
         header: ({ table }) => (
@@ -39,20 +33,19 @@ export const columns: ColumnDef<FarmEmployee>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: 'farmId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Trang trại" />,
+        accessorKey: 'chickenCoopId',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Chuồng gà" />,
         cell: ({ row }) => {
-            const farm = farms.find((farm) => farm.farmId === row.getValue('farmId'));
-            return <div>{farm?.farmName}</div>;
+            const coop = chickenCoops.find(
+                (coop) => coop.chickenCoopId === row.getValue('chickenCoopId'),
+            );
+            return <div>{coop?.chickenCoopName || '-'}</div>;
         },
     },
     {
-        accessorKey: 'employeeId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Nhân viên" />,
-        cell: ({ row }) => {
-            const employee = users.find((user) => user.userId === row.getValue('employeeId'));
-            return <div>{employee?.fullName}</div>;
-        },
+        accessorKey: 'type',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại công việc" />,
+        cell: ({ row }) => <div>{row.getValue('type')}</div>,
     },
     {
         accessorKey: 'startDate',
@@ -67,21 +60,4 @@ export const columns: ColumnDef<FarmEmployee>[] = [
             return <div>{endDate ? dayjs(endDate).format('DD/MM/YYYY') : '-'}</div>;
         },
     },
-    {
-        accessorKey: 'status',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
-        cell: ({ row }) => {
-            const status = row.getValue('status') as EmployeeStatus;
-            return (
-                <Badge variant={employeeStatusVariant[status]}>
-                    {employeeStatusLabels[status]}
-                </Badge>
-            );
-        },
-    },
-    // {
-    //     accessorKey: 'roleName',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Vai trò" />,
-    //     cell: ({ row }) => <div>{row.getValue('roleName')}</div>,
-    // },
 ];

@@ -33,6 +33,7 @@ import PopoverWithOverlay from '@/components/popover-with-overlay';
 import { Flock } from '@/utils/schemas/flock.schema';
 import config from '@/configs';
 import { flockStatusLabels, flockStatusVariant } from '@/utils/enum/status.enum';
+import { downloadCSV } from '@/utils/functions/download-csv.function';
 
 const techinicalIndicators = [
     { id: 1, name: 'GÀ CHẾT', value: '9 con' },
@@ -259,7 +260,11 @@ const CardComponent = ({ title }: { title: string }) => {
                     </p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" className="space-x-1">
+                    <Button
+                        variant="outline"
+                        className="space-x-1"
+                        onClick={() => downloadCSV(coopEquipments, 'coop-equipments.csv')}
+                    >
                         <span>Tải file</span> <Download size={18} />
                     </Button>
                     <Button className="space-x-1" onClick={openModal}>

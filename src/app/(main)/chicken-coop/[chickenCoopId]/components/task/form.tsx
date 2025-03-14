@@ -22,30 +22,28 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
-import { FarmEmployeeSchema, type FarmEmployee } from '@/utils/schemas/farm-employee.schema';
+import { TaskLogSchema, type TaskLog } from '@/utils/schemas/task-log.schema';
 import dayjs from 'dayjs';
-import { createFarmEmployee, updateFarmEmployee } from '@/services/farm-employee.service';
+import { createTaskLog, updateTaskLog } from '@/services/task-log.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getFarms } from '@/services/farm.service';
-import { getUsers } from '@/services/user.service';
+import { getChickenCoops } from '@/services/chicken-coop.service';
+import { Input } from '@/components/ui/input';
 
-interface AddEmployeeFormProps {
-    defaultValues?: Partial<FarmEmployee>;
+interface AddTaskLogFormProps {
+    defaultValues?: Partial<TaskLog>;
     closeDialog: () => void;
 }
 
-export default function AddEmployeeForm({ defaultValues, closeDialog }: AddEmployeeFormProps) {
+export default function AddTaskLogForm({ defaultValues, closeDialog }: AddTaskLogFormProps) {
     // Initialize form
-    const form = useForm<FarmEmployee>({
-        resolver: zodResolver(FarmEmployeeSchema),
+    const form = useForm<TaskLog>({
+        resolver: zodResolver(TaskLogSchema),
         defaultValues: {
-            farmId: '',
-            employeeId: '',
+            type: '',
+            chickenCoopId: '',
             startDate: new Date().toISOString(),
-            endDate: null,
-            status: '1',
-            roleName: '',
+            endDate: '',
             ...defaultValues,
         },
     });
@@ -55,12 +53,14 @@ export default function AddEmployeeForm({ defaultValues, closeDialog }: AddEmplo
 
     // Mutations for creating and updating
     const mutation = useMutation({
-        mutationFn: defaultValues ? updateFarmEmployee : createFarmEmployee,
+        mutationFn: defaultValues ? updateTaskLog : createTaskLog,
         onSuccess: () => {
             closeDialog();
-            queryClient.invalidateQueries({ queryKey: ['farmEmployees'] });
+            queryClient.invalidateQueries({ queryKey: ['taskLogs'] });
             toast.success(
-                defaultValues ? 'Cập nhật nhân viên thành công' : 'Thêm nhân viên thành công',
+                defaultValues
+                    ? 'Cập nhật nhật ký công việc thành công'
+                    : 'Thêm nhật ký công việc thành công',
             );
         },
         onError: (error: any) => {
@@ -70,72 +70,60 @@ export default function AddEmployeeForm({ defaultValues, closeDialog }: AddEmplo
     });
 
     // Form submit handler
-    async function onSubmit(values: FarmEmployee) {
+    async function onSubmit(values: TaskLog) {
         mutation.mutate(values);
     }
 
-    const { data: farms } = useQuery({
-        queryKey: ['farms'],
-        queryFn: () => getFarms(),
-    });
-
-    const { data: users } = useQuery({
-        queryKey: ['users'],
-        queryFn: () => getUsers(),
+    const { data: chickenCoops } = useQuery({
+        queryKey: ['chickenCoops'],
+        queryFn: () => getChickenCoops(),
     });
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
-                    {/* Chọn trang trại */}
+                    {/* Chọn loại công việc */}
                     <FormField
                         control={form.control}
-                        name="farmId"
+                        name="type"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Trang trại</FormLabel>
+                                <FormLabel>Loại công việc</FormLabel>
                                 <FormControl>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Chọn trang trại" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {farms?.map((farm) => (
-                                                <SelectItem key={farm.farmId} value={farm.farmId}>
-                                                    {farm.farmName}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <Input
+                                        type="text"
+                                        placeholder="Nhập loại công việc"
+                                        {...field}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
 
-                    {/* Chọn nhân viên */}
+                    {/* Chọn chuồng gà */}
                     <FormField
                         control={form.control}
-                        name="employeeId"
+                        name="chickenCoopId"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Nhân viên</FormLabel>
+                                <FormLabel>Chuồng gà</FormLabel>
                                 <FormControl>
                                     <Select
                                         onValueChange={field.onChange}
                                         defaultValue={field.value}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Chọn nhân viên" />
+                                            <SelectValue placeholder="Chọn chuồng gà" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {users?.map((user) => (
-                                                <SelectItem key={user.userId} value={user.userId}>
-                                                    {user.fullName}
+                                            {chickenCoops?.map((coop) => (
+                                                <SelectItem
+                                                    key={coop.chickenCoopId}
+                                                    value={coop.chickenCoopId}
+                                                >
+                                                    {coop.chickenCoopName}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
