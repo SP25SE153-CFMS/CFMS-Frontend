@@ -1,8 +1,10 @@
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { Checkbox } from '@/components/ui/checkbox';
+import { capitalizeFirstLetter } from '@/utils/functions';
 import { WarehouseProduct } from '@/utils/schemas/warehouse-product.schema';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
+import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<WarehouseProduct>[] = [
     {
@@ -37,27 +39,29 @@ export const columns: ColumnDef<WarehouseProduct>[] = [
     {
         accessorKey: 'productCode',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mã hàng" />,
-        cell: ({ row }) => <div className="w-[40px]">{row.getValue('productCode')}</div>,
+        cell: ({ row }) => (
+            <div className="w-[40px]">{String(row.getValue('productCode')).toUpperCase()}</div>
+        ),
     },
     {
         accessorKey: 'productName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên hàng" />,
-        cell: ({ row }) => <div>{row.getValue('productName')}</div>,
+        cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('productName'))}</div>,
     },
     {
-        accessorKey: 'currentQuantity',
+        accessorKey: 'quantity',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng hiện tại" />,
-        cell: ({ row }) => <div>{row.getValue('currentQuantity')}</div>,
+        cell: ({ row }) => <div>{row.getValue('quantity')}</div>,
     },
     {
         accessorKey: 'unit',
-        header: () => <div className='text-xs whitespace-nowrap'>Đơn vị</div>,
-        cell: ({ row }) => <div>{row.getValue('unit')}</div>,
+        header: () => <div className="text-xs whitespace-nowrap">Đơn vị</div>,
+        cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('unit'))}</div>,
     },
     {
         accessorKey: 'area',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Khu vực" />,
-        cell: ({ row }) => <div>{row.getValue('area')}</div>,
+        cell: ({ row }) => <div>Kho {capitalizeFirstLetter(row.getValue('area'))}</div>,
     },
     {
         accessorKey: 'expiry',
@@ -78,6 +82,10 @@ export const columns: ColumnDef<WarehouseProduct>[] = [
     {
         accessorKey: 'supplier',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Nhà cung cấp" />,
-        cell: ({ row }) => <div>{row.getValue('supplier')}</div>,
+        cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('supplier'))}</div>,
+    },
+    {
+        id: "action",
+        cell: ({ row }) => <DataTableRowActions row={row}/>,
     },
 ];
