@@ -32,7 +32,7 @@ export const chickenCoopStatusLabels: Record<string, string> = {
 export const chickenCoopStatusVariant: Record<string, any> = {
     [ChickenCoopStatus.AVAILABLE]: 'default',
     [ChickenCoopStatus.OCCUPIED]: 'outline',
-    [ChickenCoopStatus.UNDER_MAINTENANCE]: 'destructive',
+    [ChickenCoopStatus.UNDER_MAINTENANCE]: 'warning',
 };
 
 // Employee status
@@ -66,8 +66,8 @@ export const equipmentStatusLabels: Record<string, string> = {
 
 export const equipmentStatusVariant: Record<string, any> = {
     [EquipmentStatus.IN_USE]: 'default',
-    [EquipmentStatus.BROKEN]: 'outline',
-    [EquipmentStatus.UNDER_MAINTENANCE]: 'destructive',
+    [EquipmentStatus.BROKEN]: 'destructive',
+    [EquipmentStatus.UNDER_MAINTENANCE]: 'warning',
 };
 
 // Flock status
@@ -88,7 +88,7 @@ export const flockStatusLabels: Record<string, string> = {
 export const flockStatusVariant: Record<string, any> = {
     [FlockStatus.IN_FARM]: 'default',
     [FlockStatus.SOLD]: 'outline',
-    [FlockStatus.REMOVED]: 'destructive',
+    [FlockStatus.REMOVED]: 'muted',
     [FlockStatus.DEAD]: 'destructive',
 };
 
@@ -106,9 +106,9 @@ export const requestStatusLabels: Record<string, string> = {
 };
 
 export const requestStatusVariant: Record<string, any> = {
-    [RequestStatus.PENDING]: 'default',
+    [RequestStatus.PENDING]: 'success',
     [RequestStatus.REJECTED]: 'destructive',
-    [RequestStatus.APPROVED]: 'success',
+    [RequestStatus.APPROVED]: 'default',
 };
 
 // Chicken batch status
