@@ -27,13 +27,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import Image from 'next/image';
 import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import PopoverWithOverlay from '@/components/popover-with-overlay';
 import { Flock } from '@/utils/schemas/flock.schema';
 import config from '@/configs';
 import { flockStatusLabels, flockStatusVariant } from '@/utils/enum/status.enum';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 const techinicalIndicators = [
     { id: 1, name: 'GÀ CHẾT', value: '9 con' },
@@ -70,16 +70,8 @@ export default function Page() {
 
     if (!currentFlock) {
         return (
-            <div className="w-full h-full flex items-center justify-center">
-                <Card className="px-36 py-8">
-                    <div className="flex flex-col justify-center items-center h-[300px] gap-4">
-                        <Image src="/no-data.jpg" width={300} height={300} alt="Not Found" />
-                        <h1 className="text-2xl font-bold">Đàn không tồn tại</h1>
-                        <Button variant="outline" onClick={() => window.history.back()}>
-                            Quay lại
-                        </Button>
-                    </div>
-                </Card>
+            <div className="flex items-center justify-center h-full">
+                <LoadingSpinner />;
             </div>
         );
     }
@@ -217,10 +209,10 @@ export default function Page() {
                 <div className="col-span-2">
                     <Tabs defaultValue="nutritions" className="w-auto">
                         <TabsList className="grid w-full grid-cols-4">
-                            <TabsTrigger value="nutritions">Chế độ dinh dưỡng</TabsTrigger>
-                            <TabsTrigger value="vaccine">Nhật ký tiêm phòng</TabsTrigger>
-                            <TabsTrigger value="health">Nhật ký sức khỏe</TabsTrigger>
-                            <TabsTrigger value="quantity">Nhật ký số lượng</TabsTrigger>
+                            <TabsTrigger value="nutritions">Dinh dưỡng</TabsTrigger>
+                            <TabsTrigger value="vaccine">Tiêm phòng</TabsTrigger>
+                            <TabsTrigger value="health">Sức khỏe</TabsTrigger>
+                            <TabsTrigger value="quantity">Số lượng</TabsTrigger>
                         </TabsList>
                         <TabsContent value="nutritions">
                             <CardComponent title="Thức ăn" />

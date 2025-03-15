@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { columns } from './columns';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
 import AddEmployeeForm from './form';
@@ -26,7 +25,7 @@ export default function CardEmployee() {
     const onOpenChange = (val: boolean) => setOpen(val);
 
     return (
-        <Card className="p-6 mb-4">
+        <div>
             <div className="flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                 <div>
                     <h2 className="text-xl font-bold tracking-tight">Danh sách nhân công</h2>
@@ -63,6 +62,6 @@ export default function CardEmployee() {
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
                 <DataTable data={farmEmployees} columns={columns} />
             </div>
-        </Card>
+        </div>
     );
 }

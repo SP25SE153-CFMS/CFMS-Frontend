@@ -3,7 +3,7 @@
 // Category status
 export enum CategoryStatus {
     ACTIVE,
-    INACTIVE
+    INACTIVE,
 }
 
 export const categoryStatusLabels: Record<string, string> = {
@@ -20,7 +20,7 @@ export const categoryStatusVariant: Record<string, any> = {
 export enum ChickenCoopStatus {
     AVAILABLE,
     OCCUPIED,
-    UNDER_MAINTENANCE
+    UNDER_MAINTENANCE,
 }
 
 export const chickenCoopStatusLabels: Record<string, string> = {
@@ -32,13 +32,13 @@ export const chickenCoopStatusLabels: Record<string, string> = {
 export const chickenCoopStatusVariant: Record<string, any> = {
     [ChickenCoopStatus.AVAILABLE]: 'default',
     [ChickenCoopStatus.OCCUPIED]: 'outline',
-    [ChickenCoopStatus.UNDER_MAINTENANCE]: 'destructive',
+    [ChickenCoopStatus.UNDER_MAINTENANCE]: 'warning',
 };
 
 // Employee status
 export enum EmployeeStatus {
     WORKING,
-    RESIGNED
+    RESIGNED,
 }
 
 export const employeeStatusLabels: Record<string, string> = {
@@ -55,7 +55,7 @@ export const employeeStatusVariant: Record<string, any> = {
 export enum EquipmentStatus {
     IN_USE,
     BROKEN,
-    UNDER_MAINTENANCE
+    UNDER_MAINTENANCE,
 }
 
 export const equipmentStatusLabels: Record<string, string> = {
@@ -66,8 +66,8 @@ export const equipmentStatusLabels: Record<string, string> = {
 
 export const equipmentStatusVariant: Record<string, any> = {
     [EquipmentStatus.IN_USE]: 'default',
-    [EquipmentStatus.BROKEN]: 'outline',
-    [EquipmentStatus.UNDER_MAINTENANCE]: 'destructive',
+    [EquipmentStatus.BROKEN]: 'destructive',
+    [EquipmentStatus.UNDER_MAINTENANCE]: 'warning',
 };
 
 // Flock status
@@ -75,7 +75,7 @@ export enum FlockStatus {
     IN_FARM,
     SOLD,
     REMOVED,
-    DEAD
+    DEAD,
 }
 
 export const flockStatusLabels: Record<string, string> = {
@@ -88,7 +88,7 @@ export const flockStatusLabels: Record<string, string> = {
 export const flockStatusVariant: Record<string, any> = {
     [FlockStatus.IN_FARM]: 'default',
     [FlockStatus.SOLD]: 'outline',
-    [FlockStatus.REMOVED]: 'destructive',
+    [FlockStatus.REMOVED]: 'muted',
     [FlockStatus.DEAD]: 'destructive',
 };
 
@@ -96,7 +96,7 @@ export const flockStatusVariant: Record<string, any> = {
 export enum RequestStatus {
     PENDING,
     REJECTED,
-    APPROVED
+    APPROVED,
 }
 
 export const requestStatusLabels: Record<string, string> = {
@@ -106,26 +106,26 @@ export const requestStatusLabels: Record<string, string> = {
 };
 
 export const requestStatusVariant: Record<string, any> = {
-    [RequestStatus.PENDING]: 'default',
+    [RequestStatus.PENDING]: 'success',
     [RequestStatus.REJECTED]: 'destructive',
-    [RequestStatus.APPROVED]: 'success',
+    [RequestStatus.APPROVED]: 'default',
 };
 
 // Chicken batch status
 export enum ChickenBatchStatus {
     ACTIVE,
     INACTIVE,
-    COMPLETED
+    COMPLETED,
 }
 
 export const chickenBatchStatusLabels: Record<string, string> = {
     [ChickenBatchStatus.ACTIVE]: 'Hoạt động',
     [ChickenBatchStatus.INACTIVE]: 'Chưa hoạt động',
     [ChickenBatchStatus.COMPLETED]: 'Kết thúc',
-}
+};
 
 export const chickenBatchStatusVariant: Record<string, any> = {
     [ChickenBatchStatus.ACTIVE]: 'default',
     [ChickenBatchStatus.INACTIVE]: 'outline',
     [ChickenBatchStatus.COMPLETED]: 'destructive',
-}
+};

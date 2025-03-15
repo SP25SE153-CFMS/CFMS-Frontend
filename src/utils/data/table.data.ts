@@ -13,6 +13,7 @@ import { VaccinationLog, Vaccine } from '../schemas/vaccine.schema';
 import { FarmEmployee } from '../schemas/farm-employee.schema';
 import { User } from '../schemas/user.schema';
 import { TaskDetail, TaskLog } from '../schemas/task-log.schema';
+import { HarvestDetail, HarvestLog } from '../schemas/harvest-log.schema';
 
 export const labels = [
     {
@@ -877,7 +878,7 @@ export const flocks: Flock[] = [
         quantity: 300,
         name: 'Đàn gà thịt lứa 2',
         startDate: '2025-02-01',
-        status: '0',
+        status: '3',
         description: 'Đàn gà thịt phục vụ xuất chuồng vào tháng 4.',
         endDate: null,
         avgWeight: 1.4,
@@ -893,7 +894,7 @@ export const flocks: Flock[] = [
         quantity: 50,
         name: 'Đàn gà giống nhập mới',
         startDate: '2025-02-10',
-        status: '0',
+        status: '3',
         description: 'Gà giống nhập từ trang trại Bình Dương.',
         endDate: null,
         avgWeight: 0.8,
@@ -1507,5 +1508,86 @@ export const taskDetails: TaskDetail[] = [
         typeProductId: '823e4567-e89b-12d3-a456-426614174000',
         quantity: 30,
         note: 'Tiêm phòng đầy đủ cho đàn gà',
+    },
+];
+
+export const harvestLogs: HarvestLog[] = [
+    {
+        harvestLogId: '550e8400-e29b-41d4-a716-446655440000',
+        chickenCoopId: chickenCoops[0].chickenCoopId,
+        date: new Date(),
+        type: 'Trứng gà',
+        total: 120,
+        note: 'Thu hoạch sớm hơn dự kiến',
+    },
+    {
+        harvestLogId: '550e8400-e29b-41d4-a716-446655440002',
+        chickenCoopId: chickenCoops[1].chickenCoopId,
+        date: new Date(),
+        type: 'Hút',
+        total: 30,
+        note: 'Gà bị bệnh cần hút sớm',
+    },
+    {
+        harvestLogId: '550e8400-e29b-41d4-a716-446655440004',
+        chickenCoopId: chickenCoops[0].chickenCoopId,
+        date: new Date(),
+        type: 'Trứng gà',
+        total: 95,
+        note: 'Thu hoạch bình thường',
+    },
+    {
+        harvestLogId: '550e8400-e29b-41d4-a716-446655440006',
+        chickenCoopId: chickenCoops[2].chickenCoopId,
+        date: new Date(),
+        type: 'Hút',
+        total: 25,
+        note: 'Chuồng mới cần kiểm tra',
+    },
+    {
+        harvestLogId: '550e8400-e29b-41d4-a716-446655440008',
+        chickenCoopId: chickenCoops[2].chickenCoopId,
+        date: new Date(),
+        type: 'Trứng vịt',
+        total: 110,
+        note: 'Thu hoạch theo lịch',
+    },
+];
+
+export const harvestDetails: HarvestDetail[] = [
+    {
+        harvestDetailId: '550e8400-e29b-41d4-a716-446655440010',
+        harvestLogId: harvestLogs[0].harvestLogId,
+        typeProductId: '550e8400-e29b-41d4-a716-446655440011',
+        quantity: 60,
+        note: 'Trứng gà loại 1',
+    },
+    {
+        harvestDetailId: '550e8400-e29b-41d4-a716-446655440012',
+        harvestLogId: harvestLogs[1].harvestLogId,
+        typeProductId: '550e8400-e29b-41d4-a716-446655440013',
+        quantity: 60,
+        note: 'Trứng gà loại 2',
+    },
+    {
+        harvestDetailId: '550e8400-e29b-41d4-a716-446655440014',
+        harvestLogId: harvestLogs[1].harvestLogId,
+        typeProductId: '550e8400-e29b-41d4-a716-446655440015',
+        quantity: 30,
+        note: 'Hút để kiểm tra sức khỏe',
+    },
+    {
+        harvestDetailId: '550e8400-e29b-41d4-a716-446655440016',
+        harvestLogId: harvestLogs[2].harvestLogId,
+        typeProductId: '550e8400-e29b-41d4-a716-446655440017',
+        quantity: 45,
+        note: 'Trứng gà loại 1',
+    },
+    {
+        harvestDetailId: '550e8400-e29b-41d4-a716-446655440018',
+        harvestLogId: harvestLogs[2].harvestLogId,
+        typeProductId: '550e8400-e29b-41d4-a716-446655440019',
+        quantity: 50,
+        note: 'Trứng gà loại 2',
     },
 ];

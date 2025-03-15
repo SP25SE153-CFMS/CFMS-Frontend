@@ -118,7 +118,7 @@ export default function Page() {
                             <CardEquipment chickenCoopId={chickenCoopId} />
                         </TabsContent>
                         <TabsContent value="harvest">
-                            <CardHarvest />
+                            <CardHarvest chickenCoopId={chickenCoopId} />
                         </TabsContent>
                     </Tabs>
                 </div>
