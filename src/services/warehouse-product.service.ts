@@ -12,6 +12,15 @@ export const createProduct = async (warehouseProduct: WarehouseProduct) => {
     return warehouseProduct;
 };
 
+// Update
+export const updateProduct = async (warehouseProduct: WarehouseProduct) => {
+    const index = warehouseProducts.findIndex(
+        (product) => product.productId === warehouseProduct.productId,
+    );
+    warehouseProducts[index] = warehouseProduct;
+    return warehouseProduct;
+};
+
 // Delete
 export const deleteProduct = async (id: string) => {
     const index = warehouseProducts.findIndex((product) => product.productId === id);
