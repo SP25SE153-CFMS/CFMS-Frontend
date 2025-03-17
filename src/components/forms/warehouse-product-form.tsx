@@ -1,11 +1,15 @@
 'use client';
 
-import { CreateProductSchema, WarehouseProduct, WarehouseProductSchema } from '@/utils/schemas/warehouse-product.schema';
+import {
+    CreateProductSchema,
+    WarehouseProduct,
+    WarehouseProductSchema,
+} from '@/utils/schemas/warehouse-product.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
-import { createProduct } from '@/services/warehouse-product.service';
+import { createProduct, updateProduct } from '@/services/warehouse-product.service';
 import toast from 'react-hot-toast';
 import { Button } from '../ui/button';
 
@@ -13,7 +17,10 @@ interface WarehouseProductFormProps {
     defaultValues?: Partial<WarehouseProduct>;
     closeModal: () => void;
 }
-export default function WarehouseProductForm({ defaultValues, closeModal }: WarehouseProductFormProps) {
+export default function WarehouseProductForm({
+    defaultValues,
+    closeModal,
+}: WarehouseProductFormProps) {
     const form = useForm<WarehouseProduct>({
         resolver: zodResolver(defaultValues ? WarehouseProductSchema : CreateProductSchema),
         defaultValues: {
@@ -25,7 +32,7 @@ export default function WarehouseProductForm({ defaultValues, closeModal }: Ware
             expiry: '',
             supplier: '',
             dateToImport: new Date().toISOString(),
-            ...defaultValues
+            ...defaultValues,
         },
         mode: 'onChange',
     });
@@ -42,8 +49,13 @@ export default function WarehouseProductForm({ defaultValues, closeModal }: Ware
                 ...values,
                 dateToImport: new Date().toISOString(),
             };
-            await createProduct(dataToSubmit);
-            toast.success('Tạo khu nuôi thành công');
+            if (defaultValues) {
+                await updateProduct(dataToSubmit);
+                toast.success("Cập nhật sản phẩm thành công")
+            } else {
+                await createProduct(dataToSubmit);
+                toast.success('Tạo sản phẩm thành công');
+            }
             closeModal();
         } catch (error) {
             console.log(error);
