@@ -17,6 +17,9 @@ import { createCategory, updateCategory } from '@/services/category.service';
 import { Textarea } from '../ui/textarea';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { CategoryStatus, categoryStatusLabels } from '@/utils/enum/status.enum';
+import { mapEnumToValues } from '@/utils/functions/enum.function';
 
 interface CategoryFormProps {
     defaultValues?: Partial<Category>;
@@ -32,7 +35,7 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
             categoryName: '',
             categoryType: '',
             description: '',
-            status: 'ACTIVE',
+            status: '0',
             ...defaultValues,
         },
     });
@@ -133,7 +136,7 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
                 />
 
                 {/* Trạng thái */}
-                {/* <FormField
+                <FormField
                     control={form.control}
                     name="status"
                     render={({ field }) => (
@@ -145,15 +148,18 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
                                         <SelectValue placeholder="Chọn trạng thái" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="ACTIVE">Hoạt động</SelectItem>
-                                        <SelectItem value="INACTIVE">Không hoạt động</SelectItem>
+                                        {mapEnumToValues(CategoryStatus).map((status) => (
+                                            <SelectItem key={status} value={status.toString()}>
+                                                {categoryStatusLabels[status]}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
-                /> */}
+                />
 
                 <Button type="submit">Gửi</Button>
             </form>

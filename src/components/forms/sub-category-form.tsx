@@ -29,6 +29,8 @@ import { Category } from '@/utils/schemas/category.schema';
 import dayjs from 'dayjs';
 import { Textarea } from '../ui/textarea';
 import { useParams } from 'next/navigation';
+import { mapEnumToValues } from '@/utils/functions/enum.function';
+import { CategoryStatus, categoryStatusLabels } from '@/utils/enum/status.enum';
 
 interface SubCategoryFormProps {
     defaultValues?: Partial<SubCategory>;
@@ -45,7 +47,7 @@ export default function SubCategoryForm({ defaultValues, closeDialog }: SubCateg
             subCategoryId: '',
             subCategoryName: '',
             description: '',
-            status: 'ACTIVE',
+            status: '0',
             dataType: '',
             createdDate: new Date(),
             categoryId: categoryId as string,
@@ -170,30 +172,33 @@ export default function SubCategoryForm({ defaultValues, closeDialog }: SubCateg
                     />
 
                     {/* Trạng thái */}
-                    {/* <FormField
-                    control={form.control}
-                    name="status"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Trạng thái</FormLabel>
-                            <FormControl>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Chọn trạng thái" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {['ACTIVE', 'INACTIVE'].map((status) => (
-                                            <SelectItem key={status} value={status}>
-                                                {status}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                /> */}
+                    <FormField
+                        control={form.control}
+                        name="status"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Trạng thái</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn trạng thái" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {mapEnumToValues(CategoryStatus).map((status) => (
+                                                <SelectItem key={status} value={status}>
+                                                    {categoryStatusLabels[status]}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                 </div>
 
                 <Button type="submit" className="mx-auto w-60">

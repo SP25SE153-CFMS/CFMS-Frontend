@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { CalendarIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -13,6 +12,11 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { CoopEquipmentSchema } from '@/utils/schemas/equipment.schema';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createCoopEquipment, updateCoopEquipment } from '@/services/coop-equipment.service';
+import toast from 'react-hot-toast';
 import {
     Select,
     SelectContent,
@@ -20,160 +24,146 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { cn } from '@/lib/utils';
-import {
-    CreateEquipmentSchema,
-    type Equipment,
-    EquipmentSchema,
-} from '@/utils/schemas/equipment.schema';
-import dayjs from 'dayjs';
-import { createEquipment, updateEquipment } from '@/services/equipment.service';
-import toast from 'react-hot-toast';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { mapEnumToValues } from '@/utils/functions/enum.function';
+import { EquipmentStatus, equipmentStatusLabels } from '@/utils/enum/status.enum';
+import { chickenCoops, equipments } from '@/utils/data/table.data';
 
-interface AddEquipmentFormProps {
-    defaultValues?: Partial<Equipment>;
+interface CoopEquipmentFormProps {
+    defaultValues?: Partial<typeof CoopEquipmentSchema._type>;
     closeDialog: () => void;
 }
 
-export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEquipmentFormProps) {
+export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEquipmentFormProps) {
+    const queryClient = useQueryClient();
+
     // Initialize form
-    const form = useForm<Equipment>({
-        resolver: zodResolver(defaultValues ? EquipmentSchema : CreateEquipmentSchema),
+    const form = useForm({
+        resolver: zodResolver(CoopEquipmentSchema),
         defaultValues: {
+            coopEquipmentId: '',
+            chickenCoopId: '',
             equipmentId: '',
-            equipmentCode: '',
-            equipmentName: '',
-            purchaseDate: new Date().toISOString(),
-            warrantyPeriod: 12,
-            status: '0',
-            cost: 0,
             quantity: 1,
-            createdAt: new Date().toISOString(),
-            updatedAt: null,
+            assignedDate: new Date().toISOString(),
+            maintainDate: null,
+            status: '0',
+            note: '',
             ...defaultValues,
         },
     });
 
-    // Query client
-    const queryClient = useQueryClient();
-
     // Mutations for creating and updating
     const mutation = useMutation({
-        mutationFn: defaultValues ? updateEquipment : createEquipment,
-        onSuccess: () => {
+        mutationFn: defaultValues ? updateCoopEquipment : createCoopEquipment,
+        onSuccess: ({ message }) => {
             closeDialog();
-            queryClient.invalidateQueries({ queryKey: ['equipments'] });
-            toast.success(
-                defaultValues ? 'Cập nhật thiết bị thành công' : 'Tạo thiết bị thành công',
-            );
+            queryClient.invalidateQueries({ queryKey: ['coopEquipments'] });
+            toast.success(message);
         },
-        onError: (error: any) => {
-            console.error(error);
-            toast.error(error?.response?.data?.message);
+        onError: (err: any) => {
+            toast.error(err?.response?.data?.message);
         },
     });
 
-    // Form submit handler
-    async function onSubmit(values: Equipment) {
-        mutation.mutate(values);
-    }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
+    const onSubmit = async (values: any) => {
+        await mutation.mutateAsync(values);
     };
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
-                    {/* Mã thiết bị */}
+                    {/* Chicken Coop ID */}
                     <FormField
                         control={form.control}
-                        name="equipmentCode"
+                        name="chickenCoopId"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Mã thiết bị</FormLabel>
+                                <FormLabel>Chuồng Gà</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập mã thiết bị" {...field} />
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn chuồng gà" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {chickenCoops.map((coop) => (
+                                                <SelectItem
+                                                    key={coop.chickenCoopId}
+                                                    value={coop.chickenCoopId}
+                                                >
+                                                    {coop.chickenCoopName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
 
-                    {/* Tên thiết bị */}
+                    {/* Equipment ID */}
                     <FormField
                         control={form.control}
-                        name="equipmentName"
+                        name="equipmentId"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Tên thiết bị</FormLabel>
+                                <FormLabel>Thiết Bị</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập tên thiết bị" {...field} />
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn thiết bị" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {equipments.map((equip) => (
+                                                <SelectItem
+                                                    key={equip.equipmentId}
+                                                    value={equip.equipmentId}
+                                                >
+                                                    {equip.equipmentName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
 
-                    {/* Ngày mua */}
+                    {/* Quantity */}
                     <FormField
                         control={form.control}
-                        name="purchaseDate"
+                        name="quantity"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Ngày mua</FormLabel>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <FormControl>
-                                            <Button
-                                                variant={'outline'}
-                                                className={cn(
-                                                    'w-full pl-3 text-left font-normal',
-                                                    !field.value && 'text-muted-foreground',
-                                                )}
-                                            >
-                                                {dayjs(new Date(field.value)).format('DD/MM/YYYY')}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar
-                                            mode="single"
-                                            selected={
-                                                field.value ? new Date(field.value) : undefined
-                                            }
-                                            onSelect={(date) => {
-                                                field.onChange(date ? date.toISOString() : '');
-                                            }}
-                                            initialFocus
-                                        />
-                                    </PopoverContent>
-                                </Popover>
+                                <FormLabel>Số Lượng</FormLabel>
+                                <FormControl>
+                                    <Input type="number" min={1} max={1000} {...field} />
+                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
 
-                    {/* Thời gian bảo hành */}
+                    {/* Assigned Date */}
                     <FormField
                         control={form.control}
-                        name="warrantyPeriod"
+                        name="assignedDate"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Thời gian bảo hành (tháng)</FormLabel>
+                                <FormLabel>Ngày Gán</FormLabel>
                                 <FormControl>
                                     <Input
-                                        type="number"
-                                        placeholder="Nhập số tháng"
-                                        min={1}
-                                        max={12}
+                                        type="datetime-local"
                                         {...field}
+                                        value={field.value ?? ''}
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -181,13 +171,32 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
                         )}
                     />
 
-                    {/* Trạng thái */}
+                    {/* Maintain Date */}
+                    <FormField
+                        control={form.control}
+                        name="maintainDate"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Ngày Bảo Trì</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="datetime-local"
+                                        {...field}
+                                        value={field.value ?? ''}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Status */}
                     <FormField
                         control={form.control}
                         name="status"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Trạng thái</FormLabel>
+                                <FormLabel>Trạng Thái</FormLabel>
                                 <FormControl>
                                     <Select
                                         onValueChange={field.onChange}
@@ -197,12 +206,11 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
                                             <SelectValue placeholder="Chọn trạng thái" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="IN_USE">Đang sử dụng</SelectItem>
-                                            <SelectItem value="BROKEN">Hỏng</SelectItem>
-                                            <SelectItem value="AVAILABLE">Sẵn sàng</SelectItem>
-                                            <SelectItem value="UNDER_MAINTENANCE">
-                                                Bảo trì
-                                            </SelectItem>
+                                            {mapEnumToValues(EquipmentStatus).map((status) => (
+                                                <SelectItem key={status} value={status.toString()}>
+                                                    {equipmentStatusLabels[status]}
+                                                </SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                 </FormControl>
@@ -211,39 +219,18 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
                         )}
                     />
 
-                    {/* Chi phí */}
+                    {/* Note */}
                     <FormField
                         control={form.control}
-                        name="cost"
+                        name="note"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Chi phí</FormLabel>
+                                <FormLabel>Ghi Chú</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        type="number"
-                                        placeholder="Nhập chi phí"
-                                        min={0}
+                                    <Textarea
+                                        placeholder="Nhập ghi chú (tối đa 500 ký tự)"
                                         {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Số lượng */}
-                    <FormField
-                        control={form.control}
-                        name="quantity"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Số lượng</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="number"
-                                        placeholder="Nhập số lượng"
-                                        {...field}
-                                        min={0}
+                                        value={field.value ?? ''}
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -252,9 +239,18 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
                     />
                 </div>
 
-                <Button type="submit" className="mx-auto mt-6 w-60">
-                    Gửi
-                </Button>
+                <div className="flex justify-end gap-4">
+                    <Button type="button" variant="outline" onClick={closeDialog}>
+                        Hủy
+                    </Button>
+                    <Button type="submit" disabled={mutation.isPending}>
+                        {mutation.isPending
+                            ? 'Đang xử lý...'
+                            : defaultValues
+                              ? 'Cập nhật'
+                              : 'Tạo mới'}
+                    </Button>
+                </div>
             </form>
         </Form>
     );

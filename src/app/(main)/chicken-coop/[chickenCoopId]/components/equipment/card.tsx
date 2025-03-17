@@ -16,8 +16,8 @@ import { columns } from './columns';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
-import AddEquipmentForm from './form';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
+import CoopEquipmentForm from './form';
 
 export default function CardEquipment({ chickenCoopId }: { chickenCoopId: string }) {
     const [open, setOpen] = useState(false);
@@ -58,7 +58,7 @@ export default function CardEquipment({ chickenCoopId }: { chickenCoopId: string
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <AddEquipmentForm closeDialog={() => setOpen(false)} />
+                                <CoopEquipmentForm closeDialog={() => setOpen(false)} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>
