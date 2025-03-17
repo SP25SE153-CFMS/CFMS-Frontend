@@ -184,7 +184,7 @@ export default function Page() {
                         </div>
                     </Card>
 
-                    <Tabs defaultValue="nutritions" className="w-auto mt-6">
+                    <Tabs defaultValue="vaccine" className="w-auto mt-6">
                         <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="vaccine">Tiêm phòng</TabsTrigger>
                             <TabsTrigger value="health">Sức khỏe</TabsTrigger>
