@@ -1,3 +1,4 @@
+import WarehouseProductForm from '@/components/forms/warehouse-product-form';
 import {
     AlertDialog,
     AlertDialogContent,
@@ -7,13 +8,22 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { deleteProduct } from '@/services/warehouse-product.service';
+import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import { WarehouseProduct } from '@/utils/schemas/warehouse-product.schema';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Row } from '@tanstack/react-table';
@@ -26,6 +36,7 @@ interface Props<T> {
 }
 export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openDelete, setOpenDelete] = useState(false);
+    const [openUpdate, setOpenUpdate] = useState(false);
 
     const handleDelete = async () => {
         const id = (row.original as WarehouseProduct).productId;
@@ -33,6 +44,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
         toast.success('Xóa sản phẩm thành công!');
         setOpenDelete(false);
     };
+
     return (
         <>
             <DropdownMenu modal={false}>
@@ -43,13 +55,31 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Cập nhật</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
+                        Cập nhật
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
                         Xóa <Trash size={16} />
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* Update */}
+            <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Cập nhật sản phẩm</DialogTitle>
+                        <DialogDescription>Nhập</DialogDescription>
+                    </DialogHeader>
+                    <ScrollArea>
+                        <WarehouseProductForm
+                            closeModal={() => setOpenUpdate(false)}
+                            defaultValues={row.original as WarehouseProduct}
+                        />
+                    </ScrollArea>
+                </DialogContent>
+            </Dialog>
 
             {/* Delete */}
             <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
@@ -62,7 +92,9 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         <Button variant="outline" onClick={() => setOpenDelete(false)}>
                             Hủy
                         </Button>
-                        <Button variant="destructive" onClick={handleDelete}>Xóa</Button>
+                        <Button variant="destructive" onClick={handleDelete}>
+                            Xóa
+                        </Button>
                     </div>
                 </AlertDialogContent>
             </AlertDialog>
