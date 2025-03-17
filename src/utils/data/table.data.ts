@@ -14,6 +14,7 @@ import { FarmEmployee } from '../schemas/farm-employee.schema';
 import { User } from '../schemas/user.schema';
 import { TaskDetail, TaskLog } from '../schemas/task-log.schema';
 import { HarvestDetail, HarvestLog } from '../schemas/harvest-log.schema';
+import { FeedSchedule, FlockNutrition, Nutrition } from '../schemas/nutrition.schema';
 
 export const labels = [
     {
@@ -576,8 +577,8 @@ export const coopEquipments: CoopEquipment[] = [
 export const warehouseProducts: WarehouseProduct[] = [
     {
         productId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67891',
-        productCode: 'gA001',
-        productName: 'thức ăn hỗn hợp cho gà con',
+        productCode: 'GA001',
+        productName: 'Thức ăn hỗn hợp cho gà con',
         quantity: 500,
         unit: 'bao',
         area: 'A',
@@ -1589,5 +1590,131 @@ export const harvestDetails: HarvestDetail[] = [
         typeProductId: '550e8400-e29b-41d4-a716-446655440019',
         quantity: 50,
         note: 'Trứng gà loại 2',
+    },
+];
+
+export const feedSchedules: FeedSchedule[] = [
+    {
+        feedScheduleId: 'a1b2c3d4-e5f6-7890-abcd-1234567890ab',
+        feedTime: '2025-03-15T08:00:00Z',
+        feedAmount: 2.5,
+        notes: 'Cho ăn sáng',
+    },
+    {
+        feedScheduleId: 'b2c3d4e5-f678-9012-abcd-234567890abc',
+        feedTime: '2025-03-15T12:00:00Z',
+        feedAmount: 3.0,
+        notes: 'Cho ăn trưa',
+    },
+    {
+        feedScheduleId: 'c3d4e5f6-7890-1234-abcd-34567890abcd',
+        feedTime: '2025-03-15T18:00:00Z',
+        feedAmount: 2.8,
+        notes: 'Cho ăn tối',
+    },
+    {
+        feedScheduleId: 'd4e5f678-9012-3456-abcd-4567890abcde',
+        feedTime: '2025-03-16T08:00:00Z',
+        feedAmount: 2.7,
+        notes: 'Sáng hôm sau',
+    },
+    {
+        feedScheduleId: 'e5f67890-1234-5678-abcd-567890abcdef',
+        feedTime: '2025-03-16T12:00:00Z',
+        feedAmount: 3.2,
+        notes: 'Trưa hôm sau',
+    },
+];
+
+export const nutritions: Nutrition[] = [
+    {
+        nutritionId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+        name: 'Dinh dưỡng tăng trưởng',
+        description: 'Hỗ trợ phát triển nhanh cho giai đoạn đầu',
+        targetAudience: 'Gà con',
+        developmentStage: 'Sơ sinh',
+        foodId: warehouseProducts[0].productId,
+        feedScheduleId: feedSchedules[0].feedScheduleId,
+    },
+    {
+        nutritionId: '4a1c5b84-9856-42c4-8215-7e6a1f90d865',
+        name: 'Thức ăn bổ sung',
+        description: 'Bổ sung dưỡng chất cần thiết',
+        targetAudience: 'Gà trưởng thành',
+        developmentStage: 'Trưởng thành',
+        foodId: warehouseProducts[0].productId,
+        feedScheduleId: feedSchedules[0].feedScheduleId,
+    },
+    {
+        nutritionId: 'd5f6c45b-730d-4b9f-a8f9-3cbb86a98fbb',
+        name: 'Thức ăn hữu cơ',
+        description: 'Nguồn thức ăn hữu cơ giúp tăng đề kháng',
+        targetAudience: 'Gà giống',
+        developmentStage: 'Giống',
+        foodId: warehouseProducts[1].productId,
+        feedScheduleId: feedSchedules[1].feedScheduleId,
+    },
+    {
+        nutritionId: 'e84f5c78-3d3b-47e1-946d-f2a17d4c8e9a',
+        name: 'Thức ăn cho gà mái',
+        description: 'Giúp tăng sản lượng trứng',
+        targetAudience: 'Gà mái',
+        developmentStage: 'Trưởng thành',
+        foodId: warehouseProducts[2].productId,
+        feedScheduleId: feedSchedules[2].feedScheduleId,
+    },
+    {
+        nutritionId: 'f6a4c58b-9e73-4b9f-b8d4-3cbb86a98c45',
+        name: 'Thức ăn tổng hợp',
+        description: 'Cung cấp đầy đủ dưỡng chất',
+        targetAudience: 'Gà thịt',
+        developmentStage: 'Trưởng thành',
+        foodId: warehouseProducts[3].productId,
+        feedScheduleId: feedSchedules[2].feedScheduleId,
+    },
+];
+
+export const flockNutritions: FlockNutrition[] = [
+    {
+        flockNutritionId: '1a2b3c4d-5678-90ab-cdef-1234567890ab',
+        flockId: flocks[0].flockId,
+        nutritionId: nutritions[0].nutritionId,
+        startDate: '2025-03-01T00:00:00Z',
+        endDate: '2025-03-31T00:00:00Z',
+    },
+    {
+        flockNutritionId: '1a2b3c4d-5678-90ab-cdef-1234567890ab',
+        flockId: flocks[0].flockId,
+        nutritionId: nutritions[1].nutritionId,
+        startDate: '2025-03-01T00:00:00Z',
+        endDate: '2025-03-31T00:00:00Z',
+    },
+    {
+        flockNutritionId: '2b3c4d5e-6789-0abc-def1-234567890abc',
+        flockId: flocks[1].flockId,
+        nutritionId: nutritions[1].nutritionId,
+        startDate: '2025-03-01T00:00:00Z',
+        endDate: '2025-03-31T00:00:00Z',
+    },
+    {
+        flockNutritionId: '3c4d5e6f-7890-abcd-ef12-34567890abcd',
+        flockId: flocks[2].flockId,
+        nutritionId: nutritions[2].nutritionId,
+        startDate: '2025-03-01T00:00:00Z',
+        endDate: '2025-03-31T00:00:00Z',
+    },
+    {
+        flockNutritionId: '4d5e6f7g-890a-bcde-f123-4567890abcdef',
+        flockId: flocks[3].flockId,
+        nutritionId: nutritions[3].nutritionId,
+        startDate: '2025-03-01T00:00:00Z',
+        endDate: '2025-03-31T00:00:00Z',
+    },
+    {
+        flockNutritionId: '5e6f7g8h-90ab-cdef-1234-567890abcdef',
+        flockId: flocks[4].flockId,
+        nutritionId: nutritions[4].nutritionId,
+        startDate: '2025-03-01T00:00:00Z',
+        endDate: '2025-03-31T00:00:00Z',
     },
 ];

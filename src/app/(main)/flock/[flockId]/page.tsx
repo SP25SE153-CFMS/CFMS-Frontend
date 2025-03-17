@@ -1,20 +1,8 @@
 'use client';
 
-import EquipmentForm from '@/components/forms/equipment-form';
-import { DataTable } from '@/components/table/data-table';
-import { chickenCoops, coopEquipments, flocks } from '@/utils/data/table.data';
-import { columns } from './columns';
-import { Button } from '@/components/ui/button';
-import { Download, AlignRight, Plus, Database } from 'lucide-react';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-} from '@/components/ui/dialog';
+import { chickenCoops, flocks } from '@/utils/data/table.data';
+import { AlignRight, Database } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useParams, useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
 import { Card } from '@/components/ui/card';
@@ -32,8 +20,8 @@ import PopoverWithOverlay from '@/components/popover-with-overlay';
 import { Flock } from '@/utils/schemas/flock.schema';
 import config from '@/configs';
 import { flockStatusLabels, flockStatusVariant } from '@/utils/enum/status.enum';
-import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import CardFlockNutrition from './components/nutrition/card';
 
 const techinicalIndicators = [
     { id: 1, name: 'GÀ CHẾT', value: '9 con' },
@@ -45,7 +33,7 @@ const techinicalIndicators = [
 
 // TODO: Optimize and shorten the code
 export default function Page() {
-    const { flockId } = useParams();
+    const { flockId }: { flockId: string } = useParams();
     const router = useRouter();
 
     const [currentFlock, setCurrentFlock] = useState<Flock>();
@@ -215,17 +203,16 @@ export default function Page() {
                             <TabsTrigger value="quantity">Số lượng</TabsTrigger>
                         </TabsList>
                         <TabsContent value="nutritions">
-                            <CardComponent title="Thức ăn" />
-                            <CardComponent title="Lịch cho ăn" />
+                            <CardFlockNutrition flockId={flockId} />
                         </TabsContent>
                         <TabsContent value="vaccine">
-                            <CardComponent title="Nhật ký tiêm phòng" />
+                            <CardFlockNutrition flockId={flockId} />
                         </TabsContent>
                         <TabsContent value="health">
-                            <CardComponent title="Nhật ký sức khỏe" />
+                            <CardFlockNutrition flockId={flockId} />
                         </TabsContent>
                         <TabsContent value="quantity">
-                            <CardComponent title="Nhật ký số lượng" />
+                            <CardFlockNutrition flockId={flockId} />
                         </TabsContent>
                     </Tabs>
                 </div>
@@ -233,53 +220,3 @@ export default function Page() {
         </div>
     );
 }
-
-// TODO: Split to a new file
-const CardComponent = ({ title }: { title: string }) => {
-    const [open, setOpen] = useState(false);
-
-    const openModal = () => setOpen(true);
-    const onOpenChange = (val: boolean) => setOpen(val);
-
-    return (
-        <Card className="p-6 mb-4">
-            {/* Equipment List */}
-            <div className="flex flex-wrap items-center justify-between gap-x-4 space-y-2">
-                <div>
-                    <h2 className="text-xl font-bold tracking-tight">{title}</h2>
-                    <p className="text-muted-foreground">
-                        Danh sách tất cả các trang thiết bị trong khu nuôi
-                    </p>
-                </div>
-                <div className="flex gap-2">
-                    <Button
-                        variant="outline"
-                        className="space-x-1"
-                        onClick={() => downloadCSV(coopEquipments, 'coop-equipments.csv')}
-                    >
-                        <span>Tải file</span> <Download size={18} />
-                    </Button>
-                    <Button className="space-x-1" onClick={openModal}>
-                        <span>Thêm trang thiết bị</span> <Plus size={18} />
-                    </Button>
-                    <Dialog open={open} onOpenChange={onOpenChange}>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Thêm trang thiết bị mới</DialogTitle>
-                                <DialogDescription>
-                                    Hãy nhập các thông tin dưới đây.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <ScrollArea className="max-h-[600px]">
-                                <EquipmentForm closeDialog={() => setOpen(false)} />
-                            </ScrollArea>
-                        </DialogContent>
-                    </Dialog>
-                </div>
-            </div>
-            <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={coopEquipments} columns={columns} />
-            </div>
-        </Card>
-    );
-};

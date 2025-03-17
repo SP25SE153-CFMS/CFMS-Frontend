@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Chart } from './chart';
-import CardEquipment from './components/equipments/card';
+import CardEquipment from './components/equipment/card';
 import ChickenCoopDetails from './components/chicken-coop-details';
 import ChickenBatchDetails from './components/chicken-batch-details';
 import { techinicalIndicators } from '@/utils/data/table.data';
