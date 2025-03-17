@@ -129,3 +129,19 @@ export const chickenBatchStatusVariant: Record<string, any> = {
     [ChickenBatchStatus.INACTIVE]: 'outline',
     [ChickenBatchStatus.COMPLETED]: 'destructive',
 };
+
+// Vaccination log status
+export enum VaccinationLogStatus {
+    ACTIVE,
+    INACTIVE,
+}
+
+export const vaccinationLogStatusLabels: Record<string, string> = {
+    [VaccinationLogStatus.ACTIVE]: 'Đã tiêm',
+    [VaccinationLogStatus.INACTIVE]: 'Chưa tiêm',
+};
+
+export const vaccinationLogStatusVariant: Record<string, any> = {
+    [VaccinationLogStatus.ACTIVE]: 'default',
+    [VaccinationLogStatus.INACTIVE]: 'outline',
+};

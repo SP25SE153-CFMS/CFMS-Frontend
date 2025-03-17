@@ -1,6 +1,6 @@
 'use client';
 
-import { chickenCoops, flocks } from '@/utils/data/table.data';
+import { flocks } from '@/utils/data/table.data';
 import { AlignRight, Database } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
@@ -22,6 +22,7 @@ import config from '@/configs';
 import { flockStatusLabels, flockStatusVariant } from '@/utils/enum/status.enum';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import CardFlockNutrition from './components/nutrition/card';
+import CardVaccinationLog from './components/vaccine/card';
 
 const techinicalIndicators = [
     { id: 1, name: 'GÀ CHẾT', value: '9 con' },
@@ -71,20 +72,8 @@ export default function Page() {
                     Thông tin đàn gà
                     <span className="text-primary ml-2">{currentFlock?.name}</span>
                 </h1>
-                <Select>
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Đổi chuồng nuôi..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {chickenCoops.map((coop) => (
-                            <SelectItem key={coop.chickenCoopId} value={coop.chickenCoopId}>
-                                {coop.chickenCoopName}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 my-6">
                 <div className="flex flex-col gap-4">
                     {/* Flock Details */}
                     <Card>
@@ -164,7 +153,8 @@ export default function Page() {
                         </div> */}
                         </div>
                     </Card>
-
+                </div>
+                <div className="col-span-2">
                     {/* Technical Indicators */}
                     <Card>
                         <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4">
@@ -193,20 +183,15 @@ export default function Page() {
                             </div>
                         </div>
                     </Card>
-                </div>
-                <div className="col-span-2">
-                    <Tabs defaultValue="nutritions" className="w-auto">
-                        <TabsList className="grid w-full grid-cols-4">
-                            <TabsTrigger value="nutritions">Dinh dưỡng</TabsTrigger>
+
+                    <Tabs defaultValue="vaccine" className="w-auto mt-6">
+                        <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="vaccine">Tiêm phòng</TabsTrigger>
                             <TabsTrigger value="health">Sức khỏe</TabsTrigger>
                             <TabsTrigger value="quantity">Số lượng</TabsTrigger>
                         </TabsList>
-                        <TabsContent value="nutritions">
-                            <CardFlockNutrition flockId={flockId} />
-                        </TabsContent>
                         <TabsContent value="vaccine">
-                            <CardFlockNutrition flockId={flockId} />
+                            <CardVaccinationLog flockId={flockId} />
                         </TabsContent>
                         <TabsContent value="health">
                             <CardFlockNutrition flockId={flockId} />
@@ -217,6 +202,7 @@ export default function Page() {
                     </Tabs>
                 </div>
             </div>
+            <CardFlockNutrition flockId={flockId} />
         </div>
     );
 }
