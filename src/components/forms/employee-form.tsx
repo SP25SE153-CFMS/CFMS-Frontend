@@ -45,11 +45,10 @@ export default function EmployeeForm({ defaultValues, closeDialog }: EmployeeFor
             mail: '',
             avatar: '',
             dateOfBirth: new Date().toISOString(),
-            startDate: new Date().toISOString(),
             status: '1',
             address: '',
             cccd: '',
-            roleName: '',
+            systemRole: 0,
             ...defaultValues,
         },
     });
@@ -183,7 +182,7 @@ export default function EmployeeForm({ defaultValues, closeDialog }: EmployeeFor
                     {/* Vai trò */}
                     <FormField
                         control={form.control}
-                        name="roleName"
+                        name="systemRole"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Vai trò</FormLabel>
@@ -217,7 +216,9 @@ export default function EmployeeForm({ defaultValues, closeDialog }: EmployeeFor
                                     <PopoverContent align="start">
                                         <Calendar
                                             mode="single"
-                                            selected={new Date(field.value)}
+                                            selected={
+                                                field.value ? new Date(field.value) : new Date()
+                                            }
                                             onSelect={(date) => field.onChange(date?.toISOString())}
                                             initialFocus
                                         />

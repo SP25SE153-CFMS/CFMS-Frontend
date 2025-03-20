@@ -23,7 +23,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { deleteProduct } from '@/services/warehouse-product.service';
-import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import { WarehouseProduct } from '@/utils/schemas/warehouse-product.schema';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Row } from '@tanstack/react-table';

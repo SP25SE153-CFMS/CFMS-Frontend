@@ -3,7 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
-import { SubCategory } from '@/utils/schemas/category.schema';
+import { SubCategory } from '@/utils/schemas/sub-category.schema';
 import dayjs from 'dayjs';
 import { Badge } from '@/components/ui/badge';
 import {

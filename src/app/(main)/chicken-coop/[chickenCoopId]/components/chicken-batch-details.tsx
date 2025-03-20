@@ -84,7 +84,7 @@ const ChickenBatchDetails = ({ chickenCoopId }: { chickenCoopId: string }) => {
                                             key={batch.chickenBatchId}
                                             value={batch.chickenBatchId}
                                         >
-                                            {batch.name}
+                                            {batch.chickenBatchName}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
@@ -93,7 +93,7 @@ const ChickenBatchDetails = ({ chickenCoopId }: { chickenCoopId: string }) => {
                     </PopoverWithOverlay>
                 </div>
 
-                <h3 className="mb-2 font-semibold">{currentChickenBatch?.name}</h3>
+                <h3 className="mb-2 font-semibold">{currentChickenBatch?.chickenBatchName}</h3>
                 <div className="flex gap-3 text-sm mb-2">
                     Thời gian từ:{' '}
                     <strong className="flex-1 text-right">
