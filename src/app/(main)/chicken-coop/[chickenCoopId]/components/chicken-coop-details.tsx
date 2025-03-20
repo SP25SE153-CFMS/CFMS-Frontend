@@ -10,7 +10,6 @@ import { chickenBatchStatusVariant, chickenCoopStatusLabels } from '@/utils/enum
 import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { Select } from '@radix-ui/react-select';
 import { useQuery } from '@tanstack/react-query';
-import dayjs from 'dayjs';
 import { AlignRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -98,7 +97,7 @@ const ChickenCoopDetails = () => {
                         '-'
                     )}
                 </div>
-                <div className="flex gap-3 text-sm mb-4">
+                {/* <div className="flex gap-3 text-sm mb-4">
                     Ngày tạo:{' '}
                     <strong className="flex-1 text-right">
                         {dayjs(chickenCoop?.createdAt).format('DD/MM/YYYY')}
@@ -111,7 +110,7 @@ const ChickenCoopDetails = () => {
                             ? dayjs(chickenCoop?.updatedAt)?.format('DD/MM/YYYY')
                             : '-'}
                     </strong>
-                </div>
+                </div> */}
 
                 {/* Uncomment this code when you want to update */}
                 {/* <div className="flex flex-row gap-x-3 gap-y-3 sm:flex-col mt-8">

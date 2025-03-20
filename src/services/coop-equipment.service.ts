@@ -1,16 +1,13 @@
-import { CoopEquipment } from '@/utils/schemas/equipment.schema';
-import { Response } from '@/utils/types';
+import { CoopEquipment } from '@/utils/schemas/coop-equipment.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
-import { coopEquipments } from '@/utils/data/table.data';
+import { Response } from '@/utils/types';
 
 const PREFIX = '/api/CoopEquipment';
 
 export const getCoopEquipments = async () => {
-    /* eslint-disable no-unused-vars */
     const endpoint = PREFIX;
-    // const response = await get<Response<CoopEquipment[]>>(endpoint);
-    // return response.data.data;
-    return coopEquipments;
+    const response = await get<Response<CoopEquipment[]>>(endpoint);
+    return response.data.data;
 };
 
 export const getCoopEquipmentById = async (id: string) => {
