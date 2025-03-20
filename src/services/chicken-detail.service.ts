@@ -1,0 +1,35 @@
+import { ChickenDetail } from '@/utils/schemas/chicken-detail.schema';
+import { get, post, put, remove } from '@/utils/functions/axios.function';
+import { Response } from '@/utils/types';
+
+const PREFIX = '/api/ChickenDetail';
+
+export const getChickenDetails = async () => {
+    const endpoint = PREFIX;
+    const response = await get<Response<ChickenDetail[]>>(endpoint);
+    return response.data.data;
+};
+
+export const getChickenDetailById = async (id: string) => {
+    const endpoint = PREFIX + '/' + id;
+    const response = await get<Response<ChickenDetail>>(endpoint);
+    return response.data.data;
+};
+
+export const createChickenDetail = async (body: ChickenDetail) => {
+    const endpoint = PREFIX;
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const updateChickenDetail = async (body: ChickenDetail) => {
+    const endpoint = PREFIX;
+    const response = await put<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const deleteChickenDetail = async (id: string) => {
+    const endpoint = PREFIX + '/' + id;
+    const response = await remove<Response<string>>(endpoint);
+    return response.data;
+};

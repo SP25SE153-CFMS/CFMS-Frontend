@@ -41,11 +41,11 @@ export default function AddEmployeeForm({ defaultValues, closeDialog }: AddEmplo
         resolver: zodResolver(FarmEmployeeSchema),
         defaultValues: {
             farmId: '',
-            employeeId: '',
+            userId: '',
             startDate: new Date().toISOString(),
             endDate: null,
             status: '1',
-            roleName: '',
+            farmRole: 0,
             ...defaultValues,
         },
     });
@@ -120,7 +120,7 @@ export default function AddEmployeeForm({ defaultValues, closeDialog }: AddEmplo
                     {/* Chọn nhân viên */}
                     <FormField
                         control={form.control}
-                        name="employeeId"
+                        name="userId"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Nhân viên</FormLabel>

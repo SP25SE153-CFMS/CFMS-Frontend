@@ -1,32 +1,41 @@
 import { z } from 'zod';
 
 export const UserSchema = z.object({
-    userId: z.string().uuid({ message: "userId phải là UUID hợp lệ" }),
-    fullName: z.string()
-        .min(1, { message: "Họ và tên không được để trống" })
-        .max(255, { message: "Họ và tên không được vượt quá 255 ký tự" }),
-    phoneNumber: z.string()
-        .regex(/^(?:\+?84|0)(?:\d{9,10})$/, { message: "Số điện thoại không hợp lệ" }),
-    mail: z.string()
-        .email({ message: "Email không hợp lệ" }),
-    avatar: z.string()
-        .url({ message: "Avatar phải là một URL hợp lệ" })
+    userId: z.string().uuid({ message: 'ID người dùng không hợp lệ, phải là UUID' }),
+    fullName: z
+        .string()
+        .min(1, { message: 'Họ và tên là bắt buộc' })
+        .max(255, { message: 'Họ và tên không được vượt quá 255 ký tự' }),
+    phoneNumber: z
+        .string()
+        .regex(/^(?:\+?84|0)(?:\d{9,10})$/, { message: 'Số điện thoại không hợp lệ' })
+        .optional(),
+    mail: z.string().email({ message: 'Email không hợp lệ' }),
+    avatar: z
+        .string()
+        .url({ message: 'URL ảnh đại diện không hợp lệ' })
         .optional()
         .or(z.literal('')), // Cho phép avatar rỗng
-    dateOfBirth: z.string()
-        .datetime({ message: "Ngày sinh phải là ngày hợp lệ (ISO 8601)" }),
-    startDate: z.string()
-        .datetime({ message: "Ngày bắt đầu phải là ngày hợp lệ (ISO 8601)" }),
-    status: z.enum(["0", "1"], { message: "status chỉ có thể là '0' (Ngừng hoạt động) hoặc '1' (Đang hoạt động)" }),
-    address: z.string()
-        .max(500, { message: "Địa chỉ không được vượt quá 500 ký tự" }),
-    cccd: z.string()
-        .regex(/^\d{12}$/, { message: "CCCD phải có 12 chữ số" }),
-    roleName: z.string()
-        .min(1, { message: "Vai trò không được để trống" })
-        .max(255, { message: "Vai trò không được vượt quá 255 ký tự" }),
+    dateOfBirth: z
+        .string()
+        .datetime({ message: 'Ngày sinh không hợp lệ, phải là định dạng ngày giờ hợp lệ' })
+        .optional(),
+    status: z.enum(['0', '1'], {
+        message: "status chỉ có thể là '0' (Ngừng hoạt động) hoặc '1' (Đang hoạt động)",
+    }),
+    address: z.string().max(500, { message: 'Địa chỉ không được vượt quá 500 ký tự' }).optional(),
+    cccd: z
+        .string()
+        .regex(/^\d{12}$/, { message: 'CCCD phải có 12 chữ số' })
+        .optional(),
+    systemRole: z
+        .enum(['0', '1', '2', '3'], {
+            message: 'Vai trò hệ thống không hợp lệ',
+        })
+        .transform((value) => parseInt(value)),
+    googleId: z.string().optional(),
+    hashedPassword: z.string().optional(),
 });
 
 export type User = z.infer<typeof UserSchema>;
-
 export const CreateUserSchema = UserSchema.omit({ userId: true });

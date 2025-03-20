@@ -51,7 +51,7 @@ export default function Page() {
             scale: 0,
             phoneNumber: '',
             website: '',
-            farmImage: '',
+            imageUrl: '',
         },
     });
 
@@ -232,7 +232,7 @@ export default function Page() {
 
                             <FormField
                                 control={form.control}
-                                name="farmImage"
+                                name="imageUrl"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Hình ảnh trang trại</FormLabel>

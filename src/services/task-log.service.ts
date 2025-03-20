@@ -1,16 +1,13 @@
 import { TaskLog } from '@/utils/schemas/task-log.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
-import { taskLogs } from '@/utils/data/table.data';
 
 const PREFIX = '/api/TaskLog';
 
 export const getTaskLogs = async () => {
-    /* eslint-disable no-unused-vars */
     const endpoint = PREFIX;
-    // const response = await get<Response<TaskLog[]>>(endpoint);
-    // return response.data.data;
-    return taskLogs;
+    const response = await get<Response<TaskLog[]>>(endpoint);
+    return response.data.data;
 };
 
 export const getTaskLogById = async (id: string) => {

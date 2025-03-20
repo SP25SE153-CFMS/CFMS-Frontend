@@ -45,8 +45,6 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
             capacity: 0,
             status: '0',
             breedingAreaId: '',
-            createdAt: new Date().toISOString(),
-            updatedAt: null,
             ...defaultValues,
         },
     });

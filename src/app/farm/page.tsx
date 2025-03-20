@@ -279,7 +279,7 @@ export default function Page() {
                                                     {farm.farmName}
                                                 </CardTitle>
                                                 <Image
-                                                    src={farm.farmImage || '/placeholder.svg'}
+                                                    src={farm.imageUrl || '/placeholder.svg'}
                                                     alt={farm.farmCode}
                                                     width={50}
                                                     height={50}

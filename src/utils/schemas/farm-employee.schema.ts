@@ -1,18 +1,23 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const FarmEmployeeSchema = z.object({
-    farmEmployeeId: z.string().uuid({ message: "farmEmployeeId phải là UUID hợp lệ" }),
-    farmId: z.string().uuid({ message: "farmId phải là UUID hợp lệ" }),
-    employeeId: z.string().uuid({ message: "employeeId phải là UUID hợp lệ" }),
-    startDate: z.string().datetime({ message: "startDate phải là ngày hợp lệ (ISO 8601)" }),
-    endDate: z.string().datetime({ message: "endDate phải là ngày hợp lệ (ISO 8601)" }).nullable(),
-    status: z.enum(["0", "1"], { message: "status chỉ có thể là '0' (Nghỉ việc) hoặc '1' (Đang làm việc)" }),
-    roleName: z
+    farmEmployeeId: z
         .string()
-        .min(1, "Vai trò không được để trống")
-        .max(255, "Vai trò không được vượt quá 255 ký tự"),
+        .uuid({ message: 'ID nhân viên trang trại không hợp lệ, phải là UUID' }),
+    farmId: z.string().uuid({ message: 'ID trang trại không hợp lệ, phải là UUID' }),
+    userId: z.string().uuid({ message: 'ID người dùng không hợp lệ, phải là UUID' }),
+    startDate: z
+        .string()
+        .datetime({ message: 'Ngày bắt đầu không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
+    endDate: z
+        .string()
+        .datetime({ message: 'Ngày kết thúc không hợp lệ, phải là định dạng ngày giờ hợp lệ' })
+        .nullable(),
+    status: z.enum(['0', '1'], {
+        message: "status chỉ có thể là '0' (Nghỉ việc) hoặc '1' (Đang làm việc)",
+    }),
+    farmRole: z.number().int({ message: 'Vai trò trang trại phải là số nguyên' }),
 });
 
 export type FarmEmployee = z.infer<typeof FarmEmployeeSchema>;
-
 export const CreateFarmEmployeeSchema = FarmEmployeeSchema.omit({ farmEmployeeId: true });

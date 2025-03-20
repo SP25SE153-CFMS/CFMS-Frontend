@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { CalendarIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -19,16 +18,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { cn } from '@/lib/utils';
 import { TaskLogSchema, type TaskLog } from '@/utils/schemas/task-log.schema';
-import dayjs from 'dayjs';
 import { createTaskLog, updateTaskLog } from '@/services/task-log.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getChickenCoops } from '@/services/chicken-coop.service';
-import { Input } from '@/components/ui/input';
 
 interface AddTaskLogFormProps {
     defaultValues?: Partial<TaskLog>;
@@ -40,10 +34,8 @@ export default function AddTaskLogForm({ defaultValues, closeDialog }: AddTaskLo
     const form = useForm<TaskLog>({
         resolver: zodResolver(TaskLogSchema),
         defaultValues: {
-            type: '',
             chickenCoopId: '',
-            startDate: new Date().toISOString(),
-            endDate: '',
+            completedAt: '',
             ...defaultValues,
         },
     });
@@ -84,7 +76,7 @@ export default function AddTaskLogForm({ defaultValues, closeDialog }: AddTaskLo
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
                     {/* Chọn loại công việc */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="type"
                         render={({ field }) => (
@@ -100,7 +92,7 @@ export default function AddTaskLogForm({ defaultValues, closeDialog }: AddTaskLo
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
                     {/* Chọn chuồng gà */}
                     <FormField
@@ -135,7 +127,7 @@ export default function AddTaskLogForm({ defaultValues, closeDialog }: AddTaskLo
                     />
 
                     {/* Ngày bắt đầu */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="startDate"
                         render={({ field }) => (
@@ -165,7 +157,7 @@ export default function AddTaskLogForm({ defaultValues, closeDialog }: AddTaskLo
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
                 </div>
 
                 <Button type="submit" className="mx-auto mt-6 w-60">

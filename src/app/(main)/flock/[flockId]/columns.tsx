@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import dayjs from 'dayjs';
-import { CoopEquipment } from '@/utils/schemas/equipment.schema';
+import { CoopEquipment } from '@/utils/schemas/coop-equipment.schema';
 import { equipments } from '@/utils/data/table.data';
 import { Badge } from '@/components/ui/badge';
 import { flockStatusLabels, flockStatusVariant } from '@/utils/enum/status.enum';

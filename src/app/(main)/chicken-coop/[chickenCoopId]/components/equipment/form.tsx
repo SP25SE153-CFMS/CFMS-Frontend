@@ -13,13 +13,6 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
@@ -47,12 +40,7 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
             equipmentCode: '',
             equipmentName: '',
             purchaseDate: new Date().toISOString(),
-            warrantyPeriod: 12,
-            status: '0',
-            cost: 0,
-            quantity: 1,
-            createdAt: new Date().toISOString(),
-            updatedAt: null,
+            warranty: 12,
             ...defaultValues,
         },
     });
@@ -163,7 +151,7 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
                     {/* Thời gian bảo hành */}
                     <FormField
                         control={form.control}
-                        name="warrantyPeriod"
+                        name="warranty"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Thời gian bảo hành (tháng)</FormLabel>
@@ -180,78 +168,7 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
                             </FormItem>
                         )}
                     />
-
-                    {/* Trạng thái */}
-                    <FormField
-                        control={form.control}
-                        name="status"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Trạng thái</FormLabel>
-                                <FormControl>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Chọn trạng thái" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="IN_USE">Đang sử dụng</SelectItem>
-                                            <SelectItem value="BROKEN">Hỏng</SelectItem>
-                                            <SelectItem value="AVAILABLE">Sẵn sàng</SelectItem>
-                                            <SelectItem value="UNDER_MAINTENANCE">
-                                                Bảo trì
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Chi phí */}
-                    <FormField
-                        control={form.control}
-                        name="cost"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Chi phí</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="number"
-                                        placeholder="Nhập chi phí"
-                                        min={0}
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Số lượng */}
-                    <FormField
-                        control={form.control}
-                        name="quantity"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Số lượng</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="number"
-                                        placeholder="Nhập số lượng"
-                                        {...field}
-                                        min={0}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
                 </div>
-
                 <Button type="submit" className="mx-auto mt-6 w-60">
                     Gửi
                 </Button>

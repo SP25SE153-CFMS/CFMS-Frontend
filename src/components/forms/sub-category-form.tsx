@@ -23,10 +23,9 @@ import {
     CreateSubCategorySchema,
     SubCategory,
     SubCategorySchema,
-} from '@/utils/schemas/category.schema';
+} from '@/utils/schemas/sub-category.schema';
 import { categories } from '@/utils/data/table.data';
 import { Category } from '@/utils/schemas/category.schema';
-import dayjs from 'dayjs';
 import { Textarea } from '../ui/textarea';
 import { useParams } from 'next/navigation';
 
@@ -45,9 +44,8 @@ export default function SubCategoryForm({ defaultValues, closeDialog }: SubCateg
             subCategoryId: '',
             subCategoryName: '',
             description: '',
-            status: 'ACTIVE',
+            status: '0',
             dataType: '',
-            createdDate: new Date(),
             categoryId: categoryId as string,
             ...defaultValues,
         },
@@ -102,26 +100,6 @@ export default function SubCategoryForm({ defaultValues, closeDialog }: SubCateg
                         )}
                     />
 
-                    {/* Ngày tạo */}
-                    <FormField
-                        control={form.control}
-                        name="createdDate"
-                        render={() => (
-                            <FormItem>
-                                <FormLabel>Ngày tạo</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="date"
-                                        value={dayjs(new Date()).format('YYYY-MM-DD')}
-                                        disabled
-                                        className="bg-gray-200"
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
                     {/* Chọn danh mục cha */}
                     <FormField
                         control={form.control}
@@ -143,7 +121,7 @@ export default function SubCategoryForm({ defaultValues, closeDialog }: SubCateg
                                                     key={category.categoryId}
                                                     value={category.categoryId}
                                                 >
-                                                    {category.categoryName}
+                                                    {category.categoryType}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
