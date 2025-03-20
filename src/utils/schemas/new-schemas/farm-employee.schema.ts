@@ -1,0 +1,21 @@
+import { z } from 'zod';
+
+export const FarmEmployeeSchema = z.object({
+    farmEmployeeId: z
+        .string()
+        .uuid({ message: 'ID nhân viên trang trại không hợp lệ, phải là UUID' }),
+    farmId: z.string().uuid({ message: 'ID trang trại không hợp lệ, phải là UUID' }),
+    userId: z.string().uuid({ message: 'ID người dùng không hợp lệ, phải là UUID' }),
+    startDate: z
+        .string()
+        .datetime({ message: 'Ngày bắt đầu không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
+    endDate: z
+        .string()
+        .datetime({ message: 'Ngày kết thúc không hợp lệ, phải là định dạng ngày giờ hợp lệ' })
+        .nullable(),
+    status: z.number().int({ message: 'Trạng thái phải là số nguyên' }),
+    farmRole: z.number().int({ message: 'Vai trò trang trại phải là số nguyên' }),
+});
+
+export type FarmEmployee = z.infer<typeof FarmEmployeeSchema>;
+export const CreateFarmEmployeeSchema = FarmEmployeeSchema.omit({ farmEmployeeId: true });
