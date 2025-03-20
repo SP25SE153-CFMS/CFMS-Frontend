@@ -1,27 +1,12 @@
 import { z } from 'zod';
 
-export const ChickenCoopSchema = z.object({
-    chickenCoopId: z.string().uuid({ message: 'ID chuồng gà không hợp lệ, phải là UUID' }),
-
-    chickenCoopCode: z.string().trim().min(1, { message: 'Mã chuồng gà là bắt buộc' }),
-
-    chickenCoopName: z.string().trim().min(1, { message: 'Tên chuồng gà là bắt buộc' }),
-
-    capacity: z.number().int({ message: 'Sức chứa phải là số nguyên' }),
-
-    area: z.number().positive({ message: 'Diện tích phải là số dương' }),
-
-    density: z.number().positive({ message: 'Mật độ phải là số dương' }),
-
-    currentQuantity: z.number().int({ message: 'Số lượng hiện tại phải là số nguyên' }),
-
-    description: z.string().trim().optional(),
-
-    status: z.boolean({ message: 'Trạng thái phải là giá trị boolean' }),
-
-    breedingAreaId: z.string().uuid({ message: 'ID khu vực chăn nuôi không hợp lệ, phải là UUID' }),
+export const ChickenDetailSchema = z.object({
+    chickenDetailId: z.string().uuid({ message: 'ID chi tiết gà không hợp lệ, phải là UUID' }),
+    chickenId: z.string().uuid({ message: 'ID gà không hợp lệ, phải là UUID' }),
+    weight: z.number().nonnegative({ message: 'Trọng lượng phải là số không âm' }),
+    quantity: z.number().int().nonnegative({ message: 'Số lượng phải là số nguyên không âm' }),
+    gender: z.number().int({ message: 'Giới tính phải là số nguyên' }),
 });
 
-export type ChickenCoop = z.infer<typeof ChickenCoopSchema>;
-
-export const CreateChickenCoopSchema = ChickenCoopSchema.omit({ chickenCoopId: true });
+export type ChickenDetail = z.infer<typeof ChickenDetailSchema>;
+export const CreateChickenDetailSchema = ChickenDetailSchema.omit({ chickenDetailId: true });

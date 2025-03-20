@@ -1,34 +1,34 @@
-import { Request } from '@/utils/schemas/request.schema';
+import { CoopEquipment } from '@/utils/schemas/coop-equipment.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 
-const PREFIX = '/api/Request';
+const PREFIX = '/api/CoopEquipment';
 
-export const getRequests = async () => {
+export const getCoopEquipments = async () => {
     const endpoint = PREFIX;
-    const response = await get<Response<Request[]>>(endpoint);
+    const response = await get<Response<CoopEquipment[]>>(endpoint);
     return response.data.data;
 };
 
-export const getRequestById = async (id: string) => {
+export const getCoopEquipmentById = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
-    const response = await get<Response<Request>>(endpoint);
+    const response = await get<Response<CoopEquipment>>(endpoint);
     return response.data.data;
 };
 
-export const createRequest = async (body: Request) => {
+export const createCoopEquipment = async (body: CoopEquipment) => {
     const endpoint = PREFIX;
     const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };
 
-export const updateRequest = async (body: Request) => {
+export const updateCoopEquipment = async (body: CoopEquipment) => {
     const endpoint = PREFIX;
     const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };
 
-export const deleteRequest = async (id: string) => {
+export const deleteCoopEquipment = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
     const response = await remove<Response<string>>(endpoint);
     return response.data;

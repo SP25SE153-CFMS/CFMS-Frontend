@@ -1,17 +1,13 @@
-
-import { Category } from "@/utils/schemas/category.schema";
-import { get, post, put, remove } from "@/utils/functions/axios.function";
-import { Response } from "@/utils/types";
-import { categories } from "@/utils/data/table.data";
+import { Category } from '@/utils/schemas/category.schema';
+import { get, post, put, remove } from '@/utils/functions/axios.function';
+import { Response } from '@/utils/types';
 
 const PREFIX = '/api/Category';
 
 export const getCategories = async () => {
-    /* eslint-disable no-unused-vars */
-    const endpoint = PREFIX
-    // const response = await get<Response<Category[]>>(endpoint);
-    // return response.data.data;
-    return categories
+    const endpoint = PREFIX;
+    const response = await get<Response<Category[]>>(endpoint);
+    return response.data.data;
 };
 
 export const getCategoryById = async (id: string) => {
@@ -21,13 +17,13 @@ export const getCategoryById = async (id: string) => {
 };
 
 export const createCategory = async (body: Category) => {
-    const endpoint = PREFIX
+    const endpoint = PREFIX;
     const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };
 
 export const updateCategory = async (body: Category) => {
-    const endpoint = PREFIX
+    const endpoint = PREFIX;
     const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };

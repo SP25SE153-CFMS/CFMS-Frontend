@@ -1,34 +1,34 @@
-import { Request } from '@/utils/schemas/request.schema';
+import { Notification } from '@/utils/schemas/notification.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 
-const PREFIX = '/api/Request';
+const PREFIX = '/api/Notification';
 
-export const getRequests = async () => {
+export const getNotifications = async () => {
     const endpoint = PREFIX;
-    const response = await get<Response<Request[]>>(endpoint);
+    const response = await get<Response<Notification[]>>(endpoint);
     return response.data.data;
 };
 
-export const getRequestById = async (id: string) => {
+export const getNotificationById = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
-    const response = await get<Response<Request>>(endpoint);
+    const response = await get<Response<Notification>>(endpoint);
     return response.data.data;
 };
 
-export const createRequest = async (body: Request) => {
+export const createNotification = async (body: Notification) => {
     const endpoint = PREFIX;
     const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };
 
-export const updateRequest = async (body: Request) => {
+export const updateNotification = async (body: Notification) => {
     const endpoint = PREFIX;
     const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };
 
-export const deleteRequest = async (id: string) => {
+export const deleteNotification = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
     const response = await remove<Response<string>>(endpoint);
     return response.data;

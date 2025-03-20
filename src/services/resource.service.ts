@@ -1,34 +1,34 @@
-import { Request } from '@/utils/schemas/request.schema';
+import { Resource } from '@/utils/schemas/resource.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 
-const PREFIX = '/api/Request';
+const PREFIX = '/api/Resource';
 
-export const getRequests = async () => {
+export const getResources = async () => {
     const endpoint = PREFIX;
-    const response = await get<Response<Request[]>>(endpoint);
+    const response = await get<Response<Resource[]>>(endpoint);
     return response.data.data;
 };
 
-export const getRequestById = async (id: string) => {
+export const getResourceById = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
-    const response = await get<Response<Request>>(endpoint);
+    const response = await get<Response<Resource>>(endpoint);
     return response.data.data;
 };
 
-export const createRequest = async (body: Request) => {
+export const createResource = async (body: Resource) => {
     const endpoint = PREFIX;
     const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };
 
-export const updateRequest = async (body: Request) => {
+export const updateResource = async (body: Resource) => {
     const endpoint = PREFIX;
     const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };
 
-export const deleteRequest = async (id: string) => {
+export const deleteResource = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
     const response = await remove<Response<string>>(endpoint);
     return response.data;
