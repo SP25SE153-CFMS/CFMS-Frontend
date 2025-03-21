@@ -35,10 +35,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createFarm } from '@/services/farm.service';
 import { useRouter } from 'next/navigation';
 import config from '@/configs';
+import { CloudinaryImageUpload } from '@/components/cloudinary-image-upload';
+import { useMutation } from '@tanstack/react-query';
 
 export default function Page() {
     const router = useRouter();
-    const [farmImage, setFarmImage] = useState<File | null>(null);
+    const [imageUrl, setImageUrl] = useState<string>('');
 
     // Initialize form
     const form = useForm<Farm>({
@@ -55,20 +57,21 @@ export default function Page() {
         },
     });
 
+    const mutation = useMutation({
+        mutationFn: createFarm,
+        onSuccess: () => {
+            toast.success('Tạo trang trại thành công');
+            router.push(config.routes.farm);
+        },
+        onError: (err: any) => {
+            toast.error(err?.response?.data?.message);
+        },
+    });
+
     // Form submit handler
     const onSubmit = async (values: Farm) => {
-        if (farmImage) {
-            // Handle file upload logic here if needed
-            // values.farmImage = ... (URL or path after upload)
-        }
-        await createFarm(values)
-            .then(() => {
-                toast.success('Tạo trang trại thành công');
-                router.push(config.routes.farm);
-            })
-            .catch((err) => {
-                toast.error(err?.response?.data?.message);
-            });
+        values.imageUrl = imageUrl;
+        mutation.mutate(values);
     };
 
     // Form error handler
@@ -233,22 +236,12 @@ export default function Page() {
                             <FormField
                                 control={form.control}
                                 name="imageUrl"
-                                render={({ field }) => (
+                                render={() => (
                                     <FormItem>
                                         <FormLabel>Hình ảnh trang trại</FormLabel>
                                         <FormControl>
-                                            <Input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={(e) => {
-                                                    const file = e.target.files?.[0] || null;
-                                                    setFarmImage(file);
-                                                    // You might want to store the file path or handle it differently
-                                                    // field.onChange(file ? file.name : '');
-                                                    field.onChange(
-                                                        file ? URL.createObjectURL(file) : '',
-                                                    );
-                                                }}
+                                            <CloudinaryImageUpload
+                                                onUploadComplete={(url) => setImageUrl(url)}
                                             />
                                         </FormControl>
                                         <FormMessage />

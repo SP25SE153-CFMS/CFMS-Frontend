@@ -10,6 +10,12 @@ export const getChickenCoops = async () => {
     return response.data.data;
 };
 
+export const getChickenCoopsByBreedingAreaId = async (breedingAreaId: string) => {
+    const endpoint = PREFIX + '/BreedingArea/' + breedingAreaId;
+    const response = await get<Response<ChickenCoop[]>>(endpoint);
+    return response.data.data;
+};
+
 export const getChickenCoopById = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
     const response = await get<Response<ChickenCoop>>(endpoint);

@@ -12,18 +12,21 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { cn } from '@/lib/utils';
-import {
-    CreateEquipmentSchema,
-    type Equipment,
-    EquipmentSchema,
-} from '@/utils/schemas/equipment.schema';
-import dayjs from 'dayjs';
-import { createEquipment, updateEquipment } from '@/services/equipment.service';
-import toast from 'react-hot-toast';
+import { Textarea } from '@/components/ui/textarea';
+import { CoopEquipmentSchema } from '@/utils/schemas/coop-equipment.schema';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createCoopEquipment, updateCoopEquipment } from '@/services/coop-equipment.service';
+import toast from 'react-hot-toast';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { mapEnumToValues } from '@/utils/functions/enum.function';
+import { EquipmentStatus, equipmentStatusLabels } from '@/utils/enum/status.enum';
+import { chickenCoops, equipments } from '@/utils/data/table.data';
 
 interface CoopEquipmentFormProps {
     defaultValues?: Partial<typeof CoopEquipmentSchema._type>;
@@ -40,10 +43,11 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
             coopEquipmentId: '',
             chickenCoopId: '',
             equipmentId: '',
-            equipmentCode: '',
-            equipmentName: '',
-            purchaseDate: new Date().toISOString(),
-            warranty: 12,
+            quantity: 1,
+            assignedDate: new Date().toISOString(),
+            maintainDate: null,
+            status: '0',
+            note: '',
             ...defaultValues,
         },
     });
@@ -170,7 +174,7 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                     {/* Maintain Date */}
                     <FormField
                         control={form.control}
-                        name="warranty"
+                        name="maintainDate"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Ngày Bảo Trì</FormLabel>
@@ -185,10 +189,68 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                             </FormItem>
                         )}
                     />
+
+                    {/* Status */}
+                    <FormField
+                        control={form.control}
+                        name="status"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Trạng Thái</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn trạng thái" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {mapEnumToValues(EquipmentStatus).map((status) => (
+                                                <SelectItem key={status} value={status.toString()}>
+                                                    {equipmentStatusLabels[status]}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Note */}
+                    <FormField
+                        control={form.control}
+                        name="note"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Ghi Chú</FormLabel>
+                                <FormControl>
+                                    <Textarea
+                                        placeholder="Nhập ghi chú (tối đa 500 ký tự)"
+                                        {...field}
+                                        value={field.value ?? ''}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                 </div>
-                <Button type="submit" className="mx-auto mt-6 w-60">
-                    Gửi
-                </Button>
+
+                <div className="flex justify-end gap-4">
+                    <Button type="button" variant="outline" onClick={closeDialog}>
+                        Hủy
+                    </Button>
+                    <Button type="submit" disabled={mutation.isPending}>
+                        {mutation.isPending
+                            ? 'Đang xử lý...'
+                            : defaultValues
+                              ? 'Cập nhật'
+                              : 'Tạo mới'}
+                    </Button>
+                </div>
             </form>
         </Form>
     );

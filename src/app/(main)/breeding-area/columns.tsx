@@ -52,6 +52,9 @@ export const columns: ColumnDef<BreedingArea>[] = [
         cell: ({ row }) => (
             <Link
                 href={`${config.routes.chickenCoop}?breedingAreaId=${row.getValue('breedingAreaId')}`}
+                onClick={() =>
+                    sessionStorage.setItem('breedingAreaId', row.getValue('breedingAreaId'))
+                }
             >
                 {row.getValue('breedingAreaName')}
             </Link>

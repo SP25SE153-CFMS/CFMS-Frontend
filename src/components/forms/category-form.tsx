@@ -127,7 +127,10 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
                         <FormItem>
                             <FormLabel>Trạng thái</FormLabel>
                             <FormControl>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={String(field.value)}
+                                >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Chọn trạng thái" />
                                     </SelectTrigger>

@@ -23,7 +23,7 @@ export const BreedingAreaSchema = z.object({
 
     area: z.coerce.number().positive({ message: 'Diện tích phải là số dương' }),
 
-    image: z.string().trim().url({ message: 'Hình ảnh phải là URL hợp lệ' }),
+    imageUrl: z.string().trim().url({ message: 'Hình ảnh phải là URL hợp lệ' }),
 
     notes: z.string().max(500, { message: 'Ghi chú không được vượt quá 500 ký tự' }).optional(),
 
@@ -32,4 +32,7 @@ export const BreedingAreaSchema = z.object({
 
 export type BreedingArea = z.infer<typeof BreedingAreaSchema>;
 
-export const CreateBreedingAreaSchema = BreedingAreaSchema.omit({ breedingAreaId: true });
+export const CreateBreedingAreaSchema = BreedingAreaSchema.omit({
+    breedingAreaId: true,
+    imageUrl: true,
+});

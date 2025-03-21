@@ -16,7 +16,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import ChickenCoopForm from '@/components/forms/chicken-coop-form';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { getChickenCoops } from '@/services/chicken-coop.service';
+import { getChickenCoopsByBreedingAreaId } from '@/services/chicken-coop.service';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
@@ -29,7 +29,10 @@ export default function Page() {
 
     const { data: chickenCoops, isLoading } = useQuery({
         queryKey: ['chickenCoops'],
-        queryFn: () => getChickenCoops(),
+        queryFn: () => {
+            const breedingAreaId = sessionStorage.getItem('breedingAreaId') ?? '';
+            return getChickenCoopsByBreedingAreaId(breedingAreaId);
+        },
     });
 
     // Check if chickenCoops is loading

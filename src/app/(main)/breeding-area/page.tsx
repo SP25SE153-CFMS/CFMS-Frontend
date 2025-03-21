@@ -18,7 +18,7 @@ import {
 import BreedingAreaForm from '@/components/forms/breeding-area-form';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useQuery } from '@tanstack/react-query';
-import { getBreedingAreas } from '@/services/breeding-area.service';
+import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
@@ -32,9 +32,8 @@ export default function Page() {
 
     const { data: breedingAreas, isLoading } = useQuery({
         queryKey: ['breedingAreas'],
-        queryFn: () => getBreedingAreas(),
+        queryFn: () => getBreedingAreasByFarmId(sessionStorage.getItem('farmId') ?? ''),
     });
-
 
     // Check if breedingAreas is loading
     if (isLoading) {
