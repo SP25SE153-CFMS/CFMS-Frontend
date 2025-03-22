@@ -17,6 +17,7 @@ const routes = {
     vaccine: '/warehouse/vaccines',
     employee: '/employee',
     farmEmployee: '/farm-employee',
+    inventoryReceipt: '/warehouse/inventory-receipt',
 };
 
 export default routes;
