@@ -1661,8 +1661,8 @@ export const inventoryReceipts: InventoryReceipt[] = [
         createDate: '2024-03-22T12:30:00Z',
     },
     {
-        inventoryReceiptId: '550e8400-e29b-41d4-a716-446655440000',
-        inventoryCode: 'INV1234567890',
+        inventoryReceiptId: '550e8400-e29b-41d4-a716-446655440088',
+        inventoryCode: 'INV1234567888',
         inventoryRequestId: '660e8400-e29b-41d4-a716-446655440001',
         receiptTypeId: '770e8400-e29b-41d4-a716-446655440002',
         subcategoryName: 'Nhập',
@@ -1699,7 +1699,7 @@ export const inventoryReceiptDetails: InventoryReceiptDetail[] = [
     },
     {
         inventoryReceiptDetailId: '120e8400-e29b-41d4-a716-446655440015',
-        inventoryReceiptId: '550e8400-e29b-41d4-a716-446655440000', // Liên kết với phiếu nhập đầu tiên
+        inventoryReceiptId: '550e8400-e29b-41d4-a716-446655440088', // Liên kết với phiếu nhập đầu tiên
         resourceId: '230e8400-e29b-41d4-a716-446655440016',
         actualQuantity: 50,
         unitId: '340e8400-e29b-41d4-a716-446655440017',
