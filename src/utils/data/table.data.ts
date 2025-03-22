@@ -1686,7 +1686,7 @@ export const inventoryReceipts: InventoryReceipt[] = [
     }
 ];
 
-export const inventoryReceiptDetails: InventoryReceiptDetail    [] = [
+export const inventoryReceiptDetails: InventoryReceiptDetail[] = [
     {
         inventoryReceiptDetailId: '110e8400-e29b-41d4-a716-446655440012',
         inventoryReceiptId: '550e8400-e29b-41d4-a716-446655440000', // Liên kết với phiếu nhập đầu tiên
