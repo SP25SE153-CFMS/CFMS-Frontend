@@ -5,6 +5,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/s
 import { AppSidebar } from '@/components/sidebar/app-sidebar';
 import { ProfileDropdown } from '@/components/profile-dropdown';
 import { ThemeSwitch } from '@/components/theme-switch';
+import Notification from '@/components/ui/notification';
 
 interface LayoutProps {
     readonly children: ReactNode;
@@ -22,6 +23,7 @@ export default function Layout({ children }: LayoutProps) {
                             <Separator orientation="vertical" className="mr-2 h-4" />
                         </div>
                         <div className="ml-auto flex items-center space-x-4 px-4">
+                            <Notification />
                             <ThemeSwitch />
                             <ProfileDropdown />
                         </div>

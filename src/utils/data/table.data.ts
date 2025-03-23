@@ -127,6 +127,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Cần kiểm tra sức khỏe định kỳ',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801',
+        status: '1',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67892',
@@ -136,6 +137,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Chế độ ăn giàu protein',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
+        status: '1',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67893',
@@ -145,6 +147,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Chăn thả tự nhiên',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801',
+        status: '1',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67894',
@@ -154,6 +157,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Kiểm soát nhiệt độ chặt chẽ',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
+        status: '1',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67895',
@@ -163,6 +167,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Cần đèn sưởi vào ban đêm',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
+        status: '1',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67896',
@@ -172,6 +177,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Giống gà nhỏ nhưng thịt ngon',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801',
+        status: '1',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67897',
@@ -181,6 +187,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Cần chuồng rộng để vận động',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
+        status: '1',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67898',
@@ -190,6 +197,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Gà nhỏ, nuôi để làm cảnh',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
+        status: '1',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67899',
@@ -199,6 +207,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Dành cho gà chọi',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
+        status: '1',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f678910',
@@ -208,6 +217,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Cần nhiều không gian để chạy',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801',
+        status: '1',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f678911',
@@ -217,6 +227,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Sử dụng hệ thống ăn tự động',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
+        status: '1',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f678912',
@@ -226,6 +237,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Chọn giống tốt để nhân giống',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
+        status: '1',
     },
 ];
 

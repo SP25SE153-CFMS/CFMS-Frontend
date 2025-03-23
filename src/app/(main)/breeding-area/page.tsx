@@ -18,13 +18,12 @@ import {
 import BreedingAreaForm from '@/components/forms/breeding-area-form';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useQuery } from '@tanstack/react-query';
-import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
+import { deleteBreedingArea, getBreedingAreasByFarmId } from '@/services/breeding-area.service';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -36,12 +35,37 @@ import {
 import config from '@/configs';
 import Link from 'next/link';
 import { breedingAreaStatusLabels, breedingAreaStatusVariant } from '@/utils/enum/status.enum';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import toast from 'react-hot-toast';
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [viewMode, setViewMode] = useState<'table' | 'grid'>('grid');
     const [statusFilter, setStatusFilter] = useState<string>('all');
+
+    const [openUpdate, setOpenUpdate] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [row, setRow] = useState<any>();
+
+    const handleUpdate = (row: any) => {
+        setRow(row);
+        setOpenUpdate(true);
+    };
+
+    const handleDelete = async (breedingAreaId: string) => {
+        await deleteBreedingArea(breedingAreaId).then(() => {
+            toast.success('Đã xóa khu nuôi');
+            setOpenDelete(false);
+        });
+    };
 
     const openModal = () => setOpen(true);
     const closeDialog = () => setOpen(false);
@@ -99,17 +123,18 @@ export default function Page() {
     }
 
     // Filter breeding areas based on search term and status
-    const filteredBreedingAreas = breedingAreas.filter(
-        (area) =>
-            searchTerm === '' ||
-            area.breedingAreaName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (area.breedingAreaCode?.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                (statusFilter === 'all' || area.status === statusFilter)),
-    );
+    const filteredBreedingAreas = breedingAreas
+        .filter((area) => statusFilter === 'all' || area.status.toString() === statusFilter)
+        .filter(
+            (area) =>
+                searchTerm === '' ||
+                area.breedingAreaName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                area.breedingAreaCode?.toLowerCase().includes(searchTerm.toLowerCase()),
+        );
 
     // Count areas by status
-    const inactiveAreas = breedingAreas.filter((area) => area.status.toString() === '0');
-    const activeAreas = breedingAreas.filter((area) => area.status.toString() === '1');
+    const inactiveAreas = filteredBreedingAreas.filter((area) => area.status.toString() === '0');
+    const activeAreas = filteredBreedingAreas.filter((area) => area.status.toString() === '1');
 
     // Return the page
     return (
@@ -177,10 +202,10 @@ export default function Page() {
                                     <DropdownMenuItem onClick={() => setStatusFilter('all')}>
                                         Tất cả khu nuôi
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => setStatusFilter('0')}>
+                                    <DropdownMenuItem onClick={() => setStatusFilter('1')}>
                                         Đang hoạt động
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => setStatusFilter('1')}>
+                                    <DropdownMenuItem onClick={() => setStatusFilter('0')}>
                                         Tạm ngưng
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
@@ -223,7 +248,9 @@ export default function Page() {
                         onValueChange={(value) => setStatusFilter(value === 'all' ? 'all' : value)}
                     >
                         <TabsList className="mb-4">
-                            <TabsTrigger value="all">Tất cả ({breedingAreas.length})</TabsTrigger>
+                            <TabsTrigger value="all">
+                                Tất cả ({filteredBreedingAreas.length})
+                            </TabsTrigger>
                             <TabsTrigger value="0">Tạm ngưng ({inactiveAreas.length})</TabsTrigger>
                             <TabsTrigger value="1">
                                 Đang hoạt động ({activeAreas.length})
@@ -278,10 +305,17 @@ export default function Page() {
                                                         </Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            onClick={() => handleUpdate(area)}
+                                                        >
                                                             Chỉnh sửa
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem>Xóa</DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem
+                                                            onClick={() => setOpenDelete(true)}
+                                                        >
+                                                            Xóa
+                                                        </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                             </CardFooter>
@@ -335,10 +369,17 @@ export default function Page() {
                                                         </Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            onClick={() => handleUpdate(area)}
+                                                        >
                                                             Chỉnh sửa
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem>Xóa</DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem
+                                                            onClick={() => setOpenDelete(true)}
+                                                        >
+                                                            Xóa
+                                                        </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                             </CardFooter>
@@ -392,10 +433,17 @@ export default function Page() {
                                                         </Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            onClick={() => handleUpdate(area)}
+                                                        >
                                                             Chỉnh sửa
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem>Xóa</DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem
+                                                            onClick={() => setOpenDelete(true)}
+                                                        >
+                                                            Xóa
+                                                        </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                             </CardFooter>
@@ -421,6 +469,45 @@ export default function Page() {
                     </ScrollArea>
                 </DialogContent>
             </Dialog>
+
+            {/* Update Dialog */}
+            <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
+                <DialogContent className="max-w-3xl">
+                    <DialogHeader>
+                        <DialogTitle>Cập nhật khu nuôi</DialogTitle>
+                        <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
+                    </DialogHeader>
+                    <ScrollArea className="max-h-[600px]">
+                        <BreedingAreaForm
+                            closeDialog={() => setOpenUpdate(false)}
+                            defaultValues={row}
+                        />
+                    </ScrollArea>
+                </DialogContent>
+            </Dialog>
+
+            {/* Delete Confirmation Dialog */}
+            <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Bạn có chắc chắn muốn xóa khu nuôi này?
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <div className="flex justify-end space-x-2">
+                        <Button variant="outline" onClick={() => setOpenDelete(false)}>
+                            Hủy
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            onClick={() => handleDelete(row.breedingAreaId)}
+                        >
+                            Xóa
+                        </Button>
+                    </div>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
