@@ -18,6 +18,7 @@ const routes = {
     employee: '/employee',
     farmEmployee: '/farm-employee',
     inventoryReceipt: '/warehouse/inventory-receipt',
+    createReceipt: 'inventory-receipt/create',
 };
 
 export default routes;

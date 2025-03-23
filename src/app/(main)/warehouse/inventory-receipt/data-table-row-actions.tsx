@@ -15,17 +15,23 @@ import { useState } from 'react';
 import ReceiptDetail from './inventory-receipt-detail';
 import { InventoryReceiptDetail } from '@/utils/schemas/inventory-receipt-detail.schema';
 import { inventoryReceipts } from '@/utils/data/table.data';
+import { useRouter } from 'next/navigation';
+import config from '@/configs';
 
 interface Props<T> {
     row: Row<T>;
 }
 export function DataTableRowActions<T>({ row }: Props<T>) {
+    const router = useRouter();
     const [open, setOpen] = useState(false);
 
     const inventoryReceiptDetail = row.original as InventoryReceiptDetail;
     const receipt = inventoryReceipts.find(
         (receipt) => receipt.inventoryReceiptId === inventoryReceiptDetail.inventoryReceiptId,
     );
+
+    // Chuyển code sang Request
+    const status = receipt?.status ?? -1;
 
     return (
         <>
@@ -37,10 +43,20 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="end">
+                    {/* Chi tiết */}
                     <DropdownMenuItem onClick={() => setOpen(true)}>Chi tiết</DropdownMenuItem>
-                    <DropdownMenuSeparator />
+
                     <DropdownMenuItem>Duyệt</DropdownMenuItem>
                     <DropdownMenuItem>Hủy</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+
+                    {/* Tạo phiếu đưa qua request */}
+                    <DropdownMenuItem
+                        disabled={status === 0 || status == 1}
+                        onClick={() => router.push(config.routes.createReceipt)}
+                    >
+                        Tạo phiếu
+                    </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
 
