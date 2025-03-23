@@ -23,6 +23,7 @@ interface CloudinaryImageUploadProps {
     maxSizeMB?: number;
     disabled?: boolean;
     accept?: string[];
+    defaultImage?: string;
 }
 
 const ASPECT_RATIO_CLASSES: Record<AspectRatio, string> = {
@@ -41,9 +42,16 @@ export function CloudinaryImageUpload({
     maxSizeMB = 5,
     disabled = false,
     accept = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+    defaultImage,
     ...props
 }: CloudinaryImageUploadProps) {
-    const [file, setFile] = useState<{ file: File; preview: string; url?: string } | null>(null);
+    console.log(defaultImage);
+
+    const [file, setFile] = useState<{ file: File; preview: string; url?: string } | null>(
+        defaultImage
+            ? { file: new File([], 'default'), preview: defaultImage, url: defaultImage }
+            : null,
+    );
     const [uploading, setUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);

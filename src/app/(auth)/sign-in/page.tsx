@@ -19,7 +19,7 @@ export default function Page() {
     // TODO: Remove hard-coded
     const form = useForm({
         defaultValues: {
-            mail: 'dung@gmail.com',
+            mail: 'duongtruong@gmail.com',
             password: '1',
         },
     });

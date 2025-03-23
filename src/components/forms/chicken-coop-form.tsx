@@ -86,6 +86,9 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                     label: 'Mô tả',
                     fieldType: 'textarea',
                 },
+                area: {
+                    label: 'Diện tích',
+                },
                 breedingAreaId: {
                     fieldType: ({ field }) => (
                         <FormItem>

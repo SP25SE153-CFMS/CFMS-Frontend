@@ -18,20 +18,18 @@ import {
     BreedingAreaSchema,
     CreateBreedingAreaSchema,
 } from '@/utils/schemas/breeding-area.schema';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createBreedingArea, updateBreedingArea } from '@/services/breeding-area.service';
 import toast from 'react-hot-toast';
 import { Card, CardContent } from '@/components/ui/card';
-import { useState } from 'react';
 import { CloudinaryImageUpload } from '../cloudinary-image-upload';
+import { getFarms } from '@/services/farm.service';
 interface BreedingAreaFormProps {
     defaultValues?: Partial<BreedingArea>;
     closeDialog: () => void;
 }
 
 export default function BreedingAreaForm({ defaultValues, closeDialog }: BreedingAreaFormProps) {
-    const [uploadImageUrl, setUploadImageUrl] = useState<string | null>(null);
-
     const queryClient = useQueryClient();
 
     // Initialize form
@@ -40,7 +38,6 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
         defaultValues: {
             breedingAreaCode: '',
             breedingAreaName: '',
-            mealsPerDay: 0,
             area: 0,
             imageUrl: '',
             notes: '',
@@ -64,7 +61,6 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
 
     // Form submit handler
     const onSubmit = async (values: BreedingArea) => {
-        values.imageUrl = uploadImageUrl || '';
         mutation.mutate(values);
     };
 
@@ -72,6 +68,11 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
     const onError = (error: any) => {
         console.error(error);
     };
+
+    const { data: farms } = useQuery({
+        queryKey: ['farms'],
+        queryFn: () => getFarms(),
+    });
 
     return (
         <Form {...form}>
@@ -115,29 +116,6 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                                     )}
                                 />
 
-                                {/* Meals Per Day */}
-                                <FormField
-                                    control={form.control}
-                                    name="mealsPerDay"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Số bữa ăn mỗi ngày</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    placeholder="Nhập số bữa ăn mỗi ngày"
-                                                    min={0}
-                                                    {...field}
-                                                    onChange={(e) =>
-                                                        field.onChange(Number(e.target.value))
-                                                    }
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
                                 {/* Area */}
                                 <FormField
                                     control={form.control}
@@ -160,6 +138,28 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                                         </FormItem>
                                     )}
                                 />
+
+                                {/* Trang trại */}
+                                <FormField
+                                    control={form.control}
+                                    name="farmId"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Trang trại</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    disabled
+                                                    value={
+                                                        farms?.find(
+                                                            (farm) => farm.farmId === field.value,
+                                                        )?.farmName ?? ''
+                                                    }
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                             </div>
                         </CardContent>
                     </Card>
@@ -174,12 +174,13 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                             <FormField
                                 control={form.control}
                                 name="imageUrl"
-                                render={() => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Hình ảnh khu nuôi</FormLabel>
                                         <FormControl>
                                             <CloudinaryImageUpload
-                                                onUploadComplete={(url) => setUploadImageUrl(url)}
+                                                onUploadComplete={(url) => field.onChange(url)}
+                                                defaultImage={defaultValues?.imageUrl}
                                             />
                                         </FormControl>
                                         <FormMessage />

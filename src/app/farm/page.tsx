@@ -33,6 +33,7 @@ import { getFarms } from '@/services/farm.service';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
+import { scaleLabels } from '@/utils/enum/status.enum';
 
 export default function Page() {
     const { data: farms, isLoading } = useQuery({
@@ -279,7 +280,7 @@ export default function Page() {
                                                     {farm.farmName}
                                                 </CardTitle>
                                                 <Image
-                                                    src={farm.imageUrl || '/placeholder.svg'}
+                                                    src={farm.imageUrl || '/assets/logo/logo.png'}
                                                     alt={farm.farmCode}
                                                     width={50}
                                                     height={50}
@@ -292,22 +293,34 @@ export default function Page() {
                                                 Mã: {farm.farmCode}
                                             </div>
                                             <div className="flex items-center mb-1">
-                                                <MapPin className="mr-2 h-4 w-4" /> {farm.address}
+                                                <MapPin className="mr-2 h-4 w-4" />{' '}
+                                                <span className="truncate font-medium">
+                                                    {farm.address}
+                                                </span>
                                             </div>
                                             <div className="flex items-center mb-1">
-                                                <Ruler className="mr-2 h-4 w-4" /> Diện tích:{' '}
-                                                {farm.area} ha
+                                                <Ruler className="mr-2 h-4 w-4" />
+                                                <span className="truncate font-medium">
+                                                    Diện tích: {farm.area} ha
+                                                </span>
                                             </div>
                                             <div className="flex items-center mb-1">
                                                 <Scale3d className="mr-2 h-4 w-4" />
-                                                Quy mô: {farm.scale}
+                                                <span className="truncate font-medium">
+                                                    Quy mô: {scaleLabels[farm.scale]}
+                                                </span>
                                             </div>
                                             <div className="flex items-center mb-1">
-                                                <Phone className="mr-2 h-4 w-4" />{' '}
-                                                {farm.phoneNumber}
+                                                <Phone className="mr-2 h-4 w-4" />
+                                                <span className="truncate font-medium">
+                                                    SĐT: {farm.phoneNumber}
+                                                </span>
                                             </div>
                                             <div className="flex items-center">
-                                                <Globe className="mr-2 h-4 w-4" /> {farm.website}
+                                                <Globe className="mr-2 h-4 w-4" />{' '}
+                                                <span className="truncate font-medium">
+                                                    {farm.website}
+                                                </span>
                                             </div>
                                         </CardContent>
                                     </Card>

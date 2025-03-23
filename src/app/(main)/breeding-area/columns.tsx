@@ -61,8 +61,8 @@ export const columns: ColumnDef<BreedingArea>[] = [
         ),
     },
     {
-        accessorKey: 'mealsPerDay',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Bữa ăn/ngày" />,
+        accessorKey: 'notes',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Ghi chú" />,
     },
     {
         accessorKey: 'area',
