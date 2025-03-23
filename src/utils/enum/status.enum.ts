@@ -145,3 +145,31 @@ export const vaccinationLogStatusVariant: Record<string, any> = {
     [VaccinationLogStatus.ACTIVE]: 'default',
     [VaccinationLogStatus.INACTIVE]: 'outline',
 };
+
+// Scale
+export enum Scale {
+    SMALL,
+    MEDIUM,
+    LARGE,
+}
+
+export const scaleLabels: Record<string, string> = {
+    [Scale.SMALL]: 'Nhỏ',
+    [Scale.MEDIUM]: 'Trung bình',
+    [Scale.LARGE]: 'Lớn',
+};
+
+export enum BreedingAreaStatus {
+    INACTIVE,
+    ACTIVE,
+}
+
+export const breedingAreaStatusLabels: Record<string, string> = {
+    [BreedingAreaStatus.INACTIVE]: 'Tạm ngưng',
+    [BreedingAreaStatus.ACTIVE]: 'Đang hoạt động',
+};
+
+export const breedingAreaStatusVariant: Record<string, any> = {
+    [BreedingAreaStatus.INACTIVE]: 'destructive',
+    [BreedingAreaStatus.ACTIVE]: 'default',
+};

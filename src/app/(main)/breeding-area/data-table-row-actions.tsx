@@ -59,11 +59,15 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
                     <DropdownMenuItem
-                        onClick={() =>
+                        onClick={() => {
                             router.push(
                                 `${config.routes.chickenCoop}?breedingAreaId=${row.getValue('breedingAreaId')}`,
-                            )
-                        }
+                            );
+                            sessionStorage.setItem(
+                                'breedingAreaId',
+                                row.getValue('breedingAreaId'),
+                            );
+                        }}
                     >
                         Xem chi tiết
                     </DropdownMenuItem>

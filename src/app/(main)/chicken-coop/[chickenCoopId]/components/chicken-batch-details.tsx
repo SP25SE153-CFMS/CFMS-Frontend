@@ -37,11 +37,6 @@ const ChickenBatchDetails = ({ chickenCoopId }: { chickenCoopId: string }) => {
         queryFn: () => getChickenBatches(),
     });
 
-    console.log(
-        chickenBatches?.find((batch) => batch.chickenCoopId === chickenCoopId) ||
-            chickenBatches?.[0],
-    );
-
     const [currentChickenBatch, setCurrentChickenBatch] = useState<ChickenBatch>();
 
     useEffect(() => {

@@ -15,17 +15,17 @@ export const ChickenCoopSchema = z.object({
         .min(1, { message: 'Tên chuồng gà là bắt buộc' })
         .max(100, { message: 'Tên chuồng không được dài quá 100 ký tự' }),
 
-    capacity: z.number().int({ message: 'Sức chứa phải là số nguyên' }),
+    capacity: z.coerce.number().min(0).int({ message: 'Sức chứa phải là số nguyên' }),
     status: z.enum(['0', '1', '2'], {
         message: 'Trạng thái không hợp lệ',
     }),
 
     breedingAreaId: z.string().uuid({ message: 'ID khu vực chăn nuôi không hợp lệ, phải là UUID' }),
-    area: z.number().positive({ message: 'Diện tích phải là số dương' }),
+    area: z.coerce.number().positive({ message: 'Diện tích phải là số dương' }),
 
-    density: z.number().positive({ message: 'Mật độ phải là số dương' }),
+    density: z.coerce.number().positive({ message: 'Mật độ phải là số dương' }),
 
-    currentQuantity: z.number().int({ message: 'Số lượng hiện tại phải là số nguyên' }),
+    currentQuantity: z.coerce.number().int({ message: 'Số lượng hiện tại phải là số nguyên' }),
 
     description: z.string().trim().optional(),
 });
@@ -33,3 +33,4 @@ export const ChickenCoopSchema = z.object({
 export type ChickenCoop = z.infer<typeof ChickenCoopSchema>;
 
 export const CreateChickenCoopSchema = ChickenCoopSchema.omit({ chickenCoopId: true });
+export type CreateChickenCoop = z.infer<typeof CreateChickenCoopSchema>;

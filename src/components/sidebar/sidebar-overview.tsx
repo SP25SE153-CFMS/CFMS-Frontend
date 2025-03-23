@@ -76,7 +76,7 @@ export default function SidebarOverview() {
                                             >
                                                 <SidebarMenuSubButton asChild>
                                                     <Link href={`/category/${category.categoryId}`}>
-                                                        <span>{category.categoryType}</span>
+                                                        <span>{category.categoryCode}</span>
                                                     </Link>
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>

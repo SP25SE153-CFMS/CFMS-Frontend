@@ -10,6 +10,12 @@ export const getBreedingAreas = async () => {
     return response.data.data;
 };
 
+export const getBreedingAreasByFarmId = async (farmId: string) => {
+    const endpoint = PREFIX + '/Farm/' + farmId;
+    const response = await get<Response<BreedingArea[]>>(endpoint);
+    return response.data.data;
+};
+
 export const getBreedingAreaById = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
     const response = await get<Response<BreedingArea>>(endpoint);
@@ -17,12 +23,15 @@ export const getBreedingAreaById = async (id: string) => {
 };
 
 export const createBreedingArea = async (body: BreedingArea) => {
+    console.log('create');
     const endpoint = PREFIX;
     const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };
 
 export const updateBreedingArea = async (body: BreedingArea) => {
+    console.log('update');
+
     const endpoint = PREFIX;
     const response = await put<Response<string>>(endpoint, body);
     return response.data;
