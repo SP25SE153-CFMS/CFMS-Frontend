@@ -1,7 +1,7 @@
-import config from "@/configs"
-import { env } from "@/env"
-import axios, { AxiosResponse } from "axios"
-import { getCookie } from "cookies-next"
+import config from '@/configs';
+import { env } from '@/env';
+import axios, { AxiosResponse } from 'axios';
+import { getCookie } from 'cookies-next';
 
 /**
  * Creates an Axios instance for making HTTP requests.
@@ -18,18 +18,23 @@ export const request = <T>(
     method: string,
     headers: object = {},
     params: object = {},
-    body: object = {}
+    body: object = {},
 ): Promise<AxiosResponse<T>> => {
-    const accessToken = getCookie(config.cookies.accessToken)
+    const accessToken = getCookie(config.cookies.accessToken);
+    const url = endpoint.startsWith('http') ? endpoint : env.NEXT_PUBLIC_API_URL + endpoint;
 
     return axios({
-        url: env.NEXT_PUBLIC_API_URL + endpoint,
+        url,
         method: method,
-        headers: Object.assign({}, headers, accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        headers: Object.assign(
+            {},
+            headers,
+            accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+        ),
         params: Object.assign(params),
         data: body,
-    })
-}
+    });
+};
 
 /**
  * Sends a GET request to the specified endpoint.
@@ -42,9 +47,9 @@ export const request = <T>(
 export const get = <T>(
     endpoint: string,
     params: object = {},
-    headers: object = {}
+    headers: object = {},
 ): Promise<AxiosResponse<T>> => {
-    return request<T>(endpoint, "GET", headers, params);
+    return request<T>(endpoint, 'GET', headers, params);
 };
 
 /**
@@ -60,9 +65,9 @@ export const post = <T>(
     endpoint: string,
     body: object = {},
     params: object = {},
-    headers: object = {}
+    headers: object = {},
 ): Promise<AxiosResponse<T>> => {
-    return request<T>(endpoint, "POST", headers, params, body);
+    return request<T>(endpoint, 'POST', headers, params, body);
 };
 
 /**
@@ -78,9 +83,9 @@ export const put = <T>(
     endpoint: string,
     body: object = {},
     params: object = {},
-    headers: object = {}
+    headers: object = {},
 ): Promise<AxiosResponse<T>> => {
-    return request<T>(endpoint, "PUT", headers, params, body);
+    return request<T>(endpoint, 'PUT', headers, params, body);
 };
 
 /**
@@ -96,7 +101,7 @@ export const remove = <T>(
     endpoint: string,
     body: object = {},
     params: object = {},
-    headers: object = {}
+    headers: object = {},
 ): Promise<AxiosResponse<T>> => {
-    return request<T>(endpoint, "DELETE", headers, params, body);
+    return request<T>(endpoint, 'DELETE', headers, params, body);
 };

@@ -8,20 +8,36 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import { setCookie } from 'cookies-next';
+import { useMutation } from '@tanstack/react-query';
+import { signIn } from '@/services/auth.service';
+import toast from 'react-hot-toast';
 
 export default function Page() {
     const router = useRouter();
 
+    // TODO: Remove hard-coded
     const form = useForm({
         defaultValues: {
-            email: '',
-            password: '',
+            mail: 'duongtruong@gmail.com',
+            password: '1',
         },
     });
 
-    const onSubmit = (data: any) => {
-        console.log('Data: ', data);
-        router.push(config.routes.farm);
+    const mutation = useMutation({
+        mutationFn: signIn,
+        onSuccess: (response) => {
+            toast.success(response.message);
+            setCookie(config.cookies.accessToken, response.data.accessToken);
+            router.push(config.routes.farm);
+        },
+        onError: (err: any) => {
+            toast.error(err?.response?.data?.message);
+        },
+    });
+
+    const onSubmit = async (data: { mail: string; password: string }) => {
+        mutation.mutate(data);
     };
 
     return (
@@ -64,7 +80,7 @@ export default function Page() {
                             {/* Email */}
                             <FormField
                                 control={form.control}
-                                name="email"
+                                name="mail"
                                 render={({ field }) => (
                                     <FormItem className="w-full">
                                         <FormControl>
@@ -103,6 +119,7 @@ export default function Page() {
 
                             <Button
                                 type="submit"
+                                disabled={mutation.isPending}
                                 className="w-[531px] h-[80px] text-white text-[24px] font-semibold rounded-[16px] bg-primary hover:bg-primary-dark not-italic leading-[normal]"
                             >
                                 Đăng nhập

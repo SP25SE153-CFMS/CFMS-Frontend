@@ -8,6 +8,12 @@ import Link from 'next/link';
 import { DataTableRowActions } from './data-table-row-actions';
 import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import config from '@/configs';
+import {
+    BreedingAreaStatus,
+    breedingAreaStatusLabels,
+    breedingAreaStatusVariant,
+} from '@/utils/enum/status.enum';
+import { Badge } from '@/components/ui/badge';
 
 export const columns: ColumnDef<BreedingArea>[] = [
     {
@@ -52,15 +58,19 @@ export const columns: ColumnDef<BreedingArea>[] = [
         cell: ({ row }) => (
             <Link
                 href={`${config.routes.chickenCoop}?breedingAreaId=${row.getValue('breedingAreaId')}`}
+                onClick={() =>
+                    sessionStorage.setItem('breedingAreaId', row.getValue('breedingAreaId'))
+                }
             >
                 {row.getValue('breedingAreaName')}
             </Link>
         ),
     },
-    {
-        accessorKey: 'mealsPerDay',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Bữa ăn/ngày" />,
-    },
+    // {
+    //     accessorKey: 'notes',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Ghi chú" />,
+    //     cell: ({ row }) => <div className="w-[200px] truncate">{row.getValue('notes')}</div>,
+    // },
     {
         accessorKey: 'area',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Diện tích" />,
@@ -72,6 +82,18 @@ export const columns: ColumnDef<BreedingArea>[] = [
         cell: ({ row }) => {
             const chickenCoops = row.getValue('chickenCoops') as ChickenCoop[];
             return <div className="w-[80px]">{chickenCoops?.length ?? 0}</div>;
+        },
+    },
+    {
+        accessorKey: 'status',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
+        cell: ({ row }) => {
+            const status = row.getValue('status') as BreedingAreaStatus;
+            return (
+                <Badge variant={breedingAreaStatusVariant[status]}>
+                    {breedingAreaStatusLabels[status]}
+                </Badge>
+            );
         },
     },
     {
