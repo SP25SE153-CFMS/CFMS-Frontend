@@ -17,6 +17,8 @@ import { User } from '../schemas/user.schema';
 import { TaskLog } from '../schemas/task-log.schema';
 import { HarvestDetail, HarvestLog } from '../schemas/harvest-log.schema';
 import { FeedSchedule, FlockNutrition, Nutrition } from '../schemas/nutrition.schema';
+import { InventoryReceipt } from '../schemas/inventory-receipt.schema';
+import { InventoryReceiptDetail } from '../schemas/inventory-receipt-detail.schema';
 
 export const labels = [
     {
@@ -1644,3 +1646,76 @@ export const flockNutritions: FlockNutrition[] = [
         endDate: '2025-03-31T00:00:00Z',
     },
 ];
+
+export const inventoryReceipts: InventoryReceipt[] = [
+    {
+        inventoryReceiptId: '550e8400-e29b-41d4-a716-446655440000',
+        inventoryCode: 'INV1234567890',
+        inventoryRequestId: '660e8400-e29b-41d4-a716-446655440001',
+        receiptTypeId: '770e8400-e29b-41d4-a716-446655440002',
+        subcategoryName: 'Nhập',
+        wareFromId: '880e8400-e29b-41d4-a716-446655440003',
+        wareToId: '990e8400-e29b-41d4-a716-446655440004',
+        status: 0,
+        createdBy: 'aa0e8400-e29b-41d4-a716-446655440005',
+        createDate: '2024-03-22T12:30:00Z',
+    },
+    {
+        inventoryReceiptId: '550e8400-e29b-41d4-a716-446655440088',
+        inventoryCode: 'INV1234567888',
+        inventoryRequestId: '660e8400-e29b-41d4-a716-446655440001',
+        receiptTypeId: '770e8400-e29b-41d4-a716-446655440002',
+        subcategoryName: 'Nhập',
+        wareFromId: '880e8400-e29b-41d4-a716-446655440003',
+        wareToId: '990e8400-e29b-41d4-a716-446655440004',
+        status: 1,
+        createdBy: 'aa0e8400-e29b-41d4-a716-446655440005',
+        createDate: '2024-03-22T12:30:00Z',
+    },
+    {
+        inventoryReceiptId: '660e8400-e29b-41d4-a716-446655440006',
+        inventoryCode: 'INV0987654321',
+        inventoryRequestId: '770e8400-e29b-41d4-a716-446655440007',
+        receiptTypeId: '880e8400-e29b-41d4-a716-446655440008',
+        subcategoryName: 'Xuất',
+        wareFromId: '990e8400-e29b-41d4-a716-446655440009',
+        wareToId: 'aa0e8400-e29b-41d4-a716-446655440010',
+        status: 2,
+        createdBy: 'bb0e8400-e29b-41d4-a716-446655440011',
+        createDate: '2024-03-21T09:15:00Z',
+    }
+];
+
+export const inventoryReceiptDetails: InventoryReceiptDetail[] = [
+    {
+        inventoryReceiptDetailId: '110e8400-e29b-41d4-a716-446655440012',
+        inventoryReceiptId: '550e8400-e29b-41d4-a716-446655440000', // Liên kết với phiếu nhập đầu tiên
+        resourceId: '220e8400-e29b-41d4-a716-446655440013',
+        actualQuantity: 100,
+        unitId: '330e8400-e29b-41d4-a716-446655440014',
+        reason: 'Nhập Cám A1 từ nhà cung cấp',
+        actualDate: '2024-03-22T14:00:00Z',
+        note: 'Kiểm tra chất lượng OK',
+    },
+    {
+        inventoryReceiptDetailId: '120e8400-e29b-41d4-a716-446655440015',
+        inventoryReceiptId: '550e8400-e29b-41d4-a716-446655440088', // Liên kết với phiếu nhập đầu tiên
+        resourceId: '230e8400-e29b-41d4-a716-446655440016',
+        actualQuantity: 50,
+        unitId: '340e8400-e29b-41d4-a716-446655440017',
+        reason: 'Nhập kho bổ sung',
+        actualDate: '2024-03-22T15:30:00Z',
+        note: 'Chưa kiểm tra hết',
+    },
+    {
+        inventoryReceiptDetailId: '130e8400-e29b-41d4-a716-446655440018',
+        inventoryReceiptId: '660e8400-e29b-41d4-a716-446655440006', // Liên kết với phiếu nhập thứ ba
+        resourceId: '240e8400-e29b-41d4-a716-446655440019',
+        actualQuantity: 200,
+        unitId: '350e8400-e29b-41d4-a716-446655440020',
+        reason: 'Xuất kho cho chuồng A1',
+        actualDate: '2024-03-21T10:45:00Z',
+        note: 'Cần kiểm tra lại số lượng',
+    },
+];
+
