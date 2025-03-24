@@ -64,10 +64,13 @@ export const sidebarItems: NavGroup[] = [
                 icon: Warehouse,
                 subItems: [
                     { title: 'Danh sách thức ăn', path: config.routes.food },
-                    { title: 'Xuất/Nhập kho', path: config.routes.breadingArea },
                     { title: 'Danh sách trang thiết bị', path: config.routes.equipment },
-                    { title: 'Danh sách phiếu yêu cầu', path: config.routes.request },
                     { title: 'Danh mục vaccine', path: config.routes.vaccine },
+                    { title: 'Danh sách phiếu yêu cầu', path: config.routes.request },
+                    {
+                        title: 'Danh sách phiếu nhập/xuất kho',
+                        path: config.routes.inventoryReceipt,
+                    },
                 ],
             },
         ],

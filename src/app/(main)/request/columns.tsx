@@ -7,6 +7,7 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import { Badge } from '@/components/ui/badge';
 import dayjs from 'dayjs';
 import { requestStatusLabels, requestStatusVariant } from '@/utils/enum/status.enum';
+import { DataTableRowActions } from './data-table-row-ations';
 
 export const columns: ColumnDef<Request>[] = [
     {
@@ -78,14 +79,20 @@ export const columns: ColumnDef<Request>[] = [
             );
         },
     },
+    // {
+    //     accessorKey: 'actions',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Hành động" />,
+    //     cell: () => (
+    //         <p>
+    //             <span className="text-primary cursor-pointer">Duyệt</span> |{' '}
+    //             <span className="text-red-500 cursor-pointer">Hủy</span>
+    //         </p>
+    //     ),
+    // },
+
+    // Làm logic view detail với tạo phiếu cho dễ
     {
-        accessorKey: 'actions',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Hành động" />,
-        cell: () => (
-            <p>
-                <span className="text-primary cursor-pointer">Duyệt</span> |{' '}
-                <span className="text-red-500 cursor-pointer">Hủy</span>
-            </p>
-        ),
-    },
+        id: "actions",
+        cell: ({row}) => <DataTableRowActions row={row} />
+    }
 ];

@@ -1,10 +1,16 @@
 import { InventoryReceiptDetail } from '@/utils/schemas/inventory-receipt-detail.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
+import { inventoryReceiptDetails } from '@/utils/data/table.data';
 
 const PREFIX = '/api/InventoryReceiptDetail';
 
 export const getInventoryReceiptDetails = async () => {
+    const isMock = true;
+    if (isMock) {
+        return inventoryReceiptDetails;
+    }
+    
     const endpoint = PREFIX;
     const response = await get<Response<InventoryReceiptDetail[]>>(endpoint);
     return response.data.data;
