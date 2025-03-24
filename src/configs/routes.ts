@@ -17,6 +17,7 @@ const routes = {
     vaccine: '/warehouse/vaccines',
     employee: '/employee',
     farmEmployee: '/farm-employee',
+    forgotPassword: '/forgot-password'
 };
 
 export default routes;
