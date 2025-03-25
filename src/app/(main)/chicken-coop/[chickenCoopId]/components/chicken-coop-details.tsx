@@ -5,7 +5,7 @@ import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import config from '@/configs';
 import { cn } from '@/lib/utils';
-import { getBreedingAreas } from '@/services/breeding-area.service';
+import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
 import { useChickenCoopStore } from '@/store/use-chicken-coop';
 import { chickenCoopStatusLabels, chickenCoopStatusVariant } from '@/utils/enum/status.enum';
 import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
@@ -41,7 +41,7 @@ const ChickenCoopDetails = () => {
 
     const { data: breedingAreas } = useQuery({
         queryKey: ['breedingAreas'],
-        queryFn: () => getBreedingAreas(),
+        queryFn: () => getBreedingAreasByFarmId(sessionStorage.getItem('farmId') ?? ''),
     });
 
     const currentBreedingArea = breedingAreas?.find(

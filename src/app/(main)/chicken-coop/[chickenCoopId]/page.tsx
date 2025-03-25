@@ -2,7 +2,17 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Plus, Database } from 'lucide-react';
+import {
+    Plus,
+    Database,
+    Calendar,
+    PenToolIcon,
+    Layers,
+    Home,
+    ChevronRight,
+    BarChart3,
+    Target,
+} from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -17,6 +27,13 @@ import { useQuery } from '@tanstack/react-query';
 import { getChickenCoopById } from '@/services/chicken-coop.service';
 import { useEffect } from 'react';
 import { useChickenCoopStore } from '@/store/use-chicken-coop';
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 
 export default function Page() {
     const { chickenCoopId }: { chickenCoopId: string } = useParams();
@@ -59,16 +76,18 @@ export default function Page() {
                     <Card className="p-6 mb-6">
                         <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                             <div>
-                                <h2 className="text-xl font-bold tracking-tight">
+                                <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
+                                    <BarChart3 size={20} className="text-primary" />
                                     Chỉ số kỹ thuật
                                 </h2>
-                                <p className="text-muted-foreground">
-                                    Danh sách tất cả chỉ số kỹ thuật của chuồng nuôi
+                                <p className="text-muted-foreground text-sm">
+                                    Theo dõi các chỉ số kỹ thuật quan trọng của chuồng nuôi
                                 </p>
                             </div>
                             <div className="flex gap-2">
-                                <Button variant="outline" className="space-x-1">
-                                    <span>Mục tiêu</span> <Plus size={18} />
+                                <Button variant="outline" className="gap-2">
+                                    <Target size={16} />
+                                    <span>Thiết lập mục tiêu</span>
                                 </Button>
                             </div>
                         </div>
@@ -95,10 +114,19 @@ export default function Page() {
                     </Card>
 
                     <Tabs defaultValue="task" className="w-auto">
-                        <TabsList className="grid w-full grid-cols-3">
-                            <TabsTrigger value="task">Nhật ký công việc</TabsTrigger>
-                            <TabsTrigger value="equipment">Trang thiết bị</TabsTrigger>
-                            <TabsTrigger value="harvest">Thu hoạch</TabsTrigger>
+                        <TabsList className="grid w-full grid-cols-3 h-auto">
+                            <TabsTrigger value="task" className="flex items-center gap-2 py-2">
+                                <Calendar size={12} />
+                                <span>Nhật ký công việc</span>
+                            </TabsTrigger>
+                            <TabsTrigger value="equipment" className="flex items-center gap-2 py-2">
+                                <PenToolIcon size={12} />
+                                <span>Trang thiết bị</span>
+                            </TabsTrigger>
+                            <TabsTrigger value="harvest" className="flex items-center gap-2 py-2">
+                                <Layers size={12} />
+                                <span>Thu hoạch</span>
+                            </TabsTrigger>
                         </TabsList>
                         <TabsContent value="task">
                             <CardTask taskLogs={chickenCoop.taskLogs} />
