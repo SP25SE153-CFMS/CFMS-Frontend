@@ -19,7 +19,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import ChickenCoopForm from '@/components/forms/chicken-coop-form';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getChickenCoopsByBreedingAreaId } from '@/services/chicken-coop.service';
-import { getBreedingAreas } from '@/services/breeding-area.service';
+import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { Input } from '@/components/ui/input';
@@ -52,7 +52,7 @@ export default function Page() {
     // Fetch all breeding areas
     const { data: breedingAreas, isLoading: isLoadingBreedingAreas } = useQuery({
         queryKey: ['breedingAreas'],
-        queryFn: getBreedingAreas,
+        queryFn: () => getBreedingAreasByFarmId(sessionStorage.getItem('farmId') ?? ''),
     });
 
     // Set initial breeding area from sessionStorage
@@ -228,7 +228,7 @@ export default function Page() {
                 </div>
 
                 <div className="w-full h-[50vh] flex items-center justify-center p-4">
-                    <Card className="w-full max-w-md shadow-lg border-muted/40">
+                    <Card className="w-full max-w-md shadow-lg border-muted/40 mt-24">
                         <CardContent className="flex flex-col justify-center items-center pt-6 pb-8 gap-6">
                             <div className="relative w-64 h-64">
                                 <Image

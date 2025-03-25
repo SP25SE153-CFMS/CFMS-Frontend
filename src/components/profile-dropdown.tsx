@@ -37,7 +37,7 @@ export function ProfileDropdown() {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
-                        <Link href={config.routes.signIn}>Thông tin cá nhân</Link>
+                        <Link href={config.routes.profile}>Thông tin cá nhân</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                         <Link href={config.routes.signIn}>Cài đặt</Link>

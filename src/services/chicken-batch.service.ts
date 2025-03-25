@@ -33,3 +33,9 @@ export const deleteChickenBatch = async (id: string) => {
     const response = await remove<Response<string>>(endpoint);
     return response.data;
 };
+
+export const getChickenBatchByCoopId = async (chickenCoopId: string) => {
+    const endpoint = PREFIX + '/Coop/' + chickenCoopId;
+    const response = await get<Response<ChickenBatch[]>>(endpoint);
+    return response.data.data;
+};

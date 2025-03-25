@@ -20,10 +20,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useQuery } from '@tanstack/react-query';
 import { deleteBreedingArea, getBreedingAreasByFarmId } from '@/services/breeding-area.service';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -32,9 +31,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
-import config from '@/configs';
-import Link from 'next/link';
-import { breedingAreaStatusLabels, breedingAreaStatusVariant } from '@/utils/enum/status.enum';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import toast from 'react-hot-toast';
 import {
@@ -44,6 +40,8 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
+import BreedingAreaCard from './card';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -51,35 +49,33 @@ export default function Page() {
     const [viewMode, setViewMode] = useState<'table' | 'grid'>('grid');
     const [statusFilter, setStatusFilter] = useState<string>('all');
 
-    const [openUpdate, setOpenUpdate] = useState(false);
-    const [openDelete, setOpenDelete] = useState(false);
-    const [row, setRow] = useState<any>();
-
-    const handleUpdate = (row: any) => {
+    const handleUpdate = (row: BreedingArea) => {
         setRow(row);
         setOpenUpdate(true);
     };
 
     const handleDelete = async (breedingAreaId: string) => {
+        console.log(row);
+
         await deleteBreedingArea(breedingAreaId).then(() => {
             toast.success('Đã xóa khu nuôi');
             setOpenDelete(false);
         });
     };
 
-    const openModal = () => setOpen(true);
-    const closeDialog = () => setOpen(false);
-    const onOpenChange = (val: boolean) => setOpen(val);
-
     const { data: breedingAreas, isLoading } = useQuery({
         queryKey: ['breedingAreas'],
         queryFn: () => getBreedingAreasByFarmId(sessionStorage.getItem('farmId') ?? ''),
     });
 
+    const [openUpdate, setOpenUpdate] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [row, setRow] = useState<BreedingArea>({} as BreedingArea);
+
     // Check if breedingAreas is loading
     if (isLoading) {
         return (
-            <div className="flex flex-col items-center justify-center h-[70vh] gap-4">
+            <div className="flex flex-col items-center justify-center h-[75vh] gap-4">
                 <LoadingSpinner />
                 <p className="text-muted-foreground animate-pulse">Đang tải dữ liệu khu nuôi...</p>
             </div>
@@ -111,7 +107,7 @@ export default function Page() {
                                 <ChevronLeft className="mr-1 h-4 w-4" />
                                 Quay lại
                             </Button>
-                            <Button onClick={openModal}>
+                            <Button onClick={() => setOpen(true)}>
                                 <Plus className="mr-1 h-4 w-4" />
                                 Tạo khu nuôi
                             </Button>
@@ -136,9 +132,28 @@ export default function Page() {
     const inactiveAreas = filteredBreedingAreas.filter((area) => area.status.toString() === '0');
     const activeAreas = filteredBreedingAreas.filter((area) => area.status.toString() === '1');
 
-    // Return the page
+    const renderBreedingAreas = () => {
+        if (viewMode === 'table') {
+            return <DataTable data={filteredBreedingAreas} columns={columns} />;
+        }
+        return (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredBreedingAreas.map((area) => (
+                    <BreedingAreaCard
+                        key={area.breedingAreaId}
+                        area={area}
+                        handleUpdate={handleUpdate}
+                        setOpenDelete={() => setOpenDelete(true)}
+                        setRow={setRow}
+                    />
+                ))}
+            </div>
+        );
+    };
+
     return (
         <div className="space-y-6">
+            {/* Header */}
             <div className="flex items-center text-sm text-muted-foreground">
                 <Button
                     variant="ghost"
@@ -153,6 +168,7 @@ export default function Page() {
                 <span>Khu nuôi</span>
             </div>
 
+            {/* Main Content */}
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">Quản lý khu nuôi</h1>
@@ -169,13 +185,14 @@ export default function Page() {
                         <Download className="mr-2 h-4 w-4" />
                         Xuất CSV
                     </Button>
-                    <Button className="h-9" onClick={openModal}>
+                    <Button className="h-9" onClick={() => setOpen(true)}>
                         <Plus className="mr-2 h-4 w-4" />
                         Tạo khu nuôi
                     </Button>
                 </div>
             </div>
 
+            {/* Tabs and Content */}
             <Card>
                 <CardHeader className="pb-3">
                     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -256,207 +273,15 @@ export default function Page() {
                                 Đang hoạt động ({activeAreas.length})
                             </TabsTrigger>
                         </TabsList>
-                        <TabsContent value="all" className="m-0">
-                            {viewMode === 'table' ? (
-                                <DataTable data={filteredBreedingAreas} columns={columns} />
-                            ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {filteredBreedingAreas.map((area) => (
-                                        <Card key={area.breedingAreaId} className="overflow-hidden">
-                                            <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
-                                                <div>
-                                                    <h3 className="font-semibold">
-                                                        {area.breedingAreaName}
-                                                    </h3>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        {area.breedingAreaCode}
-                                                    </p>
-                                                </div>
-                                                <Badge
-                                                    variant={breedingAreaStatusVariant[area.status]}
-                                                >
-                                                    {breedingAreaStatusLabels[area.status]}
-                                                </Badge>
-                                            </CardHeader>
-                                            <CardContent className="p-4 pt-2">
-                                                <p className="text-sm text-muted-foreground line-clamp-2">
-                                                    {area.notes || 'Không có ghi chú'}
-                                                </p>
-                                            </CardContent>
-                                            <CardFooter className="p-4 pt-0 flex justify-between">
-                                                <Link
-                                                    href={`${config.routes.chickenCoop}?breedingAreaId=${area.breedingAreaId}`}
-                                                    onClick={() =>
-                                                        sessionStorage.setItem(
-                                                            'breedingAreaId',
-                                                            area.breedingAreaId,
-                                                        )
-                                                    }
-                                                >
-                                                    <Button variant="outline" size="sm">
-                                                        Xem chuồng nuôi
-                                                    </Button>
-                                                </Link>
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" size="sm">
-                                                            <span className="sr-only">Mở menu</span>
-                                                            <Filter className="h-4 w-4" />
-                                                        </Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem
-                                                            onClick={() => handleUpdate(area)}
-                                                        >
-                                                            Chỉnh sửa
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem
-                                                            onClick={() => setOpenDelete(true)}
-                                                        >
-                                                            Xóa
-                                                        </DropdownMenuItem>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            </CardFooter>
-                                        </Card>
-                                    ))}
-                                </div>
-                            )}
-                        </TabsContent>
-                        <TabsContent value="0" className="m-0">
-                            {viewMode === 'table' ? (
-                                <DataTable data={filteredBreedingAreas} columns={columns} />
-                            ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {filteredBreedingAreas.map((area) => (
-                                        <Card key={area.breedingAreaId} className="overflow-hidden">
-                                            <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
-                                                <div>
-                                                    <h3 className="font-semibold">
-                                                        {area.breedingAreaName}
-                                                    </h3>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        {area.breedingAreaCode}
-                                                    </p>
-                                                </div>
-                                                <Badge variant="default">Hoạt động</Badge>
-                                            </CardHeader>
-                                            <CardContent className="p-4 pt-2">
-                                                <p className="text-sm text-muted-foreground line-clamp-2">
-                                                    {area.notes || 'Không có ghi chú'}
-                                                </p>
-                                            </CardContent>
-                                            <CardFooter className="p-4 pt-0 flex justify-between">
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    onClick={() => {
-                                                        sessionStorage.setItem(
-                                                            'breedingAreaId',
-                                                            area.breedingAreaId,
-                                                        );
-                                                        window.location.href = '/chicken-coops';
-                                                    }}
-                                                >
-                                                    Xem chuồng nuôi
-                                                </Button>
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" size="sm">
-                                                            <span className="sr-only">Mở menu</span>
-                                                            <Filter className="h-4 w-4" />
-                                                        </Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem
-                                                            onClick={() => handleUpdate(area)}
-                                                        >
-                                                            Chỉnh sửa
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem
-                                                            onClick={() => setOpenDelete(true)}
-                                                        >
-                                                            Xóa
-                                                        </DropdownMenuItem>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            </CardFooter>
-                                        </Card>
-                                    ))}
-                                </div>
-                            )}
-                        </TabsContent>
-                        <TabsContent value="1" className="m-0">
-                            {viewMode === 'table' ? (
-                                <DataTable data={filteredBreedingAreas} columns={columns} />
-                            ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {filteredBreedingAreas.map((area) => (
-                                        <Card key={area.breedingAreaId} className="overflow-hidden">
-                                            <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
-                                                <div>
-                                                    <h3 className="font-semibold">
-                                                        {area.breedingAreaName}
-                                                    </h3>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        {area.breedingAreaCode}
-                                                    </p>
-                                                </div>
-                                                <Badge variant="secondary">Tạm ngưng</Badge>
-                                            </CardHeader>
-                                            <CardContent className="p-4 pt-2">
-                                                <p className="text-sm text-muted-foreground line-clamp-2">
-                                                    {area.notes || 'Không có ghi chú'}
-                                                </p>
-                                            </CardContent>
-                                            <CardFooter className="p-4 pt-0 flex justify-between">
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    onClick={() => {
-                                                        sessionStorage.setItem(
-                                                            'breedingAreaId',
-                                                            area.breedingAreaId,
-                                                        );
-                                                        window.location.href = '/chicken-coops';
-                                                    }}
-                                                >
-                                                    Xem chuồng nuôi
-                                                </Button>
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" size="sm">
-                                                            <span className="sr-only">Mở menu</span>
-                                                            <Filter className="h-4 w-4" />
-                                                        </Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem
-                                                            onClick={() => handleUpdate(area)}
-                                                        >
-                                                            Chỉnh sửa
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem
-                                                            onClick={() => setOpenDelete(true)}
-                                                        >
-                                                            Xóa
-                                                        </DropdownMenuItem>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            </CardFooter>
-                                        </Card>
-                                    ))}
-                                </div>
-                            )}
-                        </TabsContent>
+                        <TabsContent value="all">{renderBreedingAreas()}</TabsContent>
+                        <TabsContent value="0">{renderBreedingAreas()}</TabsContent>
+                        <TabsContent value="1">{renderBreedingAreas()}</TabsContent>
                     </Tabs>
                 </CardContent>
             </Card>
 
-            <Dialog open={open} onOpenChange={onOpenChange}>
+            {/* Create Breeding Area Dialog */}
+            <Dialog open={open} onOpenChange={(val) => setOpen(val)}>
                 <DialogContent className="max-w-3xl">
                     <DialogHeader>
                         <DialogTitle>Tạo khu nuôi mới</DialogTitle>
@@ -465,13 +290,13 @@ export default function Page() {
                         </DialogDescription>
                     </DialogHeader>
                     <ScrollArea className="max-h-[70vh]">
-                        <BreedingAreaForm closeDialog={closeDialog} />
+                        <BreedingAreaForm closeDialog={() => setOpen(false)} />
                     </ScrollArea>
                 </DialogContent>
             </Dialog>
 
-            {/* Update Dialog */}
-            <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
+            {/* Update Breeding Area Dialog */}
+            <Dialog open={openUpdate} onOpenChange={(val) => setOpenUpdate(val)}>
                 <DialogContent className="max-w-3xl">
                     <DialogHeader>
                         <DialogTitle>Cập nhật khu nuôi</DialogTitle>
@@ -487,7 +312,7 @@ export default function Page() {
             </Dialog>
 
             {/* Delete Confirmation Dialog */}
-            <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
+            <AlertDialog open={openDelete} onOpenChange={(val) => setOpenDelete(val)}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
@@ -501,7 +326,7 @@ export default function Page() {
                         </Button>
                         <Button
                             variant="destructive"
-                            onClick={() => handleDelete(row.breedingAreaId)}
+                            onClick={() => handleDelete(row?.breedingAreaId)}
                         >
                             Xóa
                         </Button>

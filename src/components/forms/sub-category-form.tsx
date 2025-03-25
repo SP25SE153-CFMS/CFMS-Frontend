@@ -30,6 +30,9 @@ import { Textarea } from '../ui/textarea';
 import { useParams } from 'next/navigation';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { CategoryStatus, categoryStatusLabels } from '@/utils/enum/status.enum';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
+import { addSubCategory, updateSubCategory } from '@/services/category.service';
 
 interface SubCategoryFormProps {
     defaultValues?: Partial<SubCategory>;
@@ -53,10 +56,28 @@ export default function SubCategoryForm({ defaultValues, closeDialog }: SubCateg
         },
     });
 
+    // Query client
+    const queryClient = useQueryClient();
+
+    // Mutation for creating and updating
+    const mutation = useMutation({
+        mutationFn: defaultValues ? updateSubCategory : addSubCategory,
+        onSuccess: () => {
+            closeDialog();
+            queryClient.invalidateQueries({ queryKey: ['categories'] });
+            toast.success(
+                defaultValues ? 'Cập nhật danh mục con thành công' : 'Thêm danh mục con thành công',
+            );
+        },
+        onError: (error: any) => {
+            console.error(error);
+            toast.error(error?.response?.data?.message);
+        },
+    });
+
     // Form submit handler
     function onSubmit(values: SubCategory) {
-        console.log('SubCategory data:', values);
-        closeDialog();
+        mutation.mutate(values);
     }
 
     // Form error handler

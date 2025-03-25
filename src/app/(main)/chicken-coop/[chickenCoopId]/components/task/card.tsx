@@ -1,14 +1,12 @@
-import { taskLogs } from '@/utils/data/table.data';
 import { DataTable } from '@/components/table/data-table';
 import { columns } from './columns';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
+import { TaskLog } from '@/utils/schemas/task-log.schema';
 
-export default function CardTask({ chickenCoopId }: { chickenCoopId: string }) {
-    const currentTaskLogs = taskLogs.filter((tasklog) => tasklog.chickenCoopId === chickenCoopId);
-
+export default function CardTask({ taskLogs }: { taskLogs: TaskLog[] }) {
     return (
         <Card className="p-6 mb-4">
             <div className="flex flex-wrap items-center justify-between gap-x-4 space-y-2">
@@ -20,14 +18,14 @@ export default function CardTask({ chickenCoopId }: { chickenCoopId: string }) {
                     <Button
                         variant="outline"
                         className="space-x-1"
-                        onClick={() => downloadCSV(currentTaskLogs, 'task-logs.csv')}
+                        onClick={() => downloadCSV(taskLogs, 'task-logs.csv')}
                     >
                         <span>Tải file</span> <Download size={18} />
                     </Button>
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={currentTaskLogs} columns={columns} />
+                <DataTable data={taskLogs} columns={columns} />
             </div>
         </Card>
     );

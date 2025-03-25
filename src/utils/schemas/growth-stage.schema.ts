@@ -4,6 +4,7 @@ export const GrowthStageSchema = z.object({
     growthStageId: z
         .string()
         .uuid({ message: 'ID giai đoạn tăng trưởng không hợp lệ, phải là UUID' }),
+    stageCode: z.string().min(1, { message: 'Mã giai đoạn là bắt buộc' }),
     stageName: z.string().min(1, { message: 'Tên giai đoạn là bắt buộc' }),
     chickenType: z.string().uuid({ message: 'ID loại gà không hợp lệ, phải là UUID' }),
     minAgeWeek: z
