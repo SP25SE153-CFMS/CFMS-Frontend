@@ -4,7 +4,7 @@ import type React from 'react';
 
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { AlignRight, Calendar, CalendarIcon, Eye, Timer, TrendingUp } from 'lucide-react';
+import { AlignRight, Calendar, CalendarIcon, Info, Timer, TrendingUp } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -49,14 +49,14 @@ import { addDays, format } from 'date-fns';
 import { Calendar as CalendarPicker } from '@/components/ui/calendar';
 
 // Calculate the duration in days between start date and now
-const calculateDuration = (startDate: string, endDate: string | null) => {
+const calculateDuration = (startDate: Date, endDate: Date | null) => {
     const start = dayjs(startDate);
     const end = endDate ? dayjs(endDate) : dayjs();
     return end.diff(start, 'day');
 };
 
 // Progress bar component for batch duration
-const BatchProgress = ({ startDate, endDate }: { startDate: string; endDate: string | null }) => {
+const BatchProgress = ({ startDate, endDate }: { startDate: Date; endDate: Date | null }) => {
     const duration = calculateDuration(startDate, null);
     const total = calculateDuration(startDate, endDate);
 
@@ -215,7 +215,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                             href={`${config.routes.chickenBatch}/${currentChickenBatch?.chickenBatchId}`}
                             className={cn(buttonVariants({ variant: 'outline' }), 'w-full group')}
                         >
-                            <Eye
+                            <Info
                                 size={16}
                                 className="mr-2 group-hover:text-primary transition-colors"
                             />

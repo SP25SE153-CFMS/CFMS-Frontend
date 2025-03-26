@@ -13,9 +13,11 @@ export const ChickenSchema = z.object({
 
     status: z.number().int({ message: 'Trạng thái phải là số nguyên' }),
 
-    purposeId: z.string().uuid({ message: 'ID mục đích không hợp lệ, phải là UUID' }),
+    // purposeId: z.string().uuid({ message: 'ID mục đích không hợp lệ, phải là UUID' }),
 
-    chickenBatchId: z.string().uuid({ message: 'ID lô gà không hợp lệ, phải là UUID' }),
+    chickenTypeId: z.string().uuid({ message: 'ID loại không hợp lệ, phải là UUID' }),
+
+    chickenBatchId: z.string().uuid({ message: 'ID lứa nuôi không hợp lệ, phải là UUID' }),
 
     createdDate: z
         .string()

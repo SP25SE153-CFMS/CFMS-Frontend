@@ -66,9 +66,9 @@ export const columns: ColumnDef<ChickenCoop>[] = [
         ),
     },
     {
-        accessorKey: 'capacity',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Sức chứa" />,
-        cell: ({ row }) => <div className="w-[80px]">{row.getValue('capacity')} con</div>,
+        accessorKey: 'currentQuantity',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng" />,
+        cell: ({ row }) => <div className="w-[80px]">{row.getValue('currentQuantity')} con</div>,
     },
     {
         accessorKey: 'status',

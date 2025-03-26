@@ -1,6 +1,6 @@
 'use client';
 
-import { flocks, techinicalIndicators } from '@/utils/data/table.data';
+import { flocks, chickenCoopIndicators } from '@/utils/data/table.data';
 import { AlignRight, Database } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
@@ -86,7 +86,7 @@ export default function Page() {
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Đổi đàn gà..." />
                                             </SelectTrigger>
-                                            <SelectContent className="h-72">
+                                            <SelectContent className="max-h-72">
                                                 {flocks.map((flock) => (
                                                     <SelectItem
                                                         key={flock.flockId}
@@ -156,7 +156,7 @@ export default function Page() {
                                 </h3>
                             </div>
                             <div className="flex flex-wrap justify-between">
-                                {techinicalIndicators.map((indicator) => (
+                                {chickenCoopIndicators.map((indicator) => (
                                     <div
                                         key={indicator.id}
                                         className="flex flex-auto p-2 border gap-2 items-center"

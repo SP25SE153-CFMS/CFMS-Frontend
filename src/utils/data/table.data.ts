@@ -19,6 +19,7 @@ import { HarvestDetail, HarvestLog } from '../schemas/harvest-log.schema';
 import { FeedSchedule, FlockNutrition, Nutrition } from '../schemas/nutrition.schema';
 import { InventoryReceipt } from '../schemas/inventory-receipt.schema';
 import { InventoryReceiptDetail } from '../schemas/inventory-receipt-detail.schema';
+import { Food } from '../schemas/food.schema';
 
 export const labels = [
     {
@@ -714,8 +715,8 @@ export const chickenBatches: ChickenBatch[] = [
         chickenBatchId: '550e8400-e29b-41d4-a716-446655440000',
         chickenCoopId: chickenCoops[0].chickenCoopId,
         chickenBatchName: 'Lứa Xuân Sớm',
-        startDate: '2024-01-10',
-        endDate: '2024-05-15',
+        startDate: new Date('2024-01-10'),
+        endDate: new Date('2024-05-15'),
         note: 'Lứa nuôi mùa xuân, thời tiết mát mẻ.',
         status: '0',
     },
@@ -723,8 +724,8 @@ export const chickenBatches: ChickenBatch[] = [
         chickenBatchId: '6a1f73b6-1dd2-11b2-87f3-fda0b64f5d9e',
         chickenCoopId: chickenCoops[0].chickenCoopId,
         chickenBatchName: 'Lứa Gà Đồi',
-        startDate: '2024-02-05',
-        endDate: '2024-06-20',
+        startDate: new Date('2024-02-05'),
+        endDate: new Date('2024-06-20'),
         note: 'Gà thả đồi, chất lượng thịt thơm ngon.',
         status: '0',
     },
@@ -732,8 +733,8 @@ export const chickenBatches: ChickenBatch[] = [
         chickenBatchId: '7c5d4e2a-45b6-4c8f-83d5-8c529ac7a73e',
         chickenCoopId: chickenCoops[2].chickenCoopId,
         chickenBatchName: 'Lứa Gà Tre',
-        startDate: '2024-03-01',
-        endDate: '2024-07-10',
+        startDate: new Date('2024-03-01'),
+        endDate: new Date('2024-07-10'),
         note: 'Nuôi gà tre, thịt chắc và dai.',
         status: '0',
     },
@@ -741,8 +742,8 @@ export const chickenBatches: ChickenBatch[] = [
         chickenBatchId: '9d8a7e6b-2b4c-4a1f-9573-66e3d5b9cdef',
         chickenCoopId: chickenCoops[1].chickenCoopId,
         chickenBatchName: 'Lứa Gà Ta',
-        startDate: '2024-04-15',
-        endDate: '2024-08-30',
+        startDate: new Date('2024-04-15'),
+        endDate: new Date('2024-08-30'),
         note: 'Nuôi gà ta truyền thống.',
         status: '0',
     },
@@ -750,8 +751,8 @@ export const chickenBatches: ChickenBatch[] = [
         chickenBatchId: '2e4b6c7d-8a9f-5b3e-4c2d-1f6e7a8d9c5b',
         chickenCoopId: chickenCoops[1].chickenCoopId,
         chickenBatchName: 'Lứa Gà Chọi',
-        startDate: '2024-05-10',
-        endDate: '2024-09-25',
+        startDate: new Date('2024-05-10'),
+        endDate: new Date('2024-09-25'),
         note: 'Lứa gà chọi giống Bình Định.',
         status: '0',
     },
@@ -759,8 +760,8 @@ export const chickenBatches: ChickenBatch[] = [
         chickenBatchId: '6e7f8d9c-5b4e-3a2d-1f9b7c6d8a4e',
         chickenCoopId: chickenCoops[3].chickenCoopId,
         chickenBatchName: 'Lứa Gà Công Nghiệp',
-        startDate: '2024-06-20',
-        endDate: '2024-10-15',
+        startDate: new Date('2024-06-20'),
+        endDate: new Date('2024-10-15'),
         note: 'Nuôi gà công nghiệp, thời gian nuôi nhanh.',
         status: '1',
     },
@@ -768,7 +769,7 @@ export const chickenBatches: ChickenBatch[] = [
         chickenBatchId: '1f6e7a8d-9c5b-4e3a-2d7c8b6d9a4f',
         chickenCoopId: chickenCoops[4].chickenCoopId,
         chickenBatchName: 'Lứa Gà Siêu Trứng',
-        startDate: '2024-07-05',
+        startDate: new Date('2024-07-05'),
         endDate: null,
         note: 'Lứa nuôi chuyên lấy trứng.',
         status: '1',
@@ -777,7 +778,7 @@ export const chickenBatches: ChickenBatch[] = [
         chickenBatchId: '3e9d7c6b-5a4f-2d1b-8c6e7a9d8c4f',
         chickenCoopId: chickenCoops[1].chickenCoopId,
         chickenBatchName: 'Lứa Gà Giống',
-        startDate: '2024-08-10',
+        startDate: new Date('2024-08-10'),
         endDate: null,
         note: 'Nuôi gà giống phục vụ nhân giống.',
         status: '1',
@@ -786,8 +787,8 @@ export const chickenBatches: ChickenBatch[] = [
         chickenBatchId: '4e7d8c9a-5b6f-3a2d-1b9c7d6e8a4f',
         chickenCoopId: chickenCoops[1].chickenCoopId,
         chickenBatchName: 'Lứa Gà Tết',
-        startDate: '2024-09-15',
-        endDate: '2025-01-20',
+        startDate: new Date('2024-09-15'),
+        endDate: new Date('2025-01-20'),
         note: 'Lứa nuôi phục vụ thị trường Tết Nguyên Đán.',
         status: '2',
     },
@@ -795,7 +796,7 @@ export const chickenBatches: ChickenBatch[] = [
         chickenBatchId: '5e9d7c6b-4a3f-2d1b-8c7a9d6e8f4b',
         chickenCoopId: chickenCoops[1].chickenCoopId,
         chickenBatchName: 'Lứa Gà Thả Vườn',
-        startDate: '2024-10-01',
+        startDate: new Date('2024-10-01'),
         endDate: null,
         note: 'Nuôi gà thả vườn, thịt săn chắc.',
         status: '1',
@@ -804,8 +805,8 @@ export const chickenBatches: ChickenBatch[] = [
         chickenBatchId: '6e8d9c7b-5a4f-3a2d-1b9c7d6e8a4f',
         chickenCoopId: chickenCoops[1].chickenCoopId,
         chickenBatchName: 'Lứa Gà Hè',
-        startDate: '2024-11-10',
-        endDate: '2025-03-15',
+        startDate: new Date('2024-11-10'),
+        endDate: new Date('2025-03-15'),
         note: 'Lứa nuôi hè, cần chú ý chống nóng.',
         status: '2',
     },
@@ -813,8 +814,8 @@ export const chickenBatches: ChickenBatch[] = [
         chickenBatchId: '7e9d6c5b-4a3f-2d1b-8c7a9d6e8f4b',
         chickenCoopId: chickenCoops[1].chickenCoopId,
         chickenBatchName: 'Lứa Gà Đông',
-        startDate: '2024-12-05',
-        endDate: '2025-04-20',
+        startDate: new Date('2024-12-05'),
+        endDate: new Date('2025-04-20'),
         note: 'Lứa gà nuôi mùa đông, chú ý giữ ấm.',
         status: '2',
     },
@@ -1288,11 +1289,18 @@ export const vaccinationLogs: VaccinationLog[] = [
     },
 ];
 
-export const techinicalIndicators = [
+export const chickenCoopIndicators = [
     { id: 1, name: 'NGÀY NUÔI', value: '9' },
     { id: 2, name: 'TỔNG ĐÀN', value: '9820 con' },
     { id: 4, name: 'MẬT ĐỘ', value: '9.18 con/m2' },
     { id: 5, name: 'SL THU HOẠCH', value: '136 (1,36%)' },
+];
+
+export const chickenBatchIndicators = [
+    { id: 1, name: 'GÀ CHẾT', value: '10 con' },
+    { id: 2, name: 'GÀ SỐNG', value: '9810 con' },
+    { id: 3, name: 'TỔNG ĐÀN', value: '9820 con' },
+    { id: 4, name: 'KL THỨC ĂN', value: '1250 kg' },
 ];
 
 export const users: User[] = [
@@ -1715,5 +1723,53 @@ export const inventoryReceiptDetails: InventoryReceiptDetail[] = [
         reason: 'Xuất kho cho chuồng A1',
         actualDate: '2024-03-21T10:45:00Z',
         note: 'Cần kiểm tra lại số lượng',
+    },
+];
+
+export const foods: Food[] = [
+    {
+        foodId: 'd290f1ee-6c54-4b01-90e6-d701748f0851',
+        foodCode: 'TA001',
+        foodName: 'Thức ăn gà con',
+        note: 'Dùng cho gà con dưới 1 tháng tuổi',
+        foodIngredientId: 'a3f1c2d4-5b67-4e89-8a2b-3c4d5e6f7g8h',
+        productionDate: '2023-09-01T08:00:00Z',
+        expiryDate: '2024-09-01T08:00:00Z',
+    },
+    {
+        foodId: 'e3a1f2d3-4b56-7c89-8a2b-3c4d5e6f7g8h',
+        foodCode: 'TA002',
+        foodName: 'Thức ăn tăng trưởng',
+        note: 'Dùng cho gà từ 1 đến 3 tháng tuổi',
+        foodIngredientId: 'b4f2c3d5-6e78-4f90-9b3c-4d5e6f7g8h9i',
+        productionDate: '2023-08-15T08:00:00Z',
+        expiryDate: '2024-08-15T08:00:00Z',
+    },
+    {
+        foodId: 'f4b2c3d5-6e78-4f90-9b3c-4d5e6f7g8h9i',
+        foodCode: 'TA003',
+        foodName: 'Thức ăn đẻ trứng',
+        note: 'Dùng cho gà mái đẻ trứng',
+        foodIngredientId: 'c5d3e4f6-7g89-4h01-9b3c-4d5e6f7g8h9i',
+        productionDate: '2023-07-10T08:00:00Z',
+        expiryDate: '2024-07-10T08:00:00Z',
+    },
+    {
+        foodId: 'g5d3e4f6-7g89-4h01-9b3c-4d5e6f7g8h9i',
+        foodCode: 'TA004',
+        foodName: 'Thức ăn tăng trọng',
+        note: 'Dùng cho gà thịt trước khi xuất chuồng',
+        foodIngredientId: 'd6e4f5g7-8h90-4i12-9b3c-4d5e6f7g8h9i',
+        productionDate: '2023-06-20T08:00:00Z',
+        expiryDate: '2024-06-20T08:00:00Z',
+    },
+    {
+        foodId: 'h6e4f5g7-8h90-4i12-9b3c-4d5e6f7g8h9i',
+        foodCode: 'TA005',
+        foodName: 'Thức ăn bổ sung',
+        note: 'Dùng để bổ sung dinh dưỡng cho gà',
+        foodIngredientId: 'e7f5g6h8-9i01-4j23-9b3c-4d5e6f7g8h9i',
+        productionDate: '2023-05-05T08:00:00Z',
+        expiryDate: '2024-05-05T08:00:00Z',
     },
 ];

@@ -16,8 +16,16 @@ function AutoFormLabel({
 
     useEffect(() => {
         async function translateLabel() {
+            // Skip translation for labels that start with '!!!'
+            if (label.startsWith('!!!')) {
+                setTranslatedLabel(label.slice(3));
+                return;
+            }
+
             try {
                 const result = await translate(label, { to: 'vi' });
+                console.log(result);
+
                 setTranslatedLabel(result);
             } catch (error) {
                 console.error('Translation error:', error);
