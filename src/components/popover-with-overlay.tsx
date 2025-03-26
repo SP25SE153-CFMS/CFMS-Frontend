@@ -14,7 +14,7 @@ const PopoverWithOverlay = ({ children }: PopoverWithOverlayProps) => {
         <>
             {open && (
                 <div
-                    className="fixed inset-0 bg-black opacity-70 z-40"
+                    className="fixed inset-0 bg-black opacity-70 z-40 !mt-0"
                     onClick={() => setOpen(false)}
                 />
             )}

@@ -44,12 +44,12 @@ export default function Page() {
     // Filter states
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedScale, setSelectedScale] = useState<number>(0);
-    const [areaRange, setAreaRange] = useState<[number, number]>([0, 100]);
+    const [areaRange, setAreaRange] = useState<[number, number]>([0, 10000]);
     const [showFilters, setShowFilters] = useState(true);
 
     const farmScales = useMemo(() => {
         if (!farms) return [];
-        return Array.from(new Set(farms.map((farm) => farm.scale))).filter(Boolean);
+        return Array.from(new Set(farms.map((farm) => farm.scale)));
     }, [farms]);
 
     // Get max area for slider
@@ -96,11 +96,14 @@ export default function Page() {
         return count;
     }, [searchTerm, selectedScale, areaRange, maxArea]);
 
-    // Check if flocks is loading
+    // Check if farms is loading
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center h-full">
-                <LoadingSpinner />;
+            <div className="flex flex-col items-center justify-center h-[100vh] gap-4">
+                <LoadingSpinner />
+                <p className="text-muted-foreground animate-pulse">
+                    Đang tải dữ liệu trang trại...
+                </p>
             </div>
         );
     }
@@ -214,7 +217,7 @@ export default function Page() {
                                             <SelectItem value="all">Tất cả quy mô</SelectItem>
                                             {farmScales.map((scale) => (
                                                 <SelectItem key={scale} value={scale.toString()}>
-                                                    {scale}
+                                                    {scaleLabels[scale]}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>

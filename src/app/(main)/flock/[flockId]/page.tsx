@@ -1,6 +1,6 @@
 'use client';
 
-import { flocks } from '@/utils/data/table.data';
+import { flocks, techinicalIndicators } from '@/utils/data/table.data';
 import { AlignRight, Database } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
@@ -23,14 +23,6 @@ import { flockStatusLabels, flockStatusVariant } from '@/utils/enum/status.enum'
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import CardFlockNutrition from './components/nutrition/card';
 import CardVaccinationLog from './components/vaccine/card';
-
-const techinicalIndicators = [
-    { id: 1, name: 'GÀ CHẾT', value: '9 con' },
-    { id: 2, name: 'GÀ SỐNG', value: '42 con' },
-    { id: 3, name: 'CÂN NẶNG TB', value: '0.12kg' },
-    { id: 4, name: 'TỔNG ĐÀN', value: '51 con' },
-    { id: 5, name: 'SL THU HOẠCH', value: '136 (1,36%)' },
-];
 
 // TODO: Optimize and shorten the code
 export default function Page() {

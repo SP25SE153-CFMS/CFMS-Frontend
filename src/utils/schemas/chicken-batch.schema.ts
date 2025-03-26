@@ -13,7 +13,6 @@ export const ChickenBatchSchema = z.object({
     endDate: z
         .string()
         .datetime({ message: 'Ngày kết thúc không hợp lệ, phải là định dạng ngày giờ hợp lệ' })
-        .optional()
         .nullable(),
 
     note: z.string().max(255, 'Ghi chú không được vượt quá 255 ký tự').optional(),

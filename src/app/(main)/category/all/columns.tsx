@@ -44,12 +44,6 @@ export const columns: ColumnDef<Category>[] = [
         cell: () => null, // Hidden cell
     },
     {
-        accessorKey: 'categoryCode',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Mã danh mục" />,
-        cell: ({ row }) => <div className="w-[100px]">{row.getValue('categoryCode')}</div>,
-        enableSorting: true,
-    },
-    {
         accessorKey: 'categoryName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên danh mục" />,
         cell: ({ row }) => (

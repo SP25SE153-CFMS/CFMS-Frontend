@@ -1,6 +1,7 @@
 import { Category } from '@/utils/schemas/category.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
+import { SubCategory } from '@/utils/schemas/sub-category.schema';
 
 const PREFIX = '/api/Category';
 
@@ -31,5 +32,17 @@ export const updateCategory = async (body: Category) => {
 export const deleteCategory = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
     const response = await remove<Response<string>>(endpoint);
+    return response.data;
+};
+
+export const addSubCategory = async (body: SubCategory) => {
+    const endpoint = PREFIX + '/addSub';
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const updateSubCategory = async (body: SubCategory) => {
+    const endpoint = PREFIX + '/updateSub';
+    const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };

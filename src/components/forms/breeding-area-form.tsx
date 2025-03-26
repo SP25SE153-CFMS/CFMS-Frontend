@@ -41,6 +41,7 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
             area: 0,
             imageUrl: '',
             notes: '',
+            status: '1',
             farmId: sessionStorage.getItem('farmId') || '',
             ...defaultValues,
         },

@@ -37,6 +37,8 @@ import { useRouter } from 'next/navigation';
 import config from '@/configs';
 import { CloudinaryImageUpload } from '@/components/cloudinary-image-upload';
 import { useMutation } from '@tanstack/react-query';
+import { mapEnumToValues } from '@/utils/functions/enum.function';
+import { Scale, scaleLabels } from '@/utils/enum/status.enum';
 
 export default function Page() {
     const router = useRouter();
@@ -184,9 +186,11 @@ export default function Page() {
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    <SelectItem value="1">Nhỏ</SelectItem>
-                                                    <SelectItem value="2">Vừa</SelectItem>
-                                                    <SelectItem value="3">Lớn</SelectItem>
+                                                    {mapEnumToValues(Scale).map((value) => (
+                                                        <SelectItem key={value} value={value}>
+                                                            {scaleLabels[value]}
+                                                        </SelectItem>
+                                                    ))}
                                                 </SelectContent>
                                             </Select>
                                             <FormMessage />

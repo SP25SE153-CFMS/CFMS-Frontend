@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { coopEquipments } from '@/utils/data/table.data';
 import { DataTable } from '@/components/table/data-table';
 import {
     Dialog,
@@ -18,16 +17,13 @@ import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import CoopEquipmentForm from './form';
+import { CoopEquipment } from '@/utils/schemas/coop-equipment.schema';
 
-export default function CardEquipment({ chickenCoopId }: { chickenCoopId: string }) {
+export default function CardEquipment({ coopEquipments }: { coopEquipments: CoopEquipment[] }) {
     const [open, setOpen] = useState(false);
 
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
-
-    const currentCoopEquipments = coopEquipments.filter(
-        (coopEquipment) => coopEquipment.chickenCoopId === chickenCoopId,
-    );
 
     return (
         <Card className="p-6 mb-4">
@@ -42,7 +38,7 @@ export default function CardEquipment({ chickenCoopId }: { chickenCoopId: string
                     <Button
                         variant="outline"
                         className="space-x-1"
-                        onClick={() => downloadCSV(currentCoopEquipments, 'coop-equipments.csv')}
+                        onClick={() => downloadCSV(coopEquipments, 'coop-equipments.csv')}
                     >
                         <span>Tải file</span> <Download size={18} />
                     </Button>
@@ -65,7 +61,7 @@ export default function CardEquipment({ chickenCoopId }: { chickenCoopId: string
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={currentCoopEquipments} columns={columns} />
+                <DataTable data={coopEquipments} columns={columns} />
             </div>
         </Card>
     );

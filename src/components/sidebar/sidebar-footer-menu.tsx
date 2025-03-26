@@ -1,7 +1,7 @@
 'use client';
 
-import { CaretSortIcon, ComponentPlaceholderIcon } from '@radix-ui/react-icons';
-import { BadgeCheck, Bell, LogOut } from 'lucide-react';
+import { CaretSortIcon } from '@radix-ui/react-icons';
+import { BadgeCheck, LogOut } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -75,30 +75,11 @@ export default function SidebarFooterMenu({
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        {/* <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <Sparkles />
-                                Upgrade to Pro
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator /> */}
                         <DropdownMenuGroup>
                             <DropdownMenuItem asChild>
-                                <Link href={config.routes.signIn}>
+                                <Link href={config.routes.profile}>
                                     <BadgeCheck />
                                     Tài khoản
-                                </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                                <Link href={config.routes.signIn}>
-                                    <ComponentPlaceholderIcon />
-                                    Thanh toán
-                                </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                                <Link href={config.routes.signIn}>
-                                    <Bell />
-                                    Thông báo
                                 </Link>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>

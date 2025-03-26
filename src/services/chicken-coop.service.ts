@@ -1,6 +1,7 @@
 import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
+import { ChickenCoopResponse } from '@/utils/types/custom.type';
 
 const PREFIX = '/api/ChickenCoop';
 
@@ -18,7 +19,7 @@ export const getChickenCoopsByBreedingAreaId = async (breedingAreaId: string) =>
 
 export const getChickenCoopById = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
-    const response = await get<Response<ChickenCoop>>(endpoint);
+    const response = await get<Response<ChickenCoopResponse>>(endpoint);
     return response.data.data;
 };
 

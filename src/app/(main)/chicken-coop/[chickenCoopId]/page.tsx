@@ -6,35 +6,32 @@ import { Plus, Database } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Chart } from './chart';
 import CardEquipment from './components/equipment/card';
 import ChickenCoopDetails from './components/chicken-coop-details';
-import ChickenBatchDetails from './components/chicken-batch-details';
+import ChickenBatchSummary from './components/chicken-batch-summary';
 import { techinicalIndicators } from '@/utils/data/table.data';
-import CardFlock from './components/flock/card';
 import CardTask from './components/task/card';
 import CardHarvest from './components/harvest/card';
-import { useEffect } from 'react';
-import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
-import { useChickenCoopStore } from '@/store/use-chicken-coop';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { useQuery } from '@tanstack/react-query';
+import { getChickenCoopById } from '@/services/chicken-coop.service';
+import { useEffect } from 'react';
+import { useChickenCoopStore } from '@/store/use-chicken-coop';
 
 export default function Page() {
     const { chickenCoopId }: { chickenCoopId: string } = useParams();
-    const { chickenCoop, setChickenCoop } = useChickenCoopStore();
+    const { data: chickenCoop } = useQuery({
+        queryKey: ['chickenCoop'],
+        queryFn: () => getChickenCoopById(chickenCoopId),
+    });
 
-    // Fetch chicken coop data from session storage
+    const { setChickenCoop } = useChickenCoopStore();
+
     useEffect(() => {
-        const chickenCoops: ChickenCoop[] = JSON.parse(
-            sessionStorage.getItem('chickenCoops') || '[]',
-        );
-
-        const foundCoop = chickenCoops.find((coop) => coop.chickenCoopId === chickenCoopId);
-
-        if (foundCoop) {
-            setChickenCoop(foundCoop);
+        if (chickenCoop) {
+            setChickenCoop(chickenCoop);
         }
-    }, [chickenCoopId, setChickenCoop]);
+    }, [chickenCoop, setChickenCoop]);
 
     if (!chickenCoop) {
         return (
@@ -56,8 +53,7 @@ export default function Page() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-6">
                 <div className="flex flex-col gap-4">
                     <ChickenCoopDetails />
-                    <ChickenBatchDetails chickenCoopId={chickenCoopId} />
-                    <Chart />
+                    <ChickenBatchSummary chickenBatches={chickenCoop.chickenBatches} />
                 </div>
                 <div className="col-span-2">
                     <Card className="p-6 mb-6">
@@ -98,26 +94,20 @@ export default function Page() {
                         </div>
                     </Card>
 
-                    <Tabs defaultValue="flock" className="w-auto">
-                        <TabsList className="grid w-full grid-cols-4">
-                            <TabsTrigger value="flock">Đàn gà</TabsTrigger>
+                    <Tabs defaultValue="task" className="w-auto">
+                        <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="task">Nhật ký công việc</TabsTrigger>
                             <TabsTrigger value="equipment">Trang thiết bị</TabsTrigger>
                             <TabsTrigger value="harvest">Thu hoạch</TabsTrigger>
                         </TabsList>
-                        <TabsContent value="flock">
-                            {/* Danh sách đàn gà */}
-                            <CardFlock />
-                            {/* Thông tin đàn gà */}
-                            <CardFlock />
-                        </TabsContent>
                         <TabsContent value="task">
-                            <CardTask chickenCoopId={chickenCoopId} />
+                            <CardTask taskLogs={chickenCoop.taskLogs} />
                         </TabsContent>
                         <TabsContent value="equipment">
-                            <CardEquipment chickenCoopId={chickenCoopId} />
+                            <CardEquipment coopEquipments={chickenCoop.coopEquipments} />
                         </TabsContent>
                         <TabsContent value="harvest">
+                            {/* TODO: Change to harvest props */}
                             <CardHarvest chickenCoopId={chickenCoopId} />
                         </TabsContent>
                     </Tabs>
