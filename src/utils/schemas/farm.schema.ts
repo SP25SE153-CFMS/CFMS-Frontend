@@ -28,6 +28,8 @@ export const FarmSchema = z.object({
 
     website: z.string().trim().url({ message: 'Địa chỉ website không hợp lệ' }).or(z.literal('')),
     imageUrl: z.string().trim().url({ message: 'URL hình ảnh không hợp lệ' }).optional(),
+    latitude: z.number().min(-90).max(90),
+    longitude: z.number().min(-180).max(180),
 });
 
 export type Farm = z.infer<typeof FarmSchema>;

@@ -13,18 +13,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import {
-    Tractor,
-    MapPin,
-    Phone,
-    Globe,
-    Ruler,
-    Scale3d,
-    Plus,
-    Search,
-    Filter,
-    X,
-} from 'lucide-react';
+import { Tractor, Ruler, Scale3d, Plus, Search, Filter, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import config from '@/configs';
@@ -34,6 +23,8 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { scaleLabels } from '@/utils/enum/status.enum';
+import { Farm } from '@/utils/schemas/farm.schema';
+import FarmMap from '@/components/farm-map';
 
 export default function Page() {
     const { data: farms, isLoading } = useQuery({
@@ -266,73 +257,84 @@ export default function Page() {
                             </Button>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {filteredFarms.map((farm) => (
-                                <Link
-                                    href={`${config.routes.dashboard}?farmCode=${farm.farmCode}`}
-                                    key={farm.farmId}
-                                    rel="noopener noreferrer"
-                                    onClick={() => {
-                                        sessionStorage.setItem('farmId', farm.farmId);
-                                    }}
-                                >
-                                    <Card className="hover:shadow-lg transition-shadow duration-300">
-                                        <CardHeader>
-                                            <div className="flex items-center justify-between">
-                                                <CardTitle className="flex items-center">
-                                                    {farm.farmName}
-                                                </CardTitle>
-                                                <Image
-                                                    src={farm.imageUrl || '/assets/logo/logo.png'}
-                                                    alt={farm.farmCode}
-                                                    width={50}
-                                                    height={50}
-                                                    className="rounded-md object-cover"
-                                                />
-                                            </div>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <div className="text-sm text-muted-foreground mb-2">
-                                                Mã: {farm.farmCode}
-                                            </div>
-                                            <div className="flex items-center mb-1">
-                                                <MapPin className="mr-2 h-4 w-4" />{' '}
-                                                <span className="truncate font-medium">
-                                                    {farm.address}
-                                                </span>
-                                            </div>
-                                            <div className="flex items-center mb-1">
-                                                <Ruler className="mr-2 h-4 w-4" />
-                                                <span className="truncate font-medium">
-                                                    Diện tích: {farm.area} ha
-                                                </span>
-                                            </div>
-                                            <div className="flex items-center mb-1">
-                                                <Scale3d className="mr-2 h-4 w-4" />
-                                                <span className="truncate font-medium">
-                                                    Quy mô: {scaleLabels[farm.scale]}
-                                                </span>
-                                            </div>
-                                            <div className="flex items-center mb-1">
-                                                <Phone className="mr-2 h-4 w-4" />
-                                                <span className="truncate font-medium">
-                                                    SĐT: {farm.phoneNumber}
-                                                </span>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <Globe className="mr-2 h-4 w-4" />{' '}
-                                                <span className="truncate font-medium">
-                                                    {farm.website}
-                                                </span>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                </Link>
-                            ))}
+                        <div className="grid grid-cols-1 md:grid-cols-3 h-full">
+                            <div className="md:col-span-2 h-full">
+                                {/* TODO: Remove fake .map() */}
+                                <FarmMap
+                                    farms={filteredFarms.map((farm) => ({
+                                        ...farm,
+                                        latitude: 10 + Math.random(),
+                                        longitude: 106 + Math.random(),
+                                    }))}
+                                />
+                            </div>
+
+                            <ScrollArea className="h-[30rem]">
+                                <div className="px-4 overflow-auto h-full border-l border-red-500">
+                                    <div className="space-y-2">
+                                        {filteredFarms.map((farm) => (
+                                            <FarmCard farm={farm} key={farm.farmId} />
+                                        ))}
+                                    </div>
+                                </div>
+                            </ScrollArea>
                         </div>
                     )}
                 </ScrollArea>
             </div>
         </div>
+    );
+}
+
+export function FarmCard({ farm }: { farm: Farm }) {
+    return (
+        <Link
+            href={`${config.routes.dashboard}?farmCode=${farm.farmCode}`}
+            key={farm.farmId}
+            rel="noopener noreferrer"
+            onClick={() => {
+                sessionStorage.setItem('farmId', farm.farmId);
+            }}
+        >
+            <Card className="hover:shadow-lg transition-shadow duration-300 mb-4">
+                <CardHeader>
+                    <div className="flex items-center justify-between relative">
+                        <CardTitle className="flex items-center">{farm.farmName}</CardTitle>
+                        <Image
+                            src={farm.imageUrl || '/assets/logo/logo.png'}
+                            alt={farm.farmCode}
+                            width={50}
+                            height={50}
+                            className="rounded-md object-cover absolute right-0 mt-6"
+                        />
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <div className="text-sm text-muted-foreground mb-2">Mã: {farm.farmCode}</div>
+                    {/* <div className="flex items-center mb-1">
+                        <MapPin className="mr-2 h-4 w-4" />{' '}
+                        <span className="truncate font-medium">{farm.address}</span>
+                    </div> */}
+                    <div className="flex items-center mb-1">
+                        <Ruler className="mr-2 h-4 w-4" />
+                        <span className="truncate font-medium">Diện tích: {farm.area} ha</span>
+                    </div>
+                    <div className="flex items-center mb-1">
+                        <Scale3d className="mr-2 h-4 w-4" />
+                        <span className="truncate font-medium">
+                            Quy mô: {scaleLabels[farm.scale]}
+                        </span>
+                    </div>
+                    {/*<div className="flex items-center mb-1">
+                        <Phone className="mr-2 h-4 w-4" />
+                        <span className="truncate font-medium">SĐT: {farm.phoneNumber}</span>
+                    </div>
+                    <div className="flex items-center">
+                        <Globe className="mr-2 h-4 w-4" />{' '}
+                        <span className="truncate font-medium">{farm.website}</span>
+                    </div> */}
+                </CardContent>
+            </Card>
+        </Link>
     );
 }

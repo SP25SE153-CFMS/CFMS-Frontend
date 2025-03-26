@@ -16,9 +16,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
-import { categories, subCategories } from '@/utils/data/table.data';
 import SubCategoryForm from '@/components/forms/sub-category-form';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
+import { getCategoryById } from '@/services/category.service';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { useQuery } from '@tanstack/react-query';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -26,15 +28,23 @@ export default function Page() {
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
 
-    const { categoryId } = useParams();
+    const { categoryId }: { categoryId: string } = useParams();
 
-    const currentCategory = categories.find((category) => category.categoryId === categoryId);
+    const { data: category, isLoading } = useQuery({
+        queryKey: ['category', categoryId],
+        queryFn: () => getCategoryById(categoryId),
+    });
 
-    const currentSubCategories = subCategories.filter(
-        (subCategory) => subCategory.categoryId === categoryId,
-    );
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-[75vh] gap-4">
+                <LoadingSpinner />
+                <p className="text-muted-foreground animate-pulse">Đang tải dữ liệu...</p>
+            </div>
+        );
+    }
 
-    if (!currentCategory) {
+    if (!category) {
         return (
             <div className="w-full h-full flex items-center justify-center">
                 <Card className="px-36 py-8">
@@ -55,11 +65,10 @@ export default function Page() {
             <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                 <div>
                     <h2 className="text-2xl font-bold tracking-tight">
-                        Danh mục {currentCategory.categoryType}
+                        Danh mục <span className="text-primary">{category.categoryName}</span>
                     </h2>
                     <p className="text-muted-foreground">
-                        Danh sách tất cả các danh mục con cho danh mục{' '}
-                        {currentCategory.categoryType}
+                        Danh sách tất cả các danh mục con cho danh mục {category.categoryName}
                     </p>
                 </div>
                 <div className="flex gap-2">
@@ -67,7 +76,10 @@ export default function Page() {
                         variant="outline"
                         className="space-x-1"
                         onClick={() =>
-                            downloadCSV(currentSubCategories, `${currentCategory.categoryType}.csv`)
+                            downloadCSV(
+                                category.subCategories,
+                                `${category.categoryType?.toLowerCase()}.csv`,
+                            )
                         }
                     >
                         <span>Tải file</span> <Download size={18} />
@@ -78,22 +90,23 @@ export default function Page() {
                     <Dialog open={open} onOpenChange={onOpenChange}>
                         <DialogContent>
                             <DialogHeader>
-                                <DialogTitle>
-                                    Thêm danh mục {currentCategory.categoryType}
-                                </DialogTitle>
+                                <DialogTitle>Thêm danh mục {category.categoryType}</DialogTitle>
                                 <DialogDescription>
                                     Hãy nhập các thông tin dưới đây.
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <SubCategoryForm closeDialog={() => setOpen(false)} />
+                                <SubCategoryForm
+                                    closeDialog={() => setOpen(false)}
+                                    categoryName={category.categoryName}
+                                />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={currentSubCategories} columns={columns} />
+                <DataTable data={category.subCategories} columns={columns} />
             </div>
         </div>
     );

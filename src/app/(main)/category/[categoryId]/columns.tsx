@@ -11,6 +11,7 @@ import {
     categoryStatusLabels,
     categoryStatusVariant,
 } from '@/utils/enum/status.enum';
+import { DataType, dataTypeLabels } from '@/utils/enum';
 
 export const columns: ColumnDef<SubCategory>[] = [
     {
@@ -68,12 +69,8 @@ export const columns: ColumnDef<SubCategory>[] = [
         accessorKey: 'dataType',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Kiểu dữ liệu" />,
         cell: ({ row }) => {
-            const dataType = row.getValue('dataType') as string;
-            const dataTypeLabels: Record<string, string> = {
-                string: 'Kiểu ký tự',
-                number: 'Kiểu ký số',
-            };
-            return <div className="w-[150px]">{dataTypeLabels[dataType]}</div>;
+            const dataType = row.getValue('dataType') as DataType;
+            return <div>{dataTypeLabels[dataType]}</div>;
         },
     },
     {

@@ -43,7 +43,7 @@ export const sidebarItems: NavGroup[] = [
                 subItems: [
                     { title: 'Danh sách lứa nuôi', path: config.routes.chickenBatch },
                     { title: 'Giai đoạn phát triển', path: config.routes.breadingArea },
-                    { title: 'Chế độ dinh dưỡng', path: config.routes.breadingArea },
+                    { title: 'Chế độ dinh dưỡng', path: config.routes.nutritionPlan },
                     { title: 'Tiêu chí đánh giá SK', path: config.routes.breadingArea },
                 ],
             },

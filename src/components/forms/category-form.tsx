@@ -27,6 +27,12 @@ interface CategoryFormProps {
 }
 
 export default function CategoryForm({ defaultValues, closeDialog }: CategoryFormProps) {
+    if (defaultValues && defaultValues.status) {
+        defaultValues.status = defaultValues.status.toString() as '0' | '1';
+    } else if (defaultValues) {
+        defaultValues.status = '1';
+    }
+
     // Initialize form
     const form = useForm<Category>({
         resolver: zodResolver(defaultValues ? CategorySchema : CreateCategorySchema),
@@ -34,7 +40,6 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
             categoryName: '',
             categoryType: '',
             description: '',
-            status: '0',
             ...defaultValues,
         },
     });
@@ -68,6 +73,8 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
         console.error(error);
     };
 
+    console.log(mapEnumToValues(CategoryStatus));
+
     return (
         <Form {...form}>
             <form
@@ -97,7 +104,12 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
                         <FormItem>
                             <FormLabel>Loại danh mục</FormLabel>
                             <FormControl>
-                                <Input type="text" placeholder="Nhập loại danh mục" {...field} />
+                                <Input
+                                    disabled
+                                    type="text"
+                                    placeholder="Nhập loại danh mục"
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -129,14 +141,14 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
                             <FormControl>
                                 <Select
                                     onValueChange={field.onChange}
-                                    defaultValue={String(field.value)}
+                                    defaultValue={field.value.toString()}
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Chọn trạng thái" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {mapEnumToValues(CategoryStatus).map((status) => (
-                                            <SelectItem key={status} value={status.toString()}>
+                                            <SelectItem key={status} value={status}>
                                                 {categoryStatusLabels[status]}
                                             </SelectItem>
                                         ))}
