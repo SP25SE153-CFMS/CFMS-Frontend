@@ -119,20 +119,20 @@ export const requestStatusVariant: Record<string, any> = {
 
 // Chicken batch status
 export enum ChickenBatchStatus {
-    ACTIVE,
     INACTIVE,
+    ACTIVE,
     COMPLETED,
 }
 
 export const chickenBatchStatusLabels: Record<string, string> = {
-    [ChickenBatchStatus.ACTIVE]: 'Hoạt động',
     [ChickenBatchStatus.INACTIVE]: 'Chưa hoạt động',
+    [ChickenBatchStatus.ACTIVE]: 'Hoạt động',
     [ChickenBatchStatus.COMPLETED]: 'Kết thúc',
 };
 
 export const chickenBatchStatusVariant: Record<string, any> = {
-    [ChickenBatchStatus.ACTIVE]: 'default',
     [ChickenBatchStatus.INACTIVE]: 'outline',
+    [ChickenBatchStatus.ACTIVE]: 'default',
     [ChickenBatchStatus.COMPLETED]: 'destructive',
 };
 

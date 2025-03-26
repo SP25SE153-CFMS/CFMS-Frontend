@@ -101,7 +101,7 @@ const ChickenCoopDetails = () => {
 
                 <InfoItem
                     label="Số lượng"
-                    value={`${chickenCoop?.capacity ?? 0} con`}
+                    value={`${chickenCoop?.currentQuantity ?? 0} con`}
                     icon={<Users size={16} />}
                 />
 

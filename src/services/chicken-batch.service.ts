@@ -1,6 +1,7 @@
 import { ChickenBatch } from '@/utils/schemas/chicken-batch.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
+import { ChickenBatchResponse } from '@/utils/types/custom.type';
 
 const PREFIX = '/api/ChickenBatch';
 
@@ -12,7 +13,7 @@ export const getChickenBatches = async () => {
 
 export const getChickenBatchById = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
-    const response = await get<Response<ChickenBatch>>(endpoint);
+    const response = await get<Response<ChickenBatchResponse>>(endpoint);
     return response.data.data;
 };
 

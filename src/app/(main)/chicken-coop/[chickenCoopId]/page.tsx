@@ -2,24 +2,14 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import {
-    Plus,
-    Database,
-    Calendar,
-    PenToolIcon,
-    Layers,
-    Home,
-    ChevronRight,
-    BarChart3,
-    Target,
-} from 'lucide-react';
+import { Database, Calendar, PenToolIcon, Layers, BarChart3, Target } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CardEquipment from './components/equipment/card';
 import ChickenCoopDetails from './components/chicken-coop-details';
 import ChickenBatchSummary from './components/chicken-batch-summary';
-import { techinicalIndicators } from '@/utils/data/table.data';
+import { chickenCoopIndicators } from '@/utils/data/table.data';
 import CardTask from './components/task/card';
 import CardHarvest from './components/harvest/card';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
@@ -27,13 +17,6 @@ import { useQuery } from '@tanstack/react-query';
 import { getChickenCoopById } from '@/services/chicken-coop.service';
 import { useEffect } from 'react';
 import { useChickenCoopStore } from '@/store/use-chicken-coop';
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
 
 export default function Page() {
     const { chickenCoopId }: { chickenCoopId: string } = useParams();
@@ -93,7 +76,7 @@ export default function Page() {
                         </div>
                         <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
                             <div className="flex justify-between">
-                                {techinicalIndicators.map((indicator) => (
+                                {chickenCoopIndicators.map((indicator) => (
                                     <div
                                         key={indicator.id}
                                         className="flex-1 flex p-2 border gap-2 items-center"
