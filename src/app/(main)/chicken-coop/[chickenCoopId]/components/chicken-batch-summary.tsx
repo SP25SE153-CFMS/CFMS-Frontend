@@ -49,14 +49,14 @@ import { addDays, format } from 'date-fns';
 import { Calendar as CalendarPicker } from '@/components/ui/calendar';
 
 // Calculate the duration in days between start date and now
-const calculateDuration = (startDate: string, endDate: string | null) => {
+const calculateDuration = (startDate: Date, endDate: Date | null) => {
     const start = dayjs(startDate);
     const end = endDate ? dayjs(endDate) : dayjs();
     return end.diff(start, 'day');
 };
 
 // Progress bar component for batch duration
-const BatchProgress = ({ startDate, endDate }: { startDate: string; endDate: string | null }) => {
+const BatchProgress = ({ startDate, endDate }: { startDate: Date; endDate: Date | null }) => {
     const duration = calculateDuration(startDate, null);
     const total = calculateDuration(startDate, endDate);
 
