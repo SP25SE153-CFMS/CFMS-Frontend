@@ -4,14 +4,35 @@ import { Card } from '@/components/ui/card';
 import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import config from '@/configs';
-import { getBreedingAreas } from '@/services/breeding-area.service';
+import { cn } from '@/lib/utils';
+import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
 import { useChickenCoopStore } from '@/store/use-chicken-coop';
-import { chickenBatchStatusVariant, chickenCoopStatusLabels } from '@/utils/enum/status.enum';
+import { chickenCoopStatusLabels, chickenCoopStatusVariant } from '@/utils/enum/status.enum';
 import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { Select } from '@radix-ui/react-select';
 import { useQuery } from '@tanstack/react-query';
-import { AlignRight } from 'lucide-react';
+import { AlignRight, Code, Map, Tag, TrendingUp, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+
+const InfoItem = ({
+    label,
+    value,
+    icon,
+    className,
+}: {
+    label: string;
+    value: React.ReactNode;
+    icon: React.ReactNode;
+    className?: string;
+}) => (
+    <div className={cn('flex items-center gap-3 text-sm mb-4 group', className)}>
+        <div className="text-muted-foreground transition-colors group-hover:text-primary">
+            {icon}
+        </div>
+        <span className="text-muted-foreground">{label}:</span>
+        <div className="flex-1 text-right font-medium">{value}</div>
+    </div>
+);
 
 const ChickenCoopDetails = () => {
     const { chickenCoop, setChickenCoop } = useChickenCoopStore();
@@ -20,7 +41,7 @@ const ChickenCoopDetails = () => {
 
     const { data: breedingAreas } = useQuery({
         queryKey: ['breedingAreas'],
-        queryFn: () => getBreedingAreas(),
+        queryFn: () => getBreedingAreasByFarmId(sessionStorage.getItem('farmId') ?? ''),
     });
 
     const currentBreedingArea = breedingAreas?.find(
@@ -66,60 +87,46 @@ const ChickenCoopDetails = () => {
                     </PopoverWithOverlay>
                 </div>
 
-                <div className="flex gap-3 text-sm mb-4">
-                    Mã chuồng gà:{' '}
-                    <strong className="flex-1 text-right">{chickenCoop?.chickenCoopCode}</strong>
-                </div>
-                <div className="flex gap-3 text-sm mb-4">
-                    Tên chuồng gà:{' '}
-                    <strong className="flex-1 text-right">{chickenCoop?.chickenCoopName}</strong>
-                </div>
-                <div className="flex gap-3 text-sm mb-4">
-                    Số lượng:{' '}
-                    <strong className="flex-1 text-right">{chickenCoop?.capacity} con</strong>
-                </div>
-                <div className="flex gap-3 text-sm mb-4">
-                    Khu nuôi:{' '}
-                    <strong className="flex-1 text-right">
-                        {currentBreedingArea?.breedingAreaName ?? '-'}
-                    </strong>
-                </div>
-                <div className="flex gap-3 text-sm mb-4 items-center justify-between">
-                    Trạng thái:{' '}
-                    {chickenCoop?.status ? (
-                        <Badge variant={chickenBatchStatusVariant[chickenCoop?.status]}>
-                            {chickenCoopStatusLabels[chickenCoop?.status]}
-                        </Badge>
-                    ) : (
-                        '-'
-                    )}
-                </div>
-                {/* <div className="flex gap-3 text-sm mb-4">
-                    Ngày tạo:{' '}
-                    <strong className="flex-1 text-right">
-                        {dayjs(chickenCoop?.createdAt).format('DD/MM/YYYY')}
-                    </strong>
-                </div>
-                <div className="flex gap-3 text-sm mb-4">
-                    Ngày cập nhật:{' '}
-                    <strong className="flex-1 text-right">
-                        {chickenCoop?.updatedAt
-                            ? dayjs(chickenCoop?.updatedAt)?.format('DD/MM/YYYY')
-                            : '-'}
-                    </strong>
-                </div> */}
+                <InfoItem
+                    label="Mã chuồng gà"
+                    value={chickenCoop?.chickenCoopCode}
+                    icon={<Code size={16} />}
+                />
 
-                {/* Uncomment this code when you want to update */}
-                {/* <div className="flex flex-row gap-x-3 gap-y-3 sm:flex-col mt-8">
-                    <Button
-                        component={Link}
-                        to={`/dashboard/center/${centerId}/court/${courtId}/update`}
-                        className="py-[10px] flex-1"
-                        leftSection={<GrUpdate />}
-                    >
-                        Cập nhật
-                    </Button> 
-                </div> */}
+                <InfoItem
+                    label="Tên chuồng gà"
+                    value={chickenCoop?.chickenCoopName}
+                    icon={<Tag size={16} />}
+                />
+
+                <InfoItem
+                    label="Số lượng"
+                    value={`${chickenCoop?.currentQuantity ?? 0} con`}
+                    icon={<Users size={16} />}
+                />
+
+                <InfoItem
+                    label="Khu nuôi"
+                    value={currentBreedingArea?.breedingAreaName ?? '-'}
+                    icon={<Map size={16} />}
+                />
+
+                <InfoItem
+                    label="Trạng thái"
+                    value={
+                        chickenCoop?.status ? (
+                            <Badge
+                                variant={chickenCoopStatusVariant[chickenCoop?.status]}
+                                className="ml-2 animate-in fade-in"
+                            >
+                                {chickenCoopStatusLabels[chickenCoop?.status]}
+                            </Badge>
+                        ) : (
+                            '-'
+                        )
+                    }
+                    icon={<TrendingUp size={16} />}
+                />
             </div>
         </Card>
     );

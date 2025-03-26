@@ -9,10 +9,14 @@ export const ChickenBatchSchema = z.object({
         .string()
         .min(3, 'Tên phải có ít nhất 3 ký tự')
         .max(100, 'Tên không được vượt quá 100 ký tự'),
-    startDate: z.string().refine((date) => !isNaN(Date.parse(date)), 'Ngày bắt đầu không hợp lệ'),
-    endDate: z
-        .string()
-        .datetime({ message: 'Ngày kết thúc không hợp lệ, phải là định dạng ngày giờ hợp lệ' })
+    startDate: z.coerce.date().refine((date) => !isNaN(date.getTime()), {
+        message: 'Ngày tạo không hợp lệ',
+    }),
+    endDate: z.coerce
+        .date()
+        .refine((date) => !isNaN(date.getTime()), {
+            message: 'Ngày kết thúc không hợp lệ',
+        })
         .nullable(),
 
     note: z.string().max(255, 'Ghi chú không được vượt quá 255 ký tự').optional(),

@@ -41,11 +41,10 @@ export const sidebarItems: NavGroup[] = [
                 path: basePath,
                 icon: Egg,
                 subItems: [
-                    { title: 'Danh sách đàn gà', path: config.routes.flock },
-                    { title: 'Mục đích nuôi', path: config.routes.breadingArea },
-                    { title: 'Danh sách giống gà', path: config.routes.breadingArea },
+                    { title: 'Danh sách lứa nuôi', path: config.routes.chickenBatch },
+                    { title: 'Giai đoạn phát triển', path: config.routes.breadingArea },
+                    { title: 'Chế độ dinh dưỡng', path: config.routes.breadingArea },
                     { title: 'Tiêu chí đánh giá SK', path: config.routes.breadingArea },
-                    { title: 'Danh sách bệnh gà', path: config.routes.breadingArea },
                 ],
             },
             {
