@@ -196,11 +196,6 @@ export default function ResetPasswordPage() {
                             Đang chuyển đến trang đăng nhập...
                         </AlertDialogDescription>
                     </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogAction onClick={() => setShowSuccessDialog(false)}>
-                            Đóng
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
 

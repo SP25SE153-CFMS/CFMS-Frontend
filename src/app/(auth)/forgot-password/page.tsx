@@ -78,7 +78,7 @@ export default function ForgotPasswordPage() {
             // }
 
             setShowSuccessDialog(true);
-            
+
             // Chờ 2 giây xong chuyển trang
             setTimeout(() => {
                 setShowSuccessDialog(false);
@@ -193,11 +193,6 @@ export default function ForgotPasswordPage() {
                             nhắn để tiếp tục đặt lại mật khẩu.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogAction onClick={() => setShowSuccessDialog(false)}>
-                            Đóng
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
         </div>
