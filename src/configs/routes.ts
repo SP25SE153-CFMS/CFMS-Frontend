@@ -21,7 +21,8 @@ const routes = {
     createReceipt: 'inventory-receipt/create',
     profile: '/profile',
     chickenBatch: '/chicken-batch',
-    forgotPassword: '/forgot-password'
+    forgotPassword: '/forgot-password',
+    inputOTP: 'forgot-password/input-OTP',
 };
 
 export default routes;
