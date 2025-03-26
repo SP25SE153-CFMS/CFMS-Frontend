@@ -23,6 +23,7 @@ const routes = {
     chickenBatch: '/chicken-batch',
     forgotPassword: '/forgot-password',
     inputOTP: 'forgot-password/input-OTP',
+    resetPassword: '/reset-password',
 };
 
 export default routes;

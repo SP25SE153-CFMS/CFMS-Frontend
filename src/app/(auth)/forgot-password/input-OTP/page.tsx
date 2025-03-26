@@ -84,8 +84,8 @@ export default function InputOTPForm() {
 
             setTimeout(() => {
                 setShowSuccessDialog(false);
-                // console.log('Chuyển đến trang đăng nhập');
-                router.push(config.routes.signIn);
+                // console.log('Chuyển đến trang đổi mật khẩu');
+                router.push(config.routes.resetPassword );
             }, 1000);
         } catch (error) {
             setErrorMessage(
@@ -188,7 +188,7 @@ export default function InputOTPForm() {
                             Xác thực thành công
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                            Đang chuyển đến trang đăng nhập...
+                            Đang chuyển đến trang đổi mật khẩu...
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
