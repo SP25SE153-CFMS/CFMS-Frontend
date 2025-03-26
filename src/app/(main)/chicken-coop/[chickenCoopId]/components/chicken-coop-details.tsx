@@ -47,14 +47,11 @@ const ChickenCoopDetails = () => {
                             <AlignRight size={20} />
                         </PopoverTrigger>
                         <PopoverContent className="p-0">
-                            <Select
-                                defaultOpen
-                                onValueChange={(coopId) => handleCoopChange(coopId)}
-                            >
+                            <Select onValueChange={(coopId) => handleCoopChange(coopId)}>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Đổi chuồng nuôi..." />
                                 </SelectTrigger>
-                                <SelectContent className="h-72">
+                                <SelectContent className="max-h-72">
                                     {chickenCoops.map((coop) => (
                                         <SelectItem
                                             key={coop.chickenCoopId}

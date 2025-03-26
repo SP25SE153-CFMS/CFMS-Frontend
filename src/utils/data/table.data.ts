@@ -252,8 +252,8 @@ export const chickenCoops: ChickenCoop[] = [
         status: '0',
         breedingAreaId: breedingAreas[0].breedingAreaId,
         area: 0,
-        density: 0,
         currentQuantity: 0,
+        purposeId: '',
     },
     {
         chickenCoopId: 'd2e3f4a5-b6c7-8901-d2e3-f4a5b6c78901',
@@ -263,8 +263,8 @@ export const chickenCoops: ChickenCoop[] = [
         status: '2',
         breedingAreaId: breedingAreas[0].breedingAreaId,
         area: 0,
-        density: 0,
         currentQuantity: 0,
+        purposeId: '',
     },
     {
         chickenCoopId: 'f5a6b7c8-d9e0-1234-a5b6-c7d8e9f01234',
@@ -274,8 +274,8 @@ export const chickenCoops: ChickenCoop[] = [
         status: '1',
         breedingAreaId: breedingAreas[1].breedingAreaId,
         area: 0,
-        density: 0,
         currentQuantity: 0,
+        purposeId: '',
     },
     {
         chickenCoopId: 'a7b8c9d0-e1f2-3456-b7c8-d9e0f1234567',
@@ -285,8 +285,8 @@ export const chickenCoops: ChickenCoop[] = [
         status: '0',
         breedingAreaId: breedingAreas[1].breedingAreaId,
         area: 0,
-        density: 0,
         currentQuantity: 0,
+        purposeId: '',
     },
     {
         chickenCoopId: 'b8c9d0e1-f2a3-4567-c8d9-e0f1a2345678',
@@ -296,8 +296,8 @@ export const chickenCoops: ChickenCoop[] = [
         status: '2',
         breedingAreaId: breedingAreas[2].breedingAreaId,
         area: 0,
-        density: 0,
         currentQuantity: 0,
+        purposeId: '',
     },
     {
         chickenCoopId: '9d0e1f2-a3b4-5678-d9e0-f1a2b3456789',
@@ -307,8 +307,8 @@ export const chickenCoops: ChickenCoop[] = [
         status: '0',
         breedingAreaId: breedingAreas[2].breedingAreaId,
         area: 0,
-        density: 0,
         currentQuantity: 0,
+        purposeId: '',
     },
     {
         chickenCoopId: 'd0e1f2a3-b4c5-6789-e0f1-a2b3c4567890',
@@ -318,8 +318,8 @@ export const chickenCoops: ChickenCoop[] = [
         status: '1',
         breedingAreaId: breedingAreas[2].breedingAreaId,
         area: 0,
-        density: 0,
         currentQuantity: 0,
+        purposeId: '',
     },
     {
         chickenCoopId: 'e1f2a3b4-c5d6-7890-f1a2-b3c4d5678901',
@@ -329,8 +329,8 @@ export const chickenCoops: ChickenCoop[] = [
         status: '0',
         breedingAreaId: breedingAreas[2].breedingAreaId,
         area: 0,
-        density: 0,
         currentQuantity: 0,
+        purposeId: '',
     },
     {
         chickenCoopId: 'f2a3b4c5-d6e7-8901-a2b3-c4d5e6789012',
@@ -340,8 +340,8 @@ export const chickenCoops: ChickenCoop[] = [
         status: '2',
         breedingAreaId: breedingAreas[3].breedingAreaId,
         area: 0,
-        density: 0,
         currentQuantity: 0,
+        purposeId: '',
     },
     {
         chickenCoopId: 'a3b4c5d6-e7f8-9012-b3c4-d5e6f7890123',
@@ -351,8 +351,8 @@ export const chickenCoops: ChickenCoop[] = [
         status: '0',
         breedingAreaId: breedingAreas[3].breedingAreaId,
         area: 0,
-        density: 0,
         currentQuantity: 0,
+        purposeId: '',
     },
     {
         chickenCoopId: 'b4c5d6e7-f8a9-0123-c4d5-e6f7a8901234',
@@ -362,8 +362,8 @@ export const chickenCoops: ChickenCoop[] = [
         status: '1',
         breedingAreaId: breedingAreas[3].breedingAreaId,
         area: 0,
-        density: 0,
         currentQuantity: 0,
+        purposeId: '',
     },
     {
         chickenCoopId: 'c9d0e1f2-a3b4-5678-d9e0-f1a2b34567895',
@@ -373,8 +373,8 @@ export const chickenCoops: ChickenCoop[] = [
         status: '0',
         breedingAreaId: breedingAreas[3].breedingAreaId,
         area: 0,
-        density: 0,
         currentQuantity: 0,
+        purposeId: '',
     },
     {
         chickenCoopId: 'd6e7f8a9-b0c1-2345-e6f7-a8b9c0123456',
@@ -384,8 +384,8 @@ export const chickenCoops: ChickenCoop[] = [
         status: '2',
         breedingAreaId: breedingAreas[3].breedingAreaId,
         area: 0,
-        density: 0,
         currentQuantity: 0,
+        purposeId: '',
     },
     {
         chickenCoopId: 'e7f8a9b0-c1d2-3456-f7a8-b9c0d1234567',
@@ -395,8 +395,8 @@ export const chickenCoops: ChickenCoop[] = [
         status: '0',
         breedingAreaId: breedingAreas[3].breedingAreaId,
         area: 0,
-        density: 0,
         currentQuantity: 0,
+        purposeId: '',
     },
     {
         chickenCoopId: 'f8a9b0c1-d2e3-4567-a8b9-c0d1e2345678',
@@ -406,8 +406,8 @@ export const chickenCoops: ChickenCoop[] = [
         status: '1',
         breedingAreaId: breedingAreas[3].breedingAreaId,
         area: 0,
-        density: 0,
         currentQuantity: 0,
+        purposeId: '',
     },
 ];
 
@@ -1059,52 +1059,52 @@ export const requests: Request[] = [
 export const categories: Category[] = [
     {
         categoryId: 'f3b7a8d2-1c9e-4b5a-93d4-7b2f6a5c8e41',
-        categoryType: 'Môi trường',
-        categoryCode: 'ENV_INDEX',
+        categoryName: 'Môi trường',
+        categoryType: 'ENV_INDEX',
         description: 'Các chỉ số quan trọng của môi trường nuôi',
-        status: 0,
+        status: '0',
     },
     {
         categoryId: 'a6c2b9d8-7e4a-4c8f-91d2-3b5a7e6f8c21',
-        categoryType: 'Sức khỏe vật nuôi',
-        categoryCode: 'ANIMAL_INDEX',
+        categoryName: 'Sức khỏe vật nuôi',
+        categoryType: 'ANIMAL_INDEX',
         description: 'Các chỉ số theo dõi sức khỏe vật nuôi',
-        status: 0,
+        status: '0',
     },
     {
         categoryId: 'c9e7b5a8-2f3d-4b1c-92d6-7a5c8e4f3b21',
-        categoryType: 'Sản phẩm thu hoạch',
-        categoryCode: 'HARVEST_TYPE',
+        categoryName: 'Sản phẩm thu hoạch',
+        categoryType: 'HARVEST_TYPE',
         description: 'Các loại sản phẩm thu hoạch từ chăn nuôi',
-        status: 0,
+        status: '0',
     },
     {
         categoryId: 'e4b7a5c9-1d2f-4c8e-93b6-2a7f5d3b6c21',
-        categoryType: 'Phân quyền',
-        categoryCode: 'USER_PERMISSION',
+        categoryName: 'Phân quyền',
+        categoryType: 'USER_PERMISSION',
         description: 'Phân quyền cho người dùng hệ thống',
-        status: 1,
+        status: '1',
     },
     {
         categoryId: 'b3c7d9a5-2f1e-4b8c-91d4-7a6f2e5c8b21',
-        categoryType: 'Nhân công',
-        categoryCode: 'WORKER_ROLE',
+        categoryName: 'Nhân công',
+        categoryType: 'WORKER_ROLE',
         description: 'Các vai trò của nhân công trong trang trại',
-        status: 1,
+        status: '1',
     },
     {
         categoryId: 'd2e4a7b5-3c1f-4b9c-92d8-6a5f2e3c7b21',
-        categoryType: 'Quản lý khu nuôi',
-        categoryCode: 'FARM_ROLE',
+        categoryName: 'Quản lý khu nuôi',
+        categoryType: 'FARM_ROLE',
         description: 'Các chức năng của khu vực chăn nuôi',
-        status: 0,
+        status: '0',
     },
     {
         categoryId: 'f6b2c9a8-1d4e-4b7c-93d5-2a3f7e5c8b21',
-        categoryType: 'Quản lý kho',
-        categoryCode: 'WAREHOUSE_ROLE',
+        categoryName: 'Quản lý kho',
+        categoryType: 'WAREHOUSE_ROLE',
         description: 'Các vị trí trong hệ thống kho hàng',
-        status: 0,
+        status: '0',
     },
 ];
 
@@ -1291,7 +1291,6 @@ export const vaccinationLogs: VaccinationLog[] = [
 export const techinicalIndicators = [
     { id: 1, name: 'NGÀY NUÔI', value: '9' },
     { id: 2, name: 'TỔNG ĐÀN', value: '9820 con' },
-    { id: 3, name: 'CÂN NẶNG TB', value: '0.12kg' },
     { id: 4, name: 'MẬT ĐỘ', value: '9.18 con/m2' },
     { id: 5, name: 'SL THU HOẠCH', value: '136 (1,36%)' },
 ];
@@ -1683,7 +1682,7 @@ export const inventoryReceipts: InventoryReceipt[] = [
         status: 2,
         createdBy: 'bb0e8400-e29b-41d4-a716-446655440011',
         createDate: '2024-03-21T09:15:00Z',
-    }
+    },
 ];
 
 export const inventoryReceiptDetails: InventoryReceiptDetail[] = [
@@ -1718,4 +1717,3 @@ export const inventoryReceiptDetails: InventoryReceiptDetail[] = [
         note: 'Cần kiểm tra lại số lượng',
     },
 ];
-

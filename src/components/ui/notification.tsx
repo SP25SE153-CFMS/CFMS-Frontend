@@ -112,7 +112,7 @@ export default function Notification() {
                 >
                     <BellIcon size={14} aria-hidden="true" />
                     {unreadCount > 0 && (
-                        <Badge className="absolute -top-2 left-full min-w-5 -translate-x-1/2 px-1 content-center">
+                        <Badge className="absolute -top-2 left-full min-w-5 -translate-x-1/2 px-1 justify-center">
                             {unreadCount > 99 ? '99+' : unreadCount}
                         </Badge>
                     )}

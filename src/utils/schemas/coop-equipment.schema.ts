@@ -7,7 +7,7 @@ export const CoopEquipmentSchema = z.object({
     quantity: z.number().int().positive({ message: 'Số lượng phải là số nguyên dương' }),
     assignedDate: z
         .string()
-        .datetime({ message: 'Ngày gán không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
+        .datetime({ message: 'Ngày lắp đặt không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
     lastMaintenanceDate: z
         .string()
         .datetime({ message: 'Ngày bảo trì cuối không hợp lệ, phải là định dạng ngày giờ hợp lệ' })

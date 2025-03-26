@@ -2,18 +2,18 @@
 
 // Category status
 export enum CategoryStatus {
-    ACTIVE,
     INACTIVE,
+    ACTIVE,
 }
 
 export const categoryStatusLabels: Record<string, string> = {
-    [CategoryStatus.ACTIVE]: 'Hoạt động',
     [CategoryStatus.INACTIVE]: 'Không hooạt động',
+    [CategoryStatus.ACTIVE]: 'Hoạt động',
 };
 
 export const categoryStatusVariant: Record<string, any> = {
-    [CategoryStatus.ACTIVE]: 'default',
     [CategoryStatus.INACTIVE]: 'outline',
+    [CategoryStatus.ACTIVE]: 'default',
 };
 
 // Chicken coop status
@@ -37,18 +37,24 @@ export const chickenCoopStatusVariant: Record<string, any> = {
 
 // Employee status
 export enum EmployeeStatus {
-    WORKING,
-    RESIGNED,
+    INACTIVE,
+    ACTIVE,
+    BANNED,
+    FIRED,
 }
 
 export const employeeStatusLabels: Record<string, string> = {
-    [EmployeeStatus.WORKING]: 'Đang làm việc',
-    [EmployeeStatus.RESIGNED]: 'Nghỉ việc',
+    [EmployeeStatus.INACTIVE]: 'Không hoạt động',
+    [EmployeeStatus.ACTIVE]: 'Đang làm việc',
+    [EmployeeStatus.BANNED]: 'Bị cấm',
+    [EmployeeStatus.FIRED]: 'Đã sa thải',
 };
 
 export const employeeStatusVariant: Record<string, any> = {
-    [EmployeeStatus.WORKING]: 'default',
-    [EmployeeStatus.RESIGNED]: 'outline',
+    [EmployeeStatus.INACTIVE]: 'muted',
+    [EmployeeStatus.ACTIVE]: 'default',
+    [EmployeeStatus.BANNED]: 'warning',
+    [EmployeeStatus.FIRED]: 'destructive',
 };
 
 // Equipment status
@@ -100,13 +106,13 @@ export enum RequestStatus {
 }
 
 export const requestStatusLabels: Record<string, string> = {
-    [RequestStatus.PENDING]: 'Đang duyệt',
+    [RequestStatus.PENDING]: 'Đang chờ duyệt',
     [RequestStatus.REJECTED]: 'Từ chối',
     [RequestStatus.APPROVED]: 'Đã duyệt',
 };
 
 export const requestStatusVariant: Record<string, any> = {
-    [RequestStatus.PENDING]: 'success',
+    [RequestStatus.PENDING]: 'outline',
     [RequestStatus.REJECTED]: 'destructive',
     [RequestStatus.APPROVED]: 'default',
 };

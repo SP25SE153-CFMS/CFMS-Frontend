@@ -31,10 +31,10 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
     const form = useForm<Category>({
         resolver: zodResolver(defaultValues ? CategorySchema : CreateCategorySchema),
         defaultValues: {
-            categoryCode: '',
+            categoryName: '',
             categoryType: '',
             description: '',
-            status: 0,
+            status: '0',
             ...defaultValues,
         },
     });
@@ -77,12 +77,12 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
                 {/* Mã danh mục */}
                 <FormField
                     control={form.control}
-                    name="categoryCode"
+                    name="categoryName"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Mã danh mục</FormLabel>
+                            <FormLabel>Tên danh mục</FormLabel>
                             <FormControl>
-                                <Input type="text" placeholder="Nhập mã danh mục" {...field} />
+                                <Input type="text" placeholder="Nhập tên danh mục" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

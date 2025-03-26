@@ -23,11 +23,11 @@ export const ChickenCoopSchema = z.object({
     breedingAreaId: z.string().uuid({ message: 'ID khu vực chăn nuôi không hợp lệ, phải là UUID' }),
     area: z.coerce.number().positive({ message: 'Diện tích phải là số dương' }),
 
-    density: z.coerce.number().positive({ message: 'Mật độ phải là số dương' }),
-
     currentQuantity: z.coerce.number().int({ message: 'Số lượng hiện tại phải là số nguyên' }),
 
     description: z.string().trim().optional(),
+
+    purposeId: z.string().uuid({ message: 'ID mục đích không hợp lệ, phải là UUID' }),
 });
 
 export type ChickenCoop = z.infer<typeof ChickenCoopSchema>;

@@ -18,6 +18,7 @@ import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
 import { ChickenCoopStatus, chickenCoopStatusLabels } from '@/utils/enum/status.enum';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import AutoForm from '../ui/auto-form';
+import { subCategories } from '@/utils/data/table.data';
 
 interface ChickenCoopFormProps {
     defaultValues?: Partial<ChickenCoop>;
@@ -88,6 +89,37 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                 },
                 area: {
                     label: 'Diện tích',
+                },
+                capacity: {
+                    label: 'Sức chứa',
+                },
+                currentQuantity: {
+                    label: 'Số lượng hiện tại',
+                },
+                purposeId: {
+                    fieldType: ({ field }) => (
+                        <FormItem>
+                            <FormLabel>Mục đích nuôi</FormLabel>
+                            <FormControl>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Chọn mục đích nuôi" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {subCategories?.map((subCategory) => (
+                                            <SelectItem
+                                                key={subCategory.subCategoryId}
+                                                value={subCategory.subCategoryId}
+                                            >
+                                                {subCategory.subCategoryName}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    ),
                 },
                 breedingAreaId: {
                     fieldType: ({ field }) => (

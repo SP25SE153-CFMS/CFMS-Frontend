@@ -19,6 +19,8 @@ const routes = {
     farmEmployee: '/farm-employee',
     inventoryReceipt: '/warehouse/inventory-receipt',
     createReceipt: 'inventory-receipt/create',
+    profile: '/profile',
+    chickenBatch: '/chicken-batch',
     forgotPassword: '/forgot-password'
 };
 
