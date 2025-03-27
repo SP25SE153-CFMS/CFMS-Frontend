@@ -262,14 +262,7 @@ export default function Page() {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-3 h-full">
                             <div className="md:col-span-2 h-full">
-                                {/* TODO: Remove fake .map() */}
-                                <FarmMapWithNoSSR
-                                    farms={filteredFarms.map((farm) => ({
-                                        ...farm,
-                                        latitude: 10 + Math.random(),
-                                        longitude: 106 + Math.random(),
-                                    }))}
-                                />
+                                <FarmMapWithNoSSR farms={filteredFarms} />
                             </div>
 
                             <ScrollArea className="h-[30rem]">

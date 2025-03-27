@@ -82,7 +82,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             <Dialog open={openUpdate} onOpenChange={(val) => setOpenUpdate(val)}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Cập nhật chế độ dinh dưỡng</DialogTitle>
+                        <DialogTitle>Cập nhật giai đoạn phát triển</DialogTitle>
                         <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                     </DialogHeader>
                     <ScrollArea className="max-h-[600px]">

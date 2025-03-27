@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { CalendarIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -20,11 +19,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { cn } from '@/lib/utils';
-import { ChickenSchema, type Chicken } from '@/utils/schemas/chicken.schema';
-import dayjs from 'dayjs';
+import { ChickenSchema, CreateChickenSchema, type Chicken } from '@/utils/schemas/chicken.schema';
 import { createChicken, updateChicken } from '@/services/chicken.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -39,7 +34,7 @@ interface ChickenFormProps {
 export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormProps) {
     // Initialize form
     const form = useForm<Chicken>({
-        resolver: zodResolver(ChickenSchema),
+        resolver: zodResolver(defaultValues ? ChickenSchema : CreateChickenSchema),
         defaultValues: {
             chickenId: '',
             chickenCode: '',

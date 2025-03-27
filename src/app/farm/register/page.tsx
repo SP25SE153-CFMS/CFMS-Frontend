@@ -40,6 +40,7 @@ import { CloudinaryImageUpload } from '@/components/cloudinary-image-upload';
 import { useMutation } from '@tanstack/react-query';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { Scale, scaleLabels } from '@/utils/enum/status.enum';
+import { getAddress } from '@/services/map.service';
 
 // Dynamically import the map component with no SSR
 const LocationMapWithNoSSR = dynamic(() => import('./location-map'), { ssr: false });
@@ -90,9 +91,11 @@ export default function Page() {
     };
 
     // Handle location selection from map
-    const handleLocationSelect = (lat: number, lng: number) => {
+    const handleLocationSelect = async (lat: number, lng: number) => {
         form.setValue('latitude', lat);
         form.setValue('longitude', lng);
+        const address = await getAddress(lat, lng);
+        form.setValue('address', address);
         setMapVisible(false);
         toast.success('Vị trí đã được chọn');
     };
@@ -145,23 +148,6 @@ export default function Page() {
                                     )}
                                 />
                             </div>
-
-                            <FormField
-                                control={form.control}
-                                name="address"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Địa chỉ</FormLabel>
-                                        <FormControl>
-                                            <Textarea
-                                                placeholder="Nhập địa chỉ trang trại"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <FormField
@@ -323,6 +309,23 @@ export default function Page() {
                                     />
                                 </div>
                             </div>
+
+                            <FormField
+                                control={form.control}
+                                name="address"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Địa chỉ</FormLabel>
+                                        <FormControl>
+                                            <Textarea
+                                                placeholder="Nhập địa chỉ trang trại"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
                             <FormField
                                 control={form.control}

@@ -74,12 +74,12 @@ export default function Page() {
                                 <DialogTrigger asChild>
                                     <Button className="h-9" onClick={() => setOpen(true)}>
                                         <Plus className="mr-2 h-4 w-4" />
-                                        Tạo giai đoạn phát triển
+                                        Tạo chế độ dinh dưỡng
                                     </Button>
                                 </DialogTrigger>
                                 <DialogContent className="max-w-5xl">
                                     <DialogHeader>
-                                        <DialogTitle>Tạo giai đoạn phát triển mới</DialogTitle>
+                                        <DialogTitle>Tạo chế độ dinh dưỡng mới</DialogTitle>
                                         <DialogDescription>
                                             Hãy nhập các thông tin dưới đây để tạo giai đoạn phát
                                             triển mới.
@@ -146,9 +146,9 @@ export default function Page() {
                         </DialogTrigger>
                         <DialogContent className="max-w-5xl">
                             <DialogHeader>
-                                <DialogTitle>Tạo giai đoạn phát triển mới</DialogTitle>
+                                <DialogTitle>Tạo chế độ dinh dưỡng mới</DialogTitle>
                                 <DialogDescription>
-                                    Hãy nhập các thông tin dưới đây để tạo giai đoạn phát triển mới.
+                                    Hãy nhập các thông tin dưới đây để tạo chế độ dinh dưỡng mới.
                                 </DialogDescription>
                             </DialogHeader>
                             <NutritionPlanForm closeDialog={() => setOpen(false)} />

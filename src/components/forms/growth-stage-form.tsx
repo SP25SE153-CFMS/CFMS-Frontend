@@ -12,7 +12,11 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { GrowthStageSchema, type GrowthStage } from '@/utils/schemas/growth-stage.schema';
+import {
+    CreateGrowthStageSchema,
+    GrowthStageSchema,
+    type GrowthStage,
+} from '@/utils/schemas/growth-stage.schema';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createGrowthStage, updateGrowthStage } from '@/services/growth-stage.service';
@@ -28,7 +32,7 @@ interface GrowthStageFormProps {
 export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthStageFormProps) {
     // Initialize form
     const form = useForm<GrowthStage>({
-        resolver: zodResolver(GrowthStageSchema),
+        resolver: zodResolver(defaultValues ? GrowthStageSchema : CreateGrowthStageSchema),
         defaultValues: {
             growthStageId: '',
             stageCode: '',
@@ -64,7 +68,8 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
 
     // Form submit handler
     async function onSubmit(values: GrowthStage) {
-        mutation.mutate(values);
+        const newValues = { ...values, id: values.growthStageId };
+        mutation.mutate(newValues);
     }
 
     return (
