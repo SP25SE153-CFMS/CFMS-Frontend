@@ -45,8 +45,6 @@ export function CloudinaryImageUpload({
     defaultImage,
     ...props
 }: CloudinaryImageUploadProps) {
-    console.log(defaultImage);
-
     const [file, setFile] = useState<{ file: File; preview: string; url?: string } | null>(
         defaultImage
             ? { file: new File([], 'default'), preview: defaultImage, url: defaultImage }

@@ -3,30 +3,15 @@
 import { DataTable } from '@/components/table/data-table';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
-import { Download, Plus } from 'lucide-react';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-} from '@/components/ui/dialog';
-import { useState } from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Download } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
-import CategoryForm from '@/components/forms/category-form';
 import { getCategories } from '@/services/category.service';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 
 export default function Page() {
-    const [open, setOpen] = useState(false);
-
-    const openModal = () => setOpen(true);
-    const onOpenChange = (val: boolean) => setOpen(val);
-
     const { data: categories, isLoading } = useQuery({
         queryKey: ['categories'],
         queryFn: () => getCategories(),
@@ -78,22 +63,6 @@ export default function Page() {
                     >
                         <span>Tải file</span> <Download size={18} />
                     </Button>
-                    <Button className="space-x-1" onClick={openModal}>
-                        <span>Tạo</span> <Plus size={18} />
-                    </Button>
-                    <Dialog open={open} onOpenChange={onOpenChange}>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Tạo danh mục dùng chung mới</DialogTitle>
-                                <DialogDescription>
-                                    Hãy nhập các thông tin dưới đây.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <ScrollArea className="max-h-[600px]">
-                                <CategoryForm closeDialog={() => setOpen(false)} />
-                            </ScrollArea>
-                        </DialogContent>
-                    </Dialog>
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">

@@ -7,7 +7,7 @@ import { Download, Plus, ChevronLeft, Search, Filter } from 'lucide-react';
 
 import { DataTable } from '@/components/table/data-table';
 import { columns } from './columns';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -40,6 +40,9 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { getChickenCoopsByBreedingAreaId } from '@/services/chicken-coop.service';
 import ChickenBatchForm from '@/components/forms/chicken-batch-form';
+import { cn } from '@/lib/utils';
+import config from '@/configs';
+import Link from 'next/link';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -340,15 +343,13 @@ export default function Page() {
     return (
         <div className="space-y-6">
             <div className="flex items-center text-sm text-muted-foreground">
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="gap-1 p-0"
-                    onClick={() => window.history.back()}
+                <Link
+                    href={config.routes.chickenCoop}
+                    className={cn(buttonVariants({ variant: 'ghost' }), 'p-0')}
                 >
                     <ChevronLeft className="h-4 w-4" />
-                    Khu vực nuôi
-                </Button>
+                    <span>Chuồng nuôi</span>
+                </Link>
                 <span className="mx-2">/</span>
                 <span>Lứa nuôi</span>
             </div>
