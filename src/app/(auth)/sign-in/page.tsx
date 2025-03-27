@@ -41,9 +41,9 @@ export default function Page() {
     };
 
     return (
-        <div className="flex min-h-screen w-full items-center justify-center px-[70px] py-[62px]">
-            <div className="flex w-[1300px] h-[900px] justify-center items-center gap-[40px] shrink-0 overflow-hidden">
-                <div className="flex flex-col w-1/2 relative items-start self-stretch columns-xl content-center px-[59px] py-[61px] rounded-[42px] bg-primary">
+        <div className="flex size-min items-center justify-center px-[70px] py-[30px]">
+            <div className="flex size-min justify-center items-center gap-x-[40px] shrink-0 overflow-hidden">
+                <div className="flex flex-col w-1/2 relative items-start self-stretch columns-xl content-center px-[59px] pt-[61px] rounded-[42px] bg-primary">
                     <h2 className="text-center text-[60px] text-white not-italic font-bold leading-[normal]">
                         Hệ Thống Quản Lý Trang Trại Gà Với CFMS
                     </h2>
@@ -113,10 +113,6 @@ export default function Page() {
                                 )}
                             />
 
-                            <p className="w-[531px] text-primary-sub-text text-right text-[24px] not-italic font-medium leading-[normal]">
-                                Quên mật khẩu?
-                            </p>
-
                             <Button
                                 type="submit"
                                 disabled={mutation.isPending}
@@ -126,6 +122,16 @@ export default function Page() {
                             </Button>
                         </form>
                     </Form>
+                    <div className="w-full flex justify-end">
+                        <Button
+                            variant="link"
+                            className="text-primary-sub-text text-[24px] not-italic font-medium leading-[normal]"
+                            onClick={() => router.push(config.routes.forgotPassword)}
+                        >
+                            Quên mật khẩu?
+                        </Button>
+                    </div>
+
                     <div className="flex items-center gap-7 w-full">
                         <span className="flex-1 w-[125px] h-[2px] bg-primary-sub-text" />
                         <p className="text-primary-sub-text text-center text-[24px] not-italic font-medium">
