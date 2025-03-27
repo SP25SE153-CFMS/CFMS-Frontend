@@ -23,6 +23,7 @@ const routes = {
     chickenBatch: '/chicken-batch',
     nutritionPlan: '/nutrition-plan',
     growthStage: '/growth-stage',
+    chicken: '/chicken',
 };
 
 export default routes;

@@ -1,5 +1,21 @@
 /* eslint-disable no-unused-vars */
 
+// This is a common status enum for all entities
+export enum CommonStatus {
+    INACTIVE,
+    ACTIVE,
+}
+
+export const commonStatusLabels: Record<string, string> = {
+    [CommonStatus.INACTIVE]: 'Không hoạt động',
+    [CommonStatus.ACTIVE]: 'Hoạt động',
+};
+
+export const commonStatusVariant: Record<string, any> = {
+    [CommonStatus.INACTIVE]: 'destructive',
+    [CommonStatus.ACTIVE]: 'default',
+};
+
 // Category status
 export enum CategoryStatus {
     INACTIVE,

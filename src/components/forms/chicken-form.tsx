@@ -23,30 +23,31 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
-import { AssignmentSchema, type Assignment } from '@/utils/schemas/assignment.schema';
+import { ChickenSchema, type Chicken } from '@/utils/schemas/chicken.schema';
 import dayjs from 'dayjs';
-import { createAssignment, updateAssignment } from '@/services/assignment.service';
+import { createChicken, updateChicken } from '@/services/chicken.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { CategoryType } from '@/utils/enum/category.enum';
 
-interface AssignmentFormProps {
-    defaultValues?: Partial<Assignment>;
+interface ChickenFormProps {
+    defaultValues?: Partial<Chicken>;
     closeDialog: () => void;
 }
 
-export default function AssignmentForm({ defaultValues, closeDialog }: AssignmentFormProps) {
+export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormProps) {
     // Initialize form
-    const form = useForm<Assignment>({
-        resolver: zodResolver(AssignmentSchema),
+    const form = useForm<Chicken>({
+        resolver: zodResolver(ChickenSchema),
         defaultValues: {
-            assignmentId: '',
-            taskId: '',
-            assignedToId: '',
-            assignedDate: new Date().toISOString(),
-            shiftScheduleId: '',
-            taskScheduleId: '',
-            status: '',
-            note: '',
+            chickenId: '',
+            chickenCode: '',
+            chickenName: '',
+            totalQuantity: 0,
+            description: '',
+            status: 1,
+            chickenTypeId: '',
             ...defaultValues,
         },
     });
@@ -56,12 +57,12 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
 
     // Mutations for creating and updating
     const mutation = useMutation({
-        mutationFn: defaultValues ? updateAssignment : createAssignment,
+        mutationFn: defaultValues ? updateChicken : createChicken,
         onSuccess: () => {
             closeDialog();
-            queryClient.invalidateQueries({ queryKey: ['assignments'] });
+            queryClient.invalidateQueries({ queryKey: ['chickens'] });
             toast.success(
-                defaultValues ? 'Cập nhật phân công thành công' : 'Tạo phân công thành công',
+                defaultValues ? 'Cập nhật giống gà thành công' : 'Tạo giống gà thành công',
             );
         },
         onError: (error: any) => {
@@ -71,7 +72,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
     });
 
     // Form submit handler
-    async function onSubmit(values: Assignment) {
+    async function onSubmit(values: Chicken) {
         mutation.mutate(values);
     }
 
@@ -79,32 +80,47 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
-                    {/* Task ID */}
+                    {/* Chicken Code */}
                     <FormField
                         control={form.control}
-                        name="taskId"
+                        name="chickenCode"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>ID Công việc</FormLabel>
+                                <FormLabel>Mã gà</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập ID công việc" {...field} />
+                                    <Input type="text" placeholder="Nhập mã gà" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
 
-                    {/* Assigned To ID */}
+                    {/* Chicken Name */}
                     <FormField
                         control={form.control}
-                        name="assignedToId"
+                        name="chickenName"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>ID Người được phân công</FormLabel>
+                                <FormLabel>Tên gà</FormLabel>
+                                <FormControl>
+                                    <Input type="text" placeholder="Nhập tên gà" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Total Quantity */}
+                    <FormField
+                        control={form.control}
+                        name="totalQuantity"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Tổng số lượng</FormLabel>
                                 <FormControl>
                                     <Input
-                                        type="text"
-                                        placeholder="Nhập ID người được phân công"
+                                        type="number"
+                                        placeholder="Nhập tổng số lượng"
                                         {...field}
                                     />
                                 </FormControl>
@@ -113,13 +129,88 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                         )}
                     />
 
-                    {/* Assigned Date */}
+                    {/* Description */}
                     <FormField
                         control={form.control}
-                        name="assignedDate"
+                        name="description"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Ngày phân công</FormLabel>
+                                <FormLabel>Mô tả</FormLabel>
+                                <FormControl>
+                                    <Input type="text" placeholder="Nhập mô tả" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Status */}
+                    <FormField
+                        control={form.control}
+                        name="status"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Trạng thái</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={(value) => field.onChange(Number(value))}
+                                        defaultValue={field.value.toString()}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn trạng thái" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="1">Hoạt động</SelectItem>
+                                            <SelectItem value="0">Ngừng hoạt động</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Chicken Type ID */}
+                    <FormField
+                        control={form.control}
+                        name="chickenTypeId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Loại gà</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn trạng thái" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {getSubCategoryByCategoryType(CategoryType.CHICKEN).map(
+                                                (status) => (
+                                                    <SelectItem
+                                                        key={status.subCategoryId}
+                                                        value={status.subCategoryId}
+                                                    >
+                                                        {status.subCategoryName}
+                                                    </SelectItem>
+                                                ),
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Created Date */}
+                    {/* <FormField
+                        control={form.control}
+                        name="createdDate"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Ngày tạo</FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
                                         <FormControl>
@@ -146,84 +237,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
-
-                    {/* Shift Schedule ID */}
-                    <FormField
-                        control={form.control}
-                        name="shiftScheduleId"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>ID Lịch ca</FormLabel>
-                                <FormControl>
-                                    <Input type="text" placeholder="Nhập ID lịch ca" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Task Schedule ID */}
-                    <FormField
-                        control={form.control}
-                        name="taskScheduleId"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>ID Lịch công việc</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="text"
-                                        placeholder="Nhập ID lịch công việc"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Status */}
-                    <FormField
-                        control={form.control}
-                        name="status"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Trạng thái</FormLabel>
-                                <FormControl>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Chọn trạng thái" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="active">Đang hoạt động</SelectItem>
-                                            <SelectItem value="inactive">
-                                                Ngừng hoạt động
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Note */}
-                    <FormField
-                        control={form.control}
-                        name="note"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Ghi chú</FormLabel>
-                                <FormControl>
-                                    <Input type="text" placeholder="Nhập ghi chú" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    /> */}
                 </div>
                 <Button type="submit" className="mx-auto mt-6 w-60">
                     Gửi
