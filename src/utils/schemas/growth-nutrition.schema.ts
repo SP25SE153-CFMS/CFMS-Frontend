@@ -6,7 +6,7 @@ export const GrowthNutritionSchema = z.object({
         .uuid({ message: 'ID dinh dưỡng tăng trưởng không hợp lệ, phải là UUID' }),
     nutritionPlanId: z
         .string()
-        .uuid({ message: 'ID kế hoạch dinh dưỡng không hợp lệ, phải là UUID' }),
+        .uuid({ message: 'ID chế độ dinh dưỡng không hợp lệ, phải là UUID' }),
     growthStageId: z
         .string()
         .uuid({ message: 'ID giai đoạn tăng trưởng không hợp lệ, phải là UUID' }),

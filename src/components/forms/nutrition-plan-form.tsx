@@ -187,12 +187,12 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
                                         <FormItem>
                                             <FormLabel className="text-base flex items-center">
                                                 <Tag className="mr-1 h-4 w-4 text-primary" />
-                                                Tên kế hoạch
+                                                Tên chế độ
                                             </FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="text"
-                                                    placeholder="Nhập tên kế hoạch"
+                                                    placeholder="Nhập tên chế độ"
                                                     required
                                                     className="h-10"
                                                     {...field}
@@ -257,8 +257,7 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
                                     <AlertCircle className="h-4 w-4" />
                                     <AlertTitle>Chưa có thức ăn</AlertTitle>
                                     <AlertDescription>
-                                        Vui lòng thêm ít nhất một loại thức ăn vào kế hoạch dinh
-                                        dưỡng
+                                        Vui lòng thêm ít nhất một loại thức ăn vào chế độ dinh dưỡng
                                     </AlertDescription>
                                 </Alert>
                             ) : (
@@ -428,7 +427,7 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
                             </span>
                         ) : (
                             <span className="flex items-center">
-                                {defaultValues ? 'Cập nhật' : 'Tạo kế hoạch'}
+                                {defaultValues ? 'Cập nhật' : 'Tạo chế độ'}
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </span>
                         )}

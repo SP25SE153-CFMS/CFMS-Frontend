@@ -40,7 +40,9 @@ export const columns: ColumnDef<NutritionPlan>[] = [
     },
     {
         accessorKey: 'name',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tên kế hoạch" />,
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Tên chế độ dinh dưỡng" />
+        ),
         cell: ({ row }) => (
             <Link href={`${config.routes.nutritionPlan}/${row.getValue('nutritionPlanId')}`}>
                 {row.getValue('name')}
