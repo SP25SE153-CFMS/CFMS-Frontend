@@ -4,7 +4,7 @@ import type React from 'react';
 
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { AlignRight, Calendar, CalendarIcon, Info, Timer, TrendingUp } from 'lucide-react';
+import { AlignRight, Calendar, Info, Timer, TrendingUp } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import PopoverWithOverlay from '@/components/popover-with-overlay';
 import {
     Select,
@@ -43,10 +43,11 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { DateRange } from 'react-day-picker';
-import { addDays, format } from 'date-fns';
+// import { DateRange } from 'react-day-picker';
+// import { addDays, format } from 'date-fns';
 
-import { Calendar as CalendarPicker } from '@/components/ui/calendar';
+// import { Calendar as CalendarPicker } from '@/components/ui/calendar';
+import { SelectNative } from '@/components/ui/select-native';
 
 // Calculate the duration in days between start date and now
 const calculateDuration = (startDate: Date, endDate: Date | null) => {
@@ -103,10 +104,10 @@ const InfoItem = ({
 );
 
 const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[] }) => {
-    const [date, setDate] = useState<DateRange | undefined>({
-        from: new Date(),
-        to: addDays(new Date(), 150),
-    });
+    // const [date, setDate] = useState<DateRange | undefined>({
+    //     from: new Date(),
+    //     to: addDays(new Date(), 150),
+    // });
 
     const [currentChickenBatch, setCurrentChickenBatch] = useState<ChickenBatch>(
         chickenBatches?.[0],
@@ -124,6 +125,8 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
             setCurrentChickenBatch(selectedBatch);
         }
     };
+
+    const timeOptions = ['ngày', 'tuần', 'tháng', 'năm'];
 
     return (
         <Card className="transition-all duration-300 hover:shadow-md">
@@ -263,7 +266,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                                     Bắt đầu lứa nuôi mới
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-lg">
+                            <DialogContent className="max-w-md">
                                 <DialogHeader>
                                     <DialogTitle>Bắt đầu lứa nuôi mới</DialogTitle>
                                     <DialogDescription>
@@ -298,7 +301,8 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                                                 </SelectContent>
                                             </Select>
                                         </div>
-                                        <div className="grid gap-2">
+                                        {/* This code for range datetime */}
+                                        {/* <div className="grid gap-2">
                                             <Label>Thời gian</Label>
                                             <Popover>
                                                 <PopoverTrigger asChild>
@@ -339,6 +343,25 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                                                     />
                                                 </PopoverContent>
                                             </Popover>
+                                        </div> */}
+
+                                        <div className="*:not-first:mt-2">
+                                            <Label>Thời lượng</Label>
+                                            <div className="flex rounded-md shadow-xs">
+                                                <Input
+                                                    className="-me-px rounded-e-none shadow-none focus-visible:z-10"
+                                                    placeholder="1"
+                                                    type="number"
+                                                    min={0}
+                                                />
+                                                <SelectNative className="text-muted-foreground hover:text-foreground w-fit rounded-s-none shadow-none bg-gray-50">
+                                                    {timeOptions.map((option) => (
+                                                        <option key={option} value={option}>
+                                                            {option}
+                                                        </option>
+                                                    ))}
+                                                </SelectNative>
+                                            </div>
                                         </div>
                                     </div>
 

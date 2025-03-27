@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import {
     Card,
     CardContent,
@@ -27,7 +28,7 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import { Tractor } from 'lucide-react';
+import { Tractor, MapPin } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { CreateFarmSchema, type Farm } from '@/utils/schemas/farm.schema';
 import { useForm } from 'react-hook-form';
@@ -40,9 +41,13 @@ import { useMutation } from '@tanstack/react-query';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { Scale, scaleLabels } from '@/utils/enum/status.enum';
 
+// Dynamically import the map component with no SSR
+const LocationMapWithNoSSR = dynamic(() => import('./location-map'), { ssr: false });
+
 export default function Page() {
     const router = useRouter();
     const [imageUrl, setImageUrl] = useState<string>('');
+    const [mapVisible, setMapVisible] = useState(false);
 
     // Initialize form
     const form = useForm<Farm>({
@@ -56,6 +61,8 @@ export default function Page() {
             phoneNumber: '',
             website: '',
             imageUrl: '',
+            longitude: 0,
+            latitude: 0,
         },
     });
 
@@ -82,9 +89,17 @@ export default function Page() {
         toast.error('Đã xảy ra lỗi');
     };
 
+    // Handle location selection from map
+    const handleLocationSelect = (lat: number, lng: number) => {
+        form.setValue('latitude', lat);
+        form.setValue('longitude', lng);
+        setMapVisible(false);
+        toast.success('Vị trí đã được chọn');
+    };
+
     return (
-        <section className="w-full min-h-screen flex flex-col items-center justify-center">
-            <Card className="min-w-2xl mx-auto">
+        <section className="w-full min-h-screen flex flex-col items-center justify-center py-8">
+            <Card className="w-full max-w-2xl mx-auto">
                 <CardHeader>
                     <CardTitle className="text-2xl flex items-center">
                         <Tractor className="mr-2" />
@@ -235,6 +250,78 @@ export default function Page() {
                                         </FormItem>
                                     )}
                                 />
+                            </div>
+
+                            {/* Location Fields */}
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-lg font-medium">Vị trí trang trại</h3>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => setMapVisible(!mapVisible)}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <MapPin className="h-4 w-4" />
+                                        {mapVisible ? 'Ẩn bản đồ' : 'Chọn trên bản đồ'}
+                                    </Button>
+                                </div>
+
+                                {mapVisible && (
+                                    <div className="w-full h-[400px] rounded-md border overflow-hidden mb-4">
+                                        <LocationMapWithNoSSR
+                                            onLocationSelect={handleLocationSelect}
+                                            initialLat={form.getValues('latitude') || 21.0278}
+                                            initialLng={form.getValues('longitude') || 105.8342}
+                                        />
+                                    </div>
+                                )}
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="latitude"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Vĩ độ</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="number"
+                                                        step="any"
+                                                        placeholder="Nhập vĩ độ (ví dụ: 21.0278)"
+                                                        {...field}
+                                                        onChange={(e) =>
+                                                            field.onChange(Number(e.target.value))
+                                                        }
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="longitude"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Kinh độ</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="number"
+                                                        step="any"
+                                                        placeholder="Nhập kinh độ (ví dụ: 105.8342)"
+                                                        {...field}
+                                                        onChange={(e) =>
+                                                            field.onChange(Number(e.target.value))
+                                                        }
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
                             </div>
 
                             <FormField

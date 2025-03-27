@@ -24,8 +24,6 @@ import {
     SubCategory,
     SubCategorySchema,
 } from '@/utils/schemas/sub-category.schema';
-import { categories } from '@/utils/data/table.data';
-import { Category } from '@/utils/schemas/category.schema';
 import { Textarea } from '../ui/textarea';
 import { useParams } from 'next/navigation';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
@@ -33,13 +31,19 @@ import { CategoryStatus, categoryStatusLabels } from '@/utils/enum/status.enum';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { addSubCategory, updateSubCategory } from '@/services/category.service';
+import { DataType, dataTypeLabels } from '@/utils/enum';
 
 interface SubCategoryFormProps {
     defaultValues?: Partial<SubCategory>;
     closeDialog: () => void;
+    categoryName: string;
 }
 
-export default function SubCategoryForm({ defaultValues, closeDialog }: SubCategoryFormProps) {
+export default function SubCategoryForm({
+    defaultValues,
+    closeDialog,
+    categoryName = '',
+}: SubCategoryFormProps) {
     const { categoryId } = useParams();
 
     // Initialize form
@@ -50,7 +54,7 @@ export default function SubCategoryForm({ defaultValues, closeDialog }: SubCateg
             subCategoryName: '',
             description: '',
             status: '0',
-            dataType: '',
+            dataType: DataType.STRING,
             categoryId: categoryId as string,
             ...defaultValues,
         },
@@ -116,7 +120,21 @@ export default function SubCategoryForm({ defaultValues, closeDialog }: SubCateg
                             <FormItem>
                                 <FormLabel>Kiểu dữ liệu</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập kiểu dữ liệu" {...field} />
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn kiểu dữ liệu" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {Object.values(DataType).map((datatype) => (
+                                                <SelectItem key={datatype} value={datatype}>
+                                                    {dataTypeLabels[datatype]}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -127,28 +145,11 @@ export default function SubCategoryForm({ defaultValues, closeDialog }: SubCateg
                     <FormField
                         control={form.control}
                         name="categoryId"
-                        render={({ field }) => (
+                        render={() => (
                             <FormItem>
                                 <FormLabel>Danh mục cha</FormLabel>
                                 <FormControl>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Chọn danh mục cha" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {categories.map((category: Category) => (
-                                                <SelectItem
-                                                    key={category.categoryId}
-                                                    value={category.categoryId}
-                                                >
-                                                    {category.categoryType}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <Input disabled value={categoryName} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

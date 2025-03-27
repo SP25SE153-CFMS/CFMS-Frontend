@@ -21,6 +21,7 @@ const routes = {
     createReceipt: 'inventory-receipt/create',
     profile: '/profile',
     chickenBatch: '/chicken-batch',
+    nutritionPlan: '/nutrition-plan',
 };
 
 export default routes;

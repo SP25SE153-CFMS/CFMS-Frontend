@@ -94,6 +94,8 @@ export const farms: Farm[] = [
         website: '/dashboard',
         imageUrl:
             'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
+        latitude: 10.7769,
+        longitude: 106.7009,
     },
     {
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
@@ -106,6 +108,8 @@ export const farms: Farm[] = [
         website: '/dashboard',
         imageUrl:
             'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
+        latitude: 10.801,
+        longitude: 106.7155,
     },
     {
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
@@ -118,6 +122,8 @@ export const farms: Farm[] = [
         website: '/dashboard',
         imageUrl:
             'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
+        latitude: 10.7623,
+        longitude: 106.7048,
     },
 ];
 

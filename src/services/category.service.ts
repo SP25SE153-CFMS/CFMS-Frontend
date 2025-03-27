@@ -2,18 +2,20 @@ import { Category } from '@/utils/schemas/category.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 import { SubCategory } from '@/utils/schemas/sub-category.schema';
+import { CategoryResponse } from '@/utils/types/custom.type';
+import { CategoryType } from '@/utils/enum/category.enum';
 
 const PREFIX = '/api/Category';
 
 export const getCategories = async () => {
     const endpoint = PREFIX;
-    const response = await get<Response<Category[]>>(endpoint);
+    const response = await get<Response<CategoryResponse[]>>(endpoint);
     return response.data.data;
 };
 
 export const getCategoryById = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
-    const response = await get<Response<Category>>(endpoint);
+    const response = await get<Response<CategoryResponse>>(endpoint);
     return response.data.data;
 };
 
@@ -45,4 +47,30 @@ export const updateSubCategory = async (body: SubCategory) => {
     const endpoint = PREFIX + '/updateSub';
     const response = await put<Response<string>>(endpoint, body);
     return response.data;
+};
+
+export const getCategoryByType = async (type: CategoryType) => {
+    const endpoint = PREFIX + '/categoryType/' + type;
+    const response = await get<Response<CategoryResponse>>(endpoint);
+    return response.data.data.subCategories;
+};
+
+export const getUnits = async () => {
+    return await getCategoryByType(CategoryType.UNIT);
+};
+
+export const getPurposes = async () => {
+    return await getCategoryByType(CategoryType.PURPOSE);
+};
+
+export const getPackageUnits = async () => {
+    return await getCategoryByType(CategoryType.PACKAGE_UNIT);
+};
+
+export const getResources = async () => {
+    return await getCategoryByType(CategoryType.RESOURCE);
+};
+
+export const getChickens = async () => {
+    return await getCategoryByType(CategoryType.CHICKEN);
 };

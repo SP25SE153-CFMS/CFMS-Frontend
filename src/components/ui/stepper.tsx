@@ -53,8 +53,6 @@ interface StepperProps {
 }
 
 export function Stepper({ steps, activeStep, visitStep, onStepClick, className }: StepperProps) {
-    console.log(visitStep, activeStep);
-
     const handleStepClick = (index: number) => {
         if (onStepClick) {
             onStepClick(index);

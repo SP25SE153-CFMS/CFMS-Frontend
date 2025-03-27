@@ -23,15 +23,12 @@ export const getBreedingAreaById = async (id: string) => {
 };
 
 export const createBreedingArea = async (body: BreedingArea) => {
-    console.log('create');
     const endpoint = PREFIX;
     const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };
 
 export const updateBreedingArea = async (body: BreedingArea) => {
-    console.log('update');
-
     const endpoint = PREFIX;
     const response = await put<Response<string>>(endpoint, body);
     return response.data;

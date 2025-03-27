@@ -55,8 +55,6 @@ export default function Page() {
     };
 
     const handleDelete = async (breedingAreaId: string) => {
-        console.log(row);
-
         await deleteBreedingArea(breedingAreaId).then(() => {
             toast.success('Đã xóa khu nuôi');
             setOpenDelete(false);

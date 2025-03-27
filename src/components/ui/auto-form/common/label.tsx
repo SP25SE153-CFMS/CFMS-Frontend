@@ -24,8 +24,6 @@ function AutoFormLabel({
 
             try {
                 const result = await translate(label, { to: 'vi' });
-                console.log(result);
-
                 setTranslatedLabel(result);
             } catch (error) {
                 console.error('Translation error:', error);
