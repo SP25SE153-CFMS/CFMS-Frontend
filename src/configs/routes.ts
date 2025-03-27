@@ -25,6 +25,7 @@ const routes = {
     forgotPassword: '/forgot-password',
     inputOTP: 'forgot-password/input-OTP',
     resetPassword: '/reset-password',
+    growthStage: '/growth-stage',
 };
 
 export default routes;

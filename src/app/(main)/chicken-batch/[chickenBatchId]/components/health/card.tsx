@@ -30,9 +30,9 @@ export default function CardHealthLog({ healthLogs }: { healthLogs: HealthLog[] 
             <Card className="p-6 mb-4">
                 <div className="flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                     <div>
-                        <h2 className="text-xl font-bold tracking-tight">Nhật ký sức khở</h2>
+                        <h2 className="text-xl font-bold tracking-tight">Nhật ký sức khỏe</h2>
                         <p className="text-muted-foreground">
-                            Danh sách nhật ký sức khở của đàn gà
+                            Danh sách nhật ký sức khỏe của đàn gà
                         </p>
                     </div>
                     <div className="flex gap-2">

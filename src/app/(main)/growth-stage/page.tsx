@@ -13,8 +13,8 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { Input } from '@/components/ui/input';
-import { getNutritionPlans } from '@/services/nutrition-plan.service';
-import NutritionPlanForm from '@/components/forms/nutrition-plan-form';
+import { getGrowthStages } from '@/services/growth-stage.service';
+import GrowthStageForm from '@/components/forms/growth-stage-form';
 import {
     Dialog,
     DialogContent,
@@ -26,27 +26,30 @@ import {
 
 export default function Page() {
     const [open, setOpen] = useState(false);
+    const openModal = () => setOpen(true);
+    const onOpenChange = (val: boolean) => setOpen(val);
+
     const [searchTerm, setSearchTerm] = useState('');
 
-    const { data: nutritionPlans, isLoading } = useQuery({
-        queryKey: ['nutritionPlans'],
-        queryFn: () => getNutritionPlans(),
+    const { data: growthStages, isLoading } = useQuery({
+        queryKey: ['growthStages'],
+        queryFn: () => getGrowthStages(),
     });
 
-    // Check if nutritionPlans is loading
+    // Check if growthStages is loading
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center h-[75vh] gap-4">
                 <LoadingSpinner />
                 <p className="text-muted-foreground animate-pulse">
-                    Đang tải dữ liệu chế độ dinh dưỡng...
+                    Đang tải dữ liệu giai đoạn phát triển...
                 </p>
             </div>
         );
     }
 
-    // Check if nutritionPlans is not null, undefined
-    if (!nutritionPlans) {
+    // Check if growthStages is not null, undefined
+    if (!growthStages) {
         return (
             <div className="w-full h-[70vh] flex items-center justify-center p-4">
                 <Card className="w-full max-w-md shadow-lg border-muted/40">
@@ -60,9 +63,9 @@ export default function Page() {
                             />
                         </div>
                         <div className="text-center space-y-2">
-                            <h1 className="text-2xl font-bold">Chưa có chế độ dinh dưỡng nào</h1>
+                            <h1 className="text-2xl font-bold">Chưa có giai đoạn phát triển nào</h1>
                             <p className="text-muted-foreground">
-                                Hãy tạo chế độ dinh dưỡng đầu tiên cho trang trại này
+                                Hãy tạo giai đoạn phát triển đầu tiên cho trang trại này
                             </p>
                         </div>
                         <div className="flex gap-3">
@@ -70,14 +73,14 @@ export default function Page() {
                                 <ChevronLeft className="mr-1 h-4 w-4" />
                                 Quay lại
                             </Button>
-                            <Dialog open={open} onOpenChange={(val) => setOpen(val)}>
+                            <Dialog open={open} onOpenChange={onOpenChange}>
                                 <DialogTrigger asChild>
-                                    <Button className="h-9" onClick={() => setOpen(true)}>
+                                    <Button className="h-9" onClick={openModal}>
                                         <Plus className="mr-2 h-4 w-4" />
                                         Tạo giai đoạn phát triển
                                     </Button>
                                 </DialogTrigger>
-                                <DialogContent className="max-w-5xl">
+                                <DialogContent>
                                     <DialogHeader>
                                         <DialogTitle>Tạo giai đoạn phát triển mới</DialogTitle>
                                         <DialogDescription>
@@ -85,7 +88,7 @@ export default function Page() {
                                             triển mới.
                                         </DialogDescription>
                                     </DialogHeader>
-                                    <NutritionPlanForm closeDialog={() => setOpen(false)} />
+                                    <GrowthStageForm closeDialog={() => setOpen(false)} />
                                 </DialogContent>
                             </Dialog>
                         </div>
@@ -95,12 +98,12 @@ export default function Page() {
         );
     }
 
-    // Filter nutrition plans based on search term
-    const filteredNutritionPlans = nutritionPlans.filter(
-        (plan) =>
+    // Filter growth stages based on search term
+    const filteredGrowthStages = growthStages.filter(
+        (stage) =>
             searchTerm === '' ||
-            plan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            plan.description?.toLowerCase().includes(searchTerm.toLowerCase()),
+            stage.stageName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            stage.description?.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
     return (
@@ -117,41 +120,43 @@ export default function Page() {
                     Trang trại
                 </Button>
                 <span className="mx-2">/</span>
-                <span>Chế độ dinh dưỡng</span>
+                <span>Giai đoạn phát triển</span>
             </div>
 
             {/* Main Content */}
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Quản lý chế độ dinh dưỡng</h1>
+                    <h1 className="text-3xl font-bold tracking-tight">
+                        Quản lý giai đoạn phát triển
+                    </h1>
                     <p className="text-muted-foreground mt-1">
-                        Quản lý tất cả các chế độ dinh dưỡng trong trang trại
+                        Quản lý tất cả các giai đoạn phát triển trong trang trại
                     </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                     <Button
                         variant="outline"
                         className="h-9"
-                        onClick={() => downloadCSV(nutritionPlans, 'nutrition-plans.csv')}
+                        onClick={() => downloadCSV(growthStages, 'growth-stages.csv')}
                     >
                         <Download className="mr-2 h-4 w-4" />
                         Xuất CSV
                     </Button>
-                    <Dialog open={open} onOpenChange={(val) => setOpen(val)}>
+                    <Dialog open={open} onOpenChange={onOpenChange}>
                         <DialogTrigger asChild>
-                            <Button className="h-9" onClick={() => setOpen(true)}>
+                            <Button className="h-9" onClick={openModal}>
                                 <Plus className="mr-2 h-4 w-4" />
                                 Tạo giai đoạn
                             </Button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-5xl">
+                        <DialogContent>
                             <DialogHeader>
                                 <DialogTitle>Tạo giai đoạn phát triển mới</DialogTitle>
                                 <DialogDescription>
                                     Hãy nhập các thông tin dưới đây để tạo giai đoạn phát triển mới.
                                 </DialogDescription>
                             </DialogHeader>
-                            <NutritionPlanForm closeDialog={() => setOpen(false)} />
+                            <GrowthStageForm closeDialog={() => setOpen(false)} />
                         </DialogContent>
                     </Dialog>
                 </div>
@@ -165,7 +170,7 @@ export default function Page() {
                             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                             <Input
                                 type="search"
-                                placeholder="Tìm kiếm chế độ dinh dưỡng..."
+                                placeholder="Tìm kiếm giai đoạn phát triển..."
                                 className="pl-8 w-full"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -174,7 +179,7 @@ export default function Page() {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <DataTable data={filteredNutritionPlans} columns={columns} />
+                    <DataTable data={filteredGrowthStages} columns={columns} />
                 </CardContent>
             </Card>
         </div>

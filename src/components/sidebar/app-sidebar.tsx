@@ -16,6 +16,9 @@ import SidebarFooterMenu from './sidebar-footer-menu';
 import SidebarNavigation from './sidebar-navigation';
 import { currentUser } from '@/utils/data/mock.data';
 import SidebarOverview from './sidebar-overview';
+import { getCategories } from '@/services/category.service';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const user = {
@@ -24,6 +27,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         avatar: currentUser.avatar,
     };
 
+    const { data: categories, isLoading } = useQuery({
+        queryKey: ['categories'],
+        queryFn: () => getCategories(),
+    });
+
+    useEffect(() => {
+        if (categories) {
+            sessionStorage.setItem('categories', JSON.stringify(categories));
+        }
+    }, [categories]);
+
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
@@ -31,7 +45,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent>
                 <SidebarNavigation sidebarItems={sidebarItems} />
-                <SidebarOverview />
+                <SidebarOverview categories={categories} isLoading={isLoading} />
             </SidebarContent>
             <SidebarFooter>
                 <SidebarFooterMenu user={user} />

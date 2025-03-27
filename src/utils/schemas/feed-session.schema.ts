@@ -4,7 +4,7 @@ export const FeedSessionSchema = z.object({
     feedSessionId: z.string().uuid({ message: 'ID phiên cho ăn không hợp lệ, phải là UUID' }),
     nutritionPlanId: z
         .string()
-        .uuid({ message: 'ID kế hoạch dinh dưỡng không hợp lệ, phải là UUID' }),
+        .uuid({ message: 'ID chế độ dinh dưỡng không hợp lệ, phải là UUID' }),
     feedingTime: z
         .string()
         .datetime({ message: 'Thời gian cho ăn không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
