@@ -20,9 +20,9 @@ import {
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
 import toast from 'react-hot-toast';
-import NutritionPlanForm from '@/components/forms/nutrition-plan-form';
-import { deleteNutritionPlan } from '@/services/nutrition-plan.service';
-import { NutritionPlan } from '@/utils/schemas/nutrition-plan.schema';
+import { deleteGrowthStage } from '@/services/growth-stage.service';
+import { GrowthStage } from '@/utils/schemas/growth-stage.schema';
+import GrowthStageForm from '@/components/forms/growth-stage-form';
 import {
     Dialog,
     DialogContent,
@@ -42,9 +42,9 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openDelete, setOpenDelete] = useState(false);
 
     const handleDelete = async () => {
-        const nutritionId = (row.original as NutritionPlan).nutritionPlanId;
-        await deleteNutritionPlan(nutritionId).then(() => {
-            toast.success('Đã xóa chế độ dinh dưỡng');
+        const growthStageId = (row.original as GrowthStage).growthStageId;
+        await deleteGrowthStage(growthStageId).then(() => {
+            toast.success('Đã xóa giai đoạn phát triển');
             setOpenDelete(false);
         });
     };
@@ -62,11 +62,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <DropdownMenuItem
                         onClick={() => {
                             router.push(
-                                `${config.routes.chickenCoop}?breedingAreaId=${row.getValue('breedingAreaId')}`,
-                            );
-                            sessionStorage.setItem(
-                                'breedingAreaId',
-                                row.getValue('breedingAreaId'),
+                                `${config.routes.growthStage}/${row.getValue('growthStageId')}`,
                             );
                         }}
                     >
@@ -83,15 +79,15 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             </DropdownMenu>
 
             {/* Update Dialog */}
-            <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
-                <DialogContent className="max-w-5xl">
+            <Dialog open={openUpdate} onOpenChange={(val) => setOpenUpdate(val)}>
+                <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Cập nhật chế độ dinh dưỡng</DialogTitle>
                         <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                     </DialogHeader>
                     <ScrollArea className="max-h-[600px]">
-                        <NutritionPlanForm
-                            defaultValues={row.original as NutritionPlan}
+                        <GrowthStageForm
+                            defaultValues={row.original as GrowthStage}
                             closeDialog={() => setOpenUpdate(false)}
                         />
                     </ScrollArea>
@@ -104,7 +100,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa chế độ dinh dưỡng này?
+                            Bạn có chắc chắn muốn xóa giai đoạn phát triển này?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="flex justify-end space-x-2">

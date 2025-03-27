@@ -22,6 +22,7 @@ const routes = {
     profile: '/profile',
     chickenBatch: '/chicken-batch',
     nutritionPlan: '/nutrition-plan',
+    growthStage: '/growth-stage',
 };
 
 export default routes;

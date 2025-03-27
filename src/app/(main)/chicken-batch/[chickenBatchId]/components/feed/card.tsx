@@ -37,7 +37,7 @@ export default function CardFeedLog({ feedLogs }: { feedLogs: FeedLog[] }) {
                         <Button
                             variant="outline"
                             className="space-x-1"
-                            onClick={() => downloadCSV(feedLogs, 'vaccination-log.csv')}
+                            onClick={() => downloadCSV(feedLogs, 'feed-logs.csv')}
                         >
                             <span>Tải file</span> <Download size={18} />
                         </Button>
