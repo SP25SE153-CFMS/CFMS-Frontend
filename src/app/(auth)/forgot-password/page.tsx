@@ -98,7 +98,7 @@ export default function ForgotPasswordPage() {
     };
 
     return (
-        <div className="container flex items-center justify-center min-h-screen py-8">
+        <div className="w-screen flex items-center justify-center min-h-screen py-8">
             <Card className="w-full max-w-xl">
                 <CardHeader className="space-y-1">
                     <div className="flex items-center justify-between">

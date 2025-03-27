@@ -82,7 +82,7 @@ export default function ResetPasswordPage() {
     };
 
     return (
-        <div className="container flex flex-col items-center justify-center min-h-screen py-8">
+        <div className="w-screen flex flex-col items-center justify-center min-h-screen py-8">
             <Card className="w-full max-w-md mx-auto shadow-lg">
                 <CardHeader className="space-y-1 text-center">
                     <div className="flex justify-center mb-2">
