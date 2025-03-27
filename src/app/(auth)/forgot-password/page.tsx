@@ -79,7 +79,7 @@ export default function ForgotPasswordPage() {
 
             setShowSuccessDialog(true);
 
-            // Chờ 2 giây xong chuyển trang
+            // Chờ 1 giây xong chuyển trang
             setTimeout(() => {
                 setShowSuccessDialog(false);
                 router.push(config.routes.inputOTP);
