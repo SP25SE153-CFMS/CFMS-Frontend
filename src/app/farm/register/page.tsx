@@ -274,7 +274,10 @@ export default function Page() {
                                                     <Input
                                                         type="number"
                                                         step="any"
-                                                        disabled
+                                                        disabled={
+                                                            form.getValues('latitude') === 0 ||
+                                                            form.getValues('longitude') === 0
+                                                        }
                                                         placeholder="Nhập vĩ độ (ví dụ: 21.0278)"
                                                         {...field}
                                                         onChange={async (e) => {
@@ -302,7 +305,10 @@ export default function Page() {
                                                     <Input
                                                         type="number"
                                                         step="any"
-                                                        disabled
+                                                        disabled={
+                                                            form.getValues('latitude') === 0 ||
+                                                            form.getValues('longitude') === 0
+                                                        }
                                                         placeholder="Nhập kinh độ (ví dụ: 105.8342)"
                                                         {...field}
                                                         onChange={async (e) => {
