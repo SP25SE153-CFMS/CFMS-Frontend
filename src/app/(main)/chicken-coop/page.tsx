@@ -40,6 +40,8 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -52,7 +54,7 @@ export default function Page() {
     // Fetch all breeding areas
     const { data: breedingAreas, isLoading: isLoadingBreedingAreas } = useQuery({
         queryKey: ['breedingAreas'],
-        queryFn: () => getBreedingAreasByFarmId(sessionStorage.getItem('farmId') ?? ''),
+        queryFn: () => getBreedingAreasByFarmId(getCookie(config.cookies.farmId) ?? ''),
     });
 
     // Set initial breeding area from sessionStorage

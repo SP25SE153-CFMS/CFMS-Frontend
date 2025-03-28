@@ -11,6 +11,7 @@ import { chickenCoopStatusLabels, chickenCoopStatusVariant } from '@/utils/enum/
 import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { Select } from '@radix-ui/react-select';
 import { useQuery } from '@tanstack/react-query';
+import { getCookie } from 'cookies-next';
 import { AlignRight, Code, Map, Tag, TrendingUp, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -41,7 +42,7 @@ const ChickenCoopDetails = () => {
 
     const { data: breedingAreas } = useQuery({
         queryKey: ['breedingAreas'],
-        queryFn: () => getBreedingAreasByFarmId(sessionStorage.getItem('farmId') ?? ''),
+        queryFn: () => getBreedingAreasByFarmId(getCookie(config.cookies.farmId) ?? ''),
     });
 
     const currentBreedingArea = breedingAreas?.find(

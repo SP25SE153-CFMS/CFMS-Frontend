@@ -43,6 +43,7 @@ import ChickenBatchForm from '@/components/forms/chicken-batch-form';
 import { cn } from '@/lib/utils';
 import config from '@/configs';
 import Link from 'next/link';
+import { getCookie } from 'cookies-next';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -57,7 +58,7 @@ export default function Page() {
     const { data: breedingAreas, isLoading: isLoadingBreedingAreas } = useQuery({
         queryKey: ['breedingAreas'],
         queryFn: async () => {
-            const farmId = sessionStorage.getItem('farmId') ?? '';
+            const farmId = getCookie(config.cookies.farmId) ?? '';
             const areas = await getBreedingAreasByFarmId(farmId);
             return areas.filter((area) => area.chickenCoops.length > 0);
         },

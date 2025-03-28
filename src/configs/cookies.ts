@@ -1,6 +1,7 @@
 const cookies = {
-    accessToken: "accessToken",
-    refreshToken: "refreshToken",
-}
+    accessToken: 'accessToken',
+    refreshToken: 'refreshToken',
+    farmId: 'farmId',
+};
 
-export default cookies
+export default cookies;

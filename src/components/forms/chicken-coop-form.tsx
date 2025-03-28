@@ -19,6 +19,8 @@ import { ChickenCoopStatus, chickenCoopStatusLabels } from '@/utils/enum/status.
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import AutoForm from '../ui/auto-form';
 import { subCategories } from '@/utils/data/table.data';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
 
 interface ChickenCoopFormProps {
     defaultValues?: Partial<ChickenCoop>;
@@ -28,7 +30,7 @@ interface ChickenCoopFormProps {
 export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenCoopFormProps) {
     const { data: breedingAreas } = useQuery({
         queryKey: ['breedingAreas'],
-        queryFn: () => getBreedingAreasByFarmId(sessionStorage.getItem('farmId') ?? ''),
+        queryFn: () => getBreedingAreasByFarmId(getCookie(config.cookies.farmId) ?? ''),
     });
 
     // Query client

@@ -24,6 +24,8 @@ import toast from 'react-hot-toast';
 import { Card, CardContent } from '@/components/ui/card';
 import { CloudinaryImageUpload } from '../cloudinary-image-upload';
 import { getFarmsForCurrentUser } from '@/services/farm.service';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
 interface BreedingAreaFormProps {
     defaultValues?: Partial<BreedingArea>;
     closeDialog: () => void;
@@ -42,7 +44,7 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
             imageUrl: '',
             notes: '',
             status: '1',
-            farmId: sessionStorage.getItem('farmId') || '',
+            farmId: getCookie(config.cookies.farmId) || '',
             ...defaultValues,
         },
     });
