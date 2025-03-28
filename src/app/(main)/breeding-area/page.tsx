@@ -112,6 +112,21 @@ export default function Page() {
                         </div>
                     </CardContent>
                 </Card>
+
+                {/* Create Breeding Area Dialog */}
+                <Dialog open={open} onOpenChange={(val) => setOpen(val)}>
+                    <DialogContent className="max-w-3xl">
+                        <DialogHeader>
+                            <DialogTitle>Tạo khu nuôi mới</DialogTitle>
+                            <DialogDescription>
+                                Hãy nhập các thông tin dưới đây để tạo khu nuôi mới.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <ScrollArea className="max-h-[70vh]">
+                            <BreedingAreaForm closeDialog={() => setOpen(false)} />
+                        </ScrollArea>
+                    </DialogContent>
+                </Dialog>
             </div>
         );
     }

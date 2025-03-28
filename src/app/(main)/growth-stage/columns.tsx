@@ -9,6 +9,7 @@ import { DataTableRowActions } from './data-table-row-actions';
 import config from '@/configs';
 import { CategoryType } from '@/utils/enum/category.enum';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export const columns: ColumnDef<GrowthStage>[] = [
     {
@@ -52,7 +53,16 @@ export const columns: ColumnDef<GrowthStage>[] = [
     {
         accessorKey: 'description',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mô tả" />,
-        cell: ({ row }) => <div className="w-[300px] truncate">{row.getValue('description')}</div>,
+        cell: ({ row }) => (
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger>
+                        <div className="w-[300px] truncate">{row.getValue('description')}</div>
+                    </TooltipTrigger>
+                    <TooltipContent>{row.getValue('description')}</TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+        ),
     },
     {
         accessorKey: 'stageCode',

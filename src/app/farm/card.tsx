@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import config from '@/configs';
 import { scaleLabels } from '@/utils/enum/status.enum';
 import { Farm } from '@/utils/schemas/farm.schema';
+import { setCookie } from 'cookies-next';
 import { Ruler, Scale3d } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,7 +14,7 @@ export function FarmCard({ farm }: { farm: Farm }) {
             key={farm.farmId}
             rel="noopener noreferrer"
             onClick={() => {
-                sessionStorage.setItem('farmId', farm.farmId);
+                setCookie('farmId', farm.farmId);
             }}
         >
             <Card className="hover:shadow-lg transition-shadow duration-300 mb-4">

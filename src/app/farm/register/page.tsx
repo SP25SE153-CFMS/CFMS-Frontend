@@ -274,11 +274,17 @@ export default function Page() {
                                                     <Input
                                                         type="number"
                                                         step="any"
+                                                        disabled
                                                         placeholder="Nhập vĩ độ (ví dụ: 21.0278)"
                                                         {...field}
-                                                        onChange={(e) =>
-                                                            field.onChange(Number(e.target.value))
-                                                        }
+                                                        onChange={async (e) => {
+                                                            field.onChange(Number(e.target.value));
+                                                            const address = await getAddress(
+                                                                Number(e.target.value),
+                                                                form.getValues('longitude'),
+                                                            );
+                                                            form.setValue('address', address);
+                                                        }}
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -296,11 +302,17 @@ export default function Page() {
                                                     <Input
                                                         type="number"
                                                         step="any"
+                                                        disabled
                                                         placeholder="Nhập kinh độ (ví dụ: 105.8342)"
                                                         {...field}
-                                                        onChange={(e) =>
-                                                            field.onChange(Number(e.target.value))
-                                                        }
+                                                        onChange={async (e) => {
+                                                            field.onChange(Number(e.target.value));
+                                                            const address = await getAddress(
+                                                                form.getValues('latitude'),
+                                                                Number(e.target.value),
+                                                            );
+                                                            form.setValue('address', address);
+                                                        }}
                                                     />
                                                 </FormControl>
                                                 <FormMessage />

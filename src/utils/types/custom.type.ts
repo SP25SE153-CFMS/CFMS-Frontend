@@ -1,3 +1,4 @@
+import { BreedingArea } from '../schemas/breeding-area.schema';
 import { Category } from '../schemas/category.schema';
 import { ChickenBatch } from '../schemas/chicken-batch.schema';
 import { ChickenCoop } from '../schemas/chicken-coop.schema';
@@ -26,4 +27,8 @@ export type ChickenBatchResponse = ChickenBatch & {
 
 export type CategoryResponse = Category & {
     subCategories: SubCategory[];
+};
+
+export type BreedingAreaResponse = BreedingArea & {
+    chickenCoops: ChickenCoop[];
 };

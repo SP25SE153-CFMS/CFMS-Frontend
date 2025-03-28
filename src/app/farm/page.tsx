@@ -19,7 +19,7 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import config from '@/configs';
 import { useQuery } from '@tanstack/react-query';
-import { getFarms } from '@/services/farm.service';
+import { getFarmsForCurrentUser } from '@/services/farm.service';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
@@ -32,7 +32,7 @@ const FarmMapWithNoSSR = dynamic(() => import('@/components/farm-map'), { ssr: f
 export default function Page() {
     const { data: farms, isLoading } = useQuery({
         queryKey: ['farms'],
-        queryFn: () => getFarms(),
+        queryFn: () => getFarmsForCurrentUser(),
     });
 
     // Filter states

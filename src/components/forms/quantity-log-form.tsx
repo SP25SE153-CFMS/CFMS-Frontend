@@ -1,74 +1,220 @@
-import React, { useState } from 'react';
+'use client';
 
-const QuantityLogForm = () => {
-    const [quantityLog, setQuantityLog] = useState({
-        chickenBatchId: '',
-        logDate: '',
-        notes: '',
-        quantity: 0,
-        logType: 0, // 0 - chet, 1 - tach dan, 2 - nhap dan
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { CalendarIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
+import { CreateQuantityLogSchema, type QuantityLog } from '@/utils/schemas/quantity-log.schema';
+import toast from 'react-hot-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Textarea } from '../ui/textarea';
+import dayjs from 'dayjs';
+import { useParams } from 'next/navigation';
+import { addQuantityLog } from '@/services/chicken-batch.service';
+
+interface QuantityLogFormProps {
+    defaultValues?: Partial<QuantityLog>;
+    closeDialog: () => void;
+}
+
+export default function QuantityLogForm({ defaultValues, closeDialog }: QuantityLogFormProps) {
+    const { chickenBatchId }: { chickenBatchId: string } = useParams();
+
+    // Initialize form
+    const form = useForm<QuantityLog>({
+        resolver: zodResolver(CreateQuantityLogSchema),
+        defaultValues: {
+            chickenBatchId,
+            logDate: new Date().toISOString(),
+            notes: '',
+            quantity: 0,
+            logType: 1,
+            ...defaultValues,
+        },
     });
 
-    const handleChange = (e: any) => {
-        const { name, value } = e.target;
-        setQuantityLog({
-            ...quantityLog,
-            [name]: value,
-        });
-    };
+    // Query client
+    const queryClient = useQueryClient();
 
-    const handleSubmit = (e: any) => {
-        e.preventDefault();
-        // Add form submission logic here
-    };
+    // Mutations for creating and updating
+    const mutation = useMutation({
+        // mutationFn: defaultValues ? updateQuantityLog : createQuantityLog,
+        mutationFn: addQuantityLog,
+        onSuccess: () => {
+            closeDialog();
+            queryClient.invalidateQueries({ queryKey: ['quantityLogs'] });
+            toast.success(
+                defaultValues
+                    ? 'Cập nhật nhật ký số lượng thành công'
+                    : 'Tạo nhật ký số lượng thành công',
+            );
+        },
+        onError: (error: any) => {
+            console.error(error);
+            toast.error(error?.response?.data?.message);
+        },
+    });
+
+    // Form submit handler
+    async function onSubmit(values: QuantityLog) {
+        mutation.mutate(values);
+    }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Chicken Batch ID:</label>
-                <input
-                    type="text"
-                    name="chickenBatchId"
-                    value={quantityLog.chickenBatchId}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-            <div>
-                <label>Log Date:</label>
-                <input
-                    type="date"
-                    name="logDate"
-                    value={quantityLog.logDate}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-            <div>
-                <label>Notes:</label>
-                <textarea name="notes" value={quantityLog.notes} onChange={handleChange} />
-            </div>
-            <div>
-                <label>Quantity:</label>
-                <input
-                    type="number"
-                    name="quantity"
-                    value={quantityLog.quantity}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-            <div>
-                <label>Log Type:</label>
-                <select name="logType" value={quantityLog.logType} onChange={handleChange}>
-                    <option value="0">Chet</option>
-                    <option value="1">Tach Dan</option>
-                    <option value="2">Nhap Dan</option>
-                </select>
-            </div>
-            <button type="submit">Submit</button>
-        </form>
-    );
-};
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
+                    {/* Chicken Batch ID */}
+                    {/* <FormField
+                        control={form.control}
+                        name="chickenBatchId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>ID Lô gà</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn chuồng gà" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {chickenBatches.map((batch) => (
+                                                <SelectItem
+                                                    key={batch.chickenCoopId}
+                                                    value={batch.chickenCoopId}
+                                                >
+                                                    {batch.chickenCoopName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    /> */}
 
-export default QuantityLogForm;
+                    {/* Log Date */}
+                    <FormField
+                        control={form.control}
+                        name="logDate"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Ngày nhật ký</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={'outline'}
+                                                className={cn('w-full pl-3 text-left font-normal')}
+                                            >
+                                                {dayjs(field.value).format('DD/MM/YYYY')}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={
+                                                field.value ? new Date(field.value) : new Date()
+                                            }
+                                            onSelect={(date) => field.onChange(date?.toISOString())}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Quantity */}
+                    <FormField
+                        control={form.control}
+                        name="quantity"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Số lượng</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="number"
+                                        min={0}
+                                        placeholder="Nhập số lượng"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Notes */}
+                    <FormField
+                        control={form.control}
+                        name="notes"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Ghi chú</FormLabel>
+                                <FormControl>
+                                    <Textarea placeholder="Nhập ghi chú" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Log Type */}
+                    <FormField
+                        control={form.control}
+                        name="logType"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Loại nhật ký</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={(value) => field.onChange(Number(value))}
+                                        defaultValue={field.value.toString()}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn loại nhật ký" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="1">Nhập</SelectItem>
+                                            <SelectItem value="2">Xuất</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+                <Button type="submit" className="mx-auto mt-6 w-60">
+                    Gửi
+                </Button>
+            </form>
+        </Form>
+    );
+}
