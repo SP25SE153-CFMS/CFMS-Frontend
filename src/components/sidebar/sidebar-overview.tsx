@@ -30,8 +30,8 @@ export default function SidebarOverview({
             <>
                 <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                        <Link href={`${config.routes.categoryAll}?categoryType=UNIT`}>
-                            <span>Đơn vị</span>
+                        <Link href={config.routes.categoryUnit}>
+                            <span>Danh mục đơn vị</span>
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>

@@ -172,7 +172,7 @@ export default function Page() {
         );
     }
 
-    if (!chickenCoops || chickenCoops.length === 0) {
+    if (!chickenCoops) {
         return (
             <div className="space-y-6">
                 <div className="flex items-center text-sm text-muted-foreground">
