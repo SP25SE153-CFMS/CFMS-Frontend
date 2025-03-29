@@ -1,7 +1,7 @@
 'use client';
 
 import { DataTable } from '@/components/table/data-table';
-import { columns } from './columns';
+import { columns } from '../columns';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import { Card } from '@/components/ui/card';

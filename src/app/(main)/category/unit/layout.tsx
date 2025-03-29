@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Tất cả danh mục dùng chung',
+    title: 'Tất cả danh mục đơn vị',
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
