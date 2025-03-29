@@ -45,7 +45,7 @@ export default function Page() {
         <div>
             <div className="flex justify-between">
                 <h1 className="text-3xl font-bold tracking-tight">
-                    Thông tin chuồng nuôi
+                    Chuồng nuôi
                     <span className="text-primary ml-2">{chickenCoop?.chickenCoopName}</span>
                 </h1>
             </div>

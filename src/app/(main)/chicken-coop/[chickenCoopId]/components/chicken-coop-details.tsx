@@ -1,10 +1,10 @@
+import InfoItem from '@/components/info-item';
 import PopoverWithOverlay from '@/components/popover-with-overlay';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import config from '@/configs';
-import { cn } from '@/lib/utils';
 import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
 import { useChickenCoopStore } from '@/store/use-chicken-coop';
 import { chickenCoopStatusLabels, chickenCoopStatusVariant } from '@/utils/enum/status.enum';
@@ -14,26 +14,6 @@ import { useQuery } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 import { AlignRight, Code, Map, Tag, TrendingUp, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-
-const InfoItem = ({
-    label,
-    value,
-    icon,
-    className,
-}: {
-    label: string;
-    value: React.ReactNode;
-    icon: React.ReactNode;
-    className?: string;
-}) => (
-    <div className={cn('flex items-center gap-3 text-sm mb-4 group', className)}>
-        <div className="text-muted-foreground transition-colors group-hover:text-primary">
-            {icon}
-        </div>
-        <span className="text-muted-foreground">{label}:</span>
-        <div className="flex-1 text-right font-medium">{value}</div>
-    </div>
-);
 
 const ChickenCoopDetails = () => {
     const { chickenCoop, setChickenCoop } = useChickenCoopStore();

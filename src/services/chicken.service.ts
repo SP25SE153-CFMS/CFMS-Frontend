@@ -1,12 +1,13 @@
 import { Chicken } from '@/utils/schemas/chicken.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
+import { ChickenResponse } from '@/utils/types/custom.type';
 
 const PREFIX = '/api/Chicken';
 
 export const getChickens = async () => {
     const endpoint = PREFIX;
-    const response = await get<Response<Chicken[]>>(endpoint);
+    const response = await get<Response<ChickenResponse[]>>(endpoint);
     return response.data.data;
 };
 

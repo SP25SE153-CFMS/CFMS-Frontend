@@ -17,7 +17,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
 import { ChickenCoopStatus, chickenCoopStatusLabels } from '@/utils/enum/status.enum';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
-import AutoForm from '../ui/auto-form';
+import AutoForm from '../auto-form';
 import { subCategories } from '@/utils/data/table.data';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';

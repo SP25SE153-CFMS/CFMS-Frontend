@@ -7,8 +7,7 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import Link from 'next/link';
 import { DataTableRowActions } from './data-table-row-actions';
 import config from '@/configs';
-import { CategoryType } from '@/utils/enum/category.enum';
-import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { getChickenType } from '@/utils/functions/category.function';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export const columns: ColumnDef<GrowthStage>[] = [
@@ -76,11 +75,7 @@ export const columns: ColumnDef<GrowthStage>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Loại gà" />,
         cell: ({ row }) => {
             const chickenTypeId = row.getValue('chickenType') as string;
-            const chickenType = getSubCategoryByCategoryType(CategoryType.CHICKEN).find(
-                (subCategory) => subCategory.subCategoryId === chickenTypeId,
-            );
-
-            return <div>{chickenType?.subCategoryName ?? 'Không có'}</div>;
+            return <div>{getChickenType(chickenTypeId)?.subCategoryName ?? 'Không có'}</div>;
         },
     },
     {
