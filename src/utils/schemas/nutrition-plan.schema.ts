@@ -7,7 +7,6 @@ export const NutritionPlanSchema = z.object({
         .uuid({ message: 'ID chế độ dinh dưỡng không hợp lệ, phải là UUID' }),
     name: z.string().min(1, { message: 'Tên kế hoạch là bắt buộc' }),
     description: z.string().optional(),
-    // target: z.string().optional(),
 });
 
 export type NutritionPlan = z.infer<typeof NutritionPlanSchema> & {

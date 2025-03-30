@@ -16,8 +16,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
-import { CreateQuantityLogSchema, QuantityLog } from '@/utils/schemas/quantity-log.schema';
-import AutoForm from '@/components/ui/auto-form';
+import { QuantityLog } from '@/utils/schemas/quantity-log.schema';
+import QuantityLogForm from '@/components/forms/quantity-log-form';
 
 export default function CardQuantityLog({ quantityLogs }: { quantityLogs: QuantityLog[] }) {
     const [open, setOpen] = useState(false);
@@ -55,9 +55,7 @@ export default function CardQuantityLog({ quantityLogs }: { quantityLogs: Quanti
                                     </DialogDescription>
                                 </DialogHeader>
                                 <ScrollArea className="max-h-[600px]">
-                                    <AutoForm formSchema={CreateQuantityLogSchema}>
-                                        <Button type="submit">Gửi</Button>
-                                    </AutoForm>
+                                    <QuantityLogForm closeDialog={() => setOpen(false)} />
                                 </ScrollArea>
                             </DialogContent>
                         </Dialog>

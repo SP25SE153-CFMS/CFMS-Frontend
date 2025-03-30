@@ -42,6 +42,8 @@ import {
 } from '@/components/ui/alert-dialog';
 import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import BreedingAreaCard from './card';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -63,7 +65,7 @@ export default function Page() {
 
     const { data: breedingAreas, isLoading } = useQuery({
         queryKey: ['breedingAreas'],
-        queryFn: () => getBreedingAreasByFarmId(sessionStorage.getItem('farmId') ?? ''),
+        queryFn: () => getBreedingAreasByFarmId(getCookie(config.cookies.farmId) ?? ''),
     });
 
     const [openUpdate, setOpenUpdate] = useState(false);
@@ -112,6 +114,21 @@ export default function Page() {
                         </div>
                     </CardContent>
                 </Card>
+
+                {/* Create Breeding Area Dialog */}
+                <Dialog open={open} onOpenChange={(val) => setOpen(val)}>
+                    <DialogContent className="max-w-3xl">
+                        <DialogHeader>
+                            <DialogTitle>Tạo khu nuôi mới</DialogTitle>
+                            <DialogDescription>
+                                Hãy nhập các thông tin dưới đây để tạo khu nuôi mới.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <ScrollArea className="max-h-[70vh]">
+                            <BreedingAreaForm closeDialog={() => setOpen(false)} />
+                        </ScrollArea>
+                    </DialogContent>
+                </Dialog>
             </div>
         );
     }

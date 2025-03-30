@@ -1,3 +1,3 @@
-import useParam from './use-param';
+import useParams from './use-params';
 import useWindowDimensions from './use-window-dimensions';
-export { useWindowDimensions, useParam };
+export { useWindowDimensions, useParams };

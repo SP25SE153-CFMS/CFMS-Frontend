@@ -1,9 +1,9 @@
 'use client';
 
-import { AlignRight, Database } from 'lucide-react';
+import { ClipboardList, Database, Egg, FileText, Info, InfoIcon, Tag, Type } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import dayjs from 'dayjs';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { chickenBatchStatusLabels, chickenBatchStatusVariant } from '@/utils/enum/status.enum';
@@ -12,22 +12,17 @@ import CardVaccinationLog from './components/vaccine/card';
 import { getChickenBatchById } from '@/services/chicken-batch.service';
 import { useQuery } from '@tanstack/react-query';
 import { chickenBatchIndicators } from '@/utils/data/table.data';
-import CardFlockNutrition from './components/nutrition/card';
+import CardNutritionPlan from './components/nutrition/card';
 import CardHealthLog from './components/health/card';
 import CardQuantityLog from './components/quantity/card';
 import CardFeedLog from './components/feed/card';
-import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import PopoverWithOverlay from '@/components/popover-with-overlay';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { useState } from 'react';
 import { Stepper } from '@/components/ui/stepper';
 import { Chart } from './chart';
+import { getChickenType } from '@/utils/functions/category.function';
+import InfoItem from '@/components/info-item';
+import { Button } from '@/components/ui/button';
+import ChickenDetailsDialog from '@/components/chicken-details-dialog';
 
 export default function Page() {
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
@@ -38,10 +33,7 @@ export default function Page() {
         enabled: !!chickenBatchId,
     });
 
-    const [chickenId, setChickenId] = useState(chickenBatch?.chickens[0].chickenId);
-    const currentChicken =
-        chickenBatch?.chickens.find((chicken) => chicken.chickenId === chickenId) ||
-        chickenBatch?.chickens[0];
+    const chicken = chickenBatch?.chicken;
 
     const [visitStep, setVisitStep] = useState(-1);
 
@@ -116,89 +108,92 @@ export default function Page() {
 
                     {/* Chicken Details */}
                     <Card>
-                        <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4">
-                            <div className="flex justify-between items-center mb-4">
-                                <h3 className="font-bold pl-3 text-lg relative before:content-[''] before:absolute before:top-[3px] before:left-0 before:w-[4px] before:h-full before:bg-primary inline-block">
-                                    Thông tin giống gà
-                                </h3>
-                                <PopoverWithOverlay>
-                                    <PopoverTrigger>
-                                        <AlignRight size={20} />
-                                    </PopoverTrigger>
-                                    <PopoverContent className="p-0">
-                                        <Select
-                                            defaultValue={chickenId}
-                                            onValueChange={(id) => setChickenId(id)}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Đổi giống gà..." />
-                                            </SelectTrigger>
-                                            <SelectContent className="max-h-72">
-                                                {chickenBatch.chickens.map((chicken) => (
-                                                    <SelectItem
-                                                        key={chicken.chickenId}
-                                                        value={chicken.chickenId}
-                                                    >
-                                                        {chicken.chickenName}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </PopoverContent>
-                                </PopoverWithOverlay>
-                            </div>
+                        {chicken ? (
+                            <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4">
+                                <div className="flex justify-between items-center mb-4">
+                                    <h3 className="font-bold pl-3 text-lg relative before:content-[''] before:absolute before:top-[3px] before:left-0 before:w-[4px] before:h-full before:bg-primary inline-block">
+                                        Thông tin giống gà
+                                    </h3>
+                                </div>
 
-                            <div className="flex gap-3 text-sm mb-4 justify-between">
-                                Mã gà:{' '}
-                                <strong className="flex-1 text-right">
-                                    {currentChicken?.chickenCode || 'Không có mã gà'}
-                                </strong>
+                                <InfoItem
+                                    icon={<Tag className="h-4 w-4" />}
+                                    label="Mã gà"
+                                    value={chicken?.chickenCode || 'Không có mã gà'}
+                                />
+
+                                <InfoItem
+                                    icon={<ClipboardList className="h-4 w-4" />}
+                                    label="Tên gà"
+                                    value={chicken?.chickenName || 'Không có tên gà'}
+                                />
+
+                                <InfoItem
+                                    icon={<Egg className="h-4 w-4" />}
+                                    label="Tổng số lượng"
+                                    value={
+                                        chicken?.totalQuantity !== undefined
+                                            ? chicken?.totalQuantity.toString()
+                                            : 'Không có số lượng'
+                                    }
+                                />
+
+                                <InfoItem
+                                    icon={<FileText className="h-4 w-4" />}
+                                    label="Mô tả"
+                                    value={chicken?.description || 'Không có mô tả'}
+                                />
+
+                                <InfoItem
+                                    icon={<Type className="h-4 w-4" />}
+                                    label="Loại gà"
+                                    value={
+                                        getChickenType(chicken?.chickenTypeId)?.subCategoryName ||
+                                        'Không có loại gà'
+                                    }
+                                />
+
+                                <InfoItem
+                                    icon={<InfoIcon className="h-4 w-4" />}
+                                    label="Trạng thái"
+                                    value={
+                                        chicken?.status ? (
+                                            <Badge
+                                                variant={chickenBatchStatusVariant[chicken?.status]}
+                                            >
+                                                {chickenBatchStatusLabels[chicken?.status]}
+                                            </Badge>
+                                        ) : (
+                                            <span className="text-muted-foreground">-</span>
+                                        )
+                                    }
+                                />
+
+                                <ChickenDetailsDialog
+                                    trigger={
+                                        <Button variant="outline" className="w-full group">
+                                            <Info
+                                                size={16}
+                                                className="mr-2 group-hover:text-primary transition-colors"
+                                            />
+                                            <span>Xem chi tiết</span>
+                                        </Button>
+                                    }
+                                    chickenDetails={chicken?.chickenDetails}
+                                />
                             </div>
-                            <div className="flex gap-3 text-sm mb-4 justify-between">
-                                Tên gà:{' '}
-                                <strong className="flex-1 text-right">
-                                    {currentChicken?.chickenName || 'Không có tên gà'}
-                                </strong>
-                            </div>
-                            <div className="flex gap-3 text-sm mb-4 justify-between">
-                                Tổng số lượng:{' '}
-                                <strong className="flex-1 text-right">
-                                    {currentChicken?.totalQuantity !== undefined
-                                        ? currentChicken?.totalQuantity
-                                        : 'Không có số lượng'}
-                                </strong>
-                            </div>
-                            <div className="flex gap-3 text-sm mb-4 justify-between">
-                                Mô tả:{' '}
-                                <strong className="flex-1 text-right">
-                                    {currentChicken?.description || 'Không có mô tả'}
-                                </strong>
-                            </div>
-                            {/* <div className="flex gap-3 text-sm mb-4 justify-between">
-                                ID mục đích:{' '}
-                                <strong className="flex-1 text-right">
-                                    {currentChicken?.purposeId || 'Không có ID mục đích'}
-                                </strong>
-                            </div> */}
-                            <div className="flex gap-3 text-sm mb-4 justify-between">
-                                Loại gà:{' '}
-                                <strong className="flex-1 text-right">
-                                    {/* {currentChicken?.chickenTypeId || 'Không có ID loại'} */}-
-                                </strong>
-                            </div>
-                            <div className="flex gap-3 text-sm mb-4 justify-between">
-                                Trạng thái:{' '}
-                                {currentChicken?.status ? (
-                                    <Badge
-                                        variant={chickenBatchStatusVariant[currentChicken?.status]}
-                                    >
-                                        {chickenBatchStatusLabels[currentChicken?.status]}
-                                    </Badge>
-                                ) : (
-                                    '-'
-                                )}
-                            </div>
-                        </div>
+                        ) : (
+                            <Card className="w-full">
+                                <CardContent className="flex items-center justify-center p-6">
+                                    <div className="text-center">
+                                        <Info className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
+                                        <h3 className="text-lg font-medium">
+                                            Không có thông tin giống gà
+                                        </h3>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
                     </Card>
                 </div>
                 <div className="col-span-2">
@@ -269,9 +264,11 @@ export default function Page() {
                 className="mb-4"
             />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 my-6">
-                <Chart />
+                <div>
+                    <CardNutritionPlan />
+                </div>
                 <div className="col-span-2">
-                    <CardFlockNutrition />
+                    <Chart />
                 </div>
             </div>
         </div>

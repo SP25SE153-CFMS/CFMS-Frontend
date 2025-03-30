@@ -42,6 +42,7 @@ export const sidebarItems: NavGroup[] = [
                 icon: Egg,
                 subItems: [
                     { title: 'Danh sách lứa nuôi', path: config.routes.chickenBatch },
+                    { title: 'Danh sách giống gà', path: config.routes.chicken },
                     { title: 'Giai đoạn phát triển', path: config.routes.growthStage },
                     { title: 'Chế độ dinh dưỡng', path: config.routes.nutritionPlan },
                     { title: 'Tiêu chí đánh giá SK', path: config.routes.breadingArea },
@@ -52,9 +53,9 @@ export const sidebarItems: NavGroup[] = [
                 path: basePath,
                 icon: UsersRound,
                 subItems: [
-                    { title: 'Danh sách nhân công', path: config.routes.employee },
+                    // { title: 'Danh sách nhân công', path: config.routes.employee },
                     { title: 'Danh sách công việc', path: config.routes.breadingArea },
-                    { title: 'Nhân công trong tr.trại', path: config.routes.farmEmployee },
+                    { title: 'Danh sách nhân công', path: config.routes.farmEmployee },
                 ],
             },
             {

@@ -10,19 +10,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Trash } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import config from '@/configs';
-import {
-    AlertDialog,
-    AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogDescription,
-} from '@/components/ui/alert-dialog';
-import toast from 'react-hot-toast';
-import { deleteGrowthStage } from '@/services/growth-stage.service';
-import { GrowthStage } from '@/utils/schemas/growth-stage.schema';
-import GrowthStageForm from '@/components/forms/growth-stage-form';
 import {
     Dialog,
     DialogContent,
@@ -31,20 +18,29 @@ import {
     DialogDescription,
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogDescription,
+} from '@/components/ui/alert-dialog';
+import toast from 'react-hot-toast';
+import { deleteChicken } from '@/services/chicken.service';
+import { Chicken } from '@/utils/schemas/chicken.schema';
+import ChickenForm from '@/components/forms/chicken-form';
 
 interface Props<T> {
     row: Row<T>;
 }
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
-    const router = useRouter();
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
     const handleDelete = async () => {
-        const growthStageId = (row.original as GrowthStage).growthStageId;
-        await deleteGrowthStage(growthStageId).then(() => {
-            toast.success('Đã xóa giai đoạn phát triển');
+        await deleteChicken((row.original as Chicken).chickenId).then(() => {
+            toast.success('Xóa giống gà thành công');
             setOpenDelete(false);
         });
     };
@@ -54,20 +50,11 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="flex h-6 w-6 p-0">
-                        <DotsHorizontalIcon className="h-2 w-2" />
+                        <DotsHorizontalIcon className="h-4 w-4" />
                         <span className="sr-only">Mở menu</span>
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <DropdownMenuItem
-                        onClick={() => {
-                            router.push(
-                                `${config.routes.growthStage}/${row.getValue('growthStageId')}`,
-                            );
-                        }}
-                    >
-                        Xem chi tiết
-                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                         Cập nhật
                     </DropdownMenuItem>
@@ -79,16 +66,16 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             </DropdownMenu>
 
             {/* Update Dialog */}
-            <Dialog open={openUpdate} onOpenChange={(val) => setOpenUpdate(val)}>
-                <DialogContent>
+            <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
+                <DialogContent className="max-w-2xl">
                     <DialogHeader>
-                        <DialogTitle>Cập nhật giai đoạn phát triển</DialogTitle>
+                        <DialogTitle>Cập nhật giống gà</DialogTitle>
                         <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                     </DialogHeader>
                     <ScrollArea className="max-h-[600px]">
-                        <GrowthStageForm
-                            defaultValues={row.original as GrowthStage}
+                        <ChickenForm
                             closeDialog={() => setOpenUpdate(false)}
+                            defaultValues={row.original as Chicken}
                         />
                     </ScrollArea>
                 </DialogContent>
@@ -100,7 +87,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa giai đoạn phát triển này?
+                            Bạn có chắc chắn muốn xóa giống gà này?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="flex justify-end space-x-2">

@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { columns } from './columns';
-import AutoForm from '@/components/ui/auto-form';
+import AutoForm from '@/components/auto-form';
 import { CreateFoodSchema } from '@/utils/schemas/food.schema';
 
 export default function CardFood() {

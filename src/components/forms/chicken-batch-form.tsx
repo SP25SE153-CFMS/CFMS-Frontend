@@ -10,7 +10,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { ChickenBatchStatus, chickenBatchStatusVariant } from '@/utils/enum/status.enum';
-import AutoForm from '../ui/auto-form';
+import AutoForm from '../auto-form';
 
 interface ChickenBatchFormProps {
     defaultValues?: Partial<ChickenBatch>;
