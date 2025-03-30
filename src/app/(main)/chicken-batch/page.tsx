@@ -43,6 +43,7 @@ import ChickenBatchForm from '@/components/forms/chicken-batch-form';
 import { cn } from '@/lib/utils';
 import config from '@/configs';
 import Link from 'next/link';
+import { getCookie } from 'cookies-next';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -56,14 +57,18 @@ export default function Page() {
     // Fetch all breeding areas
     const { data: breedingAreas, isLoading: isLoadingBreedingAreas } = useQuery({
         queryKey: ['breedingAreas'],
-        queryFn: () => getBreedingAreasByFarmId(sessionStorage.getItem('farmId') ?? ''),
+        queryFn: async () => {
+            const farmId = getCookie(config.cookies.farmId) ?? '';
+            const areas = await getBreedingAreasByFarmId(farmId);
+            return areas.filter((area) => area.chickenCoops.length > 0);
+        },
     });
 
     // Fetch all chicken coops (only if a breeding area is selected)
     const {
         data: chickenCoops,
         isLoading: isLoadingChickenCoops,
-        refetch,
+        // refetch,
     } = useQuery({
         queryKey: ['chickenCoops', selectedBreedingAreaId],
         queryFn: () => getChickenCoopsByBreedingAreaId(selectedBreedingAreaId),
@@ -95,18 +100,21 @@ export default function Page() {
     }, [chickenCoops, selectedBreedingAreaId, selectedChickenCoopId]);
 
     // Refetch chicken coops when breeding area changes
-    useEffect(() => {
-        if (selectedBreedingAreaId) {
-            // queryClient.invalidateQueries(['chickenCoops', selectedBreedingAreaId]);
-            refetch(); // Ensures immediate refetch
-            setSelectedChickenCoopId(chickenCoops?.[0].chickenCoopId ?? '');
-            sessionStorage.setItem(
-                'chickenCoopName',
-                chickenCoops?.find((coop) => coop.chickenCoopId === chickenCoops?.[0].chickenCoopId)
-                    ?.chickenCoopName ?? '',
-            );
-        }
-    }, [chickenCoops, refetch, selectedBreedingAreaId]);
+    // useEffect(() => {
+    //     if (breedingAreas && breedingAreas.length > 0) {
+    //         setSelectedBreedingAreaId(breedingAreas[0].breedingAreaId);
+    //     }
+    //     if (selectedBreedingAreaId) {
+    //         // queryClient.invalidateQueries(['chickenCoops', selectedBreedingAreaId]);
+    //         refetch(); // Ensures immediate refetch
+    //         setSelectedChickenCoopId(chickenCoops?.[0]?.chickenCoopId ?? '');
+    //         sessionStorage.setItem(
+    //             'chickenCoopName',
+    //             chickenCoops?.find((coop) => coop.chickenCoopId === chickenCoops?.[0].chickenCoopId)
+    //                 ?.chickenCoopName ?? '',
+    //         );
+    //     }
+    // }, [breedingAreas, chickenCoops, refetch, selectedBreedingAreaId]);
 
     // Handle breeding area change
     const handleBreedingAreaChange = (breedingAreaId: string) => {
@@ -167,10 +175,12 @@ export default function Page() {
                                 Hãy tạo khu vực nuôi trước khi tạo lứa nuôi
                             </p>
                         </div>
-                        <Button variant="outline" onClick={() => window.history.back()}>
-                            <ChevronLeft className="mr-1 h-4 w-4" />
-                            Quay lại
-                        </Button>
+                        <Link href={config.routes.breadingArea}>
+                            <Button variant="outline">
+                                <ChevronLeft className="mr-1 h-4 w-4" />
+                                Tạo khu nuôi
+                            </Button>
+                        </Link>
                     </CardContent>
                 </Card>
             </div>
@@ -287,21 +297,6 @@ export default function Page() {
                                 ))}
                             </SelectContent>
                         </Select>
-                        <Select
-                            value={selectedChickenCoopId}
-                            onValueChange={handleChickenCoopChange}
-                        >
-                            <SelectTrigger className="w-[200px]">
-                                <SelectValue placeholder="Chọn chuồng nuôi" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {chickenCoops?.map((coop) => (
-                                    <SelectItem key={coop.chickenCoopId} value={coop.chickenCoopId}>
-                                        {coop.chickenCoopName}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
                         <Button className="h-9" onClick={openModal}>
                             <Plus className="mr-2 h-4 w-4" />
                             Tạo lứa nuôi
@@ -333,6 +328,21 @@ export default function Page() {
                         </CardContent>
                     </Card>
                 </div>
+
+                <Dialog open={open} onOpenChange={onOpenChange}>
+                    <DialogContent className="sm:max-w-[500px]">
+                        <DialogHeader>
+                            <DialogTitle>Tạo lứa nuôi mới</DialogTitle>
+                            <DialogDescription>
+                                Hãy nhập các thông tin dưới đây để tạo lứa nuôi mới.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <ChickenBatchForm
+                            chickenCoopName={currentChickenCoop?.chickenCoopName ?? ''}
+                            closeDialog={() => setOpen(false)}
+                        />
+                    </DialogContent>
+                </Dialog>
             </div>
         );
     }

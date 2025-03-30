@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { VaccinationLog } from '@/utils/schemas/vaccine.schema';
-import AutoForm from '@/components/ui/auto-form';
+import AutoForm from '@/components/auto-form';
 import { CreateVaccineLogSchema } from '@/utils/schemas/vaccine-log.schema';
 
 export default function CardVaccinationLog({ vaccineLogs }: { vaccineLogs: VaccinationLog[] }) {

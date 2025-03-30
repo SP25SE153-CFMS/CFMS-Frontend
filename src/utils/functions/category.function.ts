@@ -16,3 +16,18 @@ export function getSubCategoryByCategoryType(categoryType: CategoryType): SubCat
 
     return category?.subCategories ?? [];
 }
+
+export function getChickenType(chickenTypeId: string): SubCategory | undefined {
+    const categories = getSubCategoryByCategoryType(CategoryType.CHICKEN);
+    return categories.find((cat) => cat.subCategoryId === chickenTypeId);
+}
+
+export function getPurpose(purposeId: string): SubCategory | undefined {
+    const categories = getSubCategoryByCategoryType(CategoryType.PURPOSE);
+    return categories.find((cat) => cat.subCategoryId === purposeId);
+}
+
+export function getWeightUnit(weightUnitId: string): SubCategory | undefined {
+    const categories = getSubCategoryByCategoryType(CategoryType.WEIGHT_UNIT);
+    return categories.find((cat) => cat.subCategoryId === weightUnitId);
+}

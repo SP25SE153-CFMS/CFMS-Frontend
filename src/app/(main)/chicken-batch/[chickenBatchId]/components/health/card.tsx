@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from 'react';
 
 import { DataTable } from '@/components/table/data-table';
@@ -17,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { CreateHealthLogSchema, HealthLog } from '@/utils/schemas/health-log.schema';
-import AutoForm from '@/components/ui/auto-form';
+import AutoForm from '@/components/auto-form';
 
 export default function CardHealthLog({ healthLogs }: { healthLogs: HealthLog[] }) {
     const [open, setOpen] = useState(false);

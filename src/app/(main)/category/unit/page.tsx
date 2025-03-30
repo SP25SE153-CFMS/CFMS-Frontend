@@ -10,12 +10,17 @@ import { getCategories } from '@/services/category.service';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
+import { CategoryType } from '@/utils/enum/category.enum';
 
 export default function Page() {
     const { data: categories, isLoading } = useQuery({
         queryKey: ['categories'],
         queryFn: () => getCategories(),
     });
+
+    const filterCategories = categories?.filter((category) =>
+        category.categoryType.endsWith(CategoryType.UNIT),
+    );
 
     // Check if categories is loading
     if (isLoading) {
@@ -48,11 +53,9 @@ export default function Page() {
         <div>
             <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight">
-                        Danh sách danh mục dùng chung
-                    </h2>
+                    <h2 className="text-2xl font-bold tracking-tight">Danh sách danh mục đơn vị</h2>
                     <p className="text-muted-foreground">
-                        Danh sách tất cả các danh mục dùng chung trong trang trại
+                        Danh sách tất cả các danh mục đơn vị trong trang trại
                     </p>
                 </div>
                 <div className="flex gap-2">
@@ -66,7 +69,7 @@ export default function Page() {
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={categories} columns={columns} />
+                <DataTable data={filterCategories ?? []} columns={columns} />
             </div>
         </div>
     );

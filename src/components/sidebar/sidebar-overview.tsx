@@ -25,6 +25,33 @@ export default function SidebarOverview({
     categories?: CategoryResponse[];
     isLoading: boolean;
 }) {
+    const renderCategories = (categories: CategoryResponse[]) => {
+        return (
+            <>
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                        <Link href={config.routes.categoryUnit}>
+                            <span>Danh mục đơn vị</span>
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                {categories
+                    .filter((category) => !category.categoryType.endsWith('UNIT'))
+                    .map((category) => (
+                        <SidebarMenuSubItem
+                            key={category.categoryId}
+                            className="flex items-center justify-between"
+                        >
+                            <SidebarMenuSubButton asChild>
+                                <Link href={`/category/${category.categoryId}`}>
+                                    <span>{category.categoryName}</span>
+                                </Link>
+                            </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                    ))}
+            </>
+        );
+    };
     // Return the page
     return (
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -69,18 +96,7 @@ export default function SidebarOverview({
                                             ))}
                                         </SidebarMenu>
                                     ) : (
-                                        categories.map((category) => (
-                                            <SidebarMenuSubItem
-                                                key={category.categoryId}
-                                                className="flex items-center justify-between"
-                                            >
-                                                <SidebarMenuSubButton asChild>
-                                                    <Link href={`/category/${category.categoryId}`}>
-                                                        <span>{category.categoryName}</span>
-                                                    </Link>
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                        ))
+                                        renderCategories(categories)
                                     )}
                                 </SidebarMenuSub>
                             </CollapsibleContent>

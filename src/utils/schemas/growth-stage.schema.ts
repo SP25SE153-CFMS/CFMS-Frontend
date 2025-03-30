@@ -7,11 +7,14 @@ export const GrowthStageSchema = z.object({
     stageCode: z.string().min(1, { message: 'Mã giai đoạn là bắt buộc' }),
     stageName: z.string().min(1, { message: 'Tên giai đoạn là bắt buộc' }),
     chickenType: z.string().uuid({ message: 'Loại gà không hợp lệ' }),
-    minAgeWeek: z
+    minAgeWeek: z.coerce
         .number()
         .int()
         .nonnegative({ message: 'Tuổi tối thiểu phải là số nguyên không âm' }),
-    maxAgeWeek: z.number().int().nonnegative({ message: 'Tuổi tối đa phải là số nguyên không âm' }),
+    maxAgeWeek: z.coerce
+        .number()
+        .int()
+        .nonnegative({ message: 'Tuổi tối đa phải là số nguyên không âm' }),
     description: z.string().optional(),
 });
 

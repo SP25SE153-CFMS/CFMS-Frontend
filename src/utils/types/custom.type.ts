@@ -1,6 +1,8 @@
+import { BreedingArea } from '../schemas/breeding-area.schema';
 import { Category } from '../schemas/category.schema';
 import { ChickenBatch } from '../schemas/chicken-batch.schema';
 import { ChickenCoop } from '../schemas/chicken-coop.schema';
+import { ChickenDetail } from '../schemas/chicken-detail.schema';
 import { Chicken } from '../schemas/chicken.schema';
 import { CoopEquipment } from '../schemas/coop-equipment.schema';
 import { FeedLog } from '../schemas/feed-log.schema';
@@ -16,14 +18,22 @@ export type ChickenCoopResponse = ChickenCoop & {
     coopEquipments: CoopEquipment[];
 };
 
+export type ChickenResponse = Chicken & {
+    chickenDetails: ChickenDetail[];
+};
+
 export type ChickenBatchResponse = ChickenBatch & {
     vaccineLogs: VaccinationLog[];
     healthLogs: HealthLog[];
     quantityLogs: QuantityLog[];
     feedLogs: FeedLog[];
-    chickens: Chicken[];
+    chicken: ChickenResponse;
 };
 
 export type CategoryResponse = Category & {
     subCategories: SubCategory[];
+};
+
+export type BreedingAreaResponse = BreedingArea & {
+    chickenCoops: ChickenCoop[];
 };

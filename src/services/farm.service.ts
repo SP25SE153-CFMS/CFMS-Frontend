@@ -10,6 +10,12 @@ export const getFarms = async () => {
     return response.data.data;
 };
 
+export const getFarmsForCurrentUser = async () => {
+    const endpoint = PREFIX + '/currentUser';
+    const response = await get<Response<Farm[]>>(endpoint);
+    return response.data.data;
+};
+
 export const getFarmById = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
     const response = await get<Response<Farm>>(endpoint);

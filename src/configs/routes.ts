@@ -14,6 +14,7 @@ const routes = {
     food: '/warehouse/foods',
     category: '/category',
     categoryAll: '/category/all',
+    categoryUnit: '/category/unit',
     vaccine: '/warehouse/vaccines',
     employee: '/employee',
     farmEmployee: '/farm-employee',
@@ -26,6 +27,7 @@ const routes = {
     inputOTP: 'forgot-password/input-OTP',
     resetPassword: '/reset-password',
     growthStage: '/growth-stage',
+    chicken: '/chicken',
     supplier: '/supplier',
 };
 

@@ -1,7 +1,28 @@
 import config from '@/configs';
 import { env } from '@/env';
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { getCookie } from 'cookies-next';
+
+/**
+ * Create an Axios instance with default configurations.
+ */
+const axiosInstance: AxiosInstance = axios.create({
+    baseURL: env.NEXT_PUBLIC_API_URL, // Set API base URL
+});
+
+// Axios Response Interceptor to handle errors globally
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        // TODO: Handle error here
+        // For example, redirect to login page if the access token is expired
+        if (error.response?.status === 401) {
+            window.location.href = config.routes.signIn;
+        }
+
+        return Promise.reject(error);
+    },
+);
 
 /**
  * Creates an Axios instance for making HTTP requests.
@@ -23,7 +44,7 @@ export const request = <T>(
     const accessToken = getCookie(config.cookies.accessToken);
     const url = endpoint.startsWith('http') ? endpoint : env.NEXT_PUBLIC_API_URL + endpoint;
 
-    return axios({
+    return axiosInstance({
         url,
         method: method,
         headers: Object.assign(

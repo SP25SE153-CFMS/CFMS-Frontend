@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { CreateFeedLogSchema, FeedLog } from '@/utils/schemas/feed-log.schema';
-import AutoForm from '@/components/ui/auto-form';
+import AutoForm from '@/components/auto-form';
 
 export default function CardFeedLog({ feedLogs }: { feedLogs: FeedLog[] }) {
     const [open, setOpen] = useState(false);
