@@ -198,18 +198,18 @@ export const breedingAreaStatusVariant: Record<string, any> = {
 
 // Supplier
 export enum SuppilerStatus {
-    DESTRUCTIVE,
-    SUCCESS,
+    INACTIVE,
+    ACTIVE,
 }
 
 export const supplierStatusLabels: Record<string, string> = {
-    [SuppilerStatus.DESTRUCTIVE]: 'Ngừng hoạt động',
-    [SuppilerStatus.SUCCESS]: 'Đang hoạt động',
+    [SuppilerStatus.INACTIVE]: 'Ngừng hoạt động',
+    [SuppilerStatus.ACTIVE]: 'Đang hoạt động',
 };
 
 export const supplierStatusVariant: Record<string, any> = {
-    [SuppilerStatus.DESTRUCTIVE]: 'destructive',
-    [SuppilerStatus.SUCCESS]: 'default',
+    [SuppilerStatus.INACTIVE]: 'destructive',
+    [SuppilerStatus.ACTIVE]: 'default',
 };
 
 // Inventory receipt
