@@ -7,7 +7,7 @@ export const SupplierSchema = z.object({
     address: z.string().min(1, { message: 'Điền địa chỉ nhà cung cấp' }).trim(),
     phoneNumber: z
         .string()
-        .regex(/^[0-9]{10-11}$/, { message: 'Điền số điện thoại' })
+        .regex(/^[0-9]{10,11}$/, { message: 'Điền số điện thoại' })
         .trim(),
     bankAccount: z.string(),
     status: z.number().int().default(1),
