@@ -179,3 +179,38 @@ export const breedingAreaStatusVariant: Record<string, any> = {
     [BreedingAreaStatus.INACTIVE]: 'destructive',
     [BreedingAreaStatus.ACTIVE]: 'default',
 };
+
+// Supplier
+export enum SuppilerStatus {
+    DESTRUCTIVE,
+    SUCCESS,
+}
+
+export const supplierStatusLabels: Record<string, string> = {
+    [SuppilerStatus.DESTRUCTIVE]: 'Ngừng hoạt động',
+    [SuppilerStatus.SUCCESS]: 'Đang hoạt động',
+};
+
+export const supplierStatusVariant: Record<string, any> = {
+    [SuppilerStatus.DESTRUCTIVE]: 'destructive',
+    [SuppilerStatus.SUCCESS]: 'default',
+};
+
+// Inventory receipt
+export enum ReceiptStatus {
+    PENDING,
+    REJECTED,
+    APPROVED,
+}
+
+export const receiptStatusLabels: Record<string, string> = {
+    [ReceiptStatus.PENDING]: 'Đang chờ duyệt',
+    [ReceiptStatus.REJECTED]: 'Từ chối',
+    [ReceiptStatus.APPROVED]: 'Đã duyệt',
+};
+
+export const receiptStatusVariant: Record<string, any> = {
+    [ReceiptStatus.PENDING]: 'outline',
+    [ReceiptStatus.REJECTED]: 'destructive',
+    [ReceiptStatus.APPROVED]: 'default',
+};

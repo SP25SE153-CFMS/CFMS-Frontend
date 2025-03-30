@@ -32,36 +32,26 @@ export const columns: ColumnDef<WarehouseProduct>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: 'productId',
+        accessorKey: 'foodId',
         header: () => null,
         cell: () => null,
     },
     {
-        accessorKey: 'productCode',
+        accessorKey: 'foodCode',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mã hàng" />,
         cell: ({ row }) => (
-            <div className="w-[40px]">{String(row.getValue('productCode')).toUpperCase()}</div>
+            <div className="w-[40px]">{String(row.getValue('foodCode')).toUpperCase()}</div>
         ),
     },
     {
-        accessorKey: 'productName',
+        accessorKey: 'foodName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên hàng" />,
-        cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('productName'))}</div>,
+        cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('foodName'))}</div>,
     },
     {
-        accessorKey: 'quantity',
+        accessorKey: 'note',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng hiện tại" />,
-        cell: ({ row }) => <div>{row.getValue('quantity')}</div>,
-    },
-    {
-        accessorKey: 'unit',
-        header: () => <div className="text-xs whitespace-nowrap">Đơn vị</div>,
-        cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('unit'))}</div>,
-    },
-    {
-        accessorKey: 'area',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Khu vực" />,
-        cell: ({ row }) => <div>Kho {capitalizeFirstLetter(row.getValue('area'))}</div>,
+        cell: ({ row }) => <div>{row.getValue('note')}</div>,
     },
     {
         accessorKey: 'expiry',
@@ -85,7 +75,7 @@ export const columns: ColumnDef<WarehouseProduct>[] = [
         cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('supplier'))}</div>,
     },
     {
-        id: "action",
-        cell: ({ row }) => <DataTableRowActions row={row}/>,
+        id: 'action',
+        cell: ({ row }) => <DataTableRowActions row={row} />,
     },
 ];

@@ -1,6 +1,12 @@
+'use client';
+
 import React, { useState } from 'react';
 
-const SupplierForm = () => {
+interface SupplierFormProps {
+    closeDialog: () => void;
+}
+
+export default function SupplierForm({ closeDialog }: SupplierFormProps) {
     const [supplierData, setSupplierData] = useState({
         supplierName: '',
         supplierCode: '',
@@ -83,6 +89,4 @@ const SupplierForm = () => {
             <button type="submit">Submit</button>
         </form>
     );
-};
-
-export default SupplierForm;
+}

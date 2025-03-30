@@ -3,7 +3,7 @@
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { requestStatusLabels, requestStatusVariant } from '@/utils/enum/status.enum';
+import { receiptStatusLabels, receiptStatusVariant, requestStatusLabels, requestStatusVariant } from '@/utils/enum/status.enum';
 import { InventoryReceipt } from '@/utils/schemas/inventory-receipt.schema';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
@@ -68,7 +68,7 @@ export const columns: ColumnDef<InventoryReceipt>[] = [
         cell: ({ row }) => {
             const status = row.getValue('status') as string;
             return (
-                <Badge variant={requestStatusVariant[status]}>{requestStatusLabels[status]}</Badge>
+                <Badge variant={receiptStatusVariant[status]}>{receiptStatusLabels[status]}</Badge>
             );
         },
     },
