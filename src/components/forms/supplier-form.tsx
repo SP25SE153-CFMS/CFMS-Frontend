@@ -62,7 +62,7 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
             }
             closeDialog();
         } catch (error) {
-            console.log('Lỗi khi tạo nhà cung cấp:', error);
+            console.log('Lỗi:', error);
         }
     };
 

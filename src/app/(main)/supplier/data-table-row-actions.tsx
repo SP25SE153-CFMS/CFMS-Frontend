@@ -1,3 +1,4 @@
+import SupplierForm from '@/components/forms/supplier-form';
 import {
     AlertDialog,
     AlertDialogContent,
@@ -6,7 +7,13 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -69,7 +76,12 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         <DialogTitle>Cập nhật sản phẩm</DialogTitle>
                         <DialogDescription>Nhập</DialogDescription>
                     </DialogHeader>
-                    <ScrollArea></ScrollArea>
+                    <ScrollArea>
+                        <SupplierForm
+                            closeDialog={() => setUpdate(false)}
+                            defaultValues={row.original as Supplier}
+                        />
+                    </ScrollArea>
                 </DialogContent>
             </Dialog>
 

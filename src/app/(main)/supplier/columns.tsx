@@ -9,6 +9,7 @@ import {
 } from '@/utils/enum/status.enum';
 import { Supplier } from '@/utils/schemas/supplier.schema';
 import { ColumnDef } from '@tanstack/react-table';
+import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<Supplier>[] = [
     {
@@ -71,7 +72,10 @@ export const columns: ColumnDef<Supplier>[] = [
         cell: ({ row }) => {
             const status = row.getValue('status') as string;
             return (
-                <Badge variant={supplierStatusVariant[status]}>
+                <Badge
+                    variant={supplierStatusVariant[status]}
+                    className="px-2 py-1 text-xs min-w-fit overflow-hidden text-ellipsis whitespace-nowrap"
+                >
                     {supplierStatusLabels[status]}
                 </Badge>
             );
@@ -79,5 +83,6 @@ export const columns: ColumnDef<Supplier>[] = [
     },
     {
         id: 'action',
+        cell: ({ row }) => <DataTableRowActions row={row} />,
     },
 ];
