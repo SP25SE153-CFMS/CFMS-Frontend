@@ -23,7 +23,7 @@ export enum CategoryStatus {
 }
 
 export const categoryStatusLabels: Record<string, string> = {
-    [CategoryStatus.INACTIVE]: 'Không hooạt động',
+    [CategoryStatus.INACTIVE]: 'Không hoạt động',
     [CategoryStatus.ACTIVE]: 'Hoạt động',
 };
 

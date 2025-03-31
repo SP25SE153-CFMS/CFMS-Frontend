@@ -20,9 +20,14 @@ import {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Building2, Phone, MapPin, CreditCard, Save, X } from 'lucide-react';
-import { CreateSupplierSchema, Supplier, SupplierSchema } from '@/utils/schemas/supplier.schema';
+import {
+    CreateSupplierSchema,
+    type Supplier,
+    SupplierSchema,
+} from '@/utils/schemas/supplier.schema';
 import { createSupplier, updateSupplier } from '@/services/supplier.service';
 import toast from 'react-hot-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface SupplierFormProps {
     defaultValues?: Partial<Supplier>;
@@ -43,33 +48,40 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
         },
     });
 
-    // Error
-    const onError = (error: any) => {
-        console.log('Lỗi form:', error);
-    };
+    const queryClient = useQueryClient();
 
-    // Submit
-    const onSubmit = async (values: Supplier) => {
-        try {
-            console.log('Dữ liệu gửi lên:', values);
-
-            if (defaultValues) {
-                await updateSupplier(values);
-                toast.success('Cập nhật nhà cung cấp thành công');
-            } else {
-                await createSupplier(values);
-                toast.success('Tạo nhà cung cấp thành công');
-            }
+    const mutation = useMutation({
+        mutationFn: defaultValues ? updateSupplier : createSupplier,
+        onSuccess: () => {
             closeDialog();
-        } catch (error) {
-            console.log('Lỗi:', error);
-        }
+            queryClient.invalidateQueries({ queryKey: ['suppliers'] });
+            toast.success(
+                defaultValues ? 'Cập nhật nhà cung cấp thành công' : 'Tạo nhà cung cấp thành công',
+            );
+        },
+        onError: (error: any) => {
+            console.error('Lỗi API:', error); // Log toàn bộ error object
+            toast.error(error?.response?.data?.message || error?.message || 'Lỗi không xác định');
+        },
+    });
+
+    // Form submit handler
+    async function onSubmit(values: Supplier) {
+        console.log('Dữ liệu gửi lên API:', values);
+        mutation.mutate(values);
+    }
+
+    // Form error handler
+    const onError = (error: any) => {
+        console.error(error);
     };
 
     return (
         <Card className="w-full max-w-2xl mx-auto">
             <CardHeader>
-                <CardTitle className="text-2xl font-bold">Add New Supplier</CardTitle>
+                <CardTitle className="text-2xl font-bold">
+                    {defaultValues?.supplierId ? 'Cập nhật nhà cung cấp' : 'Thêm nhà cung cấp mới'}
+                </CardTitle>
             </CardHeader>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit, onError)}>
@@ -200,8 +212,8 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="1">Active</SelectItem>
-                                            <SelectItem value="0">Inactive</SelectItem>
+                                            <SelectItem value="1">Đang hoạt động</SelectItem>
+                                            <SelectItem value="0">Ngừng hoạt động</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -211,10 +223,10 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
                     </CardContent>
                     <CardFooter className="flex justify-end gap-3">
                         <Button type="button" variant="outline" onClick={closeDialog}>
-                            <X className="mr-2 h-4 w-4" /> Cancel
+                            <X className="mr-2 h-4 w-4" /> Hủy
                         </Button>
                         <Button type="submit">
-                            <Save className="mr-2 h-4 w-4" /> Save Supplier
+                            <Save className="mr-2 h-4 w-4" /> Lưu
                         </Button>
                     </CardFooter>
                 </form>

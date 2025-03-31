@@ -11,10 +11,14 @@ import {
 } from '@/components/ui/dialog';
 import { Plus } from 'lucide-react';
 import { columns } from './columns';
-import { suppliers } from '@/utils/data/table.data';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import SupplierForm from '@/components/forms/supplier-form';
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getSuppliers } from '@/services/supplier.service';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { Card } from '@/components/ui/card';
+import Image from 'next/image';
 
 export default function Supplier() {
     const [openDialog, setOpenDialog] = useState(false);
@@ -23,20 +27,36 @@ export default function Supplier() {
     const closeDialog = () => setOpenDialog(false);
     const onOpenChange = (val: boolean) => setOpenDialog(val);
 
-    // const { data: suppliers, isLoading } = useQuery({
-    //     queryKey: ['suppliers'],
-    //     queryFn: () => getSuppliers(),
-    // });
+    const { data: suppliers = [], isLoading } = useQuery({
+        queryKey: ['suppliers'],
+        queryFn: () => getSuppliers(),
+    });
+    console.log(suppliers);
 
-    // if (isLoading) {
-    //     return (
-    //         <div className="flex items-center justify-center h-full">
-    //             <LoadingSpinner />
-    //         </div>
-    //     );
-    // }
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <LoadingSpinner />
+            </div>
+        );
+    }
 
-    // if (!suppliers) {
+    if (!suppliers) {
+        return (
+            <div className="w-full h-full flex items-center justify-center">
+                <Card className="px-36 py-8">
+                    <div className="flex flex-col justify-center items-center h-[300px] gap-4">
+                        <Image src="/no-data.jpg" width={300} height={300} alt="Not Found" />
+                        <h1 className="text-2xl font-bold">Danh sách không tồn tại</h1>
+                        <Button variant="outline" onClick={() => window.history.back()}>
+                            Quay lại
+                        </Button>
+                    </div>
+                </Card>
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col gap-y-5">
             <h1 className="text-2xl font-bold tracking-tight">Danh sách nhà cung cấp</h1>
@@ -67,4 +87,3 @@ export default function Supplier() {
         </div>
     );
 }
-// }

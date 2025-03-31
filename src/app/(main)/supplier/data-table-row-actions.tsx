@@ -41,10 +41,12 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
     const handleDelete = async () => {
         const id = (row.original as Supplier).supplierId;
+        console.log('ID: ', id);
         await deleteSupplier(id);
-        toast.success('Xóa nhà cung cấp thành công!');
+        toast.success('Đã xóa');
         setOpenDelete(false);
     };
+
     return (
         <>
             <DropdownMenu>
