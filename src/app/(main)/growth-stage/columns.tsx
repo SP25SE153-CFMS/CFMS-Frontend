@@ -75,7 +75,7 @@ export const columns: ColumnDef<GrowthStage>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Loại gà" />,
         cell: ({ row }) => {
             const chickenTypeId = row.getValue('chickenType') as string;
-            return <div>{getChickenType(chickenTypeId)?.subCategoryName ?? 'Không có'}</div>;
+            return <div>{getChickenType(chickenTypeId)}</div>;
         },
     },
     {

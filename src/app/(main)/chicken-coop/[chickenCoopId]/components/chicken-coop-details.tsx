@@ -5,13 +5,11 @@ import { Card } from '@/components/ui/card';
 import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import config from '@/configs';
-import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
 import { useChickenCoopStore } from '@/store/use-chicken-coop';
 import { chickenCoopStatusLabels, chickenCoopStatusVariant } from '@/utils/enum/status.enum';
+import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { Select } from '@radix-ui/react-select';
-import { useQuery } from '@tanstack/react-query';
-import { getCookie } from 'cookies-next';
 import { AlignRight, Code, Map, Tag, TrendingUp, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -20,10 +18,9 @@ const ChickenCoopDetails = () => {
     const router = useRouter();
     const chickenCoops: ChickenCoop[] = JSON.parse(sessionStorage.getItem('chickenCoops') ?? '[]');
 
-    const { data: breedingAreas } = useQuery({
-        queryKey: ['breedingAreas'],
-        queryFn: () => getBreedingAreasByFarmId(getCookie(config.cookies.farmId) ?? ''),
-    });
+    const breedingAreas: BreedingArea[] = JSON.parse(
+        sessionStorage.getItem('breedingAreas') ?? '[]',
+    );
 
     const currentBreedingArea = breedingAreas?.find(
         (area) => area.breedingAreaId === chickenCoop?.breedingAreaId,

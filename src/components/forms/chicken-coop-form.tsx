@@ -14,13 +14,10 @@ import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import { createChickenCoop, updateChickenCoop } from '@/services/chicken-coop.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
 import { ChickenCoopStatus, chickenCoopStatusLabels } from '@/utils/enum/status.enum';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import AutoForm from '../auto-form';
-import { subCategories } from '@/utils/data/table.data';
-import { getCookie } from 'cookies-next';
-import config from '@/configs';
+import { getPurposes } from '@/services/category.service';
 
 interface ChickenCoopFormProps {
     defaultValues?: Partial<ChickenCoop>;
@@ -28,9 +25,13 @@ interface ChickenCoopFormProps {
 }
 
 export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenCoopFormProps) {
-    const { data: breedingAreas } = useQuery({
-        queryKey: ['breedingAreas'],
-        queryFn: () => getBreedingAreasByFarmId(getCookie(config.cookies.farmId) ?? ''),
+    const breedingAreas: BreedingArea[] = JSON.parse(
+        sessionStorage.getItem('breedingAreas') || '[]',
+    );
+
+    const { data: purposes } = useQuery({
+        queryKey: ['purposes'],
+        queryFn: () => getPurposes(),
     });
 
     // Query client
@@ -63,6 +64,15 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
             onSubmit={onSubmit}
             formSchema={CreateChickenCoopSchema}
             fieldConfig={{
+                chickenCoopCode: {
+                    label: 'Mã chuồng gà',
+                },
+                chickenCoopName: {
+                    label: 'Tên chuồng gà',
+                },
+                density: {
+                    label: 'Mật độ',
+                },
                 status: {
                     fieldType: ({ field }) => (
                         <FormItem>
@@ -108,7 +118,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                         <SelectValue placeholder="Chọn mục đích nuôi" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {subCategories?.map((subCategory) => (
+                                        {purposes?.map((subCategory) => (
                                             <SelectItem
                                                 key={subCategory.subCategoryId}
                                                 value={subCategory.subCategoryId}
@@ -133,7 +143,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                         <SelectValue placeholder="Chọn khu vực" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {breedingAreas?.map((area: BreedingArea) => (
+                                        {breedingAreas?.map((area) => (
                                             <SelectItem
                                                 key={area.breedingAreaId}
                                                 value={area.breedingAreaId}

@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { commonStatusLabels, commonStatusVariant } from '@/utils/enum/status.enum';
 import { ChickenResponse } from '@/utils/types/custom.type';
 import ChickenDetailsDialog from '@/components/chicken-details-dialog';
+import { getChickenType } from '@/utils/functions/category.function';
 
 export const columns: ColumnDef<ChickenResponse>[] = [
     {
@@ -49,6 +50,14 @@ export const columns: ColumnDef<ChickenResponse>[] = [
                     chickenDetails={row.original.chickenDetails}
                 />
             );
+        },
+    },
+    {
+        accessorKey: 'chickenTypeId',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại gà" />,
+        cell: ({ row }) => {
+            const chickenTypeId = row.getValue('chickenTypeId') as string;
+            return <span>{getChickenType(chickenTypeId)}</span>;
         },
     },
     {

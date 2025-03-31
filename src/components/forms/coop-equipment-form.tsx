@@ -20,7 +20,13 @@ import { CoopEquipmentSchema, type CoopEquipment } from '@/utils/schemas/coop-eq
 import dayjs from 'dayjs';
 import { createCoopEquipment, updateCoopEquipment } from '@/services/coop-equipment.service';
 import toast from 'react-hot-toast';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
+import { useParams } from 'next/navigation';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { getEquipments } from '@/services/equipment.service';
+import { mapEnumToValues } from '@/utils/functions/enum.function';
+import { EquipmentStatus, equipmentStatusLabels } from '@/utils/enum/status.enum';
 
 interface CoopEquipmentFormProps {
     defaultValues?: Partial<CoopEquipment>;
@@ -28,12 +34,19 @@ interface CoopEquipmentFormProps {
 }
 
 export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEquipmentFormProps) {
+    const { chickenCoopId }: { chickenCoopId: string } = useParams();
+
+    const { data: equipments } = useQuery({
+        queryKey: ['equipments'],
+        queryFn: () => getEquipments(),
+    });
+
     // Initialize form
     const form = useForm<CoopEquipment>({
         resolver: zodResolver(CoopEquipmentSchema),
         defaultValues: {
             coopEquipmentId: '',
-            chickenCoopId: '',
+            chickenCoopId,
             equipmentId: '',
             quantity: 1,
             assignedDate: new Date().toISOString(),
@@ -58,7 +71,7 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
             toast.success(
                 defaultValues
                     ? 'Cập nhật thiết bị chuồng thành công'
-                    : 'Tạo thiết bị chuồng thành công',
+                    : 'Thêm thiết bị vào chuồng thành công',
             );
         },
         onError: (error: any) => {
@@ -72,6 +85,8 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
         mutation.mutate(values);
     }
 
+    const chickenCoops: ChickenCoop[] = JSON.parse(sessionStorage.getItem('chickenCoops') || '[]');
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
@@ -80,11 +95,22 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                     <FormField
                         control={form.control}
                         name="chickenCoopId"
-                        render={({ field }) => (
+                        render={() => (
                             <FormItem>
-                                <FormLabel>ID Chuồng gà</FormLabel>
+                                <FormLabel>Chuồng gà</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập ID chuồng gà" {...field} />
+                                    {chickenCoops && (
+                                        <Input
+                                            type="text"
+                                            placeholder="Chuồng gà"
+                                            value={
+                                                chickenCoops.find(
+                                                    (coop) => coop.chickenCoopId === chickenCoopId,
+                                                )?.chickenCoopName
+                                            }
+                                            readOnly
+                                        />
+                                    )}
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -97,9 +123,26 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                         name="equipmentId"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>ID Thiết bị</FormLabel>
+                                <FormLabel>Thiết bị</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập ID thiết bị" {...field} />
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn thiết bị" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {equipments?.map((equipment) => (
+                                                <SelectItem
+                                                    key={equipment.equipmentId}
+                                                    value={equipment.equipmentId}
+                                                >
+                                                    {equipment.equipmentName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -257,7 +300,21 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                             <FormItem>
                                 <FormLabel>Trạng thái</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập trạng thái" {...field} />
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn trạng thái" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {mapEnumToValues(EquipmentStatus).map((status) => (
+                                                <SelectItem key={status} value={status}>
+                                                    {equipmentStatusLabels[status]}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

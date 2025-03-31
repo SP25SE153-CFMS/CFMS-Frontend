@@ -50,8 +50,8 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
     const handleClickDetail = () => {
         router.push(config.routes.chickenCoop + '/' + (row.original as ChickenCoop).chickenCoopId);
-        const chickenCoops = row.getAllCells().map((cell) => cell.row.original);
-        sessionStorage.setItem('chickenCoops', JSON.stringify(chickenCoops));
+        // const chickenCoops = row.getAllCells().map((cell) => cell.row.original);
+        // sessionStorage.setItem('chickenCoops', JSON.stringify(chickenCoops));
     };
 
     return (

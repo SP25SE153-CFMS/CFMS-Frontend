@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Database, Calendar, PenToolIcon, Layers, BarChart3, Target } from 'lucide-react';
+import { Database, Calendar, PenToolIcon, Layers, BarChart3 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -55,8 +54,8 @@ export default function Page() {
                     <ChickenCoopDetails />
                     <ChickenBatchSummary chickenBatches={chickenCoop.chickenBatches} />
                 </div>
-                <div className="col-span-2">
-                    <Card className="p-6 mb-6">
+                <div className="col-span-2 flex flex-col justify-between">
+                    <Card className="p-6">
                         <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                             <div>
                                 <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
@@ -67,12 +66,12 @@ export default function Page() {
                                     Theo dõi các chỉ số kỹ thuật quan trọng của chuồng nuôi
                                 </p>
                             </div>
-                            <div className="flex gap-2">
+                            {/* <div className="flex gap-2">
                                 <Button variant="outline" className="gap-2">
                                     <Target size={16} />
                                     <span>Thiết lập mục tiêu</span>
                                 </Button>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
                             <div className="flex justify-between">

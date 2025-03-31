@@ -17,17 +17,20 @@ export function getSubCategoryByCategoryType(categoryType: CategoryType): SubCat
     return category?.subCategories ?? [];
 }
 
-export function getChickenType(chickenTypeId: string): SubCategory | undefined {
+export function getChickenType(chickenTypeId: string): string {
     const categories = getSubCategoryByCategoryType(CategoryType.CHICKEN);
-    return categories.find((cat) => cat.subCategoryId === chickenTypeId);
+    const chickenType = categories.find((cat) => cat.subCategoryId === chickenTypeId);
+    return chickenType?.subCategoryName ?? 'Không có';
 }
 
-export function getPurpose(purposeId: string): SubCategory | undefined {
+export function getPurpose(purposeId: string): string {
     const categories = getSubCategoryByCategoryType(CategoryType.PURPOSE);
-    return categories.find((cat) => cat.subCategoryId === purposeId);
+    const purpose = categories.find((cat) => cat.subCategoryId === purposeId);
+    return purpose?.subCategoryName ?? 'Không có';
 }
 
-export function getWeightUnit(weightUnitId: string): SubCategory | undefined {
+export function getWeightUnit(weightUnitId: string): string {
     const categories = getSubCategoryByCategoryType(CategoryType.WEIGHT_UNIT);
-    return categories.find((cat) => cat.subCategoryId === weightUnitId);
+    const weightUnit = categories.find((cat) => cat.subCategoryId === weightUnitId);
+    return weightUnit?.subCategoryName ?? 'Không có';
 }

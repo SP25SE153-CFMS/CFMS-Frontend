@@ -147,10 +147,7 @@ export default function Page() {
                                 <InfoItem
                                     icon={<Type className="h-4 w-4" />}
                                     label="Loại gà"
-                                    value={
-                                        getChickenType(chicken?.chickenTypeId)?.subCategoryName ||
-                                        'Không có loại gà'
-                                    }
+                                    value={getChickenType(chicken?.chickenTypeId)}
                                 />
 
                                 <InfoItem

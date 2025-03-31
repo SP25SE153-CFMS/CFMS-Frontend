@@ -7,7 +7,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { ChickenDetail } from '@/utils/schemas/chicken-detail.schema';
-import { Egg, Info, Utensils, Weight } from 'lucide-react';
+import { Award, Info, Weight } from 'lucide-react';
 import { chickenGenderLabels, chickenGenderVariant } from '@/utils/enum/gender.enum';
 import { Badge } from './ui/badge';
 
@@ -26,7 +26,7 @@ export default function ChickenDetailsDialog({
             <DialogContent className="max-w-2xl">
                 <DialogHeader>
                     <DialogTitle className="flex items-center">
-                        <Weight className="h-4 w-4 mr-2 text-primary" />
+                        <Info className="h-4 w-4 mr-2 text-primary" />
                         Chi tiết giống gà:
                     </DialogTitle>
                     <DialogDescription>
@@ -42,14 +42,14 @@ export default function ChickenDetailsDialog({
                                     className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-md bg-muted/50 hover:bg-muted transition-colors"
                                 >
                                     <div className="flex items-center mb-2 sm:mb-0">
-                                        <Utensils className="h-4 w-4 mr-2 text-primary" />
+                                        <Weight className="h-4 w-4 mr-2 text-primary" />
                                         <span className="font-medium">
                                             Trọng lượng: {detail.weight || 0} kg
                                         </span>
                                     </div>
 
                                     <div className="flex items-center mb-2 sm:mb-0">
-                                        <Egg className="h-4 w-4 mr-2 text-primary" />
+                                        <Award className="h-4 w-4 mr-2 text-primary" />
                                         <span className="font-medium">
                                             Số lượng: {detail.quantity || 0}
                                         </span>

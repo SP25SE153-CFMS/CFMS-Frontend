@@ -54,7 +54,11 @@ export default function Page() {
     // Fetch all breeding areas
     const { data: breedingAreas, isLoading: isLoadingBreedingAreas } = useQuery({
         queryKey: ['breedingAreas'],
-        queryFn: () => getBreedingAreasByFarmId(getCookie(config.cookies.farmId) ?? ''),
+        queryFn: async () => {
+            const areas = await getBreedingAreasByFarmId(getCookie(config.cookies.farmId) ?? '');
+            sessionStorage.setItem('breedingAreas', JSON.stringify(areas));
+            return areas;
+        },
     });
 
     // Set initial breeding area from sessionStorage
@@ -68,7 +72,11 @@ export default function Page() {
     // Fetch chicken coops based on selected breeding area
     const { data: chickenCoops, isLoading: isLoadingChickenCoops } = useQuery({
         queryKey: ['chickenCoops', selectedBreedingAreaId],
-        queryFn: () => getChickenCoopsByBreedingAreaId(selectedBreedingAreaId),
+        queryFn: async () => {
+            const coops = await getChickenCoopsByBreedingAreaId(selectedBreedingAreaId);
+            sessionStorage.setItem('chickenCoops', JSON.stringify(coops));
+            return coops;
+        },
         enabled: !!selectedBreedingAreaId,
     });
 

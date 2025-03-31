@@ -28,6 +28,8 @@ export const ChickenCoopSchema = z.object({
     description: z.string().trim().optional(),
 
     purposeId: z.string().uuid({ message: 'ID mục đích không hợp lệ, phải là UUID' }),
+
+    density: z.coerce.number().min(0).int({ message: 'Mật độ phải là số nguyên' }),
 });
 
 export type ChickenCoop = z.infer<typeof ChickenCoopSchema>;

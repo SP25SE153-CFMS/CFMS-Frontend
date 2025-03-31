@@ -65,7 +65,13 @@ export default function Page() {
 
     const { data: breedingAreas, isLoading } = useQuery({
         queryKey: ['breedingAreas'],
-        queryFn: () => getBreedingAreasByFarmId(getCookie(config.cookies.farmId) ?? ''),
+        queryFn: async () => {
+            const breedingAreas = await getBreedingAreasByFarmId(
+                getCookie(config.cookies.farmId) ?? '',
+            );
+            sessionStorage.setItem('breedingAreas', JSON.stringify(breedingAreas));
+            return breedingAreas;
+        },
     });
 
     const [openUpdate, setOpenUpdate] = useState(false);

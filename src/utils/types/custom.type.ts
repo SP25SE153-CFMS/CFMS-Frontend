@@ -32,6 +32,11 @@ export type ChickenBatchResponse = ChickenBatch & {
 
 export type CategoryResponse = Category & {
     subCategories: SubCategory[];
+    chickens?: ChickenResponse[];
+};
+
+export type ChickenTypeResponse = SubCategory & {
+    chickens: Chicken[];
 };
 
 export type BreedingAreaResponse = BreedingArea & {
