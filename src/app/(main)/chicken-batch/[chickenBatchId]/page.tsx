@@ -1,6 +1,18 @@
 'use client';
 
-import { ClipboardList, Database, Egg, FileText, Info, InfoIcon, Tag, Type } from 'lucide-react';
+import {
+    BarChart3,
+    Calendar,
+    ClipboardList,
+    Database,
+    Egg,
+    FileText,
+    Info,
+    InfoIcon,
+    Tag,
+    TrendingUp,
+    Type,
+} from 'lucide-react';
 import { useParams } from 'next/navigation';
 import dayjs from 'dayjs';
 import { Card, CardContent } from '@/components/ui/card';
@@ -71,38 +83,45 @@ export default function Page() {
                                     Thông tin chi tiết
                                 </h3>
                             </div>
-                            <div className="flex gap-3 text-sm mb-4 justify-between">
-                                Trạng thái:{' '}
-                                {chickenBatch?.status ? (
-                                    <Badge
-                                        variant={chickenBatchStatusVariant[chickenBatch?.status]}
-                                    >
-                                        {chickenBatchStatusLabels[chickenBatch?.status]}
-                                    </Badge>
-                                ) : (
-                                    '-'
-                                )}
-                            </div>
-                            <div className="flex gap-3 text-sm mb-4">
-                                Ngày bắt đầu:{' '}
-                                <strong className="flex-1 text-right">
-                                    {dayjs(chickenBatch?.startDate).format('DD/MM/YYYY')}
-                                </strong>
-                            </div>
-                            <div className="flex gap-3 text-sm mb-4">
-                                Ngày kết thúc:{' '}
-                                <strong className="flex-1 text-right">
-                                    {chickenBatch?.endDate
+                            <InfoItem
+                                label="Trạng thái"
+                                value={
+                                    chickenBatch?.status ? (
+                                        <Badge
+                                            variant={
+                                                chickenBatchStatusVariant[chickenBatch?.status]
+                                            }
+                                        >
+                                            {chickenBatchStatusLabels[chickenBatch?.status]}
+                                        </Badge>
+                                    ) : (
+                                        '-'
+                                    )
+                                }
+                                icon={<TrendingUp size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Ngày bắt đầu"
+                                value={dayjs(chickenBatch?.startDate).format('DD/MM/YYYY')}
+                                icon={<Calendar size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Ngày kết thúc"
+                                value={
+                                    chickenBatch?.endDate
                                         ? dayjs(chickenBatch?.endDate).format('DD/MM/YYYY')
-                                        : 'Chưa kết thúc'}
-                                </strong>
-                            </div>
-                            <div className="flex gap-3 text-sm mb-4">
-                                Ghi chú:{' '}
-                                <strong className="flex-1 text-right">
-                                    {chickenBatch?.note || 'Không có ghi chú'}
-                                </strong>
-                            </div>
+                                        : 'Chưa kết thúc'
+                                }
+                                icon={<Calendar size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Ghi chú"
+                                value={chickenBatch?.note || 'Không có ghi chú'}
+                                icon={<FileText size={16} />}
+                            />
                         </div>
                     </Card>
 
@@ -197,10 +216,14 @@ export default function Page() {
                     {/* Technical Indicators */}
                     <Card>
                         <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4">
-                            <div className="flex justify-between items-center mb-4">
-                                <h3 className="font-bold pl-3 text-lg relative before:content-[''] before:absolute before:top-[3px] before:left-0 before:w-[4px] before:h-full before:bg-primary inline-block">
+                            <div className="mb-3">
+                                <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
+                                    <BarChart3 size={20} className="text-primary" />
                                     Chỉ số kỹ thuật
-                                </h3>
+                                </h2>
+                                <p className="text-muted-foreground text-sm">
+                                    Theo dõi các chỉ số kỹ thuật quan trọng của chuồng nuôi
+                                </p>
                             </div>
                             <div className="flex flex-wrap justify-between">
                                 {chickenBatchIndicators.map((indicator) => (
@@ -258,7 +281,7 @@ export default function Page() {
                 activeStep={2}
                 visitStep={visitStep}
                 onStepClick={(step) => setVisitStep(step)}
-                className="mb-4"
+                className="mb-4 max-w-3xl mx-auto"
             />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 my-6">
                 <div>

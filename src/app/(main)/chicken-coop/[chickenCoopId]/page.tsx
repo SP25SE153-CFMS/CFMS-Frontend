@@ -20,7 +20,7 @@ import { useChickenCoopStore } from '@/store/use-chicken-coop';
 export default function Page() {
     const { chickenCoopId }: { chickenCoopId: string } = useParams();
     const { data: chickenCoop } = useQuery({
-        queryKey: ['chickenCoop'],
+        queryKey: ['chickenCoop', chickenCoopId],
         queryFn: () => getChickenCoopById(chickenCoopId),
     });
 
@@ -44,7 +44,7 @@ export default function Page() {
         <div>
             <div className="flex justify-between">
                 <h1 className="text-3xl font-bold tracking-tight">
-                    Chuồng nuôi
+                    Thông tin chuồng nuôi
                     <span className="text-primary ml-2">{chickenCoop?.chickenCoopName}</span>
                 </h1>
             </div>

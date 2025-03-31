@@ -6,7 +6,9 @@ export const FeedLogSchema = z.object({
     feedingDate: z
         .string()
         .datetime({ message: 'Ngày cho ăn không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
-    actualFeedAmount: z.number().positive({ message: 'Lượng thức ăn thực tế phải là số dương' }),
+    actualFeedAmount: z.coerce
+        .number()
+        .positive({ message: 'Lượng thức ăn thực tế phải là số dương' }),
     unitId: z.string().uuid({ message: 'ID đơn vị không hợp lệ, phải là UUID' }),
     taskId: z.string().uuid({ message: 'ID công việc không hợp lệ, phải là UUID' }),
     note: z.string().optional(),

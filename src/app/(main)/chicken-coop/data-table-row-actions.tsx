@@ -31,6 +31,8 @@ import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { deleteChickenCoop } from '@/services/chicken-coop.service';
 import toast from 'react-hot-toast';
 import ChickenCoopForm from '@/components/forms/chicken-coop-form';
+import { useQueryClient } from '@tanstack/react-query';
+import useQueryParams from '@/hooks/use-query-params';
 
 interface Props<T> {
     row: Row<T>;
@@ -41,9 +43,13 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
+    const queryClient = useQueryClient();
+    const { breedingAreaId } = useQueryParams();
+
     const handleDelete = async () => {
         await deleteChickenCoop((row.original as ChickenCoop).chickenCoopId).then(() => {
             toast.success('Xóa chuồng nuôi thành công');
+            queryClient.invalidateQueries({ queryKey: ['chickenCoops', breedingAreaId] });
             setOpenDelete(false);
         });
     };

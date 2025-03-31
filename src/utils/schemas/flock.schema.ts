@@ -33,9 +33,9 @@ export const FlockSchema = z.object({
             errorMap: () => ({ message: 'Giới tính không hợp lệ' }),
         })
         .optional(),
-    purposeId: z.number().int().positive('Mã mục đích phải là số nguyên dương'),
-    breedId: z.number().int().positive('Mã giống phải là số nguyên dương'),
-    housingId: z.number().int().positive('Mã chuồng trại phải là số nguyên dương'),
+    purposeId: z.string().uuid({ message: 'Mã mục đích phải là số nguyên dương' }),
+    breedId: z.string().uuid({ message: 'Mã giống phải là số nguyên dương' }),
+    housingId: z.string().uuid({ message: 'Mã chuồng trại phải là số nguyên dương' }),
 });
 
 export type Flock = z.infer<typeof FlockSchema>;

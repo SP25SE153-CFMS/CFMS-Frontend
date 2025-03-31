@@ -2,9 +2,9 @@ import { z } from 'zod';
 
 export const WarehouseProductSchema = z.object({
     productId: z.string().uuid(),
-    productCode: z.string().length(6, "Mã code phải đúng 6 ký tự.").trim(),
+    productCode: z.string().length(6, 'Mã code phải đúng 6 ký tự.').trim(),
     productName: z.string().min(3, 'Tên hàng có ít nhất 3 ký tự.').trim(),
-    quantity: z.preprocess((val) => Number(val), z.number().positive()), // số lượng trong kho
+    quantity: z.preprocess((val) => Number(val), z.coerce.number().positive()), // số lượng trong kho
     unit: z
         .string()
         .min(1, 'Đơn vị không được để trống.')
@@ -27,8 +27,8 @@ export const WarehouseProductSchema = z.object({
     ),
     dateToImport: z.string().datetime({ message: 'Ngày nhập kho phải là ngày hợp lệ.' }), // ngày nhập kho
     supplier: z.string().trim().min(1, 'Không được để trống').trim(), // nhà cung cấp
-    // minimum: z.number().min(100, 'Số lượng tối thiểu là 100'), // tối thiểu
-    // maximum: z.number().max(2000, 'Số lượng tối đa là 2000 '), // tối đa
+    // minimum: z.coerce.number().min(100, 'Số lượng tối thiểu là 100'), // tối thiểu
+    // maximum: z.coerce.number().max(2000, 'Số lượng tối đa là 2000 '), // tối đa
 });
 
 export type WarehouseProduct = z.infer<typeof WarehouseProductSchema>;

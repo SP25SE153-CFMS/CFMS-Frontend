@@ -25,6 +25,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { deleteProduct } from '@/services/warehouse-product.service';
 import { WarehouseProduct } from '@/utils/schemas/warehouse-product.schema';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { useQueryClient } from '@tanstack/react-query';
 import { Row } from '@tanstack/react-table';
 import { Trash } from 'lucide-react';
 import { useState } from 'react';
@@ -37,10 +38,14 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openDelete, setOpenDelete] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
 
+    const queryClient = useQueryClient();
+
     const handleDelete = async () => {
         const id = (row.original as WarehouseProduct).productId;
         await deleteProduct(id);
         toast.success('Xóa sản phẩm thành công!');
+        // TODO: Update query key
+        queryClient.invalidateQueries({ queryKey: ['foods'] });
         setOpenDelete(false);
     };
 

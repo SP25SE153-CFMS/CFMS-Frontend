@@ -1,6 +1,7 @@
-/* eslint-disable no-unused-vars */
 'use client';
 import { cn } from '@/lib/utils';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface StepProps {
     title: string;
@@ -53,33 +54,124 @@ interface StepperProps {
 }
 
 export function Stepper({ steps, activeStep, visitStep, onStepClick, className }: StepperProps) {
+    const [visibleRange, setVisibleRange] = useState({
+        start: 0,
+        end: Math.min(2, steps.length - 1),
+    });
+
+    // Ensure active step is always visible
+    useEffect(() => {
+        // For steps 0 and 1, show first 3 steps
+        if (activeStep <= 1) {
+            setVisibleRange({ start: 0, end: Math.min(2, steps.length - 1) });
+        }
+        // For last and second-to-last steps, show last 3 steps
+        else if (activeStep >= steps.length - 2) {
+            setVisibleRange({
+                start: Math.max(0, steps.length - 3),
+                end: steps.length - 1,
+            });
+        }
+        // Otherwise, center the active step
+        else {
+            setVisibleRange({
+                start: activeStep - 1,
+                end: activeStep + 1,
+            });
+        }
+    }, [activeStep, steps.length]);
+
     const handleStepClick = (index: number) => {
         if (onStepClick) {
             onStepClick(index);
         }
     };
 
+    const handlePrevious = () => {
+        console.log(visibleRange, activeStep);
+
+        if (visibleRange.start > 0) {
+            // Only move the window if we're not already showing the first step
+            // if (activeStep > 2) {
+            setVisibleRange({
+                start: visibleRange.start - 1,
+                end: visibleRange.end - 1,
+            });
+            // }
+        }
+    };
+
+    const handleNext = () => {
+        if (visibleRange.end < steps.length - 1) {
+            // Only move the window if we're not already showing the last step
+            if (activeStep < steps.length - 3) {
+                setVisibleRange({
+                    start: visibleRange.start + 1,
+                    end: visibleRange.end + 1,
+                });
+            }
+        }
+    };
+
+    const visibleSteps = steps.slice(visibleRange.start, visibleRange.end + 1);
+
     return (
-        <div className={cn('flex w-full', className)}>
-            {steps.map((step, index) => (
-                <div
-                    key={index}
-                    className={cn(
-                        'flex-1 relative',
-                        index < steps.length - 1 ? 'z-[' + (steps.length - index) + ']' : '',
-                    )}
-                >
-                    <Step
-                        title={step}
-                        index={index}
-                        active={activeStep === index}
-                        visit={visitStep === index}
-                        completed={activeStep > index}
-                        isLastStep={index === steps.length - 1}
-                        onClick={handleStepClick}
-                    />
-                </div>
-            ))}
+        <div className={cn('flex items-center w-full', className)}>
+            {/* Previous button */}
+            <button
+                onClick={handlePrevious}
+                disabled={visibleRange.start === 0}
+                className={cn(
+                    'flex items-center justify-center h-12 w-12 rounded-l-lg mr-2',
+                    visibleRange.start === 0
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+                )}
+            >
+                <ChevronLeft size={20} />
+            </button>
+
+            {/* Visible steps */}
+            <div className="flex flex-1">
+                {visibleSteps.map((step, i) => {
+                    const actualIndex = i + visibleRange.start;
+                    return (
+                        <div
+                            key={actualIndex}
+                            className={cn(
+                                'flex-1 relative',
+                                i < visibleSteps.length - 1
+                                    ? 'z-[' + (visibleSteps.length - i) + ']'
+                                    : '',
+                            )}
+                        >
+                            <Step
+                                title={step}
+                                index={actualIndex}
+                                active={activeStep === actualIndex}
+                                visit={visitStep === actualIndex}
+                                completed={activeStep > actualIndex}
+                                isLastStep={i === visibleSteps.length - 1}
+                                onClick={handleStepClick}
+                            />
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Next button */}
+            <button
+                onClick={handleNext}
+                disabled={visibleRange.end === steps.length - 1}
+                className={cn(
+                    'flex items-center justify-center h-12 w-12 rounded-r-lg ml-2',
+                    visibleRange.end === steps.length - 1
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+                )}
+            >
+                <ChevronRight size={20} />
+            </button>
         </div>
     );
 }

@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const RevokedTokenSchema = z.object({
     revokedTokenId: z.string().uuid({ message: 'ID token bị thu hồi không hợp lệ, phải là UUID' }),
     token: z.string().min(1, { message: 'Token là bắt buộc' }),
-    tokenType: z.number().int({ message: 'Loại token phải là số nguyên' }),
+    tokenType: z.coerce.number().int({ message: 'Loại token phải là số nguyên' }),
     revokedAt: z
         .string()
         .datetime({ message: 'Thời gian thu hồi không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),

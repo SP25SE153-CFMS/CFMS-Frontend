@@ -4,7 +4,7 @@ import type React from 'react';
 
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { AlignRight, Calendar, Info, Timer, TrendingUp, CalendarIcon } from 'lucide-react';
+import { AlignRight, Calendar, Info, Timer, TrendingUp } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import PopoverWithOverlay from '@/components/popover-with-overlay';
 import {
     Select,
@@ -41,17 +41,18 @@ import {
     DialogDescription,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import InfoItem from '@/components/info-item';
 import { calculateDuration } from './batch-progress';
-import { Label } from '@/components/ui/label';
-import { format } from 'date-fns';
-import { Calendar as CalendarComponent } from '@/components/ui/calendar';
-import { getChickenTypes } from '@/services/category.service';
-import { useQuery } from '@tanstack/react-query';
-import { getGrowthStages } from '@/services/growth-stage.service';
+
+import { endChickenBatch } from '@/services/chicken-batch.service';
+import { useParams } from 'next/navigation';
+import toast from 'react-hot-toast';
+import StartChickenBatchForm from '@/components/forms/start-chicken-batch-form';
 
 const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[] }) => {
+    const [open, setOpen] = useState(false);
+
+    const { chickenBatchId }: { chickenBatchId: string } = useParams();
     const [currentChickenBatch, setCurrentChickenBatch] = useState<ChickenBatch>(
         chickenBatches?.[0],
     );
@@ -66,6 +67,15 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
         const selectedBatch = chickenBatches?.find((batch) => batch.chickenBatchId === batchId);
         if (selectedBatch) {
             setCurrentChickenBatch(selectedBatch);
+        }
+    };
+
+    const closeChickenBatch = async () => {
+        try {
+            await endChickenBatch(chickenBatchId);
+            toast.success('Kết thúc lứa nuôi thành công');
+        } catch (error) {
+            toast.error('Kết thúc lứa nuôi thất bại');
         }
     };
 
@@ -112,7 +122,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                 </PopoverWithOverlay>
             </CardHeader>
 
-            {currentChickenBatch ? (
+            {currentChickenBatch && currentChickenBatch?.status?.toString() === '0' ? (
                 <>
                     <CardContent className="pb-0">
                         <h3 className="mb-2 font-semibold">
@@ -181,7 +191,9 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                     <AlertDialogCancel>Hủy</AlertDialogCancel>
-                                    <AlertDialogAction>Kết thúc</AlertDialogAction>
+                                    <AlertDialogAction onClick={closeChickenBatch}>
+                                        Kết thúc
+                                    </AlertDialogAction>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
@@ -198,7 +210,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                         </div>
                     </CardContent>
                     <CardFooter className="pb-4">
-                        <Dialog>
+                        <Dialog open={open} onOpenChange={setOpen}>
                             <DialogTrigger asChild>
                                 <Button variant="default" className="w-full">
                                     Bắt đầu lứa nuôi mới
@@ -211,7 +223,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                                         Hãy nhập các thông tin dưới đây để bắt đầu lứa nuôi mới
                                     </DialogDescription>
                                 </DialogHeader>
-                                <StartChickenBatchForm />
+                                <StartChickenBatchForm closeDialog={() => setOpen(false)} />
                             </DialogContent>
                         </Dialog>
                     </CardFooter>
@@ -222,185 +234,3 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
 };
 
 export default ChickenBatchSummary;
-
-const StartChickenBatchForm = () => {
-    const { data: chickenTypes } = useQuery({
-        queryKey: ['chickenTypes'],
-        queryFn: () => getChickenTypes(),
-    });
-
-    const { data: growthStages } = useQuery({
-        queryKey: ['growthStages'],
-        queryFn: () => getGrowthStages(),
-    });
-
-    const [chickenId, setChickenId] = useState('');
-    const [date, setDate] = useState<Date>(new Date());
-    const [chickenTypeId, setChickenTypeId] = useState('');
-
-    const chickens = chickenTypes?.find((type) => type.subCategoryId === chickenTypeId)?.chickens;
-
-    return (
-        <form className="space-y-5">
-            <div className="space-y-4">
-                <div className="*:not-first:mt-2">
-                    <Label htmlFor={`chickenBatchName`}>Tên lứa nuôi</Label>
-                    <Input id={`chickenBatchName`} placeholder="Lứa nuôi gà đẻ trứng" required />
-                </div>
-                <div className="*:not-first:mt-2">
-                    <Label>Loại gà</Label>
-                    <Select defaultValue={chickenTypeId} onValueChange={setChickenTypeId}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Chọn loại gà" />
-                        </SelectTrigger>
-                        <SelectContent className="max-h-72">
-                            {chickenTypes?.map((type) => (
-                                <SelectItem key={type.subCategoryId} value={type.subCategoryId}>
-                                    {type.subCategoryName}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-                {chickenTypeId && (
-                    <>
-                        <div className="*:not-first:mt-2">
-                            <Label>Nhóm giai đoạn phát triển</Label>
-                            <Select>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Chọn nhóm giai đoạn phát triển..." />
-                                </SelectTrigger>
-                                <SelectContent className="max-h-72">
-                                    {growthStages
-                                        // Filter stages by chicken type
-                                        ?.filter((stage) => stage.chickenType === chickenTypeId)
-                                        // Remove duplicate stages
-                                        .filter(
-                                            (stage, index, self) =>
-                                                index ===
-                                                self.findIndex(
-                                                    (s) => s.stageCode === stage.stageCode,
-                                                ),
-                                        )
-                                        // Render stages
-                                        .map((stage) => (
-                                            <SelectItem
-                                                key={stage.growthStageId}
-                                                value={stage.growthStageId}
-                                            >
-                                                {stage.stageCode}
-                                            </SelectItem>
-                                        ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="*:not-first:mt-2">
-                            <Label htmlFor={`chickenBatchName`}>Giống gà</Label>
-                            <Select defaultValue={chickenId} onValueChange={setChickenId}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Chọn giống gà" />
-                                </SelectTrigger>
-                                <SelectContent className="max-h-72">
-                                    {chickens?.map((chicken) => (
-                                        <SelectItem
-                                            key={chicken.chickenId}
-                                            value={chicken.chickenId}
-                                        >
-                                            {chicken.chickenName}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            {/* <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" className="w-full">
-                                        Chọn giống gà
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuGroup>
-                                        {chickenTypes?.map((type) => (
-                                            <DropdownMenuSub key={type.subCategoryId}>
-                                                <DropdownMenuSubTrigger inset>
-                                                    {type.subCategoryName}
-                                                </DropdownMenuSubTrigger>
-                                                <DropdownMenuPortal>
-                                                    <DropdownMenuSubContent>
-                                                        <DropdownMenuRadioGroup
-                                                            value={chickenId}
-                                                            onValueChange={setChickenId}
-                                                        >
-                                                            {type.chickens.map((chicken) => (
-                                                                <DropdownMenuRadioItem
-                                                                    value={chicken.chickenId}
-                                                                    key={chicken.chickenId}
-                                                                >
-                                                                    {chicken.chickenName}
-                                                                </DropdownMenuRadioItem>
-                                                            ))}
-                                                        </DropdownMenuRadioGroup>
-                                                    </DropdownMenuSubContent>
-                                                </DropdownMenuPortal>
-                                            </DropdownMenuSub>
-                                        ))}
-                                    </DropdownMenuGroup>
-                                </DropdownMenuContent>
-                            </DropdownMenu> */}
-                        </div>
-                    </>
-                )}
-
-                {/* This code for range datetime */}
-                <div className="*:not-first:mt-2 grid gap-2">
-                    <Label>Ngày bắt đầu</Label>
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button
-                                variant={'outline'}
-                                className={cn(
-                                    'justify-start text-left font-normal',
-                                    !date && 'text-muted-foreground',
-                                )}
-                            >
-                                <CalendarIcon />
-                                {format(date, 'PPP')}
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                            <CalendarComponent
-                                mode="single"
-                                selected={date}
-                                onSelect={(day) => setDate(day ?? new Date())}
-                                initialFocus
-                            />
-                        </PopoverContent>
-                    </Popover>
-                </div>
-
-                {/* Duration */}
-                {/* <div className="*:not-first:mt-2">
-                    <Label>Thời lượng</Label>
-                    <div className="flex rounded-md shadow-xs">
-                        <Input
-                            className="-me-px rounded-e-none shadow-none focus-visible:z-10"
-                            placeholder="1"
-                            type="number"
-                            min={0}
-                        />
-                        <SelectNative className="text-muted-foreground hover:text-foreground w-fit rounded-s-none shadow-none bg-gray-50">
-                            {timeOptions.map((option) => (
-                                <option key={option} value={option}>
-                                    {option}
-                                </option>
-                            ))}
-                        </SelectNative>
-                    </div>
-                </div> */}
-            </div>
-
-            <Button type="button" className="w-full">
-                Bắt đầu
-            </Button>
-        </form>
-    );
-};

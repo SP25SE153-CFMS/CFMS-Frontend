@@ -16,9 +16,12 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
-import { CoopEquipmentSchema, type CoopEquipment } from '@/utils/schemas/coop-equipment.schema';
+import {
+    CoopEquipmentSchema,
+    CreateCoopEquipmentSchema,
+    type CoopEquipment,
+} from '@/utils/schemas/coop-equipment.schema';
 import dayjs from 'dayjs';
-import { createCoopEquipment, updateCoopEquipment } from '@/services/coop-equipment.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
@@ -27,6 +30,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { getEquipments } from '@/services/equipment.service';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { EquipmentStatus, equipmentStatusLabels } from '@/utils/enum/status.enum';
+import { addCoopEquipment, updateCoopEquipment } from '@/services/chicken-coop.service';
 
 interface CoopEquipmentFormProps {
     defaultValues?: Partial<CoopEquipment>;
@@ -43,7 +47,7 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
 
     // Initialize form
     const form = useForm<CoopEquipment>({
-        resolver: zodResolver(CoopEquipmentSchema),
+        resolver: zodResolver(defaultValues ? CoopEquipmentSchema : CreateCoopEquipmentSchema),
         defaultValues: {
             coopEquipmentId: '',
             chickenCoopId,
@@ -64,7 +68,7 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
 
     // Mutations for creating and updating
     const mutation = useMutation({
-        mutationFn: defaultValues ? updateCoopEquipment : createCoopEquipment,
+        mutationFn: defaultValues ? updateCoopEquipment : addCoopEquipment,
         onSuccess: () => {
             closeDialog();
             queryClient.invalidateQueries({ queryKey: ['coopEquipments'] });
@@ -82,14 +86,26 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
 
     // Form submit handler
     async function onSubmit(values: CoopEquipment) {
+        console.log(values);
+
+        values.assignedDate = dayjs(values.assignedDate).format('YYYY-MM-DD');
+        values.lastMaintenanceDate = dayjs(values.lastMaintenanceDate).format('YYYY-MM-DD');
+        values.nextMaintenanceDate = dayjs(values.nextMaintenanceDate).format('YYYY-MM-DD');
+        console.log(values);
+
         mutation.mutate(values);
+    }
+
+    // Form error handler
+    function onError(errors: any) {
+        console.error(errors);
     }
 
     const chickenCoops: ChickenCoop[] = JSON.parse(sessionStorage.getItem('chickenCoops') || '[]');
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
                     {/* Chicken Coop ID */}
                     <FormField

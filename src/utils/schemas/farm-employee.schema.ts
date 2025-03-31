@@ -16,7 +16,7 @@ export const FarmEmployeeSchema = z.object({
     status: z.enum(['0', '1'], {
         message: "status chỉ có thể là '0' (Nghỉ việc) hoặc '1' (Đang làm việc)",
     }),
-    farmRole: z.number().int({ message: 'Vai trò trang trại phải là số nguyên' }),
+    farmRole: z.coerce.number().int({ message: 'Vai trò trang trại phải là số nguyên' }),
 });
 
 export type FarmEmployee = z.infer<typeof FarmEmployeeSchema>;

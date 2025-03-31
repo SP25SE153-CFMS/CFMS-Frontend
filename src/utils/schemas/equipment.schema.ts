@@ -18,9 +18,12 @@ export const EquipmentSchema = z.object({
 
     material: z.string().optional(),
     usage: z.string().optional(),
-    warranty: z.number().int().positive({ message: 'Thời gian bảo hành phải là số nguyên dương' }),
-    size: z.number().positive({ message: 'Kích thước phải là số dương' }),
-    weight: z.number().positive({ message: 'Trọng lượng phải là số dương' }),
+    warranty: z.coerce
+        .number()
+        .int()
+        .positive({ message: 'Thời gian bảo hành phải là số nguyên dương' }),
+    size: z.coerce.number().positive({ message: 'Kích thước phải là số dương' }),
+    weight: z.coerce.number().positive({ message: 'Trọng lượng phải là số dương' }),
 });
 
 export type Equipment = z.infer<typeof EquipmentSchema>;

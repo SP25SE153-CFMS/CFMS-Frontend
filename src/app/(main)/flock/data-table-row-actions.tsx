@@ -31,6 +31,7 @@ import { Flock } from '@/utils/schemas/flock.schema';
 import FlockForm from '@/components/forms/flock-form';
 import { useRouter } from 'next/navigation';
 import config from '@/configs';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props<T> {
     row: Row<T>;
@@ -41,9 +42,12 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
+    const queryClient = useQueryClient();
+
     const handleDelete = async () => {
         await deleteFlock((row.original as Flock).flockId).then(() => {
             toast.success('Xóa đàn gà thành công');
+            queryClient.invalidateQueries({ queryKey: ['flocks'] });
             setOpenDelete(false);
         });
     };

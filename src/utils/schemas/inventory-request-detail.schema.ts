@@ -8,7 +8,7 @@ export const InventoryRequestDetailSchema = z.object({
         .string()
         .uuid({ message: 'ID yêu cầu nhập kho không hợp lệ, phải là UUID' }),
     resourceId: z.string().uuid({ message: 'ID tài nguyên không hợp lệ, phải là UUID' }),
-    expectedQuantity: z.number().positive({ message: 'Số lượng mong đợi phải là số dương' }),
+    expectedQuantity: z.coerce.number().positive({ message: 'Số lượng mong đợi phải là số dương' }),
     unitId: z.string().uuid({ message: 'ID đơn vị không hợp lệ, phải là UUID' }),
     reason: z.string().optional(),
     expectedDate: z

@@ -13,7 +13,7 @@ export const InventoryReceiptSchema = z.object({
         .uuid({ message: 'ID loại phiếu nhập/xuất không hợp lệ, phải là UUID' }),
     wareFromId: z.string().uuid({ message: 'ID kho nguồn không hợp lệ, phải là UUID' }),
     wareToId: z.string().uuid({ message: 'ID kho đích không hợp lệ, phải là UUID' }),
-    status: z.number().int({ message: 'Trạng thái phải là số nguyên' }),
+    status: z.coerce.number().int({ message: 'Trạng thái phải là số nguyên' }),
     createdBy: z.string().uuid(),
     createDate: z.string().datetime({ message: 'Phải là ngày hợp lệ.' }),
     subcategoryName: z.string().optional(),

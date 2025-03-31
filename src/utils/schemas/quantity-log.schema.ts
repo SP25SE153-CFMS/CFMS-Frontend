@@ -7,9 +7,9 @@ export const QuantityLogSchema = z.object({
         .string()
         .datetime({ message: 'Ngày nhật ký không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
     notes: z.string().optional(),
-    quantity: z.number().int().nonnegative({ message: 'Số lượng không được âm' }),
+    quantity: z.coerce.number().int().nonnegative({ message: 'Số lượng không được âm' }),
     // img: z.string().url({ message: 'URL hình ảnh không hợp lệ' }).optional(),
-    logType: z.number().int({ message: 'Loại nhật ký phải là số nguyên' }),
+    logType: z.coerce.number().int({ message: 'Loại nhật ký phải là số nguyên' }),
 });
 
 export type QuantityLog = z.infer<typeof QuantityLogSchema>;

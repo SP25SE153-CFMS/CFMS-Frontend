@@ -4,7 +4,7 @@ export const WareTransactionSchema = z.object({
     transactionId: z.string().uuid({ message: 'ID giao dịch không hợp lệ, phải là UUID' }),
     wareId: z.string().uuid({ message: 'ID kho không hợp lệ, phải là UUID' }).optional(),
     resourceId: z.string().uuid({ message: 'ID tài nguyên không hợp lệ, phải là UUID' }).optional(),
-    quantity: z.number().int().optional(),
+    quantity: z.coerce.number().int().optional(),
     unitId: z.string().uuid({ message: 'ID đơn vị không hợp lệ, phải là UUID' }).optional(),
     batchNumber: z.string().optional(),
     transactionType: z

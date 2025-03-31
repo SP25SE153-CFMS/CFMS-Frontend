@@ -1,7 +1,7 @@
 import { ChickenBatch } from '@/utils/schemas/chicken-batch.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
-import { ChickenBatchResponse } from '@/utils/types/custom.type';
+import { ChickenBatchResponse, StartChickenBatch } from '@/utils/types/custom.type';
 import { QuantityLog } from '@/utils/schemas/quantity-log.schema';
 
 const PREFIX = '/api/ChickenBatch';
@@ -57,5 +57,17 @@ export const addQuantityLog = async (quantityLog: QuantityLog) => {
 export const deleteQuantityLog = async (batchId: string, quantityLogId: string) => {
     const endpoint = PREFIX + '/delete-quantitylog/' + batchId + '/' + quantityLogId;
     const response = await remove<Response<string>>(endpoint, { batchId, quantityLogId });
+    return response.data;
+};
+
+export const startChickenBatch = async (body: StartChickenBatch) => {
+    const endpoint = PREFIX + '/open-chickenbatch/';
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const endChickenBatch = async (chickenBatchId: string) => {
+    const endpoint = PREFIX + '/close-chickenbatch/';
+    const response = await put<Response<string>>(endpoint, { chickenBatchId });
     return response.data;
 };

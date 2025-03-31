@@ -51,19 +51,11 @@ export default function Page() {
     const [viewMode, setViewMode] = useState<'table' | 'grid'>('grid');
     const [statusFilter, setStatusFilter] = useState<string>('all');
 
-    const handleUpdate = (row: BreedingArea) => {
-        setRow(row);
-        setOpenUpdate(true);
-    };
-
-    const handleDelete = async (breedingAreaId: string) => {
-        await deleteBreedingArea(breedingAreaId).then(() => {
-            toast.success('Đã xóa khu nuôi');
-            setOpenDelete(false);
-        });
-    };
-
-    const { data: breedingAreas, isLoading } = useQuery({
+    const {
+        data: breedingAreas,
+        isLoading,
+        refetch,
+    } = useQuery({
         queryKey: ['breedingAreas'],
         queryFn: async () => {
             const breedingAreas = await getBreedingAreasByFarmId(
@@ -73,6 +65,19 @@ export default function Page() {
             return breedingAreas;
         },
     });
+
+    const handleUpdate = (row: BreedingArea) => {
+        setRow(row);
+        setOpenUpdate(true);
+    };
+
+    const handleDelete = async (breedingAreaId: string) => {
+        await deleteBreedingArea(breedingAreaId).then(() => {
+            toast.success('Đã xóa khu nuôi');
+            refetch();
+            setOpenDelete(false);
+        });
+    };
 
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);

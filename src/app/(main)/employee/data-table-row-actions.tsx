@@ -30,6 +30,7 @@ import { deleteUser } from '@/services/user.service';
 import { User } from '@/utils/schemas/user.schema';
 import { Equipment } from '@/utils/schemas/equipment.schema';
 import EquipmentForm from '@/components/forms/equipment-form';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props<T> {
     row: Row<T>;
@@ -39,9 +40,12 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
+    const queryClient = useQueryClient();
+
     const handleDelete = async () => {
         await deleteUser((row.original as User).userId).then(() => {
             toast.success('Xóa nhân công thành công');
+            queryClient.invalidateQueries({ queryKey: ['users'] });
             setOpenDelete(false);
         });
     };

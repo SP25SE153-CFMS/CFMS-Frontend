@@ -4,7 +4,7 @@ export const CoopEquipmentSchema = z.object({
     coopEquipmentId: z.string().uuid({ message: 'ID thiết bị chuồng không hợp lệ, phải là UUID' }),
     chickenCoopId: z.string().uuid({ message: 'ID chuồng gà không hợp lệ, phải là UUID' }),
     equipmentId: z.string().uuid({ message: 'ID thiết bị không hợp lệ, phải là UUID' }),
-    quantity: z.number().int().positive({ message: 'Số lượng phải là số nguyên dương' }),
+    quantity: z.coerce.number().int().positive({ message: 'Số lượng phải là số nguyên dương' }),
     assignedDate: z
         .string()
         .datetime({ message: 'Ngày lắp đặt không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
@@ -18,7 +18,7 @@ export const CoopEquipmentSchema = z.object({
             message: 'Ngày bảo trì tiếp theo không hợp lệ, phải là định dạng ngày giờ hợp lệ',
         })
         .nullable(),
-    maintenanceInterval: z
+    maintenanceInterval: z.coerce
         .number()
         .int()
         .positive({ message: 'Khoảng thời gian bảo trì phải là số nguyên dương' }),

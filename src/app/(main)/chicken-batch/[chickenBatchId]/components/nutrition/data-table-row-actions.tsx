@@ -30,6 +30,8 @@ import toast from 'react-hot-toast';
 import { FlockNutrition } from '@/utils/schemas/nutrition.schema';
 import FlockNutritionDetail from './flock-nutrition-detail';
 import { flocks } from '@/utils/data/table.data';
+import { useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
 
 interface Props<T> {
     row: Row<T>;
@@ -43,9 +45,13 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const flockNutrition = row.original as FlockNutrition;
     const flock = flocks.find((flock) => flock.flockId === flockNutrition.flockId);
 
+    const queryClient = useQueryClient();
+    const { chickenBatchId }: { chickenBatchId: string } = useParams();
+
     const handleDelete = async () => {
         await deleteFlockNutrition(flockNutrition.flockNutritionId).then(() => {
             toast.success('Xóa chế độ dinh dưỡng thành công');
+            queryClient.invalidateQueries({ queryKey: ['chickenBatch', chickenBatchId] });
             setOpenDelete(false);
         });
     };
