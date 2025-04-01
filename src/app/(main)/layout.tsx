@@ -6,6 +6,7 @@ import { AppSidebar } from '@/components/sidebar/app-sidebar';
 import { ProfileDropdown } from '@/components/profile-dropdown';
 import { ThemeSwitch } from '@/components/theme-switch';
 import Notification from '@/components/ui/notification';
+import { Search } from '@/components/command-search/search';
 
 interface LayoutProps {
     readonly children: ReactNode;
@@ -21,6 +22,7 @@ export default function Layout({ children }: LayoutProps) {
                         <div className="flex items-center gap-2 px-4">
                             <SidebarTrigger className="-ml-1" />
                             <Separator orientation="vertical" className="mr-2 h-4" />
+                            <Search />
                         </div>
                         <div className="ml-auto flex items-center space-x-4 px-4">
                             <Notification />
