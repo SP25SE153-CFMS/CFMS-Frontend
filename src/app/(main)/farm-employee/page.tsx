@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { farmEmployees } from '@/utils/data/table.data';
 import { DataTable } from '@/components/table/data-table';
 import {
     Dialog,
@@ -15,14 +14,42 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
-import AddEmployeeForm from './form';
+import FarmEmployeeForm from './form';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
+import { useQuery } from '@tanstack/react-query';
+import { getEmployeesByFarmId } from '@/services/farm.service';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
+import Image from 'next/image';
+import { Card } from '@/components/ui/card';
 
-export default function CardEmployee() {
+export default function Page() {
     const [open, setOpen] = useState(false);
 
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
+
+    const { data: farmEmployees } = useQuery({
+        queryKey: ['farm-employees'],
+        queryFn: () => getEmployeesByFarmId(getCookie(config.cookies.farmId) ?? ''),
+        enabled: !!getCookie(config.cookies.farmId),
+    });
+
+    if (!farmEmployees) {
+        return (
+            <div className="w-full h-full flex items-center justify-center">
+                <Card className="px-36 py-8">
+                    <div className="flex flex-col justify-center items-center h-[300px] gap-4">
+                        <Image src="/no-data.jpg" width={300} height={300} alt="Not Found" />
+                        <h1 className="text-2xl font-bold">Dữ liệu không tồn tại</h1>
+                        <Button variant="outline" onClick={() => window.history.back()}>
+                            Quay lại
+                        </Button>
+                    </div>
+                </Card>
+            </div>
+        );
+    }
 
     return (
         <div>
@@ -53,7 +80,7 @@ export default function CardEmployee() {
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <AddEmployeeForm closeDialog={() => setOpen(false)} />
+                                <FarmEmployeeForm closeDialog={() => setOpen(false)} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>

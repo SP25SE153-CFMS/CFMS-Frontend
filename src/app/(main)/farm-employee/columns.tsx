@@ -12,6 +12,9 @@ import {
     employeeStatusLabels,
     employeeStatusVariant,
 } from '@/utils/enum/status.enum';
+import { User } from '@/utils/schemas/user.schema';
+import { DataTableRowActions } from './data-table-row-actions';
+import { farmRoleLabels } from '@/utils/enum';
 
 export const columns: ColumnDef<FarmEmployee>[] = [
     {
@@ -38,20 +41,20 @@ export const columns: ColumnDef<FarmEmployee>[] = [
         enableSorting: false,
         enableHiding: false,
     },
+    // {
+    //     accessorKey: 'farmId',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Trang trại" />,
+    //     cell: ({ row }) => {
+    //         const farm = farms.find((farm) => farm.farmId === row.getValue('farmId'));
+    //         return <div>{farm?.farmName}</div>;
+    //     },
+    // },
     {
-        accessorKey: 'farmId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Trang trại" />,
-        cell: ({ row }) => {
-            const farm = farms.find((farm) => farm.farmId === row.getValue('farmId'));
-            return <div>{farm?.farmName}</div>;
-        },
-    },
-    {
-        accessorKey: 'employeeId',
+        accessorKey: 'user',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Nhân viên" />,
         cell: ({ row }) => {
-            const employee = users.find((user) => user.userId === row.getValue('employeeId'));
-            return <div>{employee?.fullName}</div>;
+            const user = row.getValue('user') as User;
+            return <div>{user?.fullName ?? '-'}</div>;
         },
     },
     {
@@ -64,7 +67,15 @@ export const columns: ColumnDef<FarmEmployee>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày kết thúc" />,
         cell: ({ row }) => {
             const endDate = row.getValue('endDate') as Date;
-            return <div>{endDate ? dayjs(endDate).format('DD/MM/YYYY') : '-'}</div>;
+            return <div>{endDate ? dayjs(endDate).format('DD/MM/YYYY') : 'Chưa kết thúc'}</div>;
+        },
+    },
+    {
+        accessorKey: 'farmRole',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Vai trò" />,
+        cell: ({ row }) => {
+            const farmRole = row.getValue('farmRole') as string;
+            return <div>{farmRoleLabels[farmRole]}</div>;
         },
     },
     {
@@ -79,9 +90,8 @@ export const columns: ColumnDef<FarmEmployee>[] = [
             );
         },
     },
-    // {
-    //     accessorKey: 'roleName',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Vai trò" />,
-    //     cell: ({ row }) => <div>{row.getValue('roleName')}</div>,
-    // },
+    {
+        id: 'actions',
+        cell: ({ row }) => <DataTableRowActions row={row} />,
+    },
 ];

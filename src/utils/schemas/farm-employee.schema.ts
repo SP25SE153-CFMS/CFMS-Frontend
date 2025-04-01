@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { User } from './user.schema';
 
 export const FarmEmployeeSchema = z.object({
     farmEmployeeId: z
@@ -19,5 +20,13 @@ export const FarmEmployeeSchema = z.object({
     farmRole: z.coerce.number().int({ message: 'Vai trò trang trại phải là số nguyên' }),
 });
 
-export type FarmEmployee = z.infer<typeof FarmEmployeeSchema>;
-export const CreateFarmEmployeeSchema = FarmEmployeeSchema.omit({ farmEmployeeId: true });
+export type FarmEmployee = z.infer<typeof FarmEmployeeSchema> & {
+    user: User;
+};
+
+export const CreateFarmEmployeeSchema = FarmEmployeeSchema.omit({
+    farmEmployeeId: true,
+    startDate: true,
+    endDate: true,
+});
+export type CreateFarmEmployee = z.infer<typeof CreateFarmEmployeeSchema>;
