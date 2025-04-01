@@ -7,10 +7,21 @@ import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/compone
 import config from '@/configs';
 import { useChickenCoopStore } from '@/store/use-chicken-coop';
 import { chickenCoopStatusLabels, chickenCoopStatusVariant } from '@/utils/enum/status.enum';
+import { getAreaUnit, getDensityUnit } from '@/utils/functions/category.function';
 import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { Select } from '@radix-ui/react-select';
-import { AlignRight, Code, Map, Tag, TrendingUp, Users } from 'lucide-react';
+import {
+    AlignRight,
+    Baseline,
+    Code,
+    LandPlot,
+    Map,
+    ScanEye,
+    Tag,
+    TrendingUp,
+    Users,
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 const ChickenCoopDetails = () => {
@@ -86,7 +97,19 @@ const ChickenCoopDetails = () => {
                 <InfoItem
                     label="Khu nuôi"
                     value={currentBreedingArea?.breedingAreaName ?? '-'}
-                    icon={<Map size={16} />}
+                    icon={<Baseline size={16} />}
+                />
+
+                <InfoItem
+                    label="Diện tích"
+                    value={`${chickenCoop?.area ?? '-'} ${getAreaUnit(chickenCoop?.areaUnitId ?? '')}`}
+                    icon={<LandPlot size={16} />}
+                />
+
+                <InfoItem
+                    label="Mật độ"
+                    value={`${chickenCoop?.density ?? '-'} ${getDensityUnit(chickenCoop?.densityUnitId ?? '')}`}
+                    icon={<ScanEye size={16} />}
                 />
 
                 <InfoItem

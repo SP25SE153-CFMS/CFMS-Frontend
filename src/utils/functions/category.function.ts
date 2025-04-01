@@ -32,5 +32,17 @@ export function getPurpose(purposeId: string): string {
 export function getWeightUnit(weightUnitId: string): string {
     const categories = getSubCategoryByCategoryType(CategoryType.WEIGHT_UNIT);
     const weightUnit = categories.find((cat) => cat.subCategoryId === weightUnitId);
-    return weightUnit?.subCategoryName ?? 'Không có';
+    return weightUnit?.subCategoryName ?? '';
+}
+
+export function getDensityUnit(densityUnitId: string): string {
+    const categories = getSubCategoryByCategoryType(CategoryType.DENSITY_UNIT);
+    const densityUnit = categories.find((cat) => cat.subCategoryId === densityUnitId);
+    return densityUnit?.subCategoryName ?? '';
+}
+
+export function getAreaUnit(areaUnitId: string): string {
+    const categories = getSubCategoryByCategoryType(CategoryType.AREA_UNIT);
+    const areaUnit = categories.find((cat) => cat.subCategoryId === areaUnitId);
+    return areaUnit?.subCategoryName ?? '';
 }

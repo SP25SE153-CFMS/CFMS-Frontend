@@ -122,7 +122,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                 </PopoverWithOverlay>
             </CardHeader>
 
-            {currentChickenBatch && currentChickenBatch?.status?.toString() === '0' ? (
+            {currentChickenBatch && currentChickenBatch?.status?.toString() !== '0' ? (
                 <>
                     <CardContent className="pb-0">
                         <h3 className="mb-2 font-semibold">

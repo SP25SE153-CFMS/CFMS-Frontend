@@ -1,14 +1,12 @@
 /* eslint-disable no-unused-vars */
 'use client';
 
-import { Database, Calendar, PenToolIcon, Layers, BarChart3 } from 'lucide-react';
+import { Calendar, PenToolIcon, Layers } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CardEquipment from './components/equipment/card';
 import ChickenCoopDetails from './components/chicken-coop-details';
 import ChickenBatchSummary from './components/chicken-batch-summary';
-import { chickenCoopIndicators } from '@/utils/data/table.data';
 import CardTask from './components/task/card';
 import CardHarvest from './components/harvest/card';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
@@ -16,12 +14,22 @@ import { useQuery } from '@tanstack/react-query';
 import { getChickenCoopById } from '@/services/chicken-coop.service';
 import { useEffect } from 'react';
 import { useChickenCoopStore } from '@/store/use-chicken-coop';
+import { getEquipments } from '@/services/equipment.service';
 
 export default function Page() {
     const { chickenCoopId }: { chickenCoopId: string } = useParams();
     const { data: chickenCoop } = useQuery({
         queryKey: ['chickenCoop', chickenCoopId],
         queryFn: () => getChickenCoopById(chickenCoopId),
+    });
+
+    useQuery({
+        queryKey: ['equipments'],
+        queryFn: async () => {
+            const equipments = await getEquipments();
+            sessionStorage.setItem('equipments', JSON.stringify(equipments));
+            return equipments;
+        },
     });
 
     const { setChickenCoop } = useChickenCoopStore();
@@ -35,7 +43,7 @@ export default function Page() {
     if (!chickenCoop) {
         return (
             <div className="flex items-center justify-center h-full">
-                <LoadingSpinner />;
+                <LoadingSpinner />
             </div>
         );
     }
@@ -55,7 +63,7 @@ export default function Page() {
                     <ChickenBatchSummary chickenBatches={chickenCoop.chickenBatches} />
                 </div>
                 <div className="col-span-2 flex flex-col justify-between">
-                    <Card className="p-6">
+                    {/* <Card className="p-6">
                         <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                             <div>
                                 <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
@@ -66,12 +74,6 @@ export default function Page() {
                                     Theo dõi các chỉ số kỹ thuật quan trọng của chuồng nuôi
                                 </p>
                             </div>
-                            {/* <div className="flex gap-2">
-                                <Button variant="outline" className="gap-2">
-                                    <Target size={16} />
-                                    <span>Thiết lập mục tiêu</span>
-                                </Button>
-                            </div> */}
                         </div>
                         <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
                             <div className="flex justify-between">
@@ -93,7 +95,7 @@ export default function Page() {
                                 ))}
                             </div>
                         </div>
-                    </Card>
+                    </Card> */}
 
                     <Tabs defaultValue="task" className="w-auto">
                         <TabsList className="grid w-full grid-cols-3 h-auto">
