@@ -114,7 +114,7 @@ export default function Page() {
 
             {/* Statistics Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="border-l-4 border-l-primary">
+                <Card className="border-l-4 border-l-black">
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm font-medium text-muted-foreground flex items-center">
                             <Users className="mr-2 h-4 w-4" />
