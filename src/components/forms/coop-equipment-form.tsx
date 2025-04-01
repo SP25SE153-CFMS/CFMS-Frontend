@@ -28,8 +28,6 @@ import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { useParams } from 'next/navigation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { getEquipments } from '@/services/equipment.service';
-import { mapEnumToValues } from '@/utils/functions/enum.function';
-import { EquipmentStatus, equipmentStatusLabels } from '@/utils/enum/status.enum';
 import { addCoopEquipment, updateCoopEquipment } from '@/services/chicken-coop.service';
 
 interface CoopEquipmentFormProps {

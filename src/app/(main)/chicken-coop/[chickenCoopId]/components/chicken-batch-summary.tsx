@@ -45,14 +45,12 @@ import InfoItem from '@/components/info-item';
 import { calculateDuration } from './batch-progress';
 
 import { endChickenBatch } from '@/services/chicken-batch.service';
-import { useParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import StartChickenBatchForm from '@/components/forms/start-chicken-batch-form';
 
 const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[] }) => {
     const [open, setOpen] = useState(false);
 
-    const { chickenBatchId }: { chickenBatchId: string } = useParams();
     const [currentChickenBatch, setCurrentChickenBatch] = useState<ChickenBatch>(
         chickenBatches?.[0],
     );
