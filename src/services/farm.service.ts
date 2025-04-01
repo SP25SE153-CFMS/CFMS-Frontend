@@ -2,6 +2,7 @@ import { Farm } from '@/utils/schemas/farm.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 import { CreateFarmEmployee, FarmEmployee } from '@/utils/schemas/farm-employee.schema';
+import { FarmEmployeeResponse } from '@/utils/types/custom.type';
 
 const PREFIX = '/api/Farm';
 
@@ -43,7 +44,7 @@ export const deleteFarm = async (id: string) => {
 
 export const getEmployeesByFarmId = async (farmId: string) => {
     const endpoint = PREFIX + '/' + farmId + '/get-employees';
-    const response = await get<Response<FarmEmployee[]>>(endpoint);
+    const response = await get<Response<FarmEmployeeResponse[]>>(endpoint);
     return response.data.data;
 };
 
