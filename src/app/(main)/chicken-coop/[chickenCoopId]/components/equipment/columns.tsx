@@ -8,7 +8,7 @@ import { CoopEquipment } from '@/utils/schemas/coop-equipment.schema';
 import { Badge } from '@/components/ui/badge';
 import { equipmentStatusLabels, equipmentStatusVariant } from '@/utils/enum/status.enum';
 import { Equipment } from '@/utils/schemas/equipment.schema';
-import { DataTableRowActions } from '../../../data-table-row-actions';
+import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<CoopEquipment>[] = [
     {

@@ -81,14 +81,14 @@ export const columns: ColumnDef<GrowthStage>[] = [
     {
         accessorKey: 'minAgeWeek',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Tuổi tối thiểu (tuần)" />
+            <DataTableColumnHeader column={column} title="Tuổi bắt đầu (tuần)" />
         ),
         cell: ({ row }) => <div>{row.getValue('minAgeWeek')}</div>,
     },
     {
         accessorKey: 'maxAgeWeek',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Tuổi tối đa (tuần)" />
+            <DataTableColumnHeader column={column} title="Tuổi kết thúc (tuần)" />
         ),
         cell: ({ row }) => <div>{row.getValue('maxAgeWeek')}</div>,
     },

@@ -23,6 +23,7 @@ import { createGrowthStage, updateGrowthStage } from '@/services/growth-stage.se
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
+import { Textarea } from '../ui/textarea';
 
 interface GrowthStageFormProps {
     defaultValues?: Partial<GrowthStage>;
@@ -77,7 +78,7 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
                     {/* Stage Code */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="stageCode"
                         render={({ field }) => (
@@ -94,7 +95,7 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
                     {/* Stage Name */}
                     <FormField
@@ -155,11 +156,12 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                         name="minAgeWeek"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Tuổi tối thiểu (tuần)</FormLabel>
+                                <FormLabel>Tuổi bắt đầu (tuần)</FormLabel>
                                 <FormControl>
                                     <Input
                                         type="number"
-                                        placeholder="Nhập tuổi tối thiểu (tuần)"
+                                        min={0}
+                                        placeholder="Nhập tuổi bắt đầu (tuần)"
                                         {...field}
                                     />
                                 </FormControl>
@@ -174,11 +176,12 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                         name="maxAgeWeek"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Tuổi tối đa (tuần)</FormLabel>
+                                <FormLabel>Tuổi kết thúc (tuần)</FormLabel>
                                 <FormControl>
                                     <Input
                                         type="number"
-                                        placeholder="Nhập tuổi tối đa (tuần)"
+                                        min={0}
+                                        placeholder="Nhập tuổi kết thúc (tuần)"
                                         {...field}
                                     />
                                 </FormControl>
@@ -192,10 +195,10 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                         control={form.control}
                         name="description"
                         render={({ field }) => (
-                            <FormItem>
+                            <FormItem className="col-span-2">
                                 <FormLabel>Mô tả</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập mô tả" {...field} />
+                                    <Textarea placeholder="Nhập mô tả" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

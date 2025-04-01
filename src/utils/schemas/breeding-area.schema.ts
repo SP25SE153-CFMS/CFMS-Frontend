@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { BreedingAreaStatus } from '../enum/status.enum';
 
 export const BreedingAreaSchema = z.object({
     breedingAreaId: z.string().uuid({ message: 'ID khu nuôi không hợp lệ, phải là UUID' }),
@@ -23,7 +24,7 @@ export const BreedingAreaSchema = z.object({
 
     farmId: z.string().uuid({ message: 'ID trang trại không hợp lệ, phải là UUID' }),
 
-    status: z.enum(['0', '1'], { message: 'Trạng thái không hợp lệ' }),
+    status: z.nativeEnum(BreedingAreaStatus, { message: 'Trạng thái không hợp lệ' }),
 });
 
 export type BreedingArea = z.infer<typeof BreedingAreaSchema>;

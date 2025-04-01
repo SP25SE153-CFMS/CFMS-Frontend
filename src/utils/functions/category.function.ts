@@ -46,3 +46,15 @@ export function getAreaUnit(areaUnitId: string): string {
     const areaUnit = categories.find((cat) => cat.subCategoryId === areaUnitId);
     return areaUnit?.subCategoryName ?? '';
 }
+
+export function getLengthUnit(lengthUnitId: string): string {
+    const categories = getSubCategoryByCategoryType(CategoryType.LENGTH_UNIT);
+    const sizeUnit = categories.find((cat) => cat.subCategoryId === lengthUnitId);
+    return sizeUnit?.subCategoryName ?? '';
+}
+
+export function getMaterial(materialId: string): string {
+    const categories = getSubCategoryByCategoryType(CategoryType.MATERIAL);
+    const material = categories.find((cat) => cat.subCategoryId === materialId);
+    return material?.subCategoryName ?? '';
+}

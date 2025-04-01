@@ -72,7 +72,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
 
     const closeChickenBatch = async () => {
         try {
-            await endChickenBatch(chickenBatchId);
+            await endChickenBatch(currentChickenBatch.chickenBatchId);
             toast.success('Kết thúc lứa nuôi thành công');
         } catch (error) {
             toast.error('Kết thúc lứa nuôi thất bại');

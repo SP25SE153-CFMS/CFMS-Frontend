@@ -173,7 +173,12 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                             <FormItem>
                                 <FormLabel>Số lượng</FormLabel>
                                 <FormControl>
-                                    <Input type="number" placeholder="Nhập số lượng" {...field} />
+                                    <Input
+                                        type="number"
+                                        min={0}
+                                        placeholder="Nhập số lượng"
+                                        {...field}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

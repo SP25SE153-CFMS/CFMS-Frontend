@@ -17,13 +17,16 @@ export const EquipmentSchema = z.object({
         .datetime({ message: 'Ngày mua không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
 
     material: z.string().optional(),
+    materialId: z.string().uuid({ message: 'Chất liệu không hợp lệ' }),
     usage: z.string().optional(),
     warranty: z.coerce
         .number()
         .int()
         .positive({ message: 'Thời gian bảo hành phải là số nguyên dương' }),
     size: z.coerce.number().positive({ message: 'Kích thước phải là số dương' }),
-    weight: z.coerce.number().positive({ message: 'Trọng lượng phải là số dương' }),
+    sizeUnitId: z.string().uuid({ message: 'Đơn vị kích thước không hợp lệ' }),
+    weight: z.coerce.number().positive({ message: 'Khối lượng phải là số dương' }),
+    weightUnitId: z.string().uuid({ message: 'Đơn vị khối lượng không hợp lệ' }),
 });
 
 export type Equipment = z.infer<typeof EquipmentSchema>;
