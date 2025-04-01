@@ -6,7 +6,6 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import dayjs from 'dayjs';
 import { Badge } from '@/components/ui/badge';
 import { FarmEmployee } from '@/utils/schemas/farm-employee.schema';
-import { farms, users } from '@/utils/data/table.data';
 import {
     EmployeeStatus,
     employeeStatusLabels,

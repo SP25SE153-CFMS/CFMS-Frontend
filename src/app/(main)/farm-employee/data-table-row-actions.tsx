@@ -29,13 +29,13 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { deleteFarmEmployee } from '@/services/farm-employee.service';
 import { getCookie } from 'cookies-next';
-import { FarmEmployee } from '@/utils/schemas/farm-employee.schema';
 import InfoItem from '@/components/info-item';
-import { Activity, Calendar, IdCard, Mail, MapPin, Phone, Tag, User } from 'lucide-react';
+import { Activity, Calendar, IdCard, Mail, MapPin, Phone, Tag } from 'lucide-react';
 import dayjs from 'dayjs';
 import { Badge } from '@/components/ui/badge';
 import { employeeStatusLabels, employeeStatusVariant } from '@/utils/enum/status.enum';
 import FarmEmployeeForm from './form';
+import { FarmEmployeeResponse } from '@/utils/types/custom.type';
 
 interface Props<T> {
     row: Row<T>;
@@ -50,7 +50,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
     const queryClient = useQueryClient();
 
-    const farmEmployee = row.original as FarmEmployee;
+    const farmEmployee = row.original as FarmEmployeeResponse;
     const employee = farmEmployee.user;
 
     const handleDelete = async () => {

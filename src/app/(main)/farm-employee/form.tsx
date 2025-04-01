@@ -28,7 +28,6 @@ import {
     type FarmEmployee,
 } from '@/utils/schemas/farm-employee.schema';
 import dayjs from 'dayjs';
-import { createFarmEmployee, updateFarmEmployee } from '@/services/farm-employee.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { addEmployeeToFarm, getFarms, updateEmployeeInFarm } from '@/services/farm.service';
@@ -266,7 +265,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                                         </SelectTrigger>
                                         <SelectContent>
                                             {mapEnumToValues(FarmRole).map((role) => (
-                                                <SelectItem value={role}>
+                                                <SelectItem value={role} key={role}>
                                                     {farmRoleLabels[role]}
                                                 </SelectItem>
                                             ))}
