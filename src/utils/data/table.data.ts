@@ -262,6 +262,8 @@ export const chickenCoops: ChickenCoop[] = [
         currentQuantity: 0,
         purposeId: '',
         density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'd2e3f4a5-b6c7-8901-d2e3-f4a5b6c78901',
@@ -274,6 +276,8 @@ export const chickenCoops: ChickenCoop[] = [
         currentQuantity: 0,
         purposeId: '',
         density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'f5a6b7c8-d9e0-1234-a5b6-c7d8e9f01234',
@@ -286,6 +290,8 @@ export const chickenCoops: ChickenCoop[] = [
         currentQuantity: 0,
         purposeId: '',
         density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'a7b8c9d0-e1f2-3456-b7c8-d9e0f1234567',
@@ -298,6 +304,8 @@ export const chickenCoops: ChickenCoop[] = [
         currentQuantity: 0,
         purposeId: '',
         density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'b8c9d0e1-f2a3-4567-c8d9-e0f1a2345678',
@@ -310,6 +318,8 @@ export const chickenCoops: ChickenCoop[] = [
         currentQuantity: 0,
         purposeId: '',
         density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: '9d0e1f2-a3b4-5678-d9e0-f1a2b3456789',
@@ -322,6 +332,8 @@ export const chickenCoops: ChickenCoop[] = [
         currentQuantity: 0,
         purposeId: '',
         density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'd0e1f2a3-b4c5-6789-e0f1-a2b3c4567890',
@@ -334,6 +346,8 @@ export const chickenCoops: ChickenCoop[] = [
         currentQuantity: 0,
         purposeId: '',
         density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'e1f2a3b4-c5d6-7890-f1a2-b3c4d5678901',
@@ -346,6 +360,8 @@ export const chickenCoops: ChickenCoop[] = [
         currentQuantity: 0,
         purposeId: '',
         density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'f2a3b4c5-d6e7-8901-a2b3-c4d5e6789012',
@@ -358,6 +374,8 @@ export const chickenCoops: ChickenCoop[] = [
         currentQuantity: 0,
         purposeId: '',
         density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'a3b4c5d6-e7f8-9012-b3c4-d5e6f7890123',
@@ -370,6 +388,8 @@ export const chickenCoops: ChickenCoop[] = [
         currentQuantity: 0,
         purposeId: '',
         density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'b4c5d6e7-f8a9-0123-c4d5-e6f7a8901234',
@@ -382,6 +402,8 @@ export const chickenCoops: ChickenCoop[] = [
         currentQuantity: 0,
         purposeId: '',
         density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'c9d0e1f2-a3b4-5678-d9e0-f1a2b34567895',
@@ -394,6 +416,8 @@ export const chickenCoops: ChickenCoop[] = [
         currentQuantity: 0,
         purposeId: '',
         density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'd6e7f8a9-b0c1-2345-e6f7-a8b9c0123456',
@@ -406,6 +430,8 @@ export const chickenCoops: ChickenCoop[] = [
         currentQuantity: 0,
         purposeId: '',
         density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'e7f8a9b0-c1d2-3456-f7a8-b9c0d1234567',
@@ -418,6 +444,8 @@ export const chickenCoops: ChickenCoop[] = [
         currentQuantity: 0,
         purposeId: '',
         density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'f8a9b0c1-d2e3-4567-a8b9-c0d1e2345678',
@@ -430,6 +458,8 @@ export const chickenCoops: ChickenCoop[] = [
         currentQuantity: 0,
         purposeId: '',
         density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
 ];
 
