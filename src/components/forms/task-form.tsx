@@ -6,6 +6,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 import { format } from 'date-fns';
+import { vi } from 'date-fns/locale';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateTask, CreateTaskSchema } from '@/utils/schemas/task.schema';
@@ -350,7 +351,7 @@ export function TaskForm() {
                         control={form.control}
                         name="frequency"
                         render={({ field }) => (
-                            <FormItem>
+                            <FormItem className="mt-2">
                                 <FormLabel className="flex items-center gap-1">
                                     <Clock className="h-4 w-4" />
                                     Tần suất
@@ -381,7 +382,7 @@ export function TaskForm() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
-                                    Đơn Vị Thời Gian <span className="text-destructive">*</span>
+                                    Đơn vị thời gian <span className="text-destructive">*</span>
                                 </FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
@@ -402,6 +403,9 @@ export function TaskForm() {
                                         )}
                                     </SelectContent>
                                 </Select>
+                                <FormDescription>
+                                    Đơn vị thời gian được sử dụng để tính toán tần suất công việc.
+                                </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -428,7 +432,7 @@ export function TaskForm() {
                                                 )}
                                             >
                                                 {field.value ? (
-                                                    format(field.value, 'PPP')
+                                                    format(field.value, 'PPP', { locale: vi })
                                                 ) : (
                                                     <span>Chọn ngày</span>
                                                 )}
@@ -442,6 +446,7 @@ export function TaskForm() {
                                             selected={field.value}
                                             onSelect={field.onChange}
                                             initialFocus
+                                            locale={vi}
                                         />
                                     </PopoverContent>
                                 </Popover>
@@ -469,7 +474,7 @@ export function TaskForm() {
                                                 )}
                                             >
                                                 {field.value ? (
-                                                    format(field.value, 'PPP')
+                                                    format(field.value, 'PPP', { locale: vi })
                                                 ) : (
                                                     <span>Chọn ngày</span>
                                                 )}
@@ -483,6 +488,7 @@ export function TaskForm() {
                                             selected={field.value}
                                             onSelect={field.onChange}
                                             initialFocus
+                                            locale={vi}
                                         />
                                     </PopoverContent>
                                 </Popover>
@@ -550,7 +556,7 @@ export function TaskForm() {
             <div className="space-y-6 pt-4">
                 <div className="flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-primary" />
-                    <h3 className="text-lg font-medium">Vị trí</h3>
+                    <h3 className="text-lg font-medium">Địa điểm</h3>
                 </div>
                 <Separator />
 
@@ -561,7 +567,7 @@ export function TaskForm() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
-                                    Loại vị trí <span className="text-destructive">*</span>
+                                    Loại địa điểm <span className="text-destructive">*</span>
                                 </FormLabel>
                                 <Select
                                     onValueChange={(value) => {
@@ -572,7 +578,7 @@ export function TaskForm() {
                                 >
                                     <FormControl>
                                         <SelectTrigger className="h-10">
-                                            <SelectValue placeholder="Chọn loại vị trí" />
+                                            <SelectValue placeholder="Chọn loại địa điểm" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
@@ -685,13 +691,13 @@ export function TaskForm() {
             <div className="space-y-6 pt-4">
                 <div className="flex items-center gap-2">
                     <Package className="h-5 w-5 text-primary" />
-                    <h3 className="text-lg font-medium">Tài nguyên</h3>
+                    <h3 className="text-lg font-medium">Vật phẩm</h3>
                 </div>
                 <Separator />
 
                 <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                        <FormLabel className="text-base">Tài nguyên cần thiết</FormLabel>
+                        <FormLabel className="text-base">Vật phẩm cần thiết</FormLabel>
                         <Button
                             type="button"
                             variant="outline"
