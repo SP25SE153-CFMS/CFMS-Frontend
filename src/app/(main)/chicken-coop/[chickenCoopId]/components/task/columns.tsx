@@ -4,8 +4,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import dayjs from 'dayjs';
-import { chickenCoops } from '@/utils/data/table.data';
 import { TaskLog } from '@/utils/schemas/task-log.schema';
+import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 
 export const columns: ColumnDef<TaskLog>[] = [
     {
@@ -36,6 +36,9 @@ export const columns: ColumnDef<TaskLog>[] = [
         accessorKey: 'chickenCoopId',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Chuồng gà" />,
         cell: ({ row }) => {
+            const chickenCoops: ChickenCoop[] = JSON.parse(
+                sessionStorage.getItem('chickenCoops') || '[]',
+            );
             const coop = chickenCoops.find(
                 (coop) => coop.chickenCoopId === row.getValue('chickenCoopId'),
             );

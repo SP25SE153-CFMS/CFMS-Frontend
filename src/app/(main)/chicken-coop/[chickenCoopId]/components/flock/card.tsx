@@ -32,7 +32,7 @@ export default function CardFlock() {
     });
 
     return (
-        <Card className="p-6 mb-4">
+        <Card className="p-6">
             <div className="flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                 <div>
                     <h2 className="text-xl font-bold tracking-tight">Danh sách đàn gà</h2>

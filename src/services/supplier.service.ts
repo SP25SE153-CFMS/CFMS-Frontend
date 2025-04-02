@@ -1,6 +1,7 @@
 import { Supplier } from '@/utils/schemas/supplier.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
+import { Food } from '@/utils/schemas/food.schema';
 
 const PREFIX = '/api/Supplier';
 
@@ -30,15 +31,22 @@ export const createSupplier = async (body: Supplier) => {
 
 export const updateSupplier = async (body: Supplier) => {
     const endpoint = PREFIX;
-    // console.log('API update: ', endpoint);
-    // console.log("API update body:", JSON.stringify(body, null, 2));
     const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };
 
 export const deleteSupplier = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
-    console.log('API: ', endpoint);
     const response = await remove<Response<string>>(endpoint);
     return response.data;
+};
+
+export const getResourceSuppliersByFarmIdAndSupplierId = async (
+    farmId: string,
+    supplierId: string,
+) => {
+    const endpoint = `${PREFIX}/resource-suppliers/${farmId}/${supplierId}`;
+    console.log('Api Resource: ', endpoint);
+    const response = await get<Response<Food[]>>(endpoint);
+    return response.data.data;
 };

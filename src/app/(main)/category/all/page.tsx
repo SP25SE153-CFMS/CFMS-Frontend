@@ -21,7 +21,7 @@ export default function Page() {
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">
-                <LoadingSpinner />;
+                <LoadingSpinner />
             </div>
         );
     }

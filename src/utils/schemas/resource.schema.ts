@@ -6,7 +6,7 @@ export const ResourceSchema = z.object({
     description: z.string().optional(),
     unitId: z.string().uuid({ message: 'ID đơn vị không hợp lệ, phải là UUID' }),
     packageId: z.string().uuid({ message: 'ID gói không hợp lệ, phải là UUID' }),
-    packageSize: z.number().positive({ message: 'Kích thước gói phải là số dương' }),
+    packageSize: z.coerce.number().positive({ message: 'Kích thước gói phải là số dương' }),
 });
 
 export type Resource = z.infer<typeof ResourceSchema>;

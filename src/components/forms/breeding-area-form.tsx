@@ -43,7 +43,7 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
             area: 0,
             imageUrl: '',
             notes: '',
-            status: '1',
+            status: 1,
             farmId: getCookie(config.cookies.farmId) || '',
             ...defaultValues,
         },

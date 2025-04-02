@@ -47,6 +47,8 @@ import { getUnits } from '@/services/category.service';
 import { getFoods } from '@/services/food.service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { CategoryType } from '@/utils/enum/category.enum';
 
 interface NutritionPlanFormProps {
     defaultValues?: Partial<NutritionPlan>;
@@ -54,12 +56,7 @@ interface NutritionPlanFormProps {
 }
 
 export default function NutritionPlanForm({ defaultValues, closeDialog }: NutritionPlanFormProps) {
-    console.log(defaultValues);
-    // Get all units
-    const { data: units, isLoading: unitsLoading } = useQuery({
-        queryKey: ['units'],
-        queryFn: () => getUnits(),
-    });
+    const units = getSubCategoryByCategoryType(CategoryType.WEIGHT_UNIT);
 
     // Get all foods
     const { data: foods, isLoading: foodsLoading } = useQuery({
@@ -151,7 +148,7 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
         setNutriPlanDetails(newNutriPlanDetails);
     };
 
-    if (unitsLoading || foodsLoading) {
+    if (foodsLoading) {
         return (
             <div className="flex items-center justify-center h-64">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>

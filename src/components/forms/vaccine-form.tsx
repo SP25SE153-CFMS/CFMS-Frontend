@@ -215,7 +215,7 @@ export default function VaccineForm({ defaultValues, closeDialog }: VaccineFormP
                             <FormItem>
                                 <FormLabel>ID Bệnh</FormLabel>
                                 <FormControl>
-                                    <Input type="number" {...field} />
+                                    <Input type="number" min={0} {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

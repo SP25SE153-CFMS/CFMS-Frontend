@@ -25,11 +25,22 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { deleteSupplier } from '@/services/supplier.service';
 import { Supplier } from '@/utils/schemas/supplier.schema';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Row } from '@tanstack/react-table';
-import { Trash } from 'lucide-react';
+import { Scroll, Trash } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import ResourceSuppliers from './resource-supplier';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { getFarms } from '@/services/farm.service';
 
 interface Props<T> {
     row: Row<T>;
@@ -39,18 +50,33 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [open, setOpen] = useState(false);
     const [update, setUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
+    const [selectFarmId, setSelectFarmId] = useState('');
+
+    const supplierId = (row.original as Supplier).supplierId;
+    console.log("Id nhà cung cấp được chọn: ", supplierId)
 
     const queryClient = useQueryClient();
 
     const handleDelete = async () => {
         const id = (row.original as Supplier).supplierId;
-        console.log('ID: ', id);
+        // console.log('ID: ', id);
         await deleteSupplier(id);
         toast.success('Đã xóa');
 
-        queryClient.invalidateQueries({queryKey: []})
+        queryClient.invalidateQueries({ queryKey: ['suppliers'] });
 
         setOpenDelete(false);
+    };
+
+    // Lấy dữ liệu từ Farm
+    const { data: farms, isLoading } = useQuery({
+        queryKey: ['farms'],
+        queryFn: () => getFarms(),
+    });
+
+    const handleFarmChange = (farmId: string) => {
+        setSelectFarmId(farmId);
+        console.log('Choose: ', farmId);
     };
 
     return (
@@ -76,6 +102,47 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* Chi tiết */}
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent>
+                    <DialogHeader>Tài nguyên của nhà cung cấp</DialogHeader>
+                    <p>Chọn trang trại</p>
+                    <Select onValueChange={handleFarmChange} value={selectFarmId}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Trang trại" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectLabel>Chọn trang trại</SelectLabel>
+                                {isLoading ? (
+                                    <SelectItem value="loading">Đang tải trang trại....</SelectItem>
+                                ) : farms && farms.length > 0 ? (
+                                    farms.map((farm) => (
+                                        <SelectItem key={farm.farmId} value={farm.farmId}>
+                                            {farm.farmName}
+                                        </SelectItem>
+                                    ))
+                                ) : (
+                                    <SelectItem value="empty">Không có trang trại nào</SelectItem>
+                                )}
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                    <ScrollArea>
+                        {selectFarmId ? (
+                            <ResourceSuppliers
+                                supplierId={supplierId}
+                                farmId={selectFarmId}
+                            />
+                        ) : (
+                            <span className="p-4 text-center text-gray-500">
+                                Vui lòng chọn trang trại để xem tài nguyên
+                            </span>
+                        )}
+                    </ScrollArea>
+                </DialogContent>
+            </Dialog>
 
             {/* Cập nhật */}
             <Dialog open={update} onOpenChange={setUpdate}>

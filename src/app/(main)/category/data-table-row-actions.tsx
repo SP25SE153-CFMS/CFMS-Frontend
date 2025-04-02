@@ -10,7 +10,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Trash } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import config from '@/configs';
 import {
     Dialog,
@@ -31,6 +31,7 @@ import { deleteCategory } from '@/services/category.service';
 import { Category } from '@/utils/schemas/category.schema';
 import CategoryForm from '@/components/forms/category-form';
 import toast from 'react-hot-toast';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props<T> {
     row: Row<T>;
@@ -41,9 +42,13 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
+    const queryClient = useQueryClient();
+    const { categoryId }: { categoryId: string } = useParams();
+
     const handleDelete = async () => {
         await deleteCategory((row.original as Category).categoryId).then(() => {
             toast.success('Đã xóa danh mục');
+            queryClient.invalidateQueries({ queryKey: ['category', categoryId] });
             setOpenDelete(false);
         });
     };

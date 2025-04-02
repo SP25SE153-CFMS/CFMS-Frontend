@@ -45,9 +45,9 @@ export default function FlockForm({ defaultValues, closeDialog }: FlockFormProps
             mortalityRate: 0,
             lastHealthCheck: null,
             gender: 'mixed',
-            purposeId: 1,
-            breedId: 1,
-            housingId: 1,
+            purposeId: '',
+            breedId: '',
+            housingId: '',
             ...defaultValues,
         },
     });

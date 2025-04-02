@@ -32,8 +32,21 @@ export type ChickenBatchResponse = ChickenBatch & {
 
 export type CategoryResponse = Category & {
     subCategories: SubCategory[];
+    chickens?: ChickenResponse[];
+};
+
+export type ChickenTypeResponse = SubCategory & {
+    chickens: Chicken[];
 };
 
 export type BreedingAreaResponse = BreedingArea & {
     chickenCoops: ChickenCoop[];
+};
+
+export type StartChickenBatch = {
+    chickenCoopId: string;
+    chickenId: string;
+    chickenBatchName: string;
+    stageCode: string;
+    startDate: string | Date;
 };

@@ -93,8 +93,7 @@ export default function CardNutritionPlan() {
                                                 variant="outline"
                                                 className="self-start sm:self-auto"
                                             >
-                                                {detail.foodWeight || 0}{' '}
-                                                {unit?.subCategoryName || '-'}
+                                                {detail.foodWeight || 0} {unit || '-'}
                                             </Badge>
                                         </div>
                                     );

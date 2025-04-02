@@ -75,20 +75,20 @@ export const columns: ColumnDef<GrowthStage>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Loại gà" />,
         cell: ({ row }) => {
             const chickenTypeId = row.getValue('chickenType') as string;
-            return <div>{getChickenType(chickenTypeId)?.subCategoryName ?? 'Không có'}</div>;
+            return <div>{getChickenType(chickenTypeId)}</div>;
         },
     },
     {
         accessorKey: 'minAgeWeek',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Tuổi tối thiểu (tuần)" />
+            <DataTableColumnHeader column={column} title="Tuổi bắt đầu (tuần)" />
         ),
         cell: ({ row }) => <div>{row.getValue('minAgeWeek')}</div>,
     },
     {
         accessorKey: 'maxAgeWeek',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Tuổi tối đa (tuần)" />
+            <DataTableColumnHeader column={column} title="Tuổi kết thúc (tuần)" />
         ),
         cell: ({ row }) => <div>{row.getValue('maxAgeWeek')}</div>,
     },

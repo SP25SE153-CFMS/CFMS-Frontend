@@ -41,73 +41,15 @@ import {
     DialogDescription,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-// import { DateRange } from 'react-day-picker';
-// import { addDays, format } from 'date-fns';
+import InfoItem from '@/components/info-item';
+import { calculateDuration } from './batch-progress';
 
-// import { Calendar as CalendarPicker } from '@/components/ui/calendar';
-import { SelectNative } from '@/components/ui/select-native';
-
-// Calculate the duration in days between start date and now
-const calculateDuration = (startDate: Date, endDate: Date | null) => {
-    const start = dayjs(startDate);
-    const end = endDate ? dayjs(endDate) : dayjs();
-    return end.diff(start, 'day');
-};
-
-// Progress bar component for batch duration
-const BatchProgress = ({ startDate, endDate }: { startDate: Date; endDate: Date | null }) => {
-    const duration = calculateDuration(startDate, null);
-    const total = calculateDuration(startDate, endDate);
-
-    const progress = Math.min(Math.round((duration / total) * 100), 100);
-
-    return (
-        <div className="mt-4 space-y-1">
-            <div className="flex justify-between text-xs text-muted-foreground">
-                <span>Ngày nuôi: {duration}</span>
-                <span>{progress}%</span>
-            </div>
-            <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                <div
-                    className={cn(
-                        'h-full rounded-full transition-all duration-500 ease-in-out',
-                        progress < 30
-                            ? 'bg-blue-500'
-                            : progress < 70
-                              ? 'bg-amber-500'
-                              : 'bg-green-500',
-                    )}
-                    style={{ width: `${progress}%` }}
-                />
-            </div>
-        </div>
-    );
-};
-
-// Info item component for consistent styling
-const InfoItem = ({
-    label,
-    value,
-    icon,
-}: {
-    label: string;
-    value: React.ReactNode;
-    icon: React.ReactNode;
-}) => (
-    <div className="flex items-center gap-2 text-sm mb-3">
-        <div className="text-muted-foreground">{icon}</div>
-        <span className="text-muted-foreground">{label}:</span>
-        <div className="flex-1 text-right font-medium">{value}</div>
-    </div>
-);
+import { endChickenBatch } from '@/services/chicken-batch.service';
+import toast from 'react-hot-toast';
+import StartChickenBatchForm from '@/components/forms/start-chicken-batch-form';
 
 const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[] }) => {
-    // const [date, setDate] = useState<DateRange | undefined>({
-    //     from: new Date(),
-    //     to: addDays(new Date(), 150),
-    // });
+    const [open, setOpen] = useState(false);
 
     const [currentChickenBatch, setCurrentChickenBatch] = useState<ChickenBatch>(
         chickenBatches?.[0],
@@ -126,7 +68,16 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
         }
     };
 
-    const timeOptions = ['ngày', 'tuần', 'tháng', 'năm'];
+    const closeChickenBatch = async () => {
+        try {
+            await endChickenBatch(currentChickenBatch.chickenBatchId);
+            toast.success('Kết thúc lứa nuôi thành công');
+        } catch (error) {
+            toast.error('Kết thúc lứa nuôi thất bại');
+        }
+    };
+
+    // const timeOptions = ['ngày', 'tuần', 'tháng', 'năm'];
 
     return (
         <Card className="transition-all duration-300 hover:shadow-md">
@@ -169,9 +120,9 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                 </PopoverWithOverlay>
             </CardHeader>
 
-            {currentChickenBatch ? (
+            {currentChickenBatch && currentChickenBatch?.status?.toString() !== '0' ? (
                 <>
-                    <CardContent className="pb-6">
+                    <CardContent className="pb-0">
                         <h3 className="mb-2 font-semibold">
                             {currentChickenBatch?.chickenBatchName}
                         </h3>
@@ -206,11 +157,6 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                             value={`${calculateDuration(currentChickenBatch?.startDate, currentChickenBatch?.endDate)} ngày`}
                             icon={<Timer size={16} />}
                         />
-
-                        <BatchProgress
-                            startDate={currentChickenBatch?.startDate}
-                            endDate={currentChickenBatch?.endDate}
-                        />
                     </CardContent>
 
                     <CardFooter className="flex flex-col gap-2">
@@ -243,7 +189,9 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                     <AlertDialogCancel>Hủy</AlertDialogCancel>
-                                    <AlertDialogAction>Kết thúc</AlertDialogAction>
+                                    <AlertDialogAction onClick={closeChickenBatch}>
+                                        Kết thúc
+                                    </AlertDialogAction>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
@@ -260,7 +208,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                         </div>
                     </CardContent>
                     <CardFooter className="pb-4">
-                        <Dialog>
+                        <Dialog open={open} onOpenChange={setOpen}>
                             <DialogTrigger asChild>
                                 <Button variant="default" className="w-full">
                                     Bắt đầu lứa nuôi mới
@@ -273,102 +221,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                                         Hãy nhập các thông tin dưới đây để bắt đầu lứa nuôi mới
                                     </DialogDescription>
                                 </DialogHeader>
-                                <form className="space-y-5">
-                                    <div className="space-y-4">
-                                        <div className="*:not-first:mt-2">
-                                            <Label htmlFor={`chickenBatchName`}>Tên lứa nuôi</Label>
-                                            <Input
-                                                id={`chickenBatchName`}
-                                                placeholder="Lứa nuôi gà đẻ trứng"
-                                                required
-                                            />
-                                        </div>
-                                        <div className="*:not-first:mt-2">
-                                            <Label>Nhóm giai đoạn phát triển</Label>
-                                            <Select>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Chọn nhóm giai đoạn phát triển..." />
-                                                </SelectTrigger>
-                                                <SelectContent className="max-h-72">
-                                                    {/* {chickenCoops.map((coop) => (
-                                                        <SelectItem
-                                                            key={coop.chickenCoopId}
-                                                            value={coop.chickenCoopId}
-                                                        >
-                                                            {coop.chickenCoopName}
-                                                        </SelectItem>
-                                                    ))} */}
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-                                        {/* This code for range datetime */}
-                                        {/* <div className="grid gap-2">
-                                            <Label>Thời gian</Label>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <Button
-                                                        id="date"
-                                                        variant={'outline'}
-                                                        className={cn(
-                                                            'w-[300px] justify-start text-left font-normal',
-                                                            !date && 'text-muted-foreground',
-                                                        )}
-                                                    >
-                                                        <CalendarIcon />
-                                                        {date?.from ? (
-                                                            date.to ? (
-                                                                <>
-                                                                    {format(date.from, 'LLL dd, y')}{' '}
-                                                                    - {format(date.to, 'LLL dd, y')}
-                                                                </>
-                                                            ) : (
-                                                                format(date.from, 'LLL dd, y')
-                                                            )
-                                                        ) : (
-                                                            <span>Pick a date</span>
-                                                        )}
-                                                    </Button>
-                                                </PopoverTrigger>
-                                                <PopoverContent
-                                                    className="w-auto p-0"
-                                                    align="start"
-                                                >
-                                                    <CalendarPicker
-                                                        initialFocus
-                                                        mode="range"
-                                                        defaultMonth={date?.from}
-                                                        selected={date}
-                                                        onSelect={setDate}
-                                                        numberOfMonths={2}
-                                                    />
-                                                </PopoverContent>
-                                            </Popover>
-                                        </div> */}
-
-                                        <div className="*:not-first:mt-2">
-                                            <Label>Thời lượng</Label>
-                                            <div className="flex rounded-md shadow-xs">
-                                                <Input
-                                                    className="-me-px rounded-e-none shadow-none focus-visible:z-10"
-                                                    placeholder="1"
-                                                    type="number"
-                                                    min={0}
-                                                />
-                                                <SelectNative className="text-muted-foreground hover:text-foreground w-fit rounded-s-none shadow-none bg-gray-50">
-                                                    {timeOptions.map((option) => (
-                                                        <option key={option} value={option}>
-                                                            {option}
-                                                        </option>
-                                                    ))}
-                                                </SelectNative>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <Button type="button" className="w-full">
-                                        Bắt đầu
-                                    </Button>
-                                </form>
+                                <StartChickenBatchForm closeDialog={() => setOpen(false)} />
                             </DialogContent>
                         </Dialog>
                     </CardFooter>

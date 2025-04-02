@@ -53,7 +53,7 @@ export default function BreedingAreaCard({
                     onClick={() => sessionStorage.setItem('breedingAreaId', area.breedingAreaId)}
                 >
                     <Button variant="outline" size="sm">
-                        Xem chuồng nuôi
+                        Xem chi tiết
                     </Button>
                 </Link>
                 <DropdownMenu>

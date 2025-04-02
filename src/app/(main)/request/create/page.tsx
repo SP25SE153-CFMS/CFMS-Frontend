@@ -194,6 +194,7 @@ export default function CreateRequestPage() {
                                             <Input
                                                 id={`amount-${index}`}
                                                 type="number"
+                                                min={0}
                                                 placeholder="Nhập số lượng"
                                                 required
                                                 value={item.amount}

@@ -31,6 +31,7 @@ import {
     DialogDescription,
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props<T> {
     row: Row<T>;
@@ -41,10 +42,13 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
+    const queryClient = useQueryClient();
+
     const handleDelete = async () => {
         const growthStageId = (row.original as GrowthStage).growthStageId;
         await deleteGrowthStage(growthStageId).then(() => {
             toast.success('Đã xóa giai đoạn phát triển');
+            queryClient.invalidateQueries({ queryKey: ['growthStages'] });
             setOpenDelete(false);
         });
     };

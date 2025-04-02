@@ -23,18 +23,6 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(error);
     },
 );
-// axiosInstance.interceptors.request.use(
-//     (config) => {
-//         console.log('Request config:', {
-//             url: config.url,
-//             method: config.method,
-//             headers: config.headers,
-//             data: config.data,
-//         });
-//         return config;
-//     },
-//     (error) => Promise.reject(error),
-// );
 
 /**
  * Creates an Axios instance for making HTTP requests.
@@ -53,24 +41,19 @@ export const request = <T>(
     params: object = {},
     body: object = {},
 ): Promise<AxiosResponse<T>> => {
-    const accessToken =
-        localStorage.getItem('accessToken') || getCookie(config.cookies.accessToken);
-    console.log('LC Token: ', localStorage.getItem('accessToken'));
+    const accessToken = getCookie(config.cookies.accessToken);
+    console.log(accessToken);
+
     const url = endpoint.startsWith('http') ? endpoint : env.NEXT_PUBLIC_API_URL + endpoint;
-    // console.log('API URL: ', url);
-    // console.log('Access Token: ', accessToken);
-    const defaultHeaders = {
-        'Content-Type':
-            body && Object.keys(body).length > 0
-                ? 'application/json'
-                : 'application/x-www-form-urlencoded',
-        ...headers, // Merge custom headers
-        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-    };
+
     return axiosInstance({
         url,
         method: method,
-        headers: defaultHeaders,
+        headers: Object.assign(
+            {},
+            headers,
+            accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+        ),
         params: Object.assign(params),
         data: body,
     });

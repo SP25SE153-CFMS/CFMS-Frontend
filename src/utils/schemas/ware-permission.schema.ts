@@ -4,7 +4,7 @@ export const WarePermissionSchema = z.object({
     permissionId: z.string().uuid({ message: 'ID quyền không hợp lệ, phải là UUID' }),
     wareId: z.string().uuid({ message: 'ID kho không hợp lệ, phải là UUID' }).optional(),
     userId: z.string().uuid({ message: 'ID người dùng không hợp lệ, phải là UUID' }).optional(),
-    permissionLevel: z
+    permissionLevel: z.coerce
         .number()
         .int()
         .nonnegative({ message: 'Cấp độ quyền phải là số nguyên không âm' }),

@@ -8,7 +8,7 @@ export const FeedSessionSchema = z.object({
     feedingTime: z
         .string()
         .datetime({ message: 'Thời gian cho ăn không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
-    feedAmount: z.number().positive({ message: 'Lượng thức ăn phải là số dương' }),
+    feedAmount: z.coerce.number().positive({ message: 'Lượng thức ăn phải là số dương' }),
     unitId: z.string().uuid({ message: 'ID đơn vị không hợp lệ, phải là UUID' }),
     note: z.string().optional(),
 });

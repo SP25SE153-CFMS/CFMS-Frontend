@@ -159,6 +159,7 @@ export default function Page() {
                                             <FormControl>
                                                 <Input
                                                     type="number"
+                                                    min={0}
                                                     placeholder="Nhập diện tích"
                                                     {...field}
                                                     onChange={(e) =>

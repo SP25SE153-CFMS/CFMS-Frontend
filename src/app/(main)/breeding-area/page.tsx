@@ -51,6 +51,21 @@ export default function Page() {
     const [viewMode, setViewMode] = useState<'table' | 'grid'>('grid');
     const [statusFilter, setStatusFilter] = useState<string>('all');
 
+    const {
+        data: breedingAreas,
+        isLoading,
+        refetch,
+    } = useQuery({
+        queryKey: ['breedingAreas'],
+        queryFn: async () => {
+            const breedingAreas = await getBreedingAreasByFarmId(
+                getCookie(config.cookies.farmId) ?? '',
+            );
+            sessionStorage.setItem('breedingAreas', JSON.stringify(breedingAreas));
+            return breedingAreas;
+        },
+    });
+
     const handleUpdate = (row: BreedingArea) => {
         setRow(row);
         setOpenUpdate(true);
@@ -59,14 +74,10 @@ export default function Page() {
     const handleDelete = async (breedingAreaId: string) => {
         await deleteBreedingArea(breedingAreaId).then(() => {
             toast.success('Đã xóa khu nuôi');
+            refetch();
             setOpenDelete(false);
         });
     };
-
-    const { data: breedingAreas, isLoading } = useQuery({
-        queryKey: ['breedingAreas'],
-        queryFn: () => getBreedingAreasByFarmId(getCookie(config.cookies.farmId) ?? ''),
-    });
 
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
