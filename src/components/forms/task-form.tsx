@@ -826,7 +826,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel className="text-sm">
-                                                        vật phẩm
+                                                        Vật phẩm
                                                     </FormLabel>
                                                     <Select
                                                         onValueChange={field.onChange}
