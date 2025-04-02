@@ -711,21 +711,21 @@ export function TaskForm() {
                             className="flex items-center gap-1"
                         >
                             <Plus className="h-4 w-4" />
-                            Thêm tài nguyên
+                            Thêm vật phẩm
                         </Button>
                     </div>
 
                     <FormDescription>
-                        Thêm các tài nguyên cần thiết cho công việc này và chọn đơn vị tính.
+                        Thêm các vật phẩm cần thiết cho công việc này và chọn đơn vị tính.
                     </FormDescription>
 
                     {fields.length === 0 ? (
                         <Card className="border-dashed">
                             <CardContent className="p-6 text-center text-muted-foreground">
                                 <Package className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                                <p>Chưa có tài nguyên nào được thêm</p>
+                                <p>Chưa có vật phẩm nào được thêm</p>
                                 <p className="text-sm mt-1">
-                                    Nhấn &quot;Thêm Tài Nguyên&quot; để bắt đầu
+                                    Nhấn &quot;Thêm vật phẩm&quot; để bắt đầu
                                 </p>
                             </CardContent>
                         </Card>
@@ -743,7 +743,7 @@ export function TaskForm() {
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel className="text-sm">
-                                                        Tài nguyên
+                                                        vật phẩm
                                                     </FormLabel>
                                                     <Select
                                                         onValueChange={field.onChange}
@@ -751,7 +751,7 @@ export function TaskForm() {
                                                     >
                                                         <FormControl>
                                                             <SelectTrigger className="h-9 mt-1">
-                                                                <SelectValue placeholder="Chọn tài nguyên" />
+                                                                <SelectValue placeholder="Chọn vật phẩm" />
                                                             </SelectTrigger>
                                                         </FormControl>
                                                         <SelectContent>
