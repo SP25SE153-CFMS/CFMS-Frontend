@@ -1,6 +1,7 @@
 import { ResourceSupplier } from '@/utils/schemas/resource-supplier.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
+import { ResourceItem } from '@/utils/schemas/resource-item.schema';
 
 const PREFIX = '/api/ResourceSupplier';
 
@@ -30,6 +31,6 @@ export const updateResourceSupplier = async (body: ResourceSupplier) => {
 
 export const deleteResourceSupplier = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
-    const response = await remove<Response<string>>(endpoint);
+    const response = await remove<Response<ResourceItem[]>>(endpoint);
     return response.data;
 };

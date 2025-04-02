@@ -1,3 +1,4 @@
+'use client';
 import SupplierForm from '@/components/forms/supplier-form';
 import {
     AlertDialog,
@@ -25,35 +26,26 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { deleteSupplier } from '@/services/supplier.service';
 import { Supplier } from '@/utils/schemas/supplier.schema';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { Row } from '@tanstack/react-table';
-import { Scroll, Trash } from 'lucide-react';
+import { Trash } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import ResourceSuppliers from './resource-supplier';
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import { getFarms } from '@/services/farm.service';
+
+import config from '@/configs';
+import { useRouter } from 'next/navigation';
 
 interface Props<T> {
     row: Row<T>;
 }
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
-    const [open, setOpen] = useState(false);
+    const router = useRouter();
     const [update, setUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
-    const [selectFarmId, setSelectFarmId] = useState('');
 
     const supplierId = (row.original as Supplier).supplierId;
-    console.log("Id nhà cung cấp được chọn: ", supplierId)
+    console.log('Id nhà cung cấp được chọn: ', supplierId);
 
     const queryClient = useQueryClient();
 
@@ -68,15 +60,8 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
         setOpenDelete(false);
     };
 
-    // Lấy dữ liệu từ Farm
-    const { data: farms, isLoading } = useQuery({
-        queryKey: ['farms'],
-        queryFn: () => getFarms(),
-    });
-
-    const handleFarmChange = (farmId: string) => {
-        setSelectFarmId(farmId);
-        console.log('Choose: ', farmId);
+    const handleClickResource = () => {
+        router.push(config.routes.supplier + '/' + (row.original as Supplier).supplierId);
     };
 
     return (
@@ -90,7 +75,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
                 <DropdownMenuContent align="end">
                     {/* Chi tiết */}
-                    <DropdownMenuItem onClick={() => setOpen(true)}>Chi tiết</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleClickResource}>Chi tiết</DropdownMenuItem>
                     <DropdownMenuSeparator />
 
                     {/* Cập nhật */}
@@ -104,45 +89,13 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             </DropdownMenu>
 
             {/* Chi tiết */}
-            <Dialog open={open} onOpenChange={setOpen}>
+            {/* <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent>
-                    <DialogHeader>Tài nguyên của nhà cung cấp</DialogHeader>
-                    <p>Chọn trang trại</p>
-                    <Select onValueChange={handleFarmChange} value={selectFarmId}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Trang trại" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>Chọn trang trại</SelectLabel>
-                                {isLoading ? (
-                                    <SelectItem value="loading">Đang tải trang trại....</SelectItem>
-                                ) : farms && farms.length > 0 ? (
-                                    farms.map((farm) => (
-                                        <SelectItem key={farm.farmId} value={farm.farmId}>
-                                            {farm.farmName}
-                                        </SelectItem>
-                                    ))
-                                ) : (
-                                    <SelectItem value="empty">Không có trang trại nào</SelectItem>
-                                )}
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
                     <ScrollArea>
-                        {selectFarmId ? (
-                            <ResourceSuppliers
-                                supplierId={supplierId}
-                                farmId={selectFarmId}
-                            />
-                        ) : (
-                            <span className="p-4 text-center text-gray-500">
-                                Vui lòng chọn trang trại để xem tài nguyên
-                            </span>
-                        )}
+                        <ResourceSuppliers supplierId={supplierId} />
                     </ScrollArea>
                 </DialogContent>
-            </Dialog>
+            </Dialog> */}
 
             {/* Cập nhật */}
             <Dialog open={update} onOpenChange={setUpdate}>

@@ -29,6 +29,7 @@ const routes = {
     growthStage: '/growth-stage',
     chicken: '/chicken',
     supplier: '/supplier',
+    resourceSupplier: 'supplier/resource-supplier'
 };
 
 export default routes;
