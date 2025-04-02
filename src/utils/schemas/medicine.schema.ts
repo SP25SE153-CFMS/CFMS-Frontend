@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 export const MedicineSchema = z.object({
     medicineId: z.string().uuid({ message: 'ID thuốc không hợp lệ, phải là UUID' }),
+    medicineCode: z.string().min(1, { message: 'Mã thuốc không được để trống' }),
+    medicineName: z.string().min(1, { message: 'Tên thuốc không được để trống' }),
     usage: z.string().optional(),
     dosageForm: z.string().optional(),
     storageCondition: z.string().optional(),

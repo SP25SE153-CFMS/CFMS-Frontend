@@ -2,7 +2,7 @@ import { Warehouse } from '@/utils/schemas/warehouse.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 
-const PREFIX = '/api/Warehouse';
+const PREFIX = '/api/Ware';
 
 export const getWarehouses = async () => {
     const endpoint = PREFIX;
