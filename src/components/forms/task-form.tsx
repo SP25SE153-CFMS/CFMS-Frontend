@@ -218,7 +218,7 @@ export function TaskForm() {
                                                     key={type.subCategoryId}
                                                     value={type.subCategoryId}
                                                 >
-                                                    {type.subCategoryName}
+                                                    {type.description}
                                                 </SelectItem>
                                             ),
                                         )}

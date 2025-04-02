@@ -2,14 +2,14 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Request } from '@/utils/schemas/request.schema';
+import { Task } from '@/utils/schemas/task.schema';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
-import dayjs from 'dayjs';
-import { requestStatusLabels, requestStatusVariant } from '@/utils/enum/status.enum';
+import { taskStatusLabels, taskStatusVariant } from '@/utils/enum/status.enum';
 import { DataTableRowActions } from './data-table-row-ations';
+import { getTaskType } from '@/utils/functions/category.function';
 
-export const columns: ColumnDef<Request>[] = [
+export const columns: ColumnDef<Task>[] = [
     {
         id: 'select',
         header: ({ table }) => (
@@ -35,62 +35,58 @@ export const columns: ColumnDef<Request>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: 'requestId',
+        accessorKey: 'taskId',
         header: () => null,
         cell: () => null,
     },
     {
-        accessorKey: 'requestType',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại yêu cầu" />,
+        accessorKey: 'taskName',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Tên công việc" />,
+    },
+    {
+        accessorKey: 'taskTypeId',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại công việc" />,
         cell: ({ row }) => {
-            const requestType = row.getValue('requestType') as string;
-            return <span>{requestType?.toUpperCase()}</span>;
+            const taskTypeId = row.getValue('taskTypeId') as string;
+            return <span>{getTaskType(taskTypeId)}</span>;
         },
     },
     {
-        accessorKey: 'content',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Nội dung" />,
+        accessorKey: 'description',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Mô tả" />,
     },
     {
-        accessorKey: 'createdAt',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày tạo" />,
+        accessorKey: 'isHavest',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Thu hoạch" />,
         cell: ({ row }) => {
-            const date = new Date(row.getValue('createdAt'));
-            return <div>{dayjs(date).format('DD/MM/YYYY')}</div>;
+            const isHavest = row.getValue('isHavest') as boolean;
+            return <span>{isHavest ? 'Có' : 'Không'}</span>;
         },
     },
-    {
-        accessorKey: 'createdBy',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Người tạo" />,
-        cell: () => <span>Hải Đăng</span>,
-    },
-    {
-        accessorKey: 'approvedBy',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Người duyệt" />,
-        cell: () => <span>Hải Đăng</span>,
-    },
+    // {
+    //     accessorKey: 'startWorkDate',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày bắt đầu" />,
+    //     cell: ({ row }) => {
+    //         const date = new Date(row.getValue('startWorkDate'));
+    //         return <div>{date ? dayjs(date).format('DD/MM/YYYY') : '-'}</div>;
+    //     },
+    // },
+    // {
+    //     accessorKey: 'endWorkDate',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày kết thúc" />,
+    //     cell: ({ row }) => {
+    //         const date = new Date(row.getValue('endWorkDate'));
+    //         return <div>{date ? dayjs(date).format('DD/MM/YYYY') : '-'}</div>;
+    //     },
+    // },
     {
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
         cell: ({ row }) => {
             const status = row.getValue('status') as string;
-            return (
-                <Badge variant={requestStatusVariant[status]}>{requestStatusLabels[status]}</Badge>
-            );
+            return <Badge variant={taskStatusVariant[status]}>{taskStatusLabels[status]}</Badge>;
         },
     },
-    // {
-    //     accessorKey: 'actions',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Hành động" />,
-    //     cell: () => (
-    //         <p>
-    //             <span className="text-primary cursor-pointer">Duyệt</span> |{' '}
-    //             <span className="text-red-500 cursor-pointer">Hủy</span>
-    //         </p>
-    //     ),
-    // },
-
-    // Làm logic view detail với tạo phiếu cho dễ
     {
         id: 'actions',
         cell: ({ row }) => <DataTableRowActions row={row} />,

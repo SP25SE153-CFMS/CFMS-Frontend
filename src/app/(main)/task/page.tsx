@@ -8,18 +8,18 @@ import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
-import { getRequests } from '@/services/request.service';
+import { getTasks } from '@/services/task.service';
 import Link from 'next/link';
 import config from '@/configs';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 
 export default function Page() {
-    const { data: requests, isLoading } = useQuery({
-        queryKey: ['requests'],
-        queryFn: () => getRequests(),
+    const { data: tasks, isLoading } = useQuery({
+        queryKey: ['tasks'],
+        queryFn: () => getTasks(),
     });
 
-    // Check if requests are loading
+    // Check if tasks are loading
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -28,8 +28,8 @@ export default function Page() {
         );
     }
 
-    // Check if requests data exists
-    if (!requests) {
+    // Check if tasks data exists
+    if (!tasks) {
         return (
             <div className="w-full h-full flex items-center justify-center">
                 <Card className="px-36 py-8">
@@ -50,30 +50,28 @@ export default function Page() {
         <div>
             <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight">
-                        Danh sách các phiếu yêu cầu
-                    </h2>
+                    <h2 className="text-2xl font-bold tracking-tight">Danh sách các công việc</h2>
                     <p className="text-muted-foreground">
-                        Danh sách tất cả các phiếu yêu cầu trong hệ thống
+                        Danh sách tất cả các công việc trong hệ thống
                     </p>
                 </div>
                 <div className="flex gap-2">
                     <Button
                         variant="outline"
                         className="space-x-1"
-                        onClick={() => downloadCSV(requests, 'requests.csv')}
+                        onClick={() => downloadCSV(tasks, 'tasks.csv')}
                     >
                         <span>Tải file</span> <Download size={18} />
                     </Button>
-                    <Link href={config.routes.createRequest}>
+                    <Link href={config.routes.createTask}>
                         <Button className="space-x-1">
-                            <span>Tạo phiếu yêu cầu</span> <Plus size={18} />
+                            <span>Tạo công việc</span> <Plus size={18} />
                         </Button>
                     </Link>
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={requests} columns={columns} />
+                <DataTable data={tasks} columns={columns} />
             </div>
         </div>
     );

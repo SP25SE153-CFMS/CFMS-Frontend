@@ -60,3 +60,9 @@ export function getMaterial(materialId: string): string {
     const material = categories.find((cat) => cat.subCategoryId === materialId);
     return material?.subCategoryName ?? '';
 }
+
+export function getTaskType(taskTypeId: string): string {
+    const categories = getSubCategoryByCategoryType(CategoryType.TASK_TYPE);
+    const taskType = categories.find((cat) => cat.subCategoryId === taskTypeId);
+    return taskType?.description ?? '';
+}
