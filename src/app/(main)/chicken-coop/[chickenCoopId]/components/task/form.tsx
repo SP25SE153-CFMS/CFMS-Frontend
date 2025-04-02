@@ -21,8 +21,8 @@ import {
 import { TaskLogSchema, type TaskLog } from '@/utils/schemas/task-log.schema';
 import { createTaskLog, updateTaskLog } from '@/services/task-log.service';
 import toast from 'react-hot-toast';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getChickenCoops } from '@/services/chicken-coop.service';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 
 interface AddTaskLogFormProps {
     defaultValues?: Partial<TaskLog>;
@@ -66,10 +66,7 @@ export default function AddTaskLogForm({ defaultValues, closeDialog }: AddTaskLo
         mutation.mutate(values);
     }
 
-    const { data: chickenCoops } = useQuery({
-        queryKey: ['chickenCoops'],
-        queryFn: () => getChickenCoops(),
-    });
+    const chickenCoops: ChickenCoop[] = JSON.parse(sessionStorage.getItem('chickenCoops') || '[]');
 
     return (
         <Form {...form}>

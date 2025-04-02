@@ -10,8 +10,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Trash } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import config from '@/configs';
+import { useParams, useRouter } from 'next/navigation';
 import {
     Dialog,
     DialogContent,
@@ -20,6 +19,8 @@ import {
     DialogDescription,
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import CoopEquipmentForm from '@/components/forms/coop-equipment-form';
+import { CoopEquipment } from '@/utils/schemas/coop-equipment.schema';
 import {
     AlertDialog,
     AlertDialogContent,
@@ -27,12 +28,9 @@ import {
     AlertDialogTitle,
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
-import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
-import { deleteChickenCoop } from '@/services/chicken-coop.service';
 import toast from 'react-hot-toast';
-import ChickenCoopForm from '@/components/forms/chicken-coop-form';
 import { useQueryClient } from '@tanstack/react-query';
-import useQueryParams from '@/hooks/use-query-params';
+import { deleteCoopEquipment } from '@/services/chicken-coop.service';
 
 interface Props<T> {
     row: Row<T>;
@@ -44,20 +42,15 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openDelete, setOpenDelete] = useState(false);
 
     const queryClient = useQueryClient();
-    const { breedingAreaId } = useQueryParams();
+    const { chickenCoopId }: { chickenCoopId: string } = useParams();
 
     const handleDelete = async () => {
-        await deleteChickenCoop((row.original as ChickenCoop).chickenCoopId).then(() => {
-            toast.success('Xóa chuồng nuôi thành công');
-            queryClient.invalidateQueries({ queryKey: ['chickenCoops', breedingAreaId] });
+        const coopEquipmentId = (row.original as CoopEquipment).coopEquipmentId;
+        await deleteCoopEquipment(chickenCoopId, coopEquipmentId).then(() => {
+            toast.success('Đã xóa thiết bị chuồng nuôi');
+            queryClient.invalidateQueries({ queryKey: ['coopEquipments'] });
             setOpenDelete(false);
         });
-    };
-
-    const handleClickDetail = () => {
-        router.push(config.routes.chickenCoop + '/' + (row.original as ChickenCoop).chickenCoopId);
-        // const chickenCoops = row.getAllCells().map((cell) => cell.row.original);
-        // sessionStorage.setItem('chickenCoops', JSON.stringify(chickenCoops));
     };
 
     return (
@@ -65,12 +58,24 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="flex h-6 w-6 p-0">
-                        <DotsHorizontalIcon className="h-4 w-4" />
+                        <DotsHorizontalIcon className="h-2 w-2" />
                         <span className="sr-only">Mở menu</span>
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <DropdownMenuItem onClick={handleClickDetail}>Xem chi tiết</DropdownMenuItem>
+                    {/* <DropdownMenuItem
+                        onClick={() => {
+                            router.push(
+                                `${config.routes.chickenCoop}?coopEquipmentId=${row.getValue('coopEquipmentId')}`,
+                            );
+                            sessionStorage.setItem(
+                                'coopEquipmentId',
+                                row.getValue('coopEquipmentId'),
+                            );
+                        }}
+                    >
+                        Xem chi tiết
+                    </DropdownMenuItem> */}
                     <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                         Cập nhật
                     </DropdownMenuItem>
@@ -85,13 +90,13 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Cập nhật chuồng nuôi</DialogTitle>
+                        <DialogTitle>Cập nhật thiết bị chuồng nuôi</DialogTitle>
                         <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                     </DialogHeader>
                     <ScrollArea className="max-h-[600px]">
-                        <ChickenCoopForm
+                        <CoopEquipmentForm
                             closeDialog={() => setOpenUpdate(false)}
-                            defaultValues={row.original as ChickenCoop}
+                            defaultValues={row.original as CoopEquipment}
                         />
                     </ScrollArea>
                 </DialogContent>
@@ -103,7 +108,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa chuồng nuôi này?
+                            Bạn có chắc chắn muốn xóa thiết bị chuồng nuôi này?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="flex justify-end space-x-2">

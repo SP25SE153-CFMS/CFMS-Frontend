@@ -136,7 +136,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Cần kiểm tra sức khỏe định kỳ',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801',
-        status: '1',
+        status: 1,
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67892',
@@ -146,7 +146,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Chế độ ăn giàu protein',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
-        status: '1',
+        status: 1,
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67893',
@@ -156,7 +156,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Chăn thả tự nhiên',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801',
-        status: '1',
+        status: 1,
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67894',
@@ -166,7 +166,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Kiểm soát nhiệt độ chặt chẽ',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
-        status: '1',
+        status: 1,
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67895',
@@ -176,7 +176,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Cần đèn sưởi vào ban đêm',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
-        status: '1',
+        status: 1,
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67896',
@@ -186,7 +186,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Giống gà nhỏ nhưng thịt ngon',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801',
-        status: '1',
+        status: 1,
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67897',
@@ -196,7 +196,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Cần chuồng rộng để vận động',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
-        status: '1',
+        status: 1,
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67898',
@@ -206,7 +206,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Gà nhỏ, nuôi để làm cảnh',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
-        status: '1',
+        status: 1,
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67899',
@@ -216,7 +216,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Dành cho gà chọi',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
-        status: '1',
+        status: 1,
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f678910',
@@ -226,7 +226,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Cần nhiều không gian để chạy',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801',
-        status: '1',
+        status: 1,
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f678911',
@@ -236,7 +236,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Sử dụng hệ thống ăn tự động',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
-        status: '1',
+        status: 1,
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f678912',
@@ -246,7 +246,7 @@ export const breedingAreas: BreedingArea[] = [
         notes: 'Chọn giống tốt để nhân giống',
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
-        status: '1',
+        status: 1,
     },
 ];
 
@@ -261,6 +261,9 @@ export const chickenCoops: ChickenCoop[] = [
         area: 0,
         currentQuantity: 0,
         purposeId: '',
+        density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'd2e3f4a5-b6c7-8901-d2e3-f4a5b6c78901',
@@ -272,6 +275,9 @@ export const chickenCoops: ChickenCoop[] = [
         area: 0,
         currentQuantity: 0,
         purposeId: '',
+        density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'f5a6b7c8-d9e0-1234-a5b6-c7d8e9f01234',
@@ -283,6 +289,9 @@ export const chickenCoops: ChickenCoop[] = [
         area: 0,
         currentQuantity: 0,
         purposeId: '',
+        density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'a7b8c9d0-e1f2-3456-b7c8-d9e0f1234567',
@@ -294,6 +303,9 @@ export const chickenCoops: ChickenCoop[] = [
         area: 0,
         currentQuantity: 0,
         purposeId: '',
+        density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'b8c9d0e1-f2a3-4567-c8d9-e0f1a2345678',
@@ -305,6 +317,9 @@ export const chickenCoops: ChickenCoop[] = [
         area: 0,
         currentQuantity: 0,
         purposeId: '',
+        density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: '9d0e1f2-a3b4-5678-d9e0-f1a2b3456789',
@@ -316,6 +331,9 @@ export const chickenCoops: ChickenCoop[] = [
         area: 0,
         currentQuantity: 0,
         purposeId: '',
+        density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'd0e1f2a3-b4c5-6789-e0f1-a2b3c4567890',
@@ -327,6 +345,9 @@ export const chickenCoops: ChickenCoop[] = [
         area: 0,
         currentQuantity: 0,
         purposeId: '',
+        density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'e1f2a3b4-c5d6-7890-f1a2-b3c4d5678901',
@@ -338,6 +359,9 @@ export const chickenCoops: ChickenCoop[] = [
         area: 0,
         currentQuantity: 0,
         purposeId: '',
+        density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'f2a3b4c5-d6e7-8901-a2b3-c4d5e6789012',
@@ -349,6 +373,9 @@ export const chickenCoops: ChickenCoop[] = [
         area: 0,
         currentQuantity: 0,
         purposeId: '',
+        density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'a3b4c5d6-e7f8-9012-b3c4-d5e6f7890123',
@@ -360,6 +387,9 @@ export const chickenCoops: ChickenCoop[] = [
         area: 0,
         currentQuantity: 0,
         purposeId: '',
+        density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'b4c5d6e7-f8a9-0123-c4d5-e6f7a8901234',
@@ -371,6 +401,9 @@ export const chickenCoops: ChickenCoop[] = [
         area: 0,
         currentQuantity: 0,
         purposeId: '',
+        density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'c9d0e1f2-a3b4-5678-d9e0-f1a2b34567895',
@@ -382,6 +415,9 @@ export const chickenCoops: ChickenCoop[] = [
         area: 0,
         currentQuantity: 0,
         purposeId: '',
+        density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'd6e7f8a9-b0c1-2345-e6f7-a8b9c0123456',
@@ -393,6 +429,9 @@ export const chickenCoops: ChickenCoop[] = [
         area: 0,
         currentQuantity: 0,
         purposeId: '',
+        density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'e7f8a9b0-c1d2-3456-f7a8-b9c0d1234567',
@@ -404,6 +443,9 @@ export const chickenCoops: ChickenCoop[] = [
         area: 0,
         currentQuantity: 0,
         purposeId: '',
+        density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
     {
         chickenCoopId: 'f8a9b0c1-d2e3-4567-a8b9-c0d1e2345678',
@@ -415,6 +457,9 @@ export const chickenCoops: ChickenCoop[] = [
         area: 0,
         currentQuantity: 0,
         purposeId: '',
+        density: 0,
+        densityUnitId: '',
+        areaUnitId: '',
     },
 ];
 
@@ -427,6 +472,9 @@ export const equipments: Equipment[] = [
         warranty: 24,
         size: 0,
         weight: 0,
+        materialId: '',
+        sizeUnitId: '',
+        weightUnitId: '',
     },
     {
         equipmentId: 'e2',
@@ -436,6 +484,9 @@ export const equipments: Equipment[] = [
         warranty: 18,
         size: 0,
         weight: 0,
+        materialId: '',
+        sizeUnitId: '',
+        weightUnitId: '',
     },
     {
         equipmentId: 'e3',
@@ -445,6 +496,9 @@ export const equipments: Equipment[] = [
         warranty: 36,
         size: 0,
         weight: 0,
+        materialId: '',
+        sizeUnitId: '',
+        weightUnitId: '',
     },
     {
         equipmentId: 'e4',
@@ -454,6 +508,9 @@ export const equipments: Equipment[] = [
         warranty: 12,
         size: 0,
         weight: 0,
+        materialId: '',
+        sizeUnitId: '',
+        weightUnitId: '',
     },
     {
         equipmentId: 'e5',
@@ -463,6 +520,9 @@ export const equipments: Equipment[] = [
         warranty: 24,
         size: 0,
         weight: 0,
+        materialId: '',
+        sizeUnitId: '',
+        weightUnitId: '',
     },
     {
         equipmentId: 'e6',
@@ -472,6 +532,9 @@ export const equipments: Equipment[] = [
         warranty: 12,
         size: 0,
         weight: 0,
+        materialId: '',
+        sizeUnitId: '',
+        weightUnitId: '',
     },
     {
         equipmentId: 'e7',
@@ -481,6 +544,9 @@ export const equipments: Equipment[] = [
         warranty: 24,
         size: 0,
         weight: 0,
+        materialId: '',
+        sizeUnitId: '',
+        weightUnitId: '',
     },
     {
         equipmentId: 'e8',
@@ -490,6 +556,9 @@ export const equipments: Equipment[] = [
         warranty: 18,
         size: 0,
         weight: 0,
+        materialId: '',
+        sizeUnitId: '',
+        weightUnitId: '',
     },
 ];
 
@@ -840,9 +909,9 @@ export const flocks: Flock[] = [
         mortalityRate: 5,
         lastHealthCheck: '2025-02-20',
         gender: 'mixed',
-        purposeId: 1,
-        breedId: 2,
-        housingId: 3,
+        purposeId: '1',
+        breedId: '2',
+        housingId: '3',
     },
     {
         flockId: '7e9d6c5b-4a3f-2d1b-8c7a9d6e8f42',
@@ -856,9 +925,9 @@ export const flocks: Flock[] = [
         mortalityRate: 3,
         lastHealthCheck: '2025-02-05',
         gender: 'mixed',
-        purposeId: 2,
-        breedId: 3,
-        housingId: 1,
+        purposeId: '2',
+        breedId: '3',
+        housingId: '1',
     },
     {
         flockId: '7e9d6c5b-4a3f-2d1b-8c7a9d6e8f43',
@@ -872,9 +941,9 @@ export const flocks: Flock[] = [
         mortalityRate: 2,
         lastHealthCheck: '2025-02-18',
         gender: 'female',
-        purposeId: 3,
-        breedId: 1,
-        housingId: 2,
+        purposeId: '3',
+        breedId: '1',
+        housingId: '2',
     },
     {
         flockId: '7e9d6c5b-4a3f-2d1b-8c7a9d6e8f44',
@@ -888,9 +957,9 @@ export const flocks: Flock[] = [
         mortalityRate: 4,
         lastHealthCheck: '2025-02-22',
         gender: 'mixed',
-        purposeId: 1,
-        breedId: 4,
-        housingId: 5,
+        purposeId: '1',
+        breedId: '4',
+        housingId: '5',
     },
     {
         flockId: '7e9d6c5b-4a3f-2d1b-8c7a9d6e8f45',
@@ -904,9 +973,9 @@ export const flocks: Flock[] = [
         mortalityRate: 6,
         lastHealthCheck: '2025-02-19',
         gender: 'male',
-        purposeId: 2,
-        breedId: 2,
-        housingId: 4,
+        purposeId: '2',
+        breedId: '2',
+        housingId: '4',
     },
     {
         flockId: '7e9d6c5b-4a3f-2d1b-8c7a9d6e8f46',
@@ -920,9 +989,9 @@ export const flocks: Flock[] = [
         mortalityRate: 1,
         lastHealthCheck: '2025-02-23',
         gender: 'mixed',
-        purposeId: 1,
-        breedId: 5,
-        housingId: 3,
+        purposeId: '1',
+        breedId: '5',
+        housingId: '3',
     },
     {
         flockId: '7e9d6c5b-4a3f-2d1b-8c7a9d6e8f47',
@@ -936,9 +1005,9 @@ export const flocks: Flock[] = [
         mortalityRate: 2,
         lastHealthCheck: '2025-02-12',
         gender: 'mixed',
-        purposeId: 2,
-        breedId: 6,
-        housingId: 2,
+        purposeId: '2',
+        breedId: '6',
+        housingId: '2',
     },
     {
         flockId: '7e9d6c5b-4a3f-2d1b-8c7a9d6e8f48',
@@ -952,9 +1021,9 @@ export const flocks: Flock[] = [
         mortalityRate: 1,
         lastHealthCheck: '2025-02-21',
         gender: 'female',
-        purposeId: 3,
-        breedId: 7,
-        housingId: 6,
+        purposeId: '3',
+        breedId: '7',
+        housingId: '6',
     },
     {
         flockId: '7e9d6c5b-4a3f-2d1b-8c7a9d6e8f49',
@@ -968,9 +1037,9 @@ export const flocks: Flock[] = [
         mortalityRate: 100,
         lastHealthCheck: '2025-01-25',
         gender: 'mixed',
-        purposeId: 1,
-        breedId: 2,
-        housingId: 1,
+        purposeId: '1',
+        breedId: '2',
+        housingId: '1',
     },
     {
         flockId: '7e9d6c5b-4a3f-2d1b-8c7a9d6e8f41',
@@ -984,9 +1053,9 @@ export const flocks: Flock[] = [
         mortalityRate: 3,
         lastHealthCheck: '2025-02-20',
         gender: 'male',
-        purposeId: 2,
-        breedId: 8,
-        housingId: 5,
+        purposeId: '2',
+        breedId: '8',
+        housingId: '5',
     },
 ];
 
@@ -1779,3 +1848,5 @@ export const foods: Food[] = [
         expiryDate: '2024-05-05T08:00:00Z',
     },
 ];
+
+export const chickenTypes = [];

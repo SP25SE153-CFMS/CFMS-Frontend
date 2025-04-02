@@ -13,7 +13,7 @@ export const NutritionSchema = z.object({
 export const FeedScheduleSchema = z.object({
     feedScheduleId: z.string().uuid({ message: 'feedScheduleId phải là UUID hợp lệ' }),
     feedTime: z.string().datetime({ message: 'feedTime phải là thời gian hợp lệ' }),
-    feedAmount: z.number().positive({ message: 'feedAmount phải là số dương' }),
+    feedAmount: z.coerce.number().positive({ message: 'feedAmount phải là số dương' }),
     notes: z.string().optional(),
 });
 

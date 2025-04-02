@@ -10,11 +10,11 @@ export const GrowthStageSchema = z.object({
     minAgeWeek: z.coerce
         .number()
         .int()
-        .nonnegative({ message: 'Tuổi tối thiểu phải là số nguyên không âm' }),
+        .nonnegative({ message: 'Tuổi bắt đầu phải là số nguyên không âm' }),
     maxAgeWeek: z.coerce
         .number()
         .int()
-        .nonnegative({ message: 'Tuổi tối đa phải là số nguyên không âm' }),
+        .nonnegative({ message: 'Tuổi kết thúc phải là số nguyên không âm' }),
     description: z.string().optional(),
 });
 

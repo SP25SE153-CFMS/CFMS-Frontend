@@ -31,6 +31,7 @@ import { ChickenBatch } from '@/utils/schemas/chicken-batch.schema';
 import ChickenBatchForm from '@/components/forms/chicken-batch-form';
 import { useRouter } from 'next/navigation';
 import config from '@/configs';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props<T> {
     row: Row<T>;
@@ -41,9 +42,13 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
+    const queryClient = useQueryClient();
+
     const handleDelete = async () => {
         await deleteChickenBatch((row.original as ChickenBatch).chickenBatchId).then(() => {
             toast.success('Xóa lứa nuôi thành công');
+            const chickenCoopId = sessionStorage.getItem('chickenCoopId');
+            queryClient.invalidateQueries({ queryKey: ['chickenBatches', chickenCoopId] });
             setOpenDelete(false);
         });
     };

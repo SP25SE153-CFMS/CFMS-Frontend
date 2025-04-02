@@ -1,4 +1,4 @@
-export default function useParams(): Record<string, string> {
+export default function useQueryParams(): Record<string, string> {
     if (typeof window === 'undefined') {
         return {};
     }

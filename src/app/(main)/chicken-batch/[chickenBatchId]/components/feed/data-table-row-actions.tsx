@@ -6,18 +6,9 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Trash } from 'lucide-react';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-} from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     AlertDialog,
     AlertDialogContent,
@@ -26,22 +17,27 @@ import {
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
 import toast from 'react-hot-toast';
-import { VaccinationLog } from '@/utils/schemas/vaccine.schema';
-import { deleteVaccinationLog } from '@/services/vaccination-log.service';
+import { useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
+import { FeedLog } from '@/utils/schemas/feed-log.schema';
+import { deleteFeedLog } from '@/services/feed-log.service';
 
 interface Props<T> {
     row: Row<T>;
 }
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
-    const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
-    const vaccinationLog = row.original as VaccinationLog;
+    const feedLog = row.original as FeedLog;
+
+    const queryClient = useQueryClient();
+    const { chickenBatchId }: { chickenBatchId: string } = useParams();
 
     const handleDelete = async () => {
-        await deleteVaccinationLog(vaccinationLog.vLogId).then(() => {
-            toast.success('Xóa lịch sử tiêm phòng thành công');
+        await deleteFeedLog(feedLog.feedLogId).then(() => {
+            toast.success('Xóa lịch cho ăn thành công');
+            queryClient.invalidateQueries({ queryKey: ['chickenBatch', chickenBatchId] });
             setOpenDelete(false);
         });
     };
@@ -56,10 +52,10 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
+                    {/* <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                         Cập nhật
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
+                    <DropdownMenuSeparator /> */}
                     <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
                         Xóa <Trash size={16} className="ml-auto" />
                     </DropdownMenuItem>
@@ -67,20 +63,20 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             </DropdownMenu>
 
             {/* Update Dialog */}
-            <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
+            {/* <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Cập nhật lịch sử tiêm phòng</DialogTitle>
+                        <DialogTitle>Cập nhật lịch cho ăn</DialogTitle>
                         <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                     </DialogHeader>
                     <ScrollArea className="max-h-[600px]">
-                        {/* <VaccinationLogForm
+                        <VaccinationLogForm
                             closeDialog={() => setOpenUpdate(false)}
                             defaultValues={row.original as VaccinationLog}
-                        /> */}
+                        />
                     </ScrollArea>
                 </DialogContent>
-            </Dialog>
+            </Dialog> */}
 
             {/* Delete Confirmation Dialog */}
             <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
@@ -88,7 +84,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa lịch sử tiêm phòng này?
+                            Bạn có chắc chắn muốn xóa lịch cho ăn này?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="flex justify-end space-x-2">

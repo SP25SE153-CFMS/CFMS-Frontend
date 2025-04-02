@@ -115,6 +115,7 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                                 <FormControl>
                                     <Input
                                         type="number"
+                                        min={0}
                                         placeholder="Nhập tổng số lượng"
                                         {...field}
                                     />

@@ -13,9 +13,11 @@ export const GrowthBatchSchema = z.object({
         .string()
         .datetime({ message: 'Ngày kết thúc không hợp lệ, phải là định dạng ngày giờ hợp lệ' })
         .nullable(),
-    avgWeight: z.number().positive({ message: 'Trọng lượng trung bình phải là số dương' }),
-    mortalityRate: z.number().positive({ message: 'Tỷ lệ tử vong phải là số dương' }),
-    feedConsumption: z.number().positive({ message: 'Lượng thức ăn tiêu thụ phải là số dương' }),
+    avgWeight: z.coerce.number().positive({ message: 'Trọng lượng trung bình phải là số dương' }),
+    mortalityRate: z.coerce.number().positive({ message: 'Tỷ lệ tử vong phải là số dương' }),
+    feedConsumption: z.coerce
+        .number()
+        .positive({ message: 'Lượng thức ăn tiêu thụ phải là số dương' }),
     note: z.string().optional(),
     status: z.boolean({ message: 'Trạng thái phải là giá trị boolean' }),
 });

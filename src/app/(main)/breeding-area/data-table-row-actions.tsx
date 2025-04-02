@@ -31,6 +31,7 @@ import {
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
 import toast from 'react-hot-toast';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props<T> {
     row: Row<T>;
@@ -41,9 +42,12 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
+    const queryClient = useQueryClient();
+
     const handleDelete = async () => {
         await deleteBreedingArea((row.original as BreedingArea).breedingAreaId).then(() => {
             toast.success('Đã xóa khu nuôi');
+            queryClient.invalidateQueries({ queryKey: ['breedingAreas'] });
             setOpenDelete(false);
         });
     };

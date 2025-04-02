@@ -1,30 +1,12 @@
-'use client';
-
-import { useState } from 'react';
-
 import { DataTable } from '@/components/table/data-table';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-} from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { columns } from './columns';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Download, Plus } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { QuantityLog } from '@/utils/schemas/quantity-log.schema';
-import QuantityLogForm from '@/components/forms/quantity-log-form';
 
 export default function CardQuantityLog({ quantityLogs }: { quantityLogs: QuantityLog[] }) {
-    const [open, setOpen] = useState(false);
-
-    const openModal = () => setOpen(true);
-    const onOpenChange = (val: boolean) => setOpen(val);
-
     return (
         <div>
             <Card className="p-6 mb-4">
@@ -43,7 +25,7 @@ export default function CardQuantityLog({ quantityLogs }: { quantityLogs: Quanti
                         >
                             <span>Tải file</span> <Download size={18} />
                         </Button>
-                        <Button className="space-x-1" onClick={openModal}>
+                        {/* <Button className="space-x-1" onClick={openModal}>
                             <span>Thêm nhật ký</span> <Plus size={18} />
                         </Button>
                         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -58,7 +40,7 @@ export default function CardQuantityLog({ quantityLogs }: { quantityLogs: Quanti
                                     <QuantityLogForm closeDialog={() => setOpen(false)} />
                                 </ScrollArea>
                             </DialogContent>
-                        </Dialog>
+                        </Dialog> */}
                     </div>
                 </div>
                 <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">

@@ -1,13 +1,12 @@
-import { Vaccine } from "@/utils/schemas/vaccine.schema";
-import { get, post, put, remove } from "@/utils/functions/axios.function";
-import { Response } from "@/utils/types";
-import { vaccines } from "@/utils/data/table.data";
+import { Vaccine } from '@/utils/schemas/vaccine.schema';
+import { get, post, put, remove } from '@/utils/functions/axios.function';
+import { Response } from '@/utils/types';
+import { vaccines } from '@/utils/data/table.data';
 
 const PREFIX = '/api/Vaccine';
 
 export const getVaccines = async () => {
-    /* eslint-disable no-unused-vars */
-    const endpoint = PREFIX
+    // const endpoint = PREFIX
     // const response = await get<Response<Vaccine[]>>(endpoint);
     // return response.data.data;
     return vaccines;
@@ -20,13 +19,13 @@ export const getVaccineById = async (id: string) => {
 };
 
 export const createVaccine = async (body: Vaccine) => {
-    const endpoint = PREFIX
+    const endpoint = PREFIX;
     const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };
 
 export const updateVaccine = async (body: Vaccine) => {
-    const endpoint = PREFIX
+    const endpoint = PREFIX;
     const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };

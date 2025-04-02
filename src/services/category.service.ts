@@ -2,7 +2,7 @@ import { Category } from '@/utils/schemas/category.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 import { SubCategory } from '@/utils/schemas/sub-category.schema';
-import { CategoryResponse } from '@/utils/types/custom.type';
+import { CategoryResponse, ChickenTypeResponse } from '@/utils/types/custom.type';
 import { CategoryType } from '@/utils/enum/category.enum';
 
 const PREFIX = '/api/Category';
@@ -53,6 +53,12 @@ export const getCategoryByType = async (type: CategoryType) => {
     const endpoint = PREFIX + '/categoryType/' + type;
     const response = await get<Response<CategoryResponse>>(endpoint);
     return response.data.data.subCategories;
+};
+
+export const getChickenTypes = async () => {
+    const endpoint = PREFIX + '/get-chickentypes';
+    const response = await get<Response<ChickenTypeResponse[]>>(endpoint);
+    return response.data.data;
 };
 
 export const getUnits = async () => {

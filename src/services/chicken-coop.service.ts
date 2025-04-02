@@ -42,8 +42,20 @@ export const deleteChickenCoop = async (id: string) => {
     return response.data;
 };
 
-export const addCoopEquipment = async (coopEquipment: CoopEquipment) => {
+export const addCoopEquipment = async (body: CoopEquipment) => {
     const endpoint = PREFIX + '/add-coopequipment';
-    const response = await post<Response<string>>(endpoint, coopEquipment);
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const updateCoopEquipment = async (body: CoopEquipment) => {
+    const endpoint = PREFIX + '/update-coopequipment';
+    const response = await put<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const deleteCoopEquipment = async (coopId: string, coopEquipId: string) => {
+    const endpoint = PREFIX + '/delete-coopequipment';
+    const response = await remove<Response<string>>(endpoint, { coopId, coopEquipId });
     return response.data;
 };

@@ -16,11 +16,19 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
-import { CoopEquipmentSchema, type CoopEquipment } from '@/utils/schemas/coop-equipment.schema';
+import {
+    CoopEquipmentSchema,
+    CreateCoopEquipmentSchema,
+    type CoopEquipment,
+} from '@/utils/schemas/coop-equipment.schema';
 import dayjs from 'dayjs';
-import { createCoopEquipment, updateCoopEquipment } from '@/services/coop-equipment.service';
 import toast from 'react-hot-toast';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
+import { useParams } from 'next/navigation';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { getEquipments } from '@/services/equipment.service';
+import { addCoopEquipment, updateCoopEquipment } from '@/services/chicken-coop.service';
 
 interface CoopEquipmentFormProps {
     defaultValues?: Partial<CoopEquipment>;
@@ -28,19 +36,26 @@ interface CoopEquipmentFormProps {
 }
 
 export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEquipmentFormProps) {
+    const { chickenCoopId }: { chickenCoopId: string } = useParams();
+
+    const { data: equipments } = useQuery({
+        queryKey: ['equipments'],
+        queryFn: () => getEquipments(),
+    });
+
     // Initialize form
     const form = useForm<CoopEquipment>({
-        resolver: zodResolver(CoopEquipmentSchema),
+        resolver: zodResolver(defaultValues ? CoopEquipmentSchema : CreateCoopEquipmentSchema),
         defaultValues: {
             coopEquipmentId: '',
-            chickenCoopId: '',
+            chickenCoopId,
             equipmentId: '',
             quantity: 1,
-            assignedDate: new Date().toISOString(),
+            assignedDate: undefined,
             lastMaintenanceDate: null,
             nextMaintenanceDate: null,
             maintenanceInterval: 1,
-            status: '',
+            status: '0',
             note: '',
             ...defaultValues,
         },
@@ -51,14 +66,14 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
 
     // Mutations for creating and updating
     const mutation = useMutation({
-        mutationFn: defaultValues ? updateCoopEquipment : createCoopEquipment,
+        mutationFn: defaultValues ? updateCoopEquipment : addCoopEquipment,
         onSuccess: () => {
             closeDialog();
-            queryClient.invalidateQueries({ queryKey: ['coopEquipments'] });
+            queryClient.invalidateQueries({ queryKey: ['chickenCoop', chickenCoopId] });
             toast.success(
                 defaultValues
                     ? 'Cập nhật thiết bị chuồng thành công'
-                    : 'Tạo thiết bị chuồng thành công',
+                    : 'Thêm thiết bị vào chuồng thành công',
             );
         },
         onError: (error: any) => {
@@ -69,22 +84,47 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
 
     // Form submit handler
     async function onSubmit(values: CoopEquipment) {
+        console.log(values);
+
+        values.assignedDate = dayjs(values.assignedDate).format('YYYY-MM-DD');
+        values.lastMaintenanceDate = dayjs(values.lastMaintenanceDate).format('YYYY-MM-DD');
+        values.nextMaintenanceDate = dayjs(values.nextMaintenanceDate).format('YYYY-MM-DD');
+        console.log(values);
+
         mutation.mutate(values);
     }
 
+    // Form error handler
+    function onError(errors: any) {
+        console.error(errors);
+    }
+
+    const chickenCoops: ChickenCoop[] = JSON.parse(sessionStorage.getItem('chickenCoops') || '[]');
+
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
                     {/* Chicken Coop ID */}
                     <FormField
                         control={form.control}
                         name="chickenCoopId"
-                        render={({ field }) => (
+                        render={() => (
                             <FormItem>
-                                <FormLabel>ID Chuồng gà</FormLabel>
+                                <FormLabel>Chuồng gà</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập ID chuồng gà" {...field} />
+                                    {chickenCoops && (
+                                        <Input
+                                            type="text"
+                                            placeholder="Chuồng gà"
+                                            value={
+                                                chickenCoops.find(
+                                                    (coop) => coop.chickenCoopId === chickenCoopId,
+                                                )?.chickenCoopName
+                                            }
+                                            readOnly
+                                        />
+                                    )}
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -97,9 +137,26 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                         name="equipmentId"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>ID Thiết bị</FormLabel>
+                                <FormLabel>Thiết bị</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập ID thiết bị" {...field} />
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn thiết bị" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {equipments?.map((equipment) => (
+                                                <SelectItem
+                                                    key={equipment.equipmentId}
+                                                    value={equipment.equipmentId}
+                                                >
+                                                    {equipment.equipmentName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -114,7 +171,12 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                             <FormItem>
                                 <FormLabel>Số lượng</FormLabel>
                                 <FormControl>
-                                    <Input type="number" placeholder="Nhập số lượng" {...field} />
+                                    <Input
+                                        type="number"
+                                        min={0}
+                                        placeholder="Nhập số lượng"
+                                        {...field}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -135,7 +197,9 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                                                 variant={'outline'}
                                                 className={cn('w-full pl-3 text-left font-normal')}
                                             >
-                                                {dayjs(field.value).format('DD/MM/YYYY')}
+                                                {field.value
+                                                    ? dayjs(field.value).format('DD/MM/YYYY')
+                                                    : 'Chọn ngày'}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                             </Button>
                                         </FormControl>
@@ -146,7 +210,28 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                                             selected={
                                                 field.value ? new Date(field.value) : new Date()
                                             }
-                                            onSelect={(date) => field.onChange(date?.toISOString())}
+                                            onSelect={(date) => {
+                                                field.onChange(date?.toISOString());
+                                                form.setValue(
+                                                    'lastMaintenanceDate',
+                                                    date
+                                                        ? date.toISOString()
+                                                        : new Date().toISOString(),
+                                                );
+                                                form.setValue(
+                                                    'nextMaintenanceDate',
+                                                    dayjs(date)
+                                                        .add(
+                                                            Number(
+                                                                form.getValues(
+                                                                    'maintenanceInterval',
+                                                                ) || 0,
+                                                            ),
+                                                            'day',
+                                                        ) // Ensure quantity is a number
+                                                        .toISOString(),
+                                                );
+                                            }}
                                             initialFocus
                                         />
                                     </PopoverContent>
@@ -162,8 +247,8 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                         name="lastMaintenanceDate"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Ngày bảo trì cuối</FormLabel>
-                                <Popover>
+                                <FormLabel>Ngày bảo trì gần nhất</FormLabel>
+                                {/* <Popover>
                                     <PopoverTrigger asChild>
                                         <FormControl>
                                             <Button
@@ -183,11 +268,34 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                                             selected={
                                                 field.value ? new Date(field.value) : undefined
                                             }
-                                            onSelect={(date) => field.onChange(date?.toISOString())}
+                                            onSelect={(date) => {
+                                                field.onChange(date?.toISOString());
+                                                form.setValue(
+                                                    'nextMaintenanceDate',
+                                                    dayjs(date)
+                                                        .add(
+                                                            Number(
+                                                                form.getValues(
+                                                                    'maintenanceInterval',
+                                                                ) || 0,
+                                                            ),
+                                                            'day',
+                                                        ) // Ensure quantity is a number
+                                                        .toISOString(),
+                                                );
+                                            }}
                                             initialFocus
                                         />
                                     </PopoverContent>
-                                </Popover>
+                                </Popover> */}
+                                <Button
+                                    variant={'outline'}
+                                    className={cn('w-full pl-3 text-left font-normal')}
+                                    disabled
+                                >
+                                    {field.value ? dayjs(field.value).format('DD/MM/YYYY') : '-'}
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -200,7 +308,7 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Ngày bảo trì tiếp theo</FormLabel>
-                                <Popover>
+                                {/* <Popover>
                                     <PopoverTrigger asChild>
                                         <FormControl>
                                             <Button
@@ -224,7 +332,15 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                                             initialFocus
                                         />
                                     </PopoverContent>
-                                </Popover>
+                                </Popover> */}
+                                <Button
+                                    variant={'ghost'}
+                                    className={cn('w-full pl-3 text-left font-normal')}
+                                    disabled
+                                >
+                                    {field.value ? dayjs(field.value).format('DD/MM/YYYY') : '-'}
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -241,7 +357,18 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                                     <Input
                                         type="number"
                                         placeholder="Nhập khoảng thời gian bảo trì"
+                                        min={1}
                                         {...field}
+                                        onChange={(e) => {
+                                            const value = e.target.value; // Get the input value
+                                            field.onChange(value); // Update the field value
+                                            form.setValue(
+                                                'nextMaintenanceDate',
+                                                dayjs(form.getValues('lastMaintenanceDate'))
+                                                    .add(Number(value || 0), 'day') // Ensure the value is a number
+                                                    .toISOString(),
+                                            );
+                                        }}
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -250,19 +377,33 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                     />
 
                     {/* Status */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="status"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Trạng thái</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập trạng thái" {...field} />
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn trạng thái" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {mapEnumToValues(EquipmentStatus).map((status) => (
+                                                <SelectItem key={status} value={status}>
+                                                    {equipmentStatusLabels[status]}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
                     {/* Note */}
                     <FormField

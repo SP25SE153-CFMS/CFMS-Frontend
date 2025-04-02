@@ -21,7 +21,7 @@ export const VaccineSchema = z.object({
         message: 'Ngày cập nhật không hợp lệ',
     }),
     supplierId: z.string().uuid('ID nhà cung cấp phải là UUID hợp lệ'),
-    diseaseId: z.number().int().positive('ID bệnh phải là số nguyên dương'),
+    diseaseId: z.coerce.number().int().positive('ID bệnh phải là số nguyên dương'),
 });
 
 // Schema Vaccination Log
@@ -32,7 +32,7 @@ export const VaccinationLogSchema = z.object({
     }),
     dosage: z.string().min(1, 'Liều lượng không được để trống'),
     notes: z.string().optional(),
-    quantity: z
+    quantity: z.coerce
         .number()
         .int()
         .positive('Số lượng phải là số nguyên dương')

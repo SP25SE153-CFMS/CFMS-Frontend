@@ -44,7 +44,7 @@ export const columns: ColumnDef<Request>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Loại yêu cầu" />,
         cell: ({ row }) => {
             const requestType = row.getValue('requestType') as string;
-            return <span>{requestType.toUpperCase()}</span>;
+            return <span>{requestType?.toUpperCase()}</span>;
         },
     },
     {
@@ -92,7 +92,7 @@ export const columns: ColumnDef<Request>[] = [
 
     // Làm logic view detail với tạo phiếu cho dễ
     {
-        id: "actions",
-        cell: ({row}) => <DataTableRowActions row={row} />
-    }
+        id: 'actions',
+        cell: ({ row }) => <DataTableRowActions row={row} />,
+    },
 ];

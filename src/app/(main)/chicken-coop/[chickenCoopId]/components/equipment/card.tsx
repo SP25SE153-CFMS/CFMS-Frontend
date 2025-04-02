@@ -16,8 +16,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Download, Plus } from 'lucide-react';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
-import CoopEquipmentForm from './form';
 import { CoopEquipment } from '@/utils/schemas/coop-equipment.schema';
+import CoopEquipmentForm from '@/components/forms/coop-equipment-form';
 
 export default function CardEquipment({ coopEquipments }: { coopEquipments: CoopEquipment[] }) {
     const [open, setOpen] = useState(false);
@@ -26,7 +26,7 @@ export default function CardEquipment({ coopEquipments }: { coopEquipments: Coop
     const onOpenChange = (val: boolean) => setOpen(val);
 
     return (
-        <Card className="p-6 mb-4">
+        <Card className="p-6">
             <div className="flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                 <div>
                     <h2 className="text-xl font-bold tracking-tight">Danh sách trang thiết bị</h2>

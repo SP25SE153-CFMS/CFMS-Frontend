@@ -15,7 +15,7 @@ export const FarmSchema = z.object({
         .trim()
         .min(1, { message: 'Địa chỉ là bắt buộc' })
         .max(300, { message: 'Địa chỉ không được dài quá 300 ký tự' }),
-    area: z
+    area: z.coerce
         .number()
         .positive({ message: 'Diện tích phải là số dương' })
         .max(1_000_000, { message: 'Diện tích không được vượt quá 1,000,000 m²' }),
@@ -28,8 +28,8 @@ export const FarmSchema = z.object({
 
     website: z.string().trim().url({ message: 'Địa chỉ website không hợp lệ' }).or(z.literal('')),
     imageUrl: z.string().trim().url({ message: 'URL hình ảnh không hợp lệ' }).optional(),
-    latitude: z.number().min(-90).max(90),
-    longitude: z.number().min(-180).max(180),
+    latitude: z.coerce.number().min(-90).max(90),
+    longitude: z.coerce.number().min(-180).max(180),
 });
 
 export type Farm = z.infer<typeof FarmSchema>;

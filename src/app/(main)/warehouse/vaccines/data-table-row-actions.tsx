@@ -29,6 +29,7 @@ import toast from 'react-hot-toast';
 import { deleteVaccine } from '@/services/vaccine.service';
 import { Vaccine } from '@/utils/schemas/vaccine.schema';
 import VaccineForm from '@/components/forms/vaccine-form';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props<T> {
     row: Row<T>;
@@ -38,9 +39,12 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
+    const queryClient = useQueryClient();
+
     const handleDelete = async () => {
         await deleteVaccine((row.original as Vaccine).vaccineId).then(() => {
             toast.success('Xóa vắc xin thành công');
+            queryClient.invalidateQueries({ queryKey: 'vaccines' });
             setOpenDelete(false);
         });
     };
