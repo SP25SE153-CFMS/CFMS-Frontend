@@ -1,4 +1,4 @@
-import { Task } from '@/utils/schemas/task.schema';
+import { CreateTask, Task } from '@/utils/schemas/task.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 
@@ -16,7 +16,7 @@ export const getTaskById = async (id: string) => {
     return response.data.data;
 };
 
-export const createTask = async (body: Task) => {
+export const createTask = async (body: CreateTask) => {
     const endpoint = PREFIX;
     const response = await post<Response<string>>(endpoint, body);
     return response.data;

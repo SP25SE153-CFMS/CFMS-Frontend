@@ -6,7 +6,6 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 import { format } from 'date-fns';
-import { vi } from 'date-fns/locale';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateTask, CreateTaskSchema } from '@/utils/schemas/task.schema';
@@ -72,6 +71,8 @@ import { getShifts } from '@/services/shift.service';
 import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
 import { getWarehouses } from '@/services/warehouse.service';
 import { getResources } from '@/services/resource.service';
+import config from '@/configs';
+import { createTask } from '@/services/task.service';
 
 const LOCATION_TYPES = [
     { value: 'COOP', label: 'Chuồng nuôi' },
@@ -82,9 +83,6 @@ export function TaskForm() {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [locationType, setLocationType] = useState<string>('');
-
-    const taskTypes = getSubCategoryByCategoryType(CategoryType.TASK_TYPE);
-    const timeUnits = getSubCategoryByCategoryType(CategoryType.TIME_UNIT);
 
     const { data: shifts } = useQuery({
         queryKey: ['shifts'],
@@ -110,20 +108,20 @@ export function TaskForm() {
         resolver: zodResolver(CreateTaskSchema),
         defaultValues: {
             taskName: '',
-            taskTypeId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+            taskTypeId: '',
             description: '',
             isHavest: false,
             status: 0,
             frequency: 0,
-            timeUnitId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+            timeUnitId: '',
             startWorkDate: new Date(),
             endWorkDate: new Date(),
-            shiftIds: ['3fa85f64-5717-4562-b3fc-2c963f66afa6'],
+            shiftIds: [''],
             locationType: '',
-            locationId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+            locationId: '',
             taskResources: [
                 {
-                    resourceId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+                    resourceId: '',
                     quantity: 0,
                 },
             ],
@@ -138,13 +136,9 @@ export function TaskForm() {
     async function onSubmit(values: CreateTask) {
         setIsSubmitting(true);
         try {
-            const formattedValues = {
-                ...values,
-                isHavest: values.isHavest ? 1 : 0,
-            };
-
-            console.log('Submitting form data:', formattedValues);
-            router.push('/tasks');
+            console.log('Submitting form data:', values);
+            await createTask(values);
+            router.push(config.routes.task);
             router.refresh();
         } catch (error) {
             console.error('Không thể tạo công việc:', error);
@@ -218,14 +212,16 @@ export function TaskForm() {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {taskTypes.map((type) => (
-                                            <SelectItem
-                                                key={type.subCategoryId}
-                                                value={type.subCategoryId}
-                                            >
-                                                {type.subCategoryName}
-                                            </SelectItem>
-                                        ))}
+                                        {getSubCategoryByCategoryType(CategoryType.TASK_TYPE).map(
+                                            (type) => (
+                                                <SelectItem
+                                                    key={type.subCategoryId}
+                                                    value={type.subCategoryId}
+                                                >
+                                                    {type.subCategoryName}
+                                                </SelectItem>
+                                            ),
+                                        )}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -337,7 +333,7 @@ export function TaskForm() {
                 </div>
             </div>
         ),
-        [form.control, taskTypes],
+        [form.control],
     );
 
     const renderScheduleSection = useMemo(
@@ -394,14 +390,16 @@ export function TaskForm() {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {timeUnits.map((unit) => (
-                                            <SelectItem
-                                                key={unit.subCategoryId}
-                                                value={unit.subCategoryId}
-                                            >
-                                                {unit.subCategoryName}
-                                            </SelectItem>
-                                        ))}
+                                        {getSubCategoryByCategoryType(CategoryType.TIME_UNIT).map(
+                                            (unit) => (
+                                                <SelectItem
+                                                    key={unit.subCategoryId}
+                                                    value={unit.subCategoryId}
+                                                >
+                                                    {unit.subCategoryName}
+                                                </SelectItem>
+                                            ),
+                                        )}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -430,7 +428,7 @@ export function TaskForm() {
                                                 )}
                                             >
                                                 {field.value ? (
-                                                    format(field.value, 'PPP', { locale: vi })
+                                                    format(field.value, 'PPP')
                                                 ) : (
                                                     <span>Chọn ngày</span>
                                                 )}
@@ -444,7 +442,6 @@ export function TaskForm() {
                                             selected={field.value}
                                             onSelect={field.onChange}
                                             initialFocus
-                                            locale={vi}
                                         />
                                     </PopoverContent>
                                 </Popover>
@@ -472,7 +469,7 @@ export function TaskForm() {
                                                 )}
                                             >
                                                 {field.value ? (
-                                                    format(field.value, 'PPP', { locale: vi })
+                                                    format(field.value, 'PPP')
                                                 ) : (
                                                     <span>Chọn ngày</span>
                                                 )}
@@ -486,7 +483,6 @@ export function TaskForm() {
                                             selected={field.value}
                                             onSelect={field.onChange}
                                             initialFocus
-                                            locale={vi}
                                         />
                                     </PopoverContent>
                                 </Popover>
@@ -546,7 +542,7 @@ export function TaskForm() {
                 />
             </div>
         ),
-        [form.control, shifts, timeUnits],
+        [form.control, shifts],
     );
 
     const renderLocationSection = useMemo(
@@ -702,7 +698,7 @@ export function TaskForm() {
                             size="sm"
                             onClick={() =>
                                 append({
-                                    resourceId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+                                    resourceId: '',
                                     quantity: 0,
                                 })
                             }

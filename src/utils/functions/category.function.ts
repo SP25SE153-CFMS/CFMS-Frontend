@@ -8,6 +8,8 @@ import { SubCategory } from '../schemas/sub-category.schema';
  * @returns An array of subcategories for the specified category type, or an empty array if not found.
  */
 export function getSubCategoryByCategoryType(categoryType: CategoryType): SubCategory[] {
+    if (typeof window === 'undefined') return [];
+
     const categoriesFromStorage = sessionStorage.getItem('categories');
     if (!categoriesFromStorage) return [];
 
