@@ -366,7 +366,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
                                                     variant="outline"
                                                     className="bg-yellow-50 text-yellow-700 border-yellow-200"
                                                 >
-                                                    Chờ Xử Lý
+                                                    Chưa giao
                                                 </Badge>
                                             </div>
                                         </SelectItem>
@@ -376,7 +376,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
                                                     variant="outline"
                                                     className="bg-blue-50 text-blue-700 border-blue-200"
                                                 >
-                                                    Đang Thực Hiện
+                                                    Đã giao
                                                 </Badge>
                                             </div>
                                         </SelectItem>
@@ -386,7 +386,17 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
                                                     variant="outline"
                                                     className="bg-green-50 text-green-700 border-green-200"
                                                 >
-                                                    Hoàn Thành
+                                                    Đã hoàn thành
+                                                </Badge>
+                                            </div>
+                                        </SelectItem>
+                                        <SelectItem value="3">
+                                            <div className="flex items-center gap-2">
+                                                <Badge
+                                                    variant="outline"
+                                                    className="bg-red-50 text-red-700 border-red-200"
+                                                >
+                                                    Đã hủy
                                                 </Badge>
                                             </div>
                                         </SelectItem>

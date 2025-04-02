@@ -224,7 +224,7 @@ export enum AssignmentStatus {
 }
 
 export const assignmentStatusLabels: Record<string, string> = {
-    [AssignmentStatus.PENDING]: 'Chờ xử lý',
+    [AssignmentStatus.PENDING]: 'Chưa giao',
     [AssignmentStatus.ASSIGNED]: 'Đã giao',
     [AssignmentStatus.COMPLETED]: 'Hoàn thành',
     [AssignmentStatus.CANCELLED]: 'Đã hủy',
