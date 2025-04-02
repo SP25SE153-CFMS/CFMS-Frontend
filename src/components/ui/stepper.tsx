@@ -19,12 +19,14 @@ const Step = ({ title, index, active, visit, completed, isLastStep, onClick }: S
         <div
             className={cn(
                 'relative flex items-center justify-center h-12 transition-colors cursor-pointer',
-                active && !completed ? 'bg-sky-400 text-white' : '',
-                completed ? 'bg-gray-300 text-gray-600' : '',
-                !active && !completed ? 'bg-gray-100 text-gray-400' : '',
+                active && !completed ? 'bg-sky-400 text-white dark:bg-sky-600' : '',
+                completed ? 'bg-gray-300 text-gray-600 dark:bg-gray-600 dark:text-gray-200' : '',
+                !active && !completed
+                    ? 'bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-300'
+                    : '',
                 isLastStep ? 'rounded-r-lg' : '',
                 index === 0 ? 'rounded-l-lg' : '',
-                visit ? 'text-black font-black text-lg' : '',
+                visit ? 'text-black font-black text-lg dark:text-white' : '',
             )}
             onClick={() => onClick(index)}
         >
@@ -34,10 +36,10 @@ const Step = ({ title, index, active, visit, completed, isLastStep, onClick }: S
                     <div
                         className={cn(
                             'h-full w-full transform rotate-45 translate-x-[-50%] translate-y-0 transition-colors',
-                            active && !completed ? 'bg-sky-400' : '',
-                            completed ? 'bg-gray-300' : '',
-                            !active && !completed ? 'bg-gray-100' : '',
-                            visit ? 'text-black font-black text-lg' : '',
+                            active && !completed ? 'bg-sky-400 dark:bg-sky-600' : '',
+                            completed ? 'bg-gray-300 dark:bg-gray-600' : '',
+                            !active && !completed ? 'bg-gray-100 dark:bg-gray-700' : '',
+                            visit ? 'text-black font-black text-lg dark:text-white' : '',
                         )}
                     />
                 </div>
@@ -125,8 +127,8 @@ export function Stepper({ steps, activeStep, visitStep, onStepClick, className }
                 className={cn(
                     'flex items-center justify-center h-12 w-12 rounded-l-lg mr-2',
                     visibleRange.start === 0
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500',
                 )}
             >
                 <ChevronLeft size={20} />
@@ -167,8 +169,8 @@ export function Stepper({ steps, activeStep, visitStep, onStepClick, className }
                 className={cn(
                     'flex items-center justify-center h-12 w-12 rounded-r-lg ml-2',
                     visibleRange.end === steps.length - 1
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500',
                 )}
             >
                 <ChevronRight size={20} />
