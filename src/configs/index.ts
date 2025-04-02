@@ -1,9 +1,9 @@
-import cookies from "./cookies"
-import routes from "./routes"
+import cookies from './cookies';
+import routes from './routes';
 
 const config = {
     cookies,
-    routes
-}
+    routes,
+};
 
-export default config
+export default config;

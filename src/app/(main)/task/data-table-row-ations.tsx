@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import config from '@/configs';
 import { deleteTask } from '@/services/task.service';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -24,6 +23,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import config from '@/configs';
 
 interface DataTableRowActionsProps<TData> {
     row: Row<TData>;
@@ -31,7 +31,8 @@ interface DataTableRowActionsProps<TData> {
 
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
     const router = useRouter();
-    const [open, setOpen] = useState(false);
+    // const [openDetail, setOpenDetail] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const task = row.original as Task;
@@ -46,9 +47,25 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
             toast.error('Lỗi khi xóa công việc');
         } finally {
             setLoading(false);
-            setOpen(false);
+            setOpenDelete(false);
         }
     };
+
+    // const createTask: CreateTask = {
+    //     taskName: task.taskName,
+    //     taskTypeId: task.taskTypeId,
+    //     description: task.description,
+    //     isHavest: task.isHavest,
+    //     frequency: task.frequency,
+    //     timeUnitId: task.timeUnitId,
+    //     startWorkDate: task.startWorkDate,
+    //     endWorkDate: task.endWorkDate,
+    //     shiftIds: task.shiftIds,
+    //     locationType: task.locationType,
+    //     locationId: task.locationId,
+    //     taskResources: task.taskResources,
+    //     status: task.status,
+    // };
 
     return (
         <>
@@ -61,28 +78,42 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
                     <DropdownMenuItem
-                        // onClick={() => router.push(`${config.routes.task}/${task.taskId}`)}
-                        onClick={() => router.push(`${config.routes.createTask}`)}
+                    // onClick={() => router.push(`${config.routes.task}/${task.taskId}`)}
+                    // onClick={() => router.push(`${config.routes.createTask}`)}
+                    // onClick={() => setOpenDetail(true)}
                     >
                         <Eye className="mr-2 h-4 w-4" />
                         Xem chi tiết
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                        onClick={() => router.push(`${config.routes.updateTask}/${task.taskId}`)}
+                        onClick={() => router.push(`${config.routes.task}/${task.taskId}`)}
                     >
                         <Pencil className="mr-2 h-4 w-4" />
                         Chỉnh sửa
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setOpen(true)}>
+                    <DropdownMenuItem onClick={() => setOpenDelete(true)}>
                         <Trash2 className="mr-2 h-4 w-4" />
                         Xóa
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
 
+            {/* Detail Dialog */}
+            {/* <Dialog open={openDetail} onOpenChange={setOpenDetail}>
+                <DialogContent className="max-w-5xl">
+                    <DialogHeader>
+                        <DialogTitle>Chi tiết công việc</DialogTitle>
+                        <DialogDescription>Đây là những thông tin của công việc</DialogDescription>
+                    </DialogHeader>
+                    <ScrollArea className="max-h-[500px]">
+                        <TaskForm />
+                    </ScrollArea>
+                </DialogContent>
+            </Dialog> */}
+
             {/* Delete Confirmation Dialog */}
-            <AlertDialog open={open} onOpenChange={setOpen}>
+            <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
@@ -91,7 +122,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="flex justify-end space-x-2">
-                        <Button variant="outline" onClick={() => setOpen(false)}>
+                        <Button variant="outline" onClick={() => setOpenDelete(false)}>
                             Hủy
                         </Button>
                         <Button variant="destructive" onClick={onDelete} disabled={loading}>

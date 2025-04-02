@@ -1,3 +1,4 @@
+import { Assignment } from '../schemas/assignment.schema';
 import { BreedingArea } from '../schemas/breeding-area.schema';
 import { Category } from '../schemas/category.schema';
 import { ChickenBatch } from '../schemas/chicken-batch.schema';
@@ -15,6 +16,7 @@ import { QuantityLog } from '../schemas/quantity-log.schema';
 import { Resource } from '../schemas/resource.schema';
 import { SubCategory } from '../schemas/sub-category.schema';
 import { TaskLog } from '../schemas/task-log.schema';
+import { Task } from '../schemas/task.schema';
 import { User } from '../schemas/user.schema';
 import { VaccinationLog } from '../schemas/vaccine.schema';
 
@@ -65,4 +67,8 @@ export type ResourceResponse = Resource & {
     equipment?: Equipment;
     medicine?: Medicine;
     food?: Food;
+};
+
+export type TaskResponse = Task & {
+    assignments: Assignment[];
 };

@@ -5,18 +5,11 @@ export const TaskSchema = z.object({
     taskName: z.string().min(1, { message: 'Tên công việc là bắt buộc' }),
     taskTypeId: z.string().uuid({ message: 'ID loại công việc không hợp lệ, phải là UUID' }),
     description: z.string().optional(),
-});
-
-export const CreateTaskSchema = z.object({
-    taskName: z.string().min(2, {
-        message: 'Tên công việc phải có ít nhất 2 ký tự.',
-    }),
-    taskTypeId: z.string().uuid({
-        message: 'Vui lòng chọn loại công việc hợp lệ.',
-    }),
-    description: z.string().optional(),
     isHavest: z.boolean().default(false),
     status: z.number().int().min(0).max(2),
+});
+
+export const CreateTaskSchema = TaskSchema.extend({
     frequency: z.number().int().min(0),
     timeUnitId: z.string().uuid({
         message: 'Vui lòng chọn đơn vị thời gian hợp lệ.',

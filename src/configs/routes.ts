@@ -30,7 +30,6 @@ const routes = {
     chicken: '/chicken',
     task: '/task',
     createTask: '/task/create',
-    updateTask: '/task/edit',
 };
 
 export default routes;

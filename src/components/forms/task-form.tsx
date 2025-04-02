@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
-import { format } from 'date-fns';
+import { addDays, format } from 'date-fns';
 import { vi } from 'date-fns/locale';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -74,16 +74,18 @@ import { getWarehouses } from '@/services/warehouse.service';
 import { getResources } from '@/services/resource.service';
 import config from '@/configs';
 import { createTask } from '@/services/task.service';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 
 const LOCATION_TYPES = [
     { value: 'COOP', label: 'Chuồng nuôi' },
     { value: 'WARE', label: 'Nhà kho' },
 ];
 
-export function TaskForm() {
+export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [locationType, setLocationType] = useState<string>('');
+    const [selectedDates, setSelectedDates] = useState<Date[]>([]);
 
     const { data: shifts } = useQuery({
         queryKey: ['shifts'],
@@ -126,6 +128,7 @@ export function TaskForm() {
                     quantity: 0,
                 },
             ],
+            ...defaultValues,
         },
     });
 
@@ -133,6 +136,68 @@ export function TaskForm() {
         control: form.control,
         name: 'taskResources',
     });
+
+    const calculateWorkDates = useCallback(() => {
+        const startDate = form.getValues('startWorkDate');
+        const endDate = form.getValues('endWorkDate');
+        const frequency = form.getValues('frequency');
+        const timeUnitId = form.getValues('timeUnitId');
+        const timeUnit = getSubCategoryByCategoryType(CategoryType.TIME_UNIT).find(
+            (unit) => unit.subCategoryId === timeUnitId,
+        );
+
+        if (!startDate || !endDate || !frequency || !timeUnitId) return [];
+
+        const dates: Date[] = [];
+        let currentDate = new Date(startDate);
+
+        while (currentDate <= endDate) {
+            dates.push(new Date(currentDate));
+
+            switch (timeUnit?.subCategoryName) {
+                case 'ngày':
+                    currentDate = addDays(currentDate, frequency);
+                    break;
+                case 'tuần':
+                    currentDate = addDays(currentDate, frequency * 7);
+                    break;
+                case 'tháng':
+                    currentDate = addDays(currentDate, frequency * 30);
+                    break;
+                case 'năm':
+                    currentDate = addDays(currentDate, frequency * 365);
+                    break;
+                default:
+                    setSelectedDates([]);
+                    return [];
+            }
+        }
+
+        return dates;
+    }, [form]);
+
+    // Watch only relevant fields for date calculation
+    useEffect(() => {
+        const subscription = form.watch((value, { name }) => {
+            const relevantFields: (keyof CreateTask)[] = [
+                'startWorkDate',
+                'endWorkDate',
+                'frequency',
+                'timeUnitId',
+            ];
+            if (relevantFields.includes(name as keyof CreateTask)) {
+                const dates = calculateWorkDates();
+                setSelectedDates(dates);
+            }
+        });
+        return () => subscription.unsubscribe();
+    }, [form, calculateWorkDates]);
+
+    // Initial date calculation
+    useEffect(() => {
+        const dates = calculateWorkDates();
+        setSelectedDates(dates);
+    }, [calculateWorkDates]);
 
     async function onSubmit(values: CreateTask) {
         setIsSubmitting(true);
@@ -498,6 +563,14 @@ export function TaskForm() {
                     />
                 </div>
 
+                <CalendarComponent
+                    mode="multiple"
+                    selected={selectedDates}
+                    pagedNavigation
+                    numberOfMonths={3}
+                    className="rounded-md border p-2 flex py-6 [&>div]:mx-auto"
+                />
+
                 <FormField
                     control={form.control}
                     name="shiftIds"
@@ -548,7 +621,7 @@ export function TaskForm() {
                 />
             </div>
         ),
-        [form.control, shifts],
+        [form.control, shifts, selectedDates],
     );
 
     const renderLocationSection = useMemo(
