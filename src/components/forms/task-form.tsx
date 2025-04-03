@@ -75,6 +75,7 @@ import { getResources } from '@/services/resource.service';
 import config from '@/configs';
 import { createTask } from '@/services/task.service';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import { capitalizeFirstLetter } from '@/utils/functions';
 
 const LOCATION_TYPES = [
     { value: 'COOP', label: 'Chuồng nuôi' },
@@ -137,6 +138,14 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
         name: 'taskResources',
     });
 
+    const formatDate = (date: Date) => {
+        if (date) {
+            const translatedDate = format(date, 'PPP', { locale: vi });
+            return capitalizeFirstLetter(translatedDate);
+        }
+        return 'Chọn ngày';
+    };
+
     const calculateWorkDates = useCallback(() => {
         const startDate = form.getValues('startWorkDate');
         const endDate = form.getValues('endWorkDate');
@@ -154,7 +163,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
         while (currentDate <= endDate) {
             dates.push(new Date(currentDate));
 
-            switch (timeUnit?.subCategoryName) {
+            switch (timeUnit?.subCategoryName.toLowerCase()) {
                 case 'ngày':
                     currentDate = addDays(currentDate, frequency);
                     break;
@@ -412,6 +421,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
         [form.control],
     );
 
+    const [isFrequencyAssigned, setIsFrequencyAssigned] = useState(false);
     const renderScheduleSection = useMemo(
         () => (
             <div className="space-y-6 pt-4">
@@ -421,73 +431,187 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
                 </div>
                 <Separator />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <FormField
-                        control={form.control}
-                        name="frequency"
-                        render={({ field }) => (
-                            <FormItem className="mt-2">
-                                <FormLabel className="flex items-center gap-1">
-                                    <Clock className="h-4 w-4" />
-                                    Tần suất
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="number"
-                                        min="0"
-                                        placeholder="Nhập tần suất"
-                                        className="h-10"
-                                        {...field}
-                                        onChange={(e) =>
-                                            field.onChange(Number.parseInt(e.target.value) || 0)
-                                        }
-                                    />
-                                </FormControl>
-                                <FormDescription>
-                                    Số lần thực hiện trong một đơn vị thời gian
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                    <FormControl>
+                        <Checkbox
+                            checked={isFrequencyAssigned}
+                            onCheckedChange={(checked: boolean) => setIsFrequencyAssigned(checked)}
+                        />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                        <FormLabel>Là công việc giao tuần tự</FormLabel>
+                        <FormDescription>
+                            Đánh dấu nếu công việc này liên quan đến giao tuần tự.
+                        </FormDescription>
+                    </div>
+                </FormItem>
 
-                    <FormField
-                        control={form.control}
-                        name="timeUnitId"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>
-                                    Đơn vị thời gian <span className="text-destructive">*</span>
-                                </FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                        <SelectTrigger className="h-10">
-                                            <SelectValue placeholder="Chọn đơn vị thời gian" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {getSubCategoryByCategoryType(CategoryType.TIME_UNIT).map(
-                                            (unit) => (
-                                                <SelectItem
-                                                    key={unit.subCategoryId}
-                                                    value={unit.subCategoryId}
-                                                >
-                                                    {unit.subCategoryName}
-                                                </SelectItem>
-                                            ),
-                                        )}
-                                    </SelectContent>
-                                </Select>
-                                <FormDescription>
-                                    Đơn vị thời gian được sử dụng để tính toán tần suất công việc.
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
+                {isFrequencyAssigned && (
+                    <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <FormField
+                                control={form.control}
+                                name="frequency"
+                                render={({ field }) => (
+                                    <FormItem className="mt-2">
+                                        <FormLabel className="flex items-center gap-1">
+                                            <Clock className="h-4 w-4" />
+                                            Tần suất
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                min="0"
+                                                placeholder="Nhập tần suất"
+                                                className="h-10"
+                                                {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(
+                                                        Number.parseInt(e.target.value) || 0,
+                                                    )
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Số lần thực hiện trong một đơn vị thời gian
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <FormField
+                                control={form.control}
+                                name="timeUnitId"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Đơn vị thời gian{' '}
+                                            <span className="text-destructive">*</span>
+                                        </FormLabel>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger className="h-10">
+                                                    <SelectValue placeholder="Chọn đơn vị thời gian" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {getSubCategoryByCategoryType(
+                                                    CategoryType.TIME_UNIT,
+                                                ).map((unit) => (
+                                                    <SelectItem
+                                                        key={unit.subCategoryId}
+                                                        value={unit.subCategoryId}
+                                                    >
+                                                        {unit.subCategoryName}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormDescription>
+                                            Đơn vị thời gian được sử dụng để tính toán tần suất công
+                                            việc.
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <FormField
+                                control={form.control}
+                                name="startWorkDate"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormLabel>
+                                            Ngày bắt đầu <span className="text-destructive">*</span>
+                                        </FormLabel>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <FormControl>
+                                                    <Button
+                                                        variant={'outline'}
+                                                        className={cn(
+                                                            'w-full pl-3 text-left font-normal h-10',
+                                                            !field.value && 'text-muted-foreground',
+                                                        )}
+                                                    >
+                                                        {formatDate(field.value)}
+                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                    </Button>
+                                                </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={field.value}
+                                                    onSelect={field.onChange}
+                                                    initialFocus
+                                                    locale={vi}
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="endWorkDate"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormLabel>
+                                            Ngày kết thúc{' '}
+                                            <span className="text-destructive">*</span>
+                                        </FormLabel>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <FormControl>
+                                                    <Button
+                                                        variant={'outline'}
+                                                        className={cn(
+                                                            'w-full pl-3 text-left font-normal h-10',
+                                                            !field.value && 'text-muted-foreground',
+                                                        )}
+                                                    >
+                                                        {formatDate(field.value)}
+                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                    </Button>
+                                                </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={field.value}
+                                                    onSelect={field.onChange}
+                                                    initialFocus
+                                                    locale={vi}
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
+                        <CalendarComponent
+                            mode="multiple"
+                            selected={selectedDates}
+                            pagedNavigation
+                            numberOfMonths={3}
+                            locale={vi}
+                            className="rounded-md border p-2 flex py-6 [&>div]:mx-auto"
+                        />
+                    </>
+                )}
+
+                {!isFrequencyAssigned && (
                     <FormField
                         control={form.control}
                         name="startWorkDate"
@@ -506,11 +630,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
                                                     !field.value && 'text-muted-foreground',
                                                 )}
                                             >
-                                                {field.value ? (
-                                                    format(field.value, 'PPP', { locale: vi })
-                                                ) : (
-                                                    <span>Chọn ngày</span>
-                                                )}
+                                                {formatDate(field.value)}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                             </Button>
                                         </FormControl>
@@ -529,57 +649,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
                             </FormItem>
                         )}
                     />
-
-                    <FormField
-                        control={form.control}
-                        name="endWorkDate"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                                <FormLabel>
-                                    Ngày kết thúc <span className="text-destructive">*</span>
-                                </FormLabel>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <FormControl>
-                                            <Button
-                                                variant={'outline'}
-                                                className={cn(
-                                                    'w-full pl-3 text-left font-normal h-10',
-                                                    !field.value && 'text-muted-foreground',
-                                                )}
-                                            >
-                                                {field.value ? (
-                                                    format(field.value, 'PPP', { locale: vi })
-                                                ) : (
-                                                    <span>Chọn ngày</span>
-                                                )}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar
-                                            mode="single"
-                                            selected={field.value}
-                                            onSelect={field.onChange}
-                                            initialFocus
-                                            locale={vi}
-                                        />
-                                    </PopoverContent>
-                                </Popover>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
-
-                <CalendarComponent
-                    mode="multiple"
-                    selected={selectedDates}
-                    pagedNavigation
-                    numberOfMonths={3}
-                    className="rounded-md border p-2 flex py-6 [&>div]:mx-auto"
-                />
+                )}
 
                 <FormField
                     control={form.control}
@@ -631,7 +701,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
                 />
             </div>
         ),
-        [form.control, shifts, selectedDates],
+        [form.control, shifts, selectedDates, isFrequencyAssigned],
     );
 
     const renderLocationSection = useMemo(
