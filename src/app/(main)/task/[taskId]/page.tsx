@@ -81,6 +81,12 @@ export default function Page() {
 
                 {/* Assignments */}
                 <div className="lg:col-span-1">
+                    <h2 className="text-lg font-bold mb-4">Phân công công việc</h2>
+
+                    {task.assignments.length === 0 && (
+                        <p className="text-muted-foreground">Không có phân công công việc</p>
+                    )}
+
                     {task.assignments.map((assignment) => (
                         <Card key={assignment.assignmentId}>
                             <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4">

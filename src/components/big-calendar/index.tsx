@@ -25,30 +25,15 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-
-// Event interface
-interface Event {
-    id: number;
-    title: string;
-    date: Date;
-    color: string;
-    shift?: number; // 1, 2, or 3
-}
-
-// Shift interface
-interface Shift {
-    id: number;
-    name: string;
-    timeRange: string;
-    startHour: number;
-    endHour: number;
-}
+import { assignmentBackground } from '@/utils/enum/status.enum';
+import { Badge } from '../ui/badge';
+import { Event, Shift } from './type';
 
 type ViewMode = 'month' | 'week';
 
 export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] }) {
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [calendarEvents, setCalendarEvents] = useState<Event[]>(events);
     const [isAddEventOpen, setIsAddEventOpen] = useState(false);
     const [viewMode, setViewMode] = useState<ViewMode>('month');
@@ -57,6 +42,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] 
         date: selectedDate || currentDate,
         color: 'bg-blue-500',
         shift: 1,
+        status: 0,
     });
 
     // Get current month and year
@@ -70,7 +56,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] 
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
 
     // Get day names in Vietnamese
-    const dayNames = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+    const dayNames = ['CN', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
 
     // Get month names in Vietnamese
     const monthNames = [
@@ -168,6 +154,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] 
             date: date,
             color: 'bg-blue-500',
             shift: shift || 1,
+            status: 0,
         });
         setIsAddEventOpen(true);
     };
@@ -177,10 +164,11 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] 
         if (newEvent.title.trim() === '') return;
 
         const newEventObj: Event = {
-            id: Date.now(), // Use timestamp as a simple unique ID
+            id: Date.now().toString(), // Use timestamp as a simple unique ID
             title: newEvent.title,
             date: selectedDate || currentDate,
             color: newEvent.color,
+            status: newEvent.status,
             shift: newEvent.shift,
         };
 
@@ -191,6 +179,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] 
             date: selectedDate || currentDate,
             color: 'bg-blue-500',
             shift: 1,
+            status: 0,
         });
     };
 
@@ -272,10 +261,18 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] 
                             <span className="sr-only">Thêm sự kiện</span>
                         </Button>
                     </div>
-                    <div className="mt-1 space-y-1 overflow-y-auto max-h-16">
-                        {dateEvents.map((event) => (
+                    <div className="space-y-1 overflow-y-auto">
+                        {dateEvents.slice(0, 2).map((event) => (
                             <CalendarEvent key={event.id} event={event} />
                         ))}
+                        {dateEvents.length > 2 && (
+                            <Badge
+                                variant="outline"
+                                className="block w-fit mt-1 text-[10px] text-slate-400 py-0 px-2"
+                            >
+                                +{dateEvents.length - 2}
+                            </Badge>
+                        )}
                     </div>
                 </div>,
             );
@@ -514,7 +511,10 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] 
                                         className="flex items-center space-x-3 p-3 rounded-lg bg-background shadow-sm"
                                     >
                                         <div
-                                            className={cn('h-4 w-4 rounded-full', event.color)}
+                                            className={cn(
+                                                'h-4 w-4 rounded-full',
+                                                assignmentBackground[event.status],
+                                            )}
                                         ></div>
                                         <span className="font-medium">{event.title}</span>
                                         <div className="flex items-center ml-auto">
@@ -543,7 +543,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] 
             <Dialog open={isAddEventOpen} onOpenChange={setIsAddEventOpen}>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
-                        <DialogTitle>Thêm sự kiện mới</DialogTitle>
+                        <DialogTitle>Giao công việc mới</DialogTitle>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
