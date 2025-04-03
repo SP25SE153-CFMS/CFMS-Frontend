@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { assignmentBadge } from '@/utils/enum/status.enum';
-import { type Event } from './index';
+import { Event } from './type';
 
 interface CalendarEventProps {
     event: Event;
