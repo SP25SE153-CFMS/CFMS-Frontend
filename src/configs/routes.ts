@@ -28,6 +28,8 @@ const routes = {
     resetPassword: '/reset-password',
     growthStage: '/growth-stage',
     chicken: '/chicken',
+    task: '/task',
+    createTask: '/task/create',
     supplier: '/supplier',
     resourceSupplier: 'supplier/resource-supplier'
 };

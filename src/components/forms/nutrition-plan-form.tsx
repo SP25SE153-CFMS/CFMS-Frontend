@@ -55,8 +55,6 @@ interface NutritionPlanFormProps {
 }
 
 export default function NutritionPlanForm({ defaultValues, closeDialog }: NutritionPlanFormProps) {
-    const units = getSubCategoryByCategoryType(CategoryType.WEIGHT_UNIT);
-
     // Get all foods
     const { data: foods, isLoading: foodsLoading } = useQuery({
         queryKey: ['foods'],
@@ -70,7 +68,7 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
                   {
                       foodId: foods?.[0]?.foodId ?? '',
                       foodWeight: 0,
-                      unitId: units?.[0]?.subCategoryId ?? '',
+                      unitId: '',
                   },
               ],
     );
@@ -127,7 +125,7 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
             {
                 foodId: foods?.[0]?.foodId ?? '',
                 foodWeight: 0,
-                unitId: units?.[0]?.subCategoryId ?? '',
+                unitId: '',
             },
         ]);
     };
@@ -366,7 +364,9 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
                                                                             >
                                                                                 Đơn vị
                                                                             </option>
-                                                                            {units?.map((unit) => (
+                                                                            {getSubCategoryByCategoryType(
+                                                                                CategoryType.WEIGHT_UNIT,
+                                                                            )?.map((unit) => (
                                                                                 <option
                                                                                     key={
                                                                                         unit.subCategoryId

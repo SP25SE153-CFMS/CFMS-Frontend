@@ -10,4 +10,6 @@ export enum CategoryType {
     MATERIAL = 'MATERIAL',
     RESOURCE = 'RESOURCE',
     CHICKEN = 'CHICKEN',
+    TASK_TYPE = 'TASK_TYPE',
+    TIME_UNIT = 'TIME_UNIT',
 }

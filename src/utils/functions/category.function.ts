@@ -8,6 +8,8 @@ import { SubCategory } from '../schemas/sub-category.schema';
  * @returns An array of subcategories for the specified category type, or an empty array if not found.
  */
 export function getSubCategoryByCategoryType(categoryType: CategoryType): SubCategory[] {
+    if (typeof window === 'undefined') return [];
+
     const categoriesFromStorage = sessionStorage.getItem('categories');
     if (!categoriesFromStorage) return [];
 
@@ -57,4 +59,10 @@ export function getMaterial(materialId: string): string {
     const categories = getSubCategoryByCategoryType(CategoryType.MATERIAL);
     const material = categories.find((cat) => cat.subCategoryId === materialId);
     return material?.subCategoryName ?? '';
+}
+
+export function getTaskType(taskTypeId: string): string {
+    const categories = getSubCategoryByCategoryType(CategoryType.TASK_TYPE);
+    const taskType = categories.find((cat) => cat.subCategoryId === taskTypeId);
+    return taskType?.description ?? '';
 }

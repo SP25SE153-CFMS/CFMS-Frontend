@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { setCookie } from 'cookies-next';
+import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 import { useMutation } from '@tanstack/react-query';
 import { signIn } from '@/services/auth.service';
 import toast from 'react-hot-toast';
@@ -28,6 +28,10 @@ export default function Page() {
         mutationFn: signIn,
         onSuccess: (response) => {
             toast.success(response.message);
+            const oldAccessToken = getCookie(config.cookies.accessToken);
+            if (oldAccessToken) {
+                deleteCookie(config.cookies.accessToken);
+            }
             setCookie(config.cookies.accessToken, response.data.accessToken);
             router.push(config.routes.farm);
         },
