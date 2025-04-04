@@ -5,11 +5,13 @@ import { ChickenCoop } from '../schemas/chicken-coop.schema';
 import { ChickenDetail } from '../schemas/chicken-detail.schema';
 import { Chicken } from '../schemas/chicken.schema';
 import { CoopEquipment } from '../schemas/coop-equipment.schema';
+import { FarmEmployee } from '../schemas/farm-employee.schema';
 import { FeedLog } from '../schemas/feed-log.schema';
 import { HealthLog } from '../schemas/health-log.schema';
 import { QuantityLog } from '../schemas/quantity-log.schema';
 import { SubCategory } from '../schemas/sub-category.schema';
 import { TaskLog } from '../schemas/task-log.schema';
+import { User } from '../schemas/user.schema';
 import { VaccinationLog } from '../schemas/vaccine.schema';
 
 export type ChickenCoopResponse = ChickenCoop & {
@@ -49,4 +51,8 @@ export type StartChickenBatch = {
     chickenBatchName: string;
     stageCode: string;
     startDate: string | Date;
+};
+
+export type FarmEmployeeResponse = FarmEmployee & {
+    user: User;
 };

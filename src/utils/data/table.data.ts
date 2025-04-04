@@ -20,6 +20,7 @@ import { FeedSchedule, FlockNutrition, Nutrition } from '../schemas/nutrition.sc
 import { InventoryReceipt } from '../schemas/inventory-receipt.schema';
 import { InventoryReceiptDetail } from '../schemas/inventory-receipt-detail.schema';
 import { Food } from '../schemas/food.schema';
+import { EvaluationTemplate } from '../schemas/evaluation-template.schema';
 
 export const labels = [
     {
@@ -1849,4 +1850,39 @@ export const foods: Food[] = [
     },
 ];
 
-export const chickenTypes = [];
+export const evaluationTemplates: EvaluationTemplate[] | any[] = [
+    {
+        evaluationTemplateId: '550e8400-e29b-41d4-a716-446655440000',
+        templateName: 'Kỹ năng làm việc nhóm',
+        templateTypeId: '660e8400-e29b-41d4-a716-446655440001',
+        templateType: {
+            subCategoryId: '6c9806b4-835e-47c8-be25-ddb32549205d',
+            subCategoryName: 'Báo cáo, yêu cầu',
+            description: 'Báo cáo sự cố hay yêu cầu thực thi công việc',
+            status: 1,
+            dataType: 'string',
+            categoryId: 'f94f6506-361e-4eb2-951d-1adedd230ac8',
+            chickens: [],
+            timeUnits: [],
+            isDeleted: false,
+            deletedWhen: null,
+            createdByUserId: '46a0ba68-69c7-440c-ab29-3a1443449449',
+            createdByUser: null,
+            createdWhen: '2025-03-31T05:32:21.022623',
+            lastEditedByUserId: '46a0ba68-69c7-440c-ab29-3a1443449449',
+            lastEditedByUser: null,
+            lastEditedWhen: '2025-03-31T05:32:21.022626',
+        },
+        templateCriterias: [
+            {
+                TemplateCriteriaId: '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
+                TemplateName: 'Temperature Check',
+                EvaluationTemplateId: 'f47ac10b-58cc-4372-a567-0e02b2c3d479', // Quality Assessment
+                CriteriaId: '550e8400-e29b-41d4-a716-446655440005', // Temperature
+                ExpectedCondition: 'Less than',
+                ExpectedUnit: '°C',
+                ExpectedValue: '30',
+            },
+        ],
+    },
+];

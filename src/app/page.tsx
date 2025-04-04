@@ -99,7 +99,7 @@ export default function Home() {
                         <div className="w-14" />
                     </div>
                     <Image
-                        src="/coming-soon.png"
+                        src="/preview.png"
                         alt="Sắp ra mắt"
                         width="960"
                         height="520"
@@ -114,7 +114,7 @@ export default function Home() {
                         <div className="flex flex-col md:flex-row items-center justify-between">
                             <div className="md:w-1/2 mb-8 md:mb-0">
                                 <Image
-                                    src="/coming-soon.png"
+                                    src="/preview.png"
                                     alt="Về CFMS"
                                     width={500}
                                     height={300}
@@ -216,7 +216,7 @@ export default function Home() {
                                     className="bg-white rounded-lg shadow-md overflow-hidden"
                                 >
                                     <Image
-                                        src="/coming-soon.png"
+                                        src="/preview.png"
                                         alt={`Bài Viết ${post}`}
                                         width={400}
                                         height={200}

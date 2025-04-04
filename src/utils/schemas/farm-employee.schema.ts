@@ -20,4 +20,10 @@ export const FarmEmployeeSchema = z.object({
 });
 
 export type FarmEmployee = z.infer<typeof FarmEmployeeSchema>;
-export const CreateFarmEmployeeSchema = FarmEmployeeSchema.omit({ farmEmployeeId: true });
+
+export const CreateFarmEmployeeSchema = FarmEmployeeSchema.omit({
+    farmEmployeeId: true,
+    startDate: true,
+    endDate: true,
+});
+export type CreateFarmEmployee = z.infer<typeof CreateFarmEmployeeSchema>;
