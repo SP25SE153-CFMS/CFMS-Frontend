@@ -22,25 +22,45 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
-import { FarmEmployeeSchema, type FarmEmployee } from '@/utils/schemas/farm-employee.schema';
+import {
+    CreateFarmEmployeeSchema,
+    FarmEmployeeSchema,
+    type FarmEmployee,
+} from '@/utils/schemas/farm-employee.schema';
 import dayjs from 'dayjs';
-import { createFarmEmployee, updateFarmEmployee } from '@/services/farm-employee.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getFarms } from '@/services/farm.service';
+import { addEmployeeToFarm, getFarms, updateEmployeeInFarm } from '@/services/farm.service';
 import { getUsers } from '@/services/user.service';
+import { mapEnumToValues } from '@/utils/functions/enum.function';
+import { FarmRole, farmRoleLabels } from '@/utils/enum';
+import { Input } from '@/components/ui/input';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
 
 interface AddEmployeeFormProps {
     defaultValues?: Partial<FarmEmployee>;
     closeDialog: () => void;
 }
 
-export default function AddEmployeeForm({ defaultValues, closeDialog }: AddEmployeeFormProps) {
+export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmployeeFormProps) {
+    const { data: farms } = useQuery({
+        queryKey: ['farms'],
+        queryFn: () => getFarms(),
+    });
+
+    const currentFarm = farms?.find((farm) => farm.farmId === getCookie(config.cookies.farmId));
+
+    const { data: users } = useQuery({
+        queryKey: ['users'],
+        queryFn: () => getUsers(),
+    });
+
     // Initialize form
     const form = useForm<FarmEmployee>({
-        resolver: zodResolver(FarmEmployeeSchema),
+        resolver: zodResolver(defaultValues ? FarmEmployeeSchema : CreateFarmEmployeeSchema),
         defaultValues: {
-            farmId: '',
+            farmId: currentFarm?.farmId ?? '',
             userId: '',
             startDate: new Date().toISOString(),
             endDate: null,
@@ -55,7 +75,7 @@ export default function AddEmployeeForm({ defaultValues, closeDialog }: AddEmplo
 
     // Mutations for creating and updating
     const mutation = useMutation({
-        mutationFn: defaultValues ? updateFarmEmployee : createFarmEmployee,
+        mutationFn: defaultValues ? updateEmployeeInFarm : addEmployeeToFarm,
         onSuccess: () => {
             closeDialog();
             queryClient.invalidateQueries({ queryKey: ['farmEmployees'] });
@@ -74,16 +94,6 @@ export default function AddEmployeeForm({ defaultValues, closeDialog }: AddEmplo
         mutation.mutate(values);
     }
 
-    const { data: farms } = useQuery({
-        queryKey: ['farms'],
-        queryFn: () => getFarms(),
-    });
-
-    const { data: users } = useQuery({
-        queryKey: ['users'],
-        queryFn: () => getUsers(),
-    });
-
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
@@ -96,7 +106,7 @@ export default function AddEmployeeForm({ defaultValues, closeDialog }: AddEmplo
                             <FormItem>
                                 <FormLabel>Trang trại</FormLabel>
                                 <FormControl>
-                                    <Select
+                                    {/* <Select
                                         onValueChange={field.onChange}
                                         defaultValue={field.value}
                                     >
@@ -110,7 +120,13 @@ export default function AddEmployeeForm({ defaultValues, closeDialog }: AddEmplo
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
-                                    </Select>
+                                    </Select> */}
+                                    <Input
+                                        type="text"
+                                        disabled
+                                        {...field}
+                                        value={currentFarm?.farmName ?? ''}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -147,37 +163,147 @@ export default function AddEmployeeForm({ defaultValues, closeDialog }: AddEmplo
                     />
 
                     {/* Ngày bắt đầu */}
+                    {defaultValues && (
+                        <FormField
+                            control={form.control}
+                            name="startDate"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Ngày bắt đầu</FormLabel>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <FormControl>
+                                                <Button
+                                                    variant={'outline'}
+                                                    className={cn(
+                                                        'w-full pl-3 text-left font-normal',
+                                                    )}
+                                                >
+                                                    {dayjs(new Date(field.value)).format(
+                                                        'DD/MM/YYYY',
+                                                    )}
+                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                </Button>
+                                            </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                            <Calendar
+                                                mode="single"
+                                                selected={new Date(field.value)}
+                                                onSelect={(date) =>
+                                                    field.onChange(date?.toISOString())
+                                                }
+                                                initialFocus
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    )}
+
+                    {/* Ngày kết thúc */}
+                    {defaultValues && (
+                        <FormField
+                            control={form.control}
+                            name="endDate"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Ngày kết thúc</FormLabel>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <FormControl>
+                                                <Button
+                                                    variant={'outline'}
+                                                    className={cn(
+                                                        'w-full pl-3 text-left font-normal',
+                                                    )}
+                                                >
+                                                    {field.value
+                                                        ? dayjs(new Date(field.value)).format(
+                                                              'DD/MM/YYYY',
+                                                          )
+                                                        : '-'}
+                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                </Button>
+                                            </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                            <Calendar
+                                                mode="single"
+                                                selected={
+                                                    field.value ? new Date(field.value) : new Date()
+                                                }
+                                                onSelect={(date) =>
+                                                    field.onChange(date?.toISOString())
+                                                }
+                                                initialFocus
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    )}
+
+                    {/* Farm role */}
                     <FormField
                         control={form.control}
-                        name="startDate"
+                        name="farmRole"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Ngày bắt đầu</FormLabel>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <FormControl>
-                                            <Button
-                                                variant={'outline'}
-                                                className={cn('w-full pl-3 text-left font-normal')}
-                                            >
-                                                {dayjs(new Date(field.value)).format('DD/MM/YYYY')}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar
-                                            mode="single"
-                                            selected={new Date(field.value)}
-                                            onSelect={(date) => field.onChange(date?.toISOString())}
-                                            initialFocus
-                                        />
-                                    </PopoverContent>
-                                </Popover>
+                                <FormLabel>Vai trò trong trang trại</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value?.toString()}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn vai trò" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {mapEnumToValues(FarmRole).map((role) => (
+                                                <SelectItem value={role} key={role}>
+                                                    {farmRoleLabels[role]}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
+
+                    {/* Trạng thái  */}
+                    {/* <FormField
+                        control={form.control}
+                        name="status"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Trạng thái</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn trạng thái" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="active">Đang hoạt động</SelectItem>
+                                            <SelectItem value="inactive">
+                                                Ngừng hoạt động
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    /> */}
                 </div>
 
                 <Button type="submit" className="mx-auto mt-6 w-60">

@@ -41,6 +41,7 @@ import { useMutation } from '@tanstack/react-query';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { Scale, scaleLabels } from '@/utils/enum/status.enum';
 import { getAddress } from '@/services/map.service';
+import { PhoneInput } from '@/components/ui/phone-input';
 
 // Dynamically import the map component with no SSR
 const LocationMapWithNoSSR = dynamic(() => import('./location-map'), { ssr: false });
@@ -209,10 +210,12 @@ export default function Page() {
                                         <FormItem>
                                             <FormLabel>Số điện thoại</FormLabel>
                                             <FormControl>
-                                                <Input
-                                                    type="tel"
-                                                    placeholder="Nhập số điện thoại"
-                                                    {...field}
+                                                <PhoneInput
+                                                    countryCallingCodeEditable={false}
+                                                    defaultCountry="VN"
+                                                    international={true}
+                                                    onChange={field.onChange}
+                                                    value={field.value}
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -264,7 +267,7 @@ export default function Page() {
                                     </div>
                                 )}
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <FormField
                                         control={form.control}
                                         name="latitude"
@@ -326,7 +329,7 @@ export default function Page() {
                                             </FormItem>
                                         )}
                                     />
-                                </div>
+                                </div> */}
                             </div>
 
                             <FormField

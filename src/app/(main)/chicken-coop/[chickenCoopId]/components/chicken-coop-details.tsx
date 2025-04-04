@@ -16,7 +16,6 @@ import {
     Baseline,
     Code,
     LandPlot,
-    Map,
     ScanEye,
     Tag,
     TrendingUp,

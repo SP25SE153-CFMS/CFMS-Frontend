@@ -10,7 +10,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Trash } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import {
     Dialog,
     DialogContent,
@@ -37,7 +37,6 @@ interface Props<T> {
 }
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
-    const router = useRouter();
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 

@@ -43,7 +43,6 @@ import {
 import { useState } from 'react';
 import type { CreateNutritionPlanDetail } from '@/utils/schemas/nutrition-plan-detail.schema';
 import { SelectNative } from '@/components/ui/select-native';
-import { getUnits } from '@/services/category.service';
 import { getFoods } from '@/services/food.service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
