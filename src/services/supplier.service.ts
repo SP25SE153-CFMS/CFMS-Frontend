@@ -1,20 +1,9 @@
 import { Supplier } from '@/utils/schemas/supplier.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
-import { ResourceItem } from '@/utils/schemas/resource-item.schema';
+import { ResourceResponse } from '@/utils/types/custom.type';
 
 const PREFIX = '/api/Supplier';
-
-interface FoodItem {
-    foodCode: string;
-    foodName: string;
-    note: string;
-    productionDate: string;
-    expiryDate: string;
-    unitSpecification: string;
-    description: string;
-    price: number;
-}
 
 export const getSuppliers = async () => {
     const endpoint = PREFIX;
@@ -48,7 +37,6 @@ export const deleteSupplier = async (id: string) => {
 
 export const getResourceSuppliersById = async (supplierId: string) => {
     const endpoint = `${PREFIX}/resource-suppliers/${supplierId}`;
-    console.log('Api Resource: ', endpoint);
-    const response = await get<Response<ResourceItem[]>>(endpoint);
+    const response = await get<Response<ResourceResponse[]>>(endpoint);
     return response.data.data;
 };

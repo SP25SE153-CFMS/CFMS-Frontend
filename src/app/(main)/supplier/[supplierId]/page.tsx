@@ -8,11 +8,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import {
     CalendarIcon,
-    Package2Icon,
     TagIcon,
     ClipboardListIcon,
     InfoIcon,
-    PillIcon,
     Stethoscope,
     Wrench,
     AlertCircle,
@@ -20,11 +18,11 @@ import {
     CheckCircle2,
     Wheat,
     BriefcaseMedical,
-    Undo2,
 } from 'lucide-react';
 import { getResourceSuppliersById } from '@/services/supplier.service';
 import { useParams } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ResourceResponse } from '@/utils/types/custom.type';
 
 // Function để kiểm tra loại resource
 const isFood = (resource: any) => resource.foodCode && resource.foodName;
@@ -47,11 +45,13 @@ const getResourceBadgeColor = (type: string) => {
 
 export default function ResourceSuppliers() {
     const { supplierId }: { supplierId: string } = useParams();
-    const { data: resources = [], isLoading } = useQuery({
+    const { data: resources = [], isLoading } = useQuery<ResourceResponse[]>({
         queryKey: ['resources', supplierId],
         queryFn: () => getResourceSuppliersById(supplierId),
         enabled: !!supplierId,
     });
+
+    // console.log('Data: ', resources);
 
     if (isLoading) {
         return (
@@ -150,7 +150,9 @@ export default function ResourceSuppliers() {
     );
 }
 
-function ResourceList({ resources }: { resources: any[] }) {
+function ResourceList({ resources }: { resources: ResourceResponse[] }) {
+    console.log('Data Test: ', resources);
+
     return (
         <ScrollArea className="h-[calc(100vh-200px)] w-full pr-2">
             <div className="space-y-6 pb-6">
@@ -175,11 +177,11 @@ function ResourceList({ resources }: { resources: any[] }) {
                                         )}
                                         <span className="font-medium text-base">
                                             {resource.resourceType === 'Thực phẩm' &&
-                                                (resource as any).foodName}
+                                                resource.foodName}
                                             {resource.resourceType === 'Dược phẩm' &&
-                                                (resource as any).medicineName}
+                                                resource.medicineName}
                                             {resource.resourceType === 'Thiết bị' &&
-                                                (resource as any).equipmentName}
+                                                resource.equipmentName}
                                             {!['Thực phẩm', 'Dược phẩm', 'Thiết bị'].includes(
                                                 resource.resourceType,
                                             ) && 'Tài nguyên khác'}
@@ -213,7 +215,7 @@ function ResourceList({ resources }: { resources: any[] }) {
                                                                 Mã thức ăn:
                                                             </span>
                                                             <span className="text-sm">
-                                                                {(resource as any).foodCode}
+                                                                {resource.foodCode}
                                                             </span>
                                                         </div>
                                                     </>
@@ -226,7 +228,7 @@ function ResourceList({ resources }: { resources: any[] }) {
                                                                 Mã thuốc:
                                                             </span>
                                                             <span className="text-sm">
-                                                                {(resource as any).medicineCode}
+                                                                {resource.medicineCode}
                                                             </span>
                                                         </div>
                                                     </>
@@ -239,7 +241,7 @@ function ResourceList({ resources }: { resources: any[] }) {
                                                                 Mã thiết bị:
                                                             </span>
                                                             <span className="text-sm">
-                                                                {(resource as any).equipmentCode}
+                                                                {resource.equipmentCode}
                                                             </span>
                                                         </div>
                                                     </>
@@ -261,7 +263,7 @@ function ResourceList({ resources }: { resources: any[] }) {
                                                         Giá:
                                                     </span>
                                                     <span className="text-sm font-medium text-primary">
-                                                        {resource.price?.toLocaleString('vi-VN')}{' '}
+                                                        {resource.price}{' '}
                                                         VNĐ
                                                     </span>
                                                 </div>
@@ -281,7 +283,7 @@ function ResourceList({ resources }: { resources: any[] }) {
                                                             Cách dùng:
                                                         </span>
                                                         <span className="text-sm">
-                                                            {(resource as any).usage || 'Không có'}
+                                                            {resource.usage || 'Không có'}
                                                         </span>
                                                     </div>
                                                     <div className="flex items-center gap-2">
@@ -289,7 +291,7 @@ function ResourceList({ resources }: { resources: any[] }) {
                                                             Liều lượng:
                                                         </span>
                                                         <span className="text-sm">
-                                                            {(resource as any).dosageForm ||
+                                                            {resource.dosageForm ||
                                                                 'Không có'}
                                                         </span>
                                                     </div>
@@ -309,7 +311,7 @@ function ResourceList({ resources }: { resources: any[] }) {
                                                             Chất liệu:
                                                         </span>
                                                         <span className="text-sm">
-                                                            {(resource as any).material ||
+                                                            {resource.material ||
                                                                 'Không có'}
                                                         </span>
                                                     </div>
@@ -318,8 +320,8 @@ function ResourceList({ resources }: { resources: any[] }) {
                                                             Bảo hành:
                                                         </span>
                                                         <span className="text-sm">
-                                                            {(resource as any).warranty
-                                                                ? `${(resource as any).warranty} tháng`
+                                                            {resource.warranty
+                                                                ? `${resource.warranty} tháng`
                                                                 : 'Không có'}
                                                         </span>
                                                     </div>
@@ -412,14 +414,14 @@ function ResourceList({ resources }: { resources: any[] }) {
                                         </div>
 
                                         {/* Ghi chú (chỉ cho thực phẩm) */}
-                                        {isFood(resource) && (resource as any).note && (
+                                        {isFood(resource) && resource.note && (
                                             <div className="bg-green-50 rounded-lg p-4">
                                                 <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-green-700">
                                                     <CheckCircle2 className="w-4 h-4" />
                                                     Ghi chú
                                                 </h4>
                                                 <p className="text-sm whitespace-pre-line">
-                                                    {(resource as any).note}
+                                                    {resource.note}
                                                 </p>
                                             </div>
                                         )}

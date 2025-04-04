@@ -64,11 +64,31 @@ export type FarmEmployeeResponse = FarmEmployee & {
 };
 
 export type ResourceResponse = Resource & {
-    equipment?: Equipment;
-    medicine?: Medicine;
-    food?: Food;
+    resourceType: string;
+    unitSpecification: string;
+    description: string;
+    price: string;
+    productionDate: string;
+    expiryDate: string;
+    purchaseDate: string;
+    disease: string;
+    foodCode: string;
+    foodName: string;
+    note: string;
+    medicineCode: string;
+    medicineName: string;
+    usage: string;
+    dosageForm: string;
+    storageCondition: string;
+    equipmentCode: string;
+    equipmentName: string;
+    material: string;
+    warranty: number;
+    size: number;
+    weight: number;
 };
 
 export type TaskResponse = Task & {
     assignments: Assignment[];
 };
+
