@@ -1,22 +1,22 @@
-import { Task } from '@/utils/schemas/task.schema';
+import { CreateTask, Task } from '@/utils/schemas/task.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
-
+import { TaskResponse } from '@/utils/types/custom.type';
 const PREFIX = '/api/Task';
 
 export const getTasks = async () => {
     const endpoint = PREFIX;
-    const response = await get<Response<Task[]>>(endpoint);
+    const response = await get<Response<TaskResponse[]>>(endpoint);
     return response.data.data;
 };
 
 export const getTaskById = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
-    const response = await get<Response<Task>>(endpoint);
+    const response = await get<Response<TaskResponse>>(endpoint);
     return response.data.data;
 };
 
-export const createTask = async (body: Task) => {
+export const createTask = async (body: CreateTask) => {
     const endpoint = PREFIX;
     const response = await post<Response<string>>(endpoint, body);
     return response.data;

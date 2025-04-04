@@ -1,3 +1,4 @@
+import { Assignment } from '../schemas/assignment.schema';
 import { BreedingArea } from '../schemas/breeding-area.schema';
 import { Category } from '../schemas/category.schema';
 import { ChickenBatch } from '../schemas/chicken-batch.schema';
@@ -5,12 +6,17 @@ import { ChickenCoop } from '../schemas/chicken-coop.schema';
 import { ChickenDetail } from '../schemas/chicken-detail.schema';
 import { Chicken } from '../schemas/chicken.schema';
 import { CoopEquipment } from '../schemas/coop-equipment.schema';
+import { Equipment } from '../schemas/equipment.schema';
 import { FarmEmployee } from '../schemas/farm-employee.schema';
 import { FeedLog } from '../schemas/feed-log.schema';
+import { Food } from '../schemas/food.schema';
 import { HealthLog } from '../schemas/health-log.schema';
+import { Medicine } from '../schemas/medicine.schema';
 import { QuantityLog } from '../schemas/quantity-log.schema';
+import { Resource } from '../schemas/resource.schema';
 import { SubCategory } from '../schemas/sub-category.schema';
 import { TaskLog } from '../schemas/task-log.schema';
+import { Task } from '../schemas/task.schema';
 import { User } from '../schemas/user.schema';
 import { VaccinationLog } from '../schemas/vaccine.schema';
 
@@ -55,4 +61,14 @@ export type StartChickenBatch = {
 
 export type FarmEmployeeResponse = FarmEmployee & {
     user: User;
+};
+
+export type ResourceResponse = Resource & {
+    equipment?: Equipment;
+    medicine?: Medicine;
+    food?: Food;
+};
+
+export type TaskResponse = Task & {
+    assignments: Assignment[];
 };
