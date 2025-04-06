@@ -48,7 +48,7 @@ export default function EmployeeForm({ defaultValues, closeDialog }: EmployeeFor
             status: '1',
             address: '',
             cccd: '',
-            systemRole: 0,
+            systemRole: '0',
             ...defaultValues,
         },
     });
