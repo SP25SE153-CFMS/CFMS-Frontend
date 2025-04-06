@@ -17,13 +17,13 @@ import {
     useSidebar,
 } from '@/components/ui/sidebar';
 import { useQuery } from '@tanstack/react-query';
-import { getFarmsForCurrentUser } from '@/services/farm.service';
+import { getFarmById, getFarmsForCurrentUser } from '@/services/farm.service';
 import Image from 'next/image';
 import { Farm } from '@/utils/schemas/farm.schema';
 import Link from 'next/link';
 import config from '@/configs';
 import { ScrollArea } from '../ui/scroll-area';
-import { setCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { Skeleton } from '../ui/skeleton';
 
@@ -69,17 +69,24 @@ export function FarmSwitcher() {
         staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
+    const { data: farm } = useQuery({
+        queryKey: ['farm'],
+        queryFn: () => getFarmById(getCookie(config.cookies.farmId) ?? ''),
+    });
+
     useEffect(() => {
         try {
             const storedFarm = sessionStorage.getItem('activeFarm');
             if (storedFarm) {
                 setActiveFarm(JSON.parse(storedFarm));
+            } else if (farm) {
+                setActiveFarm(farm);
             }
         } catch (error) {
             console.error('Error parsing active farm from session storage:', error);
             sessionStorage.removeItem('activeFarm');
         }
-    }, []);
+    }, [farm]);
 
     const handleFarmSelect = useCallback(
         (farm: Farm) => {
