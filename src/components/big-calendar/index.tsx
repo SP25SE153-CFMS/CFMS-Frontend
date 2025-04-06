@@ -27,21 +27,21 @@ import {
 } from '@/components/ui/select';
 import { assignmentBackground } from '@/utils/enum/status.enum';
 import { Badge } from '../ui/badge';
-import { Event, Shift } from './type';
+import { Event, ShiftEvent } from './type';
 
 type ViewMode = 'month' | 'week';
 
-export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] }) {
+export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEvent[] }) {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [calendarEvents, setCalendarEvents] = useState<Event[]>(events);
     const [isAddEventOpen, setIsAddEventOpen] = useState(false);
-    const [viewMode, setViewMode] = useState<ViewMode>('month');
+    const [viewMode, setViewMode] = useState<ViewMode>('week');
     const [newEvent, setNewEvent] = useState({
         title: '',
         date: selectedDate || currentDate,
         color: 'bg-blue-500',
-        shift: 1,
+        shift: '',
         status: 0,
     });
 
@@ -136,7 +136,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] 
     };
 
     // Get events for a specific date and shift
-    const getEventsForDateAndShift = (date: Date, shiftId: number) => {
+    const getEventsForDateAndShift = (date: Date, shiftId: string) => {
         return calendarEvents.filter(
             (event) =>
                 event.date.getDate() === date.getDate() &&
@@ -147,13 +147,13 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] 
     };
 
     // Open add event dialog
-    const openAddEvent = (date: Date, shift?: number) => {
+    const openAddEvent = (date: Date, shift?: string) => {
         setSelectedDate(date);
         setNewEvent({
             title: '',
             date: date,
             color: 'bg-blue-500',
-            shift: shift || 1,
+            shift: shift || '',
             status: 0,
         });
         setIsAddEventOpen(true);
@@ -178,7 +178,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] 
             title: '',
             date: selectedDate || currentDate,
             color: 'bg-blue-500',
-            shift: 1,
+            shift: '',
             status: 0,
         });
     };
@@ -189,13 +189,13 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] 
     };
 
     // Get shift name by ID
-    const getShiftName = (shiftId: number) => {
+    const getShiftName = (shiftId: string) => {
         const shift = shifts.find((s) => s.id === shiftId);
         return shift ? shift.name : '';
     };
 
     // Get shift time range by ID
-    const getShiftTimeRange = (shiftId: number) => {
+    const getShiftTimeRange = (shiftId: string) => {
         const shift = shifts.find((s) => s.id === shiftId);
         return shift ? shift.timeRange : '';
     };
@@ -442,19 +442,19 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] 
                         className="mr-4"
                     >
                         <TabsList>
-                            <TabsTrigger value="month">Tháng</TabsTrigger>
                             <TabsTrigger value="week">Tuần</TabsTrigger>
+                            <TabsTrigger value="month">Tháng</TabsTrigger>
                         </TabsList>
                     </Tabs>
 
                     <Button
                         variant="outline"
-                        size="icon"
+                        // size="icon"
                         onClick={() => setIsAddEventOpen(true)}
                         className="mr-2"
                     >
                         <Plus className="h-4 w-4" />
-                        <span className="sr-only">Thêm sự kiện</span>
+                        <span className="">Giao việc</span>
                     </Button>
                     <Button variant="outline" size="icon" onClick={prevPeriod}>
                         <ChevronLeft className="h-4 w-4" />
@@ -562,7 +562,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: Shift[] 
                             <Select
                                 value={newEvent.shift.toString()}
                                 onValueChange={(value) =>
-                                    setNewEvent({ ...newEvent, shift: Number.parseInt(value) })
+                                    setNewEvent({ ...newEvent, shift: value })
                                 }
                             >
                                 <SelectTrigger>

@@ -1390,7 +1390,7 @@ export const users: User[] = [
         status: '1',
         address: '123 Đường Nguyễn Trãi, Quận 1, TP. Hồ Chí Minh',
         cccd: '012345678901',
-        systemRole: 0,
+        systemRole: '0',
     },
     {
         userId: '660e8400-e29b-41d4-a716-446655440001',
@@ -1402,7 +1402,7 @@ export const users: User[] = [
         status: '1',
         address: '456 Đường Lê Lợi, Quận 3, TP. Hồ Chí Minh',
         cccd: '098765432109',
-        systemRole: 0,
+        systemRole: '0',
     },
     {
         userId: '770e8400-e29b-41d4-a716-446655440002',
@@ -1414,7 +1414,7 @@ export const users: User[] = [
         status: '0',
         address: '789 Đường Hai Bà Trưng, Quận 5, TP. Hồ Chí Minh',
         cccd: '102938475601',
-        systemRole: 0,
+        systemRole: '0',
     },
     {
         userId: '880e8400-e29b-41d4-a716-446655440003',
@@ -1426,7 +1426,7 @@ export const users: User[] = [
         status: '1',
         address: '567 Đường Trần Hưng Đạo, Quận 10, TP. Hồ Chí Minh',
         cccd: '564738291012',
-        systemRole: 0,
+        systemRole: '0',
     },
     {
         userId: '990e8400-e29b-41d4-a716-446655440004',
@@ -1438,7 +1438,7 @@ export const users: User[] = [
         status: '0',
         address: '678 Đường Võ Văn Kiệt, Quận Bình Thạnh, TP. Hồ Chí Minh',
         cccd: '675849302112',
-        systemRole: 0,
+        systemRole: '0',
     },
 ];
 

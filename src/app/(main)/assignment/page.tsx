@@ -14,12 +14,13 @@ import { columns } from './columns';
 import { useQuery } from '@tanstack/react-query';
 import { getAssignments } from '@/services/assignment.service';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { Assignment } from '@/utils/schemas/assignment.schema';
-import { Event } from '@/components/big-calendar/type';
+import { Event, ShiftEvent } from '@/components/big-calendar/type';
 import { getTasks } from '@/services/task.service';
-import { shifts } from '@/utils/data/table.data';
 import { getEmployeesByFarmId } from '@/services/farm.service';
 import { getCookie } from 'cookies-next';
+import { getShifts } from '@/services/shift.service';
+import { Shift } from '@/utils/schemas/shift.schema';
+
 export default function Home() {
     const { data: assignments, isLoading: isAssignmentsLoading } = useQuery({
         queryKey: ['assignments'],
@@ -45,17 +46,41 @@ export default function Home() {
         },
     });
 
-    const mapAssignmentToEvent = (assignment: Assignment): Event => ({
-        id: assignment.assignmentId,
-        title: tasks?.find((task) => task.taskId === assignment.taskId)?.taskName || '',
-        date: new Date(assignment.assignedDate),
-        color: assignmentBackground[assignment.status],
-        status: parseInt(assignment.status),
-        // TODO: Get shift from shiftScheduleId
-        shift: 1,
+    const { data: shifts } = useQuery({
+        queryKey: ['shifts'],
+        queryFn: () => getShifts(),
     });
 
-    const events = (assignments || []).map(mapAssignmentToEvent);
+    // const mapAssignmentToEvent = (assignment: Assignment): Event => ({
+    //     id: assignment.assignmentId,
+    //     title: tasks?.find((task) => task.taskId === assignment.taskId)?.taskName || '',
+    //     date: new Date(assignment.assignedDate),
+    //     color: assignmentBackground[assignment.status],
+    //     status: parseInt(assignment.status),
+    //     // TODO: Get shift from shiftScheduleId
+    //     shift: 1,
+    // });
+
+    const mapShiftToShiftEvent = (shift: Shift): ShiftEvent => ({
+        id: shift.shiftId,
+        name: shift.shiftName,
+        timeRange: `${shift.startTime} - ${shift.endTime}`,
+        startHour: parseInt(shift.startTime),
+        endHour: parseInt(shift.endTime),
+    });
+
+    // TODO: Change to Task type
+    const mapTaskToEvent = (task: any): Event => ({
+        id: task.taskId,
+        title: task.taskName,
+        date: new Date(task.startWorkDate),
+        color: assignmentBackground[task.status],
+        status: parseInt(task.status),
+        shift: shifts?.[0]?.shiftId ?? '',
+    });
+
+    const events = (tasks || []).map(mapTaskToEvent);
+    const shiftEvents = (shifts || []).map(mapShiftToShiftEvent);
 
     // Check if assignments is loading
     if (isAssignmentsLoading || isTasksLoading || isEmployeesLoading) {
@@ -94,24 +119,20 @@ export default function Home() {
                         <TabsTrigger value="completed">Công việc hoàn thành</TabsTrigger>
                     </TabsList>
                     <TabsContent value="all">
-                        <div className="grid grid-cols-6 gap-6">
-                            <div className="flex flex-col gap-6 my-2">
-                                {mapEnumToValues(AssignmentStatus).map((status) => (
-                                    <div key={status} className="flex items-center gap-2">
-                                        <div
-                                            className={cn(
-                                                'w-6 h-6 rounded-sm',
-                                                assignmentBackground[status],
-                                            )}
-                                        ></div>
-                                        <span>{assignmentStatusLabels[status]}</span>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="col-span-5">
-                                <Calendar events={events} shifts={shifts} />
-                            </div>
+                        <div className="flex items-center gap-6 my-6">
+                            {mapEnumToValues(AssignmentStatus).map((status) => (
+                                <div key={status} className="flex items-center gap-2">
+                                    <div
+                                        className={cn(
+                                            'w-6 h-6 rounded-sm',
+                                            assignmentBackground[status],
+                                        )}
+                                    ></div>
+                                    <span>{assignmentStatusLabels[status]}</span>
+                                </div>
+                            ))}
                         </div>
+                        <Calendar events={events} shifts={shiftEvents} />
                     </TabsContent>
                     <TabsContent value="cancel">
                         {/* TODO: Filter assignments by status */}

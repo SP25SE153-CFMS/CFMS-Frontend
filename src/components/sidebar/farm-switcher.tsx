@@ -36,8 +36,6 @@ export function FarmSwitcher() {
         JSON.parse(sessionStorage.getItem('activeFarm') || '{}'),
     );
 
-    console.log(activeFarm);
-
     return (
         <SidebarMenu>
             <SidebarMenuItem>

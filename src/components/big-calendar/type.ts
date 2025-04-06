@@ -5,12 +5,12 @@ export interface Event {
     date: Date;
     color: string;
     status: number;
-    shift?: number; // 1, 2, or 3
+    shift?: string;
 }
 
 // Shift interface
-export interface Shift {
-    id: number;
+export interface ShiftEvent {
+    id: string;
     name: string;
     timeRange: string;
     startHour: number;
