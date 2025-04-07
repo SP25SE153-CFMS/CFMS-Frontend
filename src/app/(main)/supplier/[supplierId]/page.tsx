@@ -26,8 +26,6 @@ import { ResourceResponse } from '@/utils/types/custom.type';
 
 // Function để kiểm tra loại resource
 const isFood = (resource: any) => resource.foodCode && resource.foodName;
-const isMedicine = (resource: any) => resource.medicineCode && resource.medicineName;
-const isEquipment = (resource: any) => resource.equipmentCode && resource.equipmentName;
 
 // Function để lấy màu badge dựa vào loại resource
 const getResourceBadgeColor = (type: string) => {
@@ -263,8 +261,7 @@ function ResourceList({ resources }: { resources: ResourceResponse[] }) {
                                                         Giá:
                                                     </span>
                                                     <span className="text-sm font-medium text-primary">
-                                                        {resource.price}{' '}
-                                                        VNĐ
+                                                        {resource.price} VNĐ
                                                     </span>
                                                 </div>
                                             </div>
@@ -291,8 +288,7 @@ function ResourceList({ resources }: { resources: ResourceResponse[] }) {
                                                             Liều lượng:
                                                         </span>
                                                         <span className="text-sm">
-                                                            {resource.dosageForm ||
-                                                                'Không có'}
+                                                            {resource.dosageForm || 'Không có'}
                                                         </span>
                                                     </div>
                                                 </div>
@@ -311,8 +307,7 @@ function ResourceList({ resources }: { resources: ResourceResponse[] }) {
                                                             Chất liệu:
                                                         </span>
                                                         <span className="text-sm">
-                                                            {resource.material ||
-                                                                'Không có'}
+                                                            {resource.material || 'Không có'}
                                                         </span>
                                                     </div>
                                                     <div className="flex items-center gap-2">
