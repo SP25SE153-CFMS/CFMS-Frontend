@@ -68,6 +68,7 @@ export const sidebarItems: NavGroup[] = [
                     { title: 'Danh sách thức ăn', path: config.routes.food },
                     { title: 'Danh sách trang thiết bị', path: config.routes.equipment },
                     { title: 'Danh mục vaccine', path: config.routes.vaccine },
+                    { title: 'Danh sách nhà cung cấp', path: config.routes.supplier },
                     { title: 'Danh sách phiếu yêu cầu', path: config.routes.request },
                     {
                         title: 'Danh sách phiếu nhập/xuất kho',

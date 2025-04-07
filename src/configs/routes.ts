@@ -33,6 +33,8 @@ const routes = {
     assignment: '/assignment',
     shift: '/shift',
     settings: '/settings',
+    supplier: '/supplier',
+    resourceSupplier: 'supplier/resource-supplier',
 };
 
 export default routes;

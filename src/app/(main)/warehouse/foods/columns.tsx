@@ -54,16 +54,6 @@ export const columns: ColumnDef<WarehouseProduct>[] = [
         cell: ({ row }) => <div>{row.getValue('quantity')}</div>,
     },
     {
-        accessorKey: 'unit',
-        header: () => <div className="text-xs whitespace-nowrap">Đơn vị</div>,
-        cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('unit'))}</div>,
-    },
-    {
-        accessorKey: 'area',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Khu vực" />,
-        cell: ({ row }) => <div>Kho {capitalizeFirstLetter(row.getValue('area'))}</div>,
-    },
-    {
         accessorKey: 'expiry',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Hạn sử dụng" />,
         cell: ({ row }) => {
@@ -79,13 +69,13 @@ export const columns: ColumnDef<WarehouseProduct>[] = [
             return <div>{dayjs(date).format('DD/MM/YYYY')}</div>;
         },
     },
+    // {
+    //     accessorKey: 'supplier',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Nhà cung cấp" />,
+    //     cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('supplier'))}</div>,
+    // },
     {
-        accessorKey: 'supplier',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Nhà cung cấp" />,
-        cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('supplier'))}</div>,
-    },
-    {
-        id: "action",
-        cell: ({ row }) => <DataTableRowActions row={row}/>,
+        id: 'action',
+        cell: ({ row }) => <DataTableRowActions row={row} />,
     },
 ];
