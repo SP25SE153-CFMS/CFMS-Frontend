@@ -32,7 +32,8 @@ const routes = {
     createTask: '/task/create',
     assignment: '/assignment',
     supplier: '/supplier',
-    resourceSupplier: 'supplier/resource-supplier'
+    resourceSupplier: 'supplier/resource-supplier',
+    ware: '/warehouse',
 };
 
 export default routes;

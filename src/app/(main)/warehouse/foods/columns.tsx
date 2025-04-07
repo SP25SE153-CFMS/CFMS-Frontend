@@ -1,12 +1,13 @@
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { Checkbox } from '@/components/ui/checkbox';
 import { capitalizeFirstLetter } from '@/utils/functions';
-import { WarehouseProduct } from '@/utils/schemas/warehouse-product.schema';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import { DataTableRowActions } from './data-table-row-actions';
+import { Food } from '@/utils/schemas/food.schema';
+import { WareStockResponse } from '@/utils/types/custom.type';
 
-export const columns: ColumnDef<WarehouseProduct>[] = [
+export const columns: ColumnDef<WareStockResponse>[] = [
     {
         id: 'select',
         header: ({ table }) => (
@@ -32,48 +33,53 @@ export const columns: ColumnDef<WarehouseProduct>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: 'productId',
+        accessorKey: 'foodId',
         header: () => null,
         cell: () => null,
     },
     {
-        accessorKey: 'productCode',
+        accessorKey: 'foodCode',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mã hàng" />,
         cell: ({ row }) => (
-            <div className="w-[40px]">{String(row.getValue('productCode')).toUpperCase()}</div>
+            <div className="w-[40px]">{String(row.getValue('foodCode')).toUpperCase()}</div>
         ),
     },
     {
-        accessorKey: 'productName',
+        accessorKey: 'foodName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên hàng" />,
-        cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('productName'))}</div>,
+        cell: ({ row }) => <div>{row.getValue('foodName')}</div>,
     },
     {
-        accessorKey: 'quantity',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng hiện tại" />,
-        cell: ({ row }) => <div>{row.getValue('quantity')}</div>,
+        accessorKey: 'note',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Ghi chú" />,
+        cell: ({ row }) => <div>{row.getValue('note')}</div>,
     },
     {
-        accessorKey: 'expiry',
+        accessorKey: 'expiryDate',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Hạn sử dụng" />,
         cell: ({ row }) => {
-            const date = new Date(row.getValue('expiry'));
+            const date = new Date(row.getValue('expiryDate'));
             return <div>{dayjs(date).format('DD/MM/YYYY')}</div>;
         },
     },
     {
-        accessorKey: 'dateToImport',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày nhập" />,
+        accessorKey: 'productionDate',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày sản xuất" />,
         cell: ({ row }) => {
-            const date = new Date(row.getValue('dateToImport'));
+            const date = new Date(row.getValue('productionDate'));
             return <div>{dayjs(date).format('DD/MM/YYYY')}</div>;
         },
     },
-    // {
-    //     accessorKey: 'supplier',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Nhà cung cấp" />,
-    //     cell: ({ row }) => <div>{capitalizeFirstLetter(row.getValue('supplier'))}</div>,
-    // },
+    {
+        accessorKey: 'specQuantity',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng" />,
+        cell: ({ row }) => <div>{row.getValue('specQuantity')}</div>,
+    },
+    {
+        accessorKey: 'unitSpecification',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Đơn vị" />,
+        cell: ({ row }) => <div>{row.getValue('unitSpecification')}</div>,
+    },
     {
         id: 'action',
         cell: ({ row }) => <DataTableRowActions row={row} />,

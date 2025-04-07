@@ -31,7 +31,6 @@ export default function Supplier() {
         queryKey: ['suppliers'],
         queryFn: () => getSuppliers(),
     });
-    console.log(suppliers);
 
     if (isLoading) {
         return (

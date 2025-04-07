@@ -1,6 +1,7 @@
 import { Warehouse } from '@/utils/schemas/warehouse.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
+import { WareStockResponse } from '@/utils/types/custom.type';
 
 const PREFIX = '/api/Ware';
 
@@ -10,9 +11,16 @@ export const getWarehouses = async () => {
     return response.data.data;
 };
 
-export const getWarehouseById = async (id: string) => {
-    const endpoint = PREFIX + '/' + id;
-    const response = await get<Response<Warehouse>>(endpoint);
+export const getWareByFarmId = async (id: string) => {
+    const endpoint = PREFIX + '/' + "farmId" + "/" + id;
+    const response = await get<Response<WareStockResponse[]>>(endpoint);
+    return response.data.data;
+};
+
+export const getWareStockByResourceTypeId = async (wareId: string, resourceTypeId: string) => {
+    const endpoint = PREFIX + '/' + "warestocks" + '/' + wareId + '/' + resourceTypeId;
+    console.log("WareStock End Point: ", endpoint)
+    const response = await get<Response<WareStockResponse[]>>(endpoint);
     return response.data.data;
 };
 

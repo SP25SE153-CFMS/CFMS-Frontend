@@ -19,6 +19,7 @@ import { TaskLog } from '../schemas/task-log.schema';
 import { Task } from '../schemas/task.schema';
 import { User } from '../schemas/user.schema';
 import { VaccinationLog } from '../schemas/vaccine.schema';
+import { Warehouse } from '../schemas/warehouse.schema';
 
 export type ChickenCoopResponse = ChickenCoop & {
     chickenBatches: ChickenBatch[];
@@ -97,3 +98,11 @@ export type TaskResponse = Task & {
     endWorkDate: string | Date;
 };
 
+export type WareStockResponse = Warehouse & {
+    foods?: Food,
+    equipments?: Equipment,
+    medicine?: Medicine, 
+    specQuantity: string,
+    unitSpecification: string,
+    resourceTypeName: string,
+}

@@ -45,13 +45,11 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openDelete, setOpenDelete] = useState(false);
 
     const supplierId = (row.original as Supplier).supplierId;
-    console.log('Id nhà cung cấp được chọn: ', supplierId);
 
     const queryClient = useQueryClient();
 
     const handleDelete = async () => {
         const id = (row.original as Supplier).supplierId;
-        // console.log('ID: ', id);
         await deleteSupplier(id);
         toast.success('Đã xóa');
 
