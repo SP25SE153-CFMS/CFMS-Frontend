@@ -11,9 +11,7 @@ import { DialogTitle } from '@radix-ui/react-dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Plus } from 'lucide-react';
 import WarehouseProductForm from '@/components/forms/warehouse-product-form';
-import { useQuery } from '@tanstack/react-query';
-import { getFoods } from '@/services/food.service';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+
 
 export default function Foods() {
     const [searchValue, setSearchValue] = useState('');
