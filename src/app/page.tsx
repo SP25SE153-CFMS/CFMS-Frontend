@@ -172,8 +172,8 @@ export default function Home() {
                                     />
                                     <div className="absolute -bottom-5 -right-5 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 max-w-xs">
                                         <p className="text-sm font-medium text-gray-900 dark:text-gray-200">
-                                            "Phương pháp thủ công không còn hiệu quả với quy mô
-                                            trang trại hiện đại"
+                                            &quot;Phương pháp thủ công không còn hiệu quả với quy mô
+                                            trang trại hiện đại&quot;
                                         </p>
                                     </div>
                                 </div>
@@ -695,9 +695,9 @@ export default function Home() {
                                     </div>
                                 </div>
                                 <p className="text-gray-700 dark:text-gray-300 italic">
-                                    "CFMS đã giúp tôi tiết kiệm 30% thời gian quản lý và tăng năng
-                                    suất trang trại lên đáng kể. Việc theo dõi sức khỏe đàn gà trở
-                                    nên dễ dàng hơn bao giờ hết."
+                                    &quot;CFMS đã giúp tôi tiết kiệm 30% thời gian quản lý và tăng
+                                    năng suất trang trại lên đáng kể. Việc theo dõi sức khỏe đàn gà
+                                    trở nên dễ dàng hơn bao giờ hết.&quot;
                                 </p>
                             </div>
 
@@ -714,9 +714,10 @@ export default function Home() {
                                     </div>
                                 </div>
                                 <p className="text-gray-700 dark:text-gray-300 italic">
-                                    "Hệ thống báo cáo và phân tích dữ liệu của CFMS giúp tôi đưa ra
-                                    quyết định nhanh chóng và chính xác. Tỷ lệ tử vong của đàn gà đã
-                                    giảm 25% kể từ khi chúng tôi sử dụng phần mềm này."
+                                    &quot;Hệ thống báo cáo và phân tích dữ liệu của CFMS giúp tôi
+                                    đưa ra quyết định nhanh chóng và chính xác. Tỷ lệ tử vong của
+                                    đàn gà đã giảm 25% kể từ khi chúng tôi sử dụng phần mềm
+                                    này.&quot;
                                 </p>
                             </div>
 
@@ -731,9 +732,9 @@ export default function Home() {
                                     </div>
                                 </div>
                                 <p className="text-gray-700 dark:text-gray-300 italic">
-                                    "Quản lý nhân viên và phân công công việc trở nên hiệu quả hơn
-                                    nhiều với CFMS. Tôi có thể theo dõi tiến độ công việc từ xa và
-                                    đảm bảo mọi thứ đều đúng kế hoạch."
+                                    &quot;Quản lý nhân viên và phân công công việc trở nên hiệu quả
+                                    hơn nhiều với CFMS. Tôi có thể theo dõi tiến độ công việc từ xa
+                                    và đảm bảo mọi thứ đều đúng kế hoạch.&quot;
                                 </p>
                             </div>
                         </div>
