@@ -64,6 +64,9 @@ export type FarmEmployeeResponse = FarmEmployee & {
 };
 
 export type ResourceResponse = Resource & {
+    equipment?: Equipment;
+    medicine?: Medicine;
+    food?: Food;
     resourceType: string;
     unitSpecification: string;
     description: string;
