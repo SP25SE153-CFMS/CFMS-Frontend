@@ -38,13 +38,6 @@ const NAV_BAR = [
     },
 ];
 
-const STATS = [
-    { value: '30%', label: 'Tăng năng suất' },
-    { value: '45%', label: 'Giảm chi phí quản lý' },
-    { value: '60%', label: 'Giảm thời gian báo cáo' },
-    { value: '25%', label: 'Tăng tỷ lệ sống của gà' },
-];
-
 export default function Home() {
     const projectName = {
         en: 'Chicken Farm Management System',
