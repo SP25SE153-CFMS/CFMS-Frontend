@@ -76,6 +76,12 @@ import config from '@/configs';
 import { createTask } from '@/services/task.service';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { capitalizeFirstLetter } from '@/utils/functions';
+import { mapEnumToValues } from '@/utils/functions/enum.function';
+import {
+    assignmentBadge,
+    AssignmentStatus,
+    assignmentStatusLabels,
+} from '@/utils/enum/status.enum';
 
 const LOCATION_TYPES = [
     { value: 'COOP', label: 'Chuồng nuôi' },
@@ -369,46 +375,18 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="0">
-                                            <div className="flex items-center gap-2">
-                                                <Badge
-                                                    variant="outline"
-                                                    className="bg-yellow-50 text-yellow-700 border-yellow-200"
-                                                >
-                                                    Chưa giao
-                                                </Badge>
-                                            </div>
-                                        </SelectItem>
-                                        <SelectItem value="1">
-                                            <div className="flex items-center gap-2">
-                                                <Badge
-                                                    variant="outline"
-                                                    className="bg-blue-50 text-blue-700 border-blue-200"
-                                                >
-                                                    Đã giao
-                                                </Badge>
-                                            </div>
-                                        </SelectItem>
-                                        <SelectItem value="2">
-                                            <div className="flex items-center gap-2">
-                                                <Badge
-                                                    variant="outline"
-                                                    className="bg-green-50 text-green-700 border-green-200"
-                                                >
-                                                    Đã hoàn thành
-                                                </Badge>
-                                            </div>
-                                        </SelectItem>
-                                        <SelectItem value="3">
-                                            <div className="flex items-center gap-2">
-                                                <Badge
-                                                    variant="outline"
-                                                    className="bg-red-50 text-red-700 border-red-200"
-                                                >
-                                                    Đã hủy
-                                                </Badge>
-                                            </div>
-                                        </SelectItem>
+                                        {mapEnumToValues(AssignmentStatus).map((status) => (
+                                            <SelectItem value={status} key={status}>
+                                                <div className="flex items-center gap-2">
+                                                    <Badge
+                                                        variant="outline"
+                                                        className={assignmentBadge[status]}
+                                                    >
+                                                        {assignmentStatusLabels[status]}
+                                                    </Badge>
+                                                </div>
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />

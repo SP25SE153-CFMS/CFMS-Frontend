@@ -1390,7 +1390,7 @@ export const users: User[] = [
         status: '1',
         address: '123 Đường Nguyễn Trãi, Quận 1, TP. Hồ Chí Minh',
         cccd: '012345678901',
-        systemRole: 0,
+        systemRole: '0',
     },
     {
         userId: '660e8400-e29b-41d4-a716-446655440001',
@@ -1402,7 +1402,7 @@ export const users: User[] = [
         status: '1',
         address: '456 Đường Lê Lợi, Quận 3, TP. Hồ Chí Minh',
         cccd: '098765432109',
-        systemRole: 0,
+        systemRole: '0',
     },
     {
         userId: '770e8400-e29b-41d4-a716-446655440002',
@@ -1414,7 +1414,7 @@ export const users: User[] = [
         status: '0',
         address: '789 Đường Hai Bà Trưng, Quận 5, TP. Hồ Chí Minh',
         cccd: '102938475601',
-        systemRole: 0,
+        systemRole: '0',
     },
     {
         userId: '880e8400-e29b-41d4-a716-446655440003',
@@ -1426,7 +1426,7 @@ export const users: User[] = [
         status: '1',
         address: '567 Đường Trần Hưng Đạo, Quận 10, TP. Hồ Chí Minh',
         cccd: '564738291012',
-        systemRole: 0,
+        systemRole: '0',
     },
     {
         userId: '990e8400-e29b-41d4-a716-446655440004',
@@ -1438,7 +1438,7 @@ export const users: User[] = [
         status: '0',
         address: '678 Đường Võ Văn Kiệt, Quận Bình Thạnh, TP. Hồ Chí Minh',
         cccd: '675849302112',
-        systemRole: 0,
+        systemRole: '0',
     },
 ];
 
@@ -1885,4 +1885,85 @@ export const evaluationTemplates: EvaluationTemplate[] | any[] = [
             },
         ],
     },
+];
+
+export const events = [
+    {
+        id: 1,
+        title: 'Chăm sóc gà',
+        date: new Date(2025, 3, 5),
+        color: 'bg-blue-500',
+        shift: 1,
+        status: 1,
+    },
+    {
+        id: 2,
+        title: 'Thu hoạch trứng',
+        date: new Date(2025, 3, 15),
+        color: 'bg-red-500',
+        shift: 2,
+        status: 0,
+    },
+    {
+        id: 9,
+        title: 'Kiểm tra thiết bị',
+        date: new Date(2025, 3, 20),
+        color: 'bg-yellow-500',
+        shift: 1,
+        status: 1,
+    },
+    {
+        id: 10,
+        title: 'Kiểm tra thiết bị 123',
+        date: new Date(2025, 3, 20),
+        color: 'bg-yellow-500',
+        shift: 3,
+        status: 2,
+    },
+    {
+        id: 10,
+        title: 'Kiểm tra thiết bị 123',
+        date: new Date(2025, 3, 20),
+        color: 'bg-yellow-500',
+        shift: 3,
+        status: 2,
+    },
+    {
+        id: 10,
+        title: 'Kiểm tra thiết bị 123',
+        date: new Date(2025, 3, 20),
+        color: 'bg-yellow-500',
+        shift: 3,
+        status: 2,
+    },
+    {
+        id: 3,
+        title: 'Tiêm vắc xin',
+        date: new Date(2025, 3, 20),
+        color: 'bg-green-500',
+        shift: 1,
+        status: 2,
+    },
+    {
+        id: 4,
+        title: 'Kiểm tra thiết bị',
+        date: new Date(2025, 3, 25),
+        color: 'bg-purple-500',
+        shift: 3,
+        status: 3,
+    },
+    {
+        id: 5,
+        title: 'Cho gà ăn',
+        date: new Date(2025, 3, 10),
+        color: 'bg-yellow-500',
+        shift: 2,
+        status: 1,
+    },
+];
+
+export const shifts = [
+    { id: 1, name: 'Ca 1', timeRange: '6:00 - 14:00', startHour: 6, endHour: 14 },
+    { id: 2, name: 'Ca 2', timeRange: '14:00 - 22:00', startHour: 14, endHour: 22 },
+    { id: 3, name: 'Ca 3', timeRange: '22:00 - 6:00', startHour: 22, endHour: 6 },
 ];

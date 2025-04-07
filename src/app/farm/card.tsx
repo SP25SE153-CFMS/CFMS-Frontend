@@ -14,6 +14,7 @@ export function FarmCard({ farm }: { farm: Farm }) {
             key={farm.farmId}
             rel="noopener noreferrer"
             onClick={() => {
+                sessionStorage.setItem('activeFarm', JSON.stringify(farm));
                 setCookie(config.cookies.farmId, farm.farmId);
             }}
         >

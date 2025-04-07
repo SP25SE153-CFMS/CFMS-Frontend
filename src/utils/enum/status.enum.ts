@@ -236,3 +236,24 @@ export const assignmentStatusVariant: Record<string, any> = {
     [AssignmentStatus.COMPLETED]: 'success',
     [AssignmentStatus.CANCELLED]: 'destructive',
 };
+
+export const assignmentBackground: Record<string, string> = {
+    [AssignmentStatus.PENDING]: 'bg-yellow-500',
+    [AssignmentStatus.ASSIGNED]: 'bg-blue-500',
+    [AssignmentStatus.COMPLETED]: 'bg-green-500',
+    [AssignmentStatus.CANCELLED]: 'bg-red-500',
+};
+
+export const assignmentBorder: Record<string, string> = {
+    [AssignmentStatus.PENDING]: 'border-l-yellow-500',
+    [AssignmentStatus.ASSIGNED]: 'border-l-blue-500',
+    [AssignmentStatus.COMPLETED]: 'border-l-green-500',
+    [AssignmentStatus.CANCELLED]: 'border-l-red-500',
+};
+
+export const assignmentBadge: Record<string, any> = {
+    [AssignmentStatus.PENDING]: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+    [AssignmentStatus.ASSIGNED]: 'bg-blue-50 text-blue-700 border-blue-200',
+    [AssignmentStatus.COMPLETED]: 'bg-green-50 text-green-700 border-green-200',
+    [AssignmentStatus.CANCELLED]: 'bg-red-50 text-red-700 border-red-200',
+};

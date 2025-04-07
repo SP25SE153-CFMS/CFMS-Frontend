@@ -13,7 +13,16 @@ import config from '@/configs';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Task } from '@/utils/schemas/task.schema';
+import { TaskResponse } from '@/utils/types/custom.type';
+import dayjs from 'dayjs';
+import {
+    AssignmentStatus,
+    assignmentBadge,
+    assignmentBorder,
+    assignmentStatusLabels,
+} from '@/utils/enum/status.enum';
+import { mapEnumToValues } from '@/utils/functions/enum.function';
+import { cn } from '@/lib/utils';
 
 export default function Page() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -56,17 +65,15 @@ export default function Page() {
     );
 
     // Define the columns for the Kanban board
-    const columns = [
-        { id: 'pending', title: 'Chưa giao', color: 'bg-gray-100' },
-        { id: 'assigned', title: 'Đã giao', color: 'bg-blue-50' },
-        { id: 'completed', title: 'Đã hoàn thành', color: 'bg-green-50' },
-        { id: 'cancel', title: 'Đã hủy', color: 'bg-red-50' },
-        // { id: 'completed', title: 'Hoàn thành', color: 'bg-green-50' },
-    ];
+    const columns = mapEnumToValues(AssignmentStatus).map((status) => ({
+        id: Number(status),
+        title: assignmentStatusLabels[status],
+        color: assignmentBadge[status],
+    }));
 
     // Group tasks by status
-    const getTasksByStatus = (status: string) => {
-        if (status === 'pending') {
+    const getTasksByStatus = (status: number) => {
+        if (status === 0) {
             return filteredTasks.filter((task) => task.status === 0 || !task.status);
         }
         return filteredTasks.filter((task) => task.status === Number(status));
@@ -114,14 +121,14 @@ export default function Page() {
 
             {/* Kanban Board */}
             <div className="flex-1 overflow-auto p-4">
-                <div className="h-full space-x-4 pb-4 overflow-x-auto w-full grid grid-cols-4">
+                <div className="h-full gap-4 pb-4 overflow-x-auto w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
                     {columns.map((column) => (
                         <div
                             key={column.id}
                             className={`flex-shrink-0 flex flex-col rounded-md ${column.color}`}
                         >
                             <div className="p-3 font-medium flex items-center justify-between border-b">
-                                <h3>{column.title}</h3>
+                                <h3 className="text-black">{column.title}</h3>
                                 <Badge variant="outline">
                                     {getTasksByStatus(column.id).length}
                                 </Badge>
@@ -160,7 +167,7 @@ export default function Page() {
     );
 }
 
-function TaskCard({ task }: { task: Task }) {
+function TaskCard({ task }: { task: TaskResponse }) {
     // const priorityColors = {
     //     high: 'text-red-500 bg-red-50 border-red-200',
     //     medium: 'text-yellow-500 bg-yellow-50 border-yellow-200',
@@ -170,10 +177,17 @@ function TaskCard({ task }: { task: Task }) {
     // const priorityClass = priorityColors[task.priority as keyof typeof priorityColors] || priorityColors.low;
 
     return (
-        <Card className="p-3 bg-white hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-primary">
+        <Card
+            className={cn(
+                'p-3 bg-white hover:shadow-md transition-shadow cursor-pointer border-l-4 mb-1',
+                assignmentBorder[task.status],
+            )}
+        >
             <div className="flex flex-col gap-2">
                 <div className="flex items-start justify-between">
-                    <span className="text-sm font-medium line-clamp-2">{task.taskName}</span>
+                    <span className="text-sm font-medium line-clamp-2 border-b border-transparent hover:border-black">
+                        {task.taskName}
+                    </span>
                     {/* {task.priority && (
                         <Badge variant="outline" className={`text-xs ${priorityClass}`}>
                             {task.priority}
@@ -185,14 +199,14 @@ function TaskCard({ task }: { task: Task }) {
                     {task.description || 'Không có mô tả'}
                 </p>
 
-                <div className="flex items-center justify-between mt-2">
-                    {/* <div className="text-xs text-muted-foreground">
-                        {task.dueDate
-                            ? new Date(task.dueDate).toLocaleDateString()
-                            : 'Không có hạn'}
+                <div className="flex items-center justify-between">
+                    <div className="text-xs text-muted-foreground">
+                        {task.startWorkDate
+                            ? dayjs(task.startWorkDate).format('DD/MM/YYYY')
+                            : 'Không có ngày bắt đầu'}
                     </div>
 
-                    {task.assignee && (
+                    {/*{task.assignee && (
                         <Avatar className="h-6 w-6">
                             <div className="flex h-full w-full items-center justify-center bg-muted text-xs">
                                 {task.assignee.substring(0, 2).toUpperCase()}

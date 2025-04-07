@@ -5,24 +5,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { currentUser } from '@/utils/data/mock.data';
 import { CalendarIcon, Mail, MapPin, Phone, User } from 'lucide-react';
 
 export default function ProfilePage() {
-    // This would typically come from an API or context
-    const userData = {
-        userId: '46a0ba68-69c7-440c-ab29-3a1443449449',
-        fullName: 'Duong Truong',
-        phoneNumber: '+84 987 654 321',
-        mail: 'duongtruong@gmail.com',
-        avatar: null,
-        dateOfBirth: null,
-        startDate: null,
-        status: '1',
-        address: null,
-        cccd: null,
-        systemRole: '1',
-    };
-
     // Map status code to readable text
     const statusMap = {
         '1': 'Hoạt Động',
@@ -49,47 +35,50 @@ export default function ProfilePage() {
                     <Card className="md:col-span-1">
                         <CardHeader className="flex flex-col items-center text-center">
                             <Avatar className="h-24 w-24">
-                                <AvatarImage src={userData.avatar || ''} alt={userData.fullName} />
+                                <AvatarImage
+                                    src={currentUser.avatar || ''}
+                                    alt={currentUser.fullName}
+                                />
                                 <AvatarFallback className="text-2xl">
-                                    {userData.fullName
+                                    {currentUser.fullName
                                         .split(' ')
                                         .map((n) => n[0])
                                         .join('')}
                                 </AvatarFallback>
                             </Avatar>
-                            <CardTitle className="mt-4">{userData.fullName}</CardTitle>
+                            <CardTitle className="mt-4">{currentUser.fullName}</CardTitle>
                             <CardDescription>
-                                {roleMap[userData.systemRole as keyof typeof roleMap]}
+                                {roleMap[currentUser.systemRole as keyof typeof roleMap]}
                             </CardDescription>
                             <div className="mt-2 flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                                {statusMap[userData.status as keyof typeof statusMap]}
+                                {statusMap[currentUser.status as keyof typeof statusMap]}
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex items-center gap-3">
                                 <Mail className="h-4 w-4 text-muted-foreground" />
-                                <span className="text-sm">{userData.mail}</span>
+                                <span className="text-sm">{currentUser.mail}</span>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Phone className="h-4 w-4 text-muted-foreground" />
-                                <span className="text-sm">{userData.phoneNumber}</span>
+                                <span className="text-sm">{currentUser.phoneNumber}</span>
                             </div>
                             <div className="flex items-center gap-3">
                                 <MapPin className="h-4 w-4 text-muted-foreground" />
                                 <span className="text-sm">
-                                    {userData.address || 'Chưa cung cấp địa chỉ'}
+                                    {currentUser.address || 'Chưa cung cấp địa chỉ'}
                                 </span>
                             </div>
                             <div className="flex items-center gap-3">
                                 <CalendarIcon className="h-4 w-4 text-muted-foreground" />
                                 <span className="text-sm">
-                                    {userData.dateOfBirth || 'Chưa cung cấp ngày sinh'}
+                                    {currentUser.dateOfBirth || 'Chưa cung cấp ngày sinh'}
                                 </span>
                             </div>
                             <div className="flex items-center gap-3">
                                 <User className="h-4 w-4 text-muted-foreground" />
                                 <span className="text-sm">
-                                    CCCD: {userData.cccd || 'Chưa cung cấp'}
+                                    CCCD: {currentUser.cccd || 'Chưa cung cấp'}
                                 </span>
                             </div>
                         </CardContent>
@@ -117,13 +106,17 @@ export default function ProfilePage() {
                                                 <Label htmlFor="fullName">Họ và Tên</Label>
                                                 <Input
                                                     id="fullName"
-                                                    value={userData.fullName}
+                                                    value={currentUser.fullName}
                                                     readOnly
                                                 />
                                             </div>
                                             <div className="space-y-2">
                                                 <Label htmlFor="email">Email</Label>
-                                                <Input id="email" value={userData.mail} readOnly />
+                                                <Input
+                                                    id="email"
+                                                    value={currentUser.mail}
+                                                    readOnly
+                                                />
                                             </div>
                                         </div>
                                         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -131,7 +124,7 @@ export default function ProfilePage() {
                                                 <Label htmlFor="phone">Số Điện Thoại</Label>
                                                 <Input
                                                     id="phone"
-                                                    value={userData.phoneNumber}
+                                                    value={currentUser.phoneNumber}
                                                     readOnly
                                                 />
                                             </div>
@@ -139,7 +132,9 @@ export default function ProfilePage() {
                                                 <Label htmlFor="dob">Ngày Sinh</Label>
                                                 <Input
                                                     id="dob"
-                                                    value={userData.dateOfBirth || 'Chưa cung cấp'}
+                                                    value={
+                                                        currentUser.dateOfBirth || 'Chưa cung cấp'
+                                                    }
                                                     readOnly
                                                 />
                                             </div>
@@ -149,7 +144,7 @@ export default function ProfilePage() {
                                                 <Label htmlFor="address">Địa Chỉ</Label>
                                                 <Input
                                                     id="address"
-                                                    value={userData.address || 'Chưa cung cấp'}
+                                                    value={currentUser.address || 'Chưa cung cấp'}
                                                     readOnly
                                                 />
                                             </div>
@@ -157,7 +152,7 @@ export default function ProfilePage() {
                                                 <Label htmlFor="id">Căn Cước Công Dân</Label>
                                                 <Input
                                                     id="id"
-                                                    value={userData.cccd || 'Chưa cung cấp'}
+                                                    value={currentUser.cccd || 'Chưa cung cấp'}
                                                     readOnly
                                                 />
                                             </div>
@@ -168,7 +163,11 @@ export default function ProfilePage() {
                                     <div className="space-y-4">
                                         <div className="space-y-2">
                                             <Label htmlFor="userId">Mã Người Dùng</Label>
-                                            <Input id="userId" value={userData.userId} readOnly />
+                                            <Input
+                                                id="userId"
+                                                value={currentUser.userId}
+                                                readOnly
+                                            />
                                             <p className="text-xs text-muted-foreground">
                                                 Đây là mã định danh duy nhất của bạn trong hệ thống.
                                             </p>
@@ -179,7 +178,7 @@ export default function ProfilePage() {
                                                 id="role"
                                                 value={
                                                     roleMap[
-                                                        userData.systemRole as keyof typeof roleMap
+                                                        currentUser.systemRole as keyof typeof roleMap
                                                     ]
                                                 }
                                                 readOnly
@@ -191,20 +190,20 @@ export default function ProfilePage() {
                                                 id="status"
                                                 value={
                                                     statusMap[
-                                                        userData.status as keyof typeof statusMap
+                                                        currentUser.status as keyof typeof statusMap
                                                     ]
                                                 }
                                                 readOnly
                                             />
                                         </div>
-                                        <div className="space-y-2">
+                                        {/* <div className="space-y-2">
                                             <Label htmlFor="startDate">Ngày Bắt Đầu</Label>
                                             <Input
                                                 id="startDate"
-                                                value={userData.startDate || 'Chưa cung cấp'}
+                                                value={currentUser.startDate || 'Chưa cung cấp'}
                                                 readOnly
                                             />
-                                        </div>
+                                        </div> */}
                                         <Separator className="my-4" />
                                         <div className="space-y-2">
                                             <Label htmlFor="password">Mật Khẩu</Label>

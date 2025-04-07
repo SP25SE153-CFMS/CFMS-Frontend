@@ -71,4 +71,6 @@ export type ResourceResponse = Resource & {
 
 export type TaskResponse = Task & {
     assignments: Assignment[];
+    startWorkDate: string | Date;
+    endWorkDate: string | Date;
 };
