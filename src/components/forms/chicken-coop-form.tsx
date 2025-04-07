@@ -1,23 +1,31 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
-import { FormControl, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import { ChickenCoop, CreateChickenCoopSchema } from '@/utils/schemas/chicken-coop.schema';
-import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+    CreateChickenCoopSchema,
+    type ChickenCoop,
+    ChickenCoopSchema,
+} from '@/utils/schemas/chicken-coop.schema';
 import { createChickenCoop, updateChickenCoop } from '@/services/chicken-coop.service';
 import toast from 'react-hot-toast';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ChickenCoopStatus, chickenCoopStatusLabels } from '@/utils/enum/status.enum';
-import { mapEnumToValues } from '@/utils/functions/enum.function';
-import AutoForm from '../auto-form';
-import { getPurposes } from '@/services/category.service';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Textarea } from '../ui/textarea';
+import { SelectNative } from '../ui/select-native';
+import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { CategoryType } from '@/utils/enum/category.enum';
+import useQueryParams from '@/hooks/use-query-params';
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from '../ui/select';
 
 interface ChickenCoopFormProps {
     defaultValues?: Partial<ChickenCoop>;
@@ -25,13 +33,32 @@ interface ChickenCoopFormProps {
 }
 
 export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenCoopFormProps) {
-    const breedingAreas: BreedingArea[] = JSON.parse(
-        sessionStorage.getItem('breedingAreas') || '[]',
-    );
+    const { breedingAreaId } = useQueryParams();
 
-    const { data: purposes } = useQuery({
-        queryKey: ['purposes'],
-        queryFn: () => getPurposes(),
+    // Initialize form
+    const form = useForm<ChickenCoop>({
+        resolver: zodResolver(defaultValues ? ChickenCoopSchema : CreateChickenCoopSchema),
+        defaultValues: {
+            chickenCoopId: '',
+            chickenCoopCode: '',
+            chickenCoopName: '',
+            capacity: 0,
+            status: '0',
+            breedingAreaId: breedingAreaId || '',
+            area: 0,
+            currentQuantity: 0,
+            description: '',
+            // TODO: Change to default value
+            purposeId: getSubCategoryByCategoryType(CategoryType.PURPOSE)?.[0].subCategoryId,
+            density: 0,
+            densityUnitId: getSubCategoryByCategoryType(CategoryType.DENSITY_UNIT)?.find(
+                (cate) => cate.subCategoryName === 'con/m²',
+            )?.subCategoryId,
+            areaUnitId: getSubCategoryByCategoryType(CategoryType.AREA_UNIT)?.find(
+                (cate) => cate.subCategoryName === 'm²',
+            )?.subCategoryId,
+            ...defaultValues,
+        },
     });
 
     // Query client
@@ -42,7 +69,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
         mutationFn: defaultValues ? updateChickenCoop : createChickenCoop,
         onSuccess: () => {
             closeDialog();
-            queryClient.invalidateQueries({ queryKey: ['chicken-coops'] });
+            queryClient.invalidateQueries({ queryKey: ['chicken-coops', breedingAreaId] });
             toast.success(
                 defaultValues ? 'Cập nhật chuồng gà thành công' : 'Tạo chuồng gà thành công',
             );
@@ -54,115 +81,292 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
     });
 
     // Form submit handler
-    async function onSubmit(values: any) {
+    async function onSubmit(values: ChickenCoop) {
         mutation.mutate(values);
     }
 
+    // Form error handler
+    const onError = (error: any) => {
+        console.error(error);
+    };
+
     return (
-        <AutoForm
-            values={defaultValues}
-            onSubmit={onSubmit}
-            formSchema={CreateChickenCoopSchema}
-            fieldConfig={{
-                chickenCoopCode: {
-                    label: 'Mã chuồng gà',
-                },
-                chickenCoopName: {
-                    label: 'Tên chuồng gà',
-                },
-                density: {
-                    label: 'Mật độ',
-                },
-                status: {
-                    fieldType: ({ field }) => (
-                        <FormItem>
-                            <FormLabel>Trạng thái</FormLabel>
-                            <FormControl>
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
+                    {/* Mã chuồng gà */}
+                    <FormField
+                        control={form.control}
+                        name="chickenCoopCode"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Mã chuồng gà</FormLabel>
+                                <FormControl>
+                                    <Input type="text" placeholder="Nhập mã chuồng gà" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Tên chuồng gà */}
+                    <FormField
+                        control={form.control}
+                        name="chickenCoopName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Tên chuồng gà</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="text"
+                                        placeholder="Nhập tên chuồng gà"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Sức chứa */}
+                    <FormField
+                        control={form.control}
+                        name="capacity"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Sức chứa</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="number"
+                                        placeholder="Nhập sức chứa"
+                                        min={0}
+                                        {...field}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value);
+                                            const capacity = Number(e.target.value);
+                                            if (capacity === 0) {
+                                                form.setValue('density', 0);
+                                            } else {
+                                                const density = form.getValues('area') / capacity;
+                                                form.setValue('density', density);
+                                            }
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Trạng thái */}
+                    {/* <FormField
+                        control={form.control}
+                        name="status"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Trạng thái</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Chọn trạng thái" />
-                                    </SelectTrigger>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn trạng thái" />
+                                        </SelectTrigger>
+                                    </FormControl>
                                     <SelectContent>
-                                        {mapEnumToValues(ChickenCoopStatus).map((status) => (
-                                            <SelectItem key={status} value={status}>
-                                                {chickenCoopStatusLabels[status]}
-                                            </SelectItem>
-                                        ))}
+                                        <SelectItem value="0">Không hoạt động</SelectItem>
+                                        <SelectItem value="1">Đang hoạt động</SelectItem>
+                                        <SelectItem value="2">Bảo trì</SelectItem>
                                     </SelectContent>
                                 </Select>
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    ),
-                },
-                description: {
-                    label: 'Mô tả',
-                    fieldType: 'textarea',
-                },
-                area: {
-                    label: 'Diện tích',
-                },
-                capacity: {
-                    label: 'Sức chứa',
-                },
-                currentQuantity: {
-                    label: 'Số lượng hiện tại',
-                },
-                purposeId: {
-                    fieldType: ({ field }) => (
-                        <FormItem>
-                            <FormLabel>Mục đích nuôi</FormLabel>
-                            <FormControl>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Chọn mục đích nuôi" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {purposes?.map((subCategory) => (
-                                            <SelectItem
-                                                key={subCategory.subCategoryId}
-                                                value={subCategory.subCategoryId}
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    /> */}
+
+                    {/* Diện tích */}
+                    <FormField
+                        control={form.control}
+                        name="area"
+                        render={({ field }) => (
+                            <FormItem className="mt-[6px]">
+                                <FormLabel className="flex items-center">Diện tích</FormLabel>
+                                <div className="flex rounded-md shadow-sm">
+                                    <Input
+                                        className="rounded-e-none h-10"
+                                        placeholder="Nhập số lượng"
+                                        type="number"
+                                        min={0}
+                                        {...field}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value);
+                                            const area = Number(e.target.value);
+                                            form.setValue(
+                                                'density',
+                                                area / form.getValues('capacity'),
+                                            );
+                                        }}
+                                    />
+                                    <SelectNative
+                                        className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
+                                        disabled
+                                        value={form.getValues('areaUnitId')}
+                                    >
+                                        {getSubCategoryByCategoryType(CategoryType.AREA_UNIT)?.map(
+                                            (unit) => (
+                                                <option
+                                                    key={unit.subCategoryId}
+                                                    value={unit.subCategoryId}
+                                                >
+                                                    {unit.subCategoryName}
+                                                </option>
+                                            ),
+                                        )}
+                                    </SelectNative>
+                                </div>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Số lượng hiện tại */}
+                    {/* <FormField
+                        control={form.control}
+                        name="currentQuantity"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Số lượng hiện tại</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="number"
+                                        placeholder="Nhập số lượng hiện tại"
+                                        min={0}
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    /> */}
+
+                    {/* Mật độ */}
+                    <FormField
+                        control={form.control}
+                        name="density"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="flex items-center">Mật độ</FormLabel>
+                                <div className="flex rounded-md shadow-sm">
+                                    <Input
+                                        className="rounded-e-none h-10"
+                                        placeholder="Nhập số lượng"
+                                        type="number"
+                                        disabled
+                                        {...field}
+                                    />
+                                    <SelectNative
+                                        className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
+                                        disabled
+                                        value={form.getValues('densityUnitId')}
+                                    >
+                                        {getSubCategoryByCategoryType(
+                                            CategoryType.DENSITY_UNIT,
+                                        )?.map((unit) => (
+                                            <option
+                                                key={unit.subCategoryId}
+                                                value={unit.subCategoryId}
                                             >
-                                                {subCategory.subCategoryName}
-                                            </SelectItem>
+                                                {unit.subCategoryName}
+                                            </option>
                                         ))}
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    ),
-                },
-                breedingAreaId: {
-                    fieldType: ({ field }) => (
-                        <FormItem>
-                            <FormLabel>Khu vực chăn nuôi</FormLabel>
-                            <FormControl>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Chọn khu vực" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {breedingAreas?.map((area) => (
-                                            <SelectItem
-                                                key={area.breedingAreaId}
-                                                value={area.breedingAreaId}
-                                            >
-                                                {area.breedingAreaName}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    ),
-                },
-            }}
-        >
-            <Button type="submit" className="mx-auto w-60">
-                Gửi
-            </Button>
-        </AutoForm>
+                                    </SelectNative>
+                                </div>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Khu vực chăn nuôi */}
+                    {/* <FormField
+                        control={form.control}
+                        name="breedingAreaId"
+                        render={({ field }) => (
+                            <FormItem className="mt-[-6px]">
+                                <FormLabel>Khu vực chăn nuôi</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="text"
+                                        placeholder="Nhập khu vực chăn nuôi"
+                                        {...field}
+                                        value={
+                                            JSON.parse(
+                                                sessionStorage.getItem('breedingAreas') || '[]',
+                                            ).find(
+                                                (area: any) => area.breedingAreaId === field.value,
+                                            )?.breedingAreaName
+                                        }
+                                        disabled
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    /> */}
+
+                    {/* Mục đích */}
+                    <FormField
+                        control={form.control}
+                        name="purposeId"
+                        render={({ field }) => (
+                            <FormItem className="mt-[-8px]">
+                                <FormLabel>Mục đích</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Chọn mục đích" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.PURPOSE,
+                                            )?.map((purpose) => (
+                                                <SelectItem
+                                                    key={purpose.subCategoryId}
+                                                    value={purpose.subCategoryId}
+                                                >
+                                                    {purpose.subCategoryName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Mô tả */}
+                    <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                            <FormItem className="col-span-2">
+                                <FormLabel>Mô tả</FormLabel>
+                                <FormControl>
+                                    <Textarea placeholder="Nhập mô tả" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
+                <Button type="submit" className="mx-auto mt-6 w-60">
+                    Gửi
+                </Button>
+            </form>
+        </Form>
     );
 }

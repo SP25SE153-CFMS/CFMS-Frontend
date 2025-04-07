@@ -55,7 +55,9 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
 // Dynamically import the map component with no SSR
-const LocationMapWithNoSSR = dynamic(() => import('./location-map'), { ssr: false });
+const LocationMapWithNoSSR = dynamic(() => import('@/components/map/location-map'), {
+    ssr: false,
+});
 
 export default function Page() {
     const router = useRouter();

@@ -6,58 +6,92 @@ import { Input } from '@/components/ui/input';
 import config from '@/configs';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
+import { FieldErrors, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import { SignUpRequest, SignUpRequestSchema } from '@/utils/schemas/auth.schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import toast from 'react-hot-toast';
+import { useMutation } from '@tanstack/react-query';
+import { signUp } from '@/services/auth.service';
+import { setCookie, deleteCookie } from 'cookies-next';
 
 export default function SignUp() {
     const router = useRouter();
-
-    const form = useForm({
+    const form = useForm<SignUpRequest>({
+        resolver: zodResolver(SignUpRequestSchema),
         defaultValues: {
-            name: '',
-            phone: '',
-            email: '',
+            fullname: '',
+            phoneNumber: '',
+            mail: '',
             password: '',
         },
     });
 
-    const onSubmit = (data: any) => {
-        console.log('Data: ', data);
-        router.push(config.routes.signIn);
+    const mutation = useMutation({
+        mutationFn: signUp,
+        onSuccess: (response) => {
+            // Show success message
+            toast.success(response.message);
+            // Remove old access token, refresh token
+            deleteCookie(config.cookies.accessToken);
+            deleteCookie(config.cookies.refreshToken);
+            // Set new access token, refresh token
+            setCookie(config.cookies.accessToken, response.data.accessToken);
+            setCookie(config.cookies.refreshToken, response.data.refreshToken);
+            // Redirect to farm page
+            router.push(config.routes.farm);
+        },
+        onError: (error: any) => {
+            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại');
+        },
+    });
+    const onSubmit = (data: SignUpRequest) => {
+        mutation.mutate(data);
+    };
+
+    const onError = (errors: FieldErrors<SignUpRequest>) => {
+        console.log('Errors: ', errors);
+        toast.error(
+            errors.fullname?.message ||
+                errors.phoneNumber?.message ||
+                errors.mail?.message ||
+                errors.password?.message ||
+                'Có lỗi xảy ra, vui lòng thử lại',
+        );
     };
 
     return (
-        <div className="flex min-h-screen w-full items-center justify-center px-[70px] py-[62px]">
-            <div className="flex w-[1300px] h-[900px] justify-center items-center content-center gap-[40px] shrink-0 overflow-hidden">
-                <div className="flex flex-col w-1/2 relative items-center self-stretch columns-xl px-[53px] py-[12px] gap-y-[34px] gap-x-[43px]">
-                    <p className="text-center text-[32px] not-italic font-bold leading-[normal] whitespace-nowrap">
+        <div className="flex min-h-screen w-full items-center justify-center px-[56px] py-[25px] bg-background transition-colors duration-300">
+            <div className="flex w-[1040px] h-[720px] justify-center items-center content-center gap-[32px] shrink-0 overflow-hidden">
+                <div className="flex flex-col w-1/2 relative items-center self-stretch columns-xl px-[42px] py-[10px] gap-y-[27px] gap-x-[34px] bg-background">
+                    <p className="text-center text-[26px] not-italic font-bold leading-[normal] whitespace-nowrap text-foreground">
                         Hệ Thống Quản Lý <span className="text-primary">Trang Trại Gà</span>
                     </p>
 
-                    <p className="text-center text-[48px] not-italic font-bold leading-[normal]">
+                    <p className="text-center text-[38px] not-italic font-bold leading-[normal] text-foreground">
                         Mừng quay lại !
                     </p>
 
-                    <p className="text-center text-[24px] text-primary-sub-text not-italic font-bold leading-[normal]">
+                    <p className="text-center text-[19px] text-primary-sub-text dark:text-primary-sub-text/90 not-italic font-bold leading-[normal]">
                         Hãy đăng ký vào tài khoản của bạn
                     </p>
 
                     <Form {...form}>
                         <form
-                            onSubmit={form.handleSubmit(onSubmit)}
-                            className="flex flex-col items-center gap-y-[34px] w-full"
+                            onSubmit={form.handleSubmit(onSubmit, onError)}
+                            className="flex flex-col items-center gap-y-[27px] w-full"
                         >
                             {/* Name */}
                             <FormField
                                 control={form.control}
-                                name="name"
+                                name="fullname"
                                 render={({ field }) => (
                                     <FormItem className="w-full">
                                         <Input
                                             {...field}
                                             type="text"
                                             placeholder="Họ và tên"
-                                            className="w-[531px] h-[80px] bg-slate-100 rounded-[16px] md:text-2xl px-[24px]"
+                                            className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl px-[19px]"
                                         />
                                     </FormItem>
                                 )}
@@ -66,14 +100,14 @@ export default function SignUp() {
                             {/* Phone number */}
                             <FormField
                                 control={form.control}
-                                name="phone"
+                                name="phoneNumber"
                                 render={({ field }) => (
                                     <FormItem className="w-full">
                                         <Input
                                             {...field}
                                             type="number"
                                             placeholder="Số điện thoại"
-                                            className="w-[531px] h-[80px] bg-slate-100 rounded-[16px] md:text-2xl px-[24px]"
+                                            className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl px-[19px]"
                                         />
                                     </FormItem>
                                 )}
@@ -82,7 +116,7 @@ export default function SignUp() {
                             {/* Email */}
                             <FormField
                                 control={form.control}
-                                name="email"
+                                name="mail"
                                 render={({ field }) => (
                                     <FormItem className="w-full">
                                         <FormControl>
@@ -90,7 +124,7 @@ export default function SignUp() {
                                                 {...field}
                                                 type="email"
                                                 placeholder="Email"
-                                                className="w-[531px] h-[80px] bg-slate-100 rounded-[16px] md:text-2xl px-[24px]"
+                                                className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl px-[19px]"
                                             />
                                         </FormControl>
                                     </FormItem>
@@ -108,50 +142,50 @@ export default function SignUp() {
                                                 {...field}
                                                 type="password"
                                                 placeholder="Mật khẩu"
-                                                className="w-[531px] h-[80px] bg-slate-100 rounded-[16px] md:text-2xl px-[24px]"
+                                                className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl px-[19px]"
                                             />
                                         </FormControl>
                                     </FormItem>
                                 )}
                             />
 
-                            <p className="w-[531px] text-primary-sub-text text-right text-[24px] not-italic font-medium leading-[normal]">
+                            <p className="w-[425px] text-primary-sub-text dark:text-primary-sub-text/90 text-right text-[19px] not-italic font-medium leading-[normal]">
                                 Quên mật khẩu?
                             </p>
 
                             <Button
                                 type="submit"
-                                className="w-[531px] h-[80px] text-white text-[24px] font-semibold rounded-[16px] bg-primary hover:bg-primary-dark not-italic leading-[normal]"
+                                className="w-[425px] h-[64px] text-white text-[19px] font-semibold rounded-[13px] bg-primary hover:bg-primary-dark dark:bg-primary/90 dark:hover:bg-primary not-italic leading-[normal]"
                             >
                                 Đăng ký
                             </Button>
                         </form>
                     </Form>
 
-                    <p className="text-center text-[24px] text-primary-sub-text not-italic font-bold leading-[normal]">
+                    <p className="text-center text-[19px] text-primary-sub-text dark:text-primary-sub-text/90 not-italic font-bold leading-[normal]">
                         Đã có tài khoản? &nbsp;
                         <Link
                             href={config.routes.signIn}
-                            className="text-[24px] text-primary not-italic font-bold leading-[normal]"
+                            className="text-[19px] text-primary not-italic font-bold leading-[normal]"
                         >
                             Đăng nhập
                         </Link>
                     </p>
                 </div>
-                <div className="flex flex-col w-1/2 relative items-start self-stretch columns-xl px-[59px] py-[61px] rounded-[42px] bg-primary">
-                    <h2 className="text-center text-[60px] text-white not-italic font-bold leading-[normal]">
+                <div className="flex flex-col w-1/2 relative items-start self-stretch columns-xl px-[47px] py-[49px] rounded-[34px] bg-primary dark:bg-primary/90">
+                    <h2 className="text-center text-[48px] text-white not-italic font-bold leading-[normal]">
                         Hệ Thống Quản Lý Trang Trại Gà Với CFMS
                     </h2>
-                    <div className="w-[483px] mt-12">
-                        <p className="text-[24px] mb-[56px] text-white font-normal leading-normal">
+                    <div className="w-[386px] mt-10">
+                        <p className="text-[19px] mb-[45px] text-white font-normal leading-normal">
                             Quản lý trang trại gà của bạn một cách dễ dàng, hiệu quả và nhanh chóng
                         </p>
                         <Image
-                            className="absolute left-[150px] bottom-[72px]"
+                            className="absolute left-[120px] bottom-[58px]"
                             alt="Logo"
                             src="/assets/logo/logo.png"
-                            width={329}
-                            height={329}
+                            width={263}
+                            height={263}
                         />
                     </div>
                 </div>

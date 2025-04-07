@@ -57,6 +57,7 @@ export const sidebarItems: NavGroup[] = [
                     { title: 'Danh sách công việc', path: config.routes.task },
                     { title: 'Danh sách nhân công', path: config.routes.farmEmployee },
                     { title: 'Lịch trình công việc', path: config.routes.assignment },
+                    { title: 'Ca làm việc', path: config.routes.shift },
                 ],
             },
             {

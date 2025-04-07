@@ -2,17 +2,18 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
-import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
-import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
-import { breedingAreas } from '@/utils/data/table.data';
-import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
-import { DataTableRowActions } from './data-table-row-actions';
+import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import {
     ChickenCoopStatus,
     chickenCoopStatusLabels,
     chickenCoopStatusVariant,
 } from '@/utils/enum/status.enum';
+import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { CategoryType } from '@/utils/enum/category.enum';
+import Link from 'next/link';
+import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
+import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<ChickenCoop>[] = [
     {
@@ -54,21 +55,62 @@ export const columns: ColumnDef<ChickenCoop>[] = [
         accessorKey: 'chickenCoopName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên chuồng" />,
         cell: ({ row }) => (
-            <Link
-                href={`/chicken-coop/${row.getValue('chickenCoopId')}`}
-                // onClick={() => {
-                //     const chickenCoops = table.getCoreRowModel().rows.map((row) => row.original);
-                //     sessionStorage.setItem('chickenCoops', JSON.stringify(chickenCoops));
-                // }}
-            >
+            <Link href={`/chicken-coop/${row.getValue('chickenCoopId')}`}>
                 {row.getValue('chickenCoopName')}
             </Link>
         ),
     },
     {
-        accessorKey: 'currentQuantity',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng" />,
-        cell: ({ row }) => <div className="w-[80px]">{row.getValue('currentQuantity')} con</div>,
+        accessorKey: 'capacity',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Sức chứa" />,
+        cell: ({ row }) => <div className="w-[80px]">{row.getValue('capacity') ?? '0'} con</div>,
+    },
+    // {
+    //     accessorKey: 'currentQuantity',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng hiện tại" />,
+    //     cell: ({ row }) => (
+    //         <div className="w-[80px]">{row.getValue('currentQuantity') ?? '0'} con</div>
+    //     ),
+    // },
+    {
+        accessorKey: 'areaUnitId', // Ensure the data exists in the row
+        header: () => null, // No header
+        cell: () => null, // Hidden cell
+    },
+    {
+        accessorKey: 'area',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Diện tích" />,
+        cell: ({ row }) => {
+            const area = row.getValue('area') as number;
+            const areaUnit = getSubCategoryByCategoryType(CategoryType.AREA_UNIT)?.find(
+                (unit) => unit.subCategoryId === row.getValue('areaUnitId'),
+            )?.subCategoryName;
+            return (
+                <div className="w-[100px]">
+                    {area} {areaUnit}
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: 'densityUnitId', // Ensure the data exists in the row
+        header: () => null, // No header
+        cell: () => null, // Hidden cell
+    },
+    {
+        accessorKey: 'density',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Mật độ" />,
+        cell: ({ row }) => {
+            const density = row.getValue('density') as number;
+            const densityUnit = getSubCategoryByCategoryType(CategoryType.DENSITY_UNIT)?.find(
+                (unit) => unit.subCategoryId === row.getValue('densityUnitId'),
+            )?.subCategoryName;
+            return (
+                <div className="w-[100px]">
+                    {density} {densityUnit}
+                </div>
+            );
+        },
     },
     {
         accessorKey: 'status',
@@ -83,15 +125,14 @@ export const columns: ColumnDef<ChickenCoop>[] = [
         },
     },
     {
-        accessorKey: 'breedingAreaId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Khu vực chăn nuôi" />,
-        cell: ({ row }) => (
-            <div>
-                {breedingAreas.find(
-                    (area) => area.breedingAreaId === row.getValue('breedingAreaId'),
-                )?.breedingAreaName || '-'}
-            </div>
-        ),
+        accessorKey: 'purposeId',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Mục đích" />,
+        cell: ({ row }) => {
+            const purpose = getSubCategoryByCategoryType(CategoryType.PURPOSE)?.find(
+                (p) => p.subCategoryId === row.getValue('purposeId'),
+            )?.subCategoryName;
+            return <div className="w-[120px]">{purpose || '-'}</div>;
+        },
     },
     {
         id: 'actions',
