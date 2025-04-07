@@ -27,7 +27,7 @@ import { scaleLabels } from '@/utils/enum/status.enum';
 import { FarmCard } from './card';
 
 // Dynamically import the map component with no SSR
-const FarmMapWithNoSSR = dynamic(() => import('@/components/farm-map'), { ssr: false });
+const FarmMapWithNoSSR = dynamic(() => import('@/components/map/farm-map'), { ssr: false });
 
 export default function Page() {
     const { data: farms, isLoading } = useQuery({
@@ -43,7 +43,9 @@ export default function Page() {
 
     const farmScales = useMemo(() => {
         if (!farms) return [];
-        return Array.from(new Set(farms.map((farm) => farm.scale)));
+        const uniqueScales = Array.from(new Set(farms.map((farm) => farm.scale)));
+        // Sort scales according to the Scale enum order (SMALL, MEDIUM, LARGE)
+        return uniqueScales.sort((a, b) => a - b);
     }, [farms]);
 
     // Get max area for slider
@@ -56,7 +58,7 @@ export default function Page() {
     // Reset all filters
     const resetFilters = () => {
         setSearchTerm('');
-        setSelectedScale(0);
+        setSelectedScale(-1);
         setAreaRange([0, maxArea]);
     };
 
@@ -71,8 +73,8 @@ export default function Page() {
                 farm.farmName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 farm.farmCode.toLowerCase().includes(searchTerm.toLowerCase());
 
-            // Scale filter
-            const matchesScale = selectedScale === 0 || farm.scale === selectedScale;
+            // Scale filter - show all farms when selectedScale is 0 (all)
+            const matchesScale = selectedScale === -1 || farm.scale === selectedScale;
 
             // Area range filter
             const matchesArea = farm.area >= areaRange[0] && farm.area <= areaRange[1];
@@ -81,11 +83,11 @@ export default function Page() {
         });
     }, [farms, searchTerm, selectedScale, areaRange]);
 
-    // Active filter count
+    // Active filter count - don't count scale if it's set to 'all' (0)
     const activeFilterCount = useMemo(() => {
         let count = 0;
         if (searchTerm) count++;
-        if (selectedScale) count++;
+        if (selectedScale > -1) count++;
         if (areaRange[0] > 0 || areaRange[1] < maxArea) count++;
         return count;
     }, [searchTerm, selectedScale, areaRange, maxArea]);
@@ -208,7 +210,7 @@ export default function Page() {
                                             <SelectValue placeholder="Tất cả quy mô" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="all">Tất cả quy mô</SelectItem>
+                                            <SelectItem value="-1">Tất cả quy mô</SelectItem>
                                             {farmScales.map((scale) => (
                                                 <SelectItem key={scale} value={scale.toString()}>
                                                     {scaleLabels[scale]}

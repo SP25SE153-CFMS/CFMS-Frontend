@@ -32,6 +32,7 @@ const routes = {
     createTask: '/task/create',
     assignment: '/assignment',
     shift: '/shift',
+    settings: '/settings',
 };
 
 export default routes;

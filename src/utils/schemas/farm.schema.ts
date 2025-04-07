@@ -23,7 +23,7 @@ export const FarmSchema = z.object({
     phoneNumber: z
         .string()
         .trim()
-        .regex(/^\+?\d{10}$/, { message: 'Số điện thoại không hợp lệ, phải có 10 chữ số' })
+        // .regex(/^\+?\d{10}$/, { message: 'Số điện thoại không hợp lệ, phải có 10 chữ số' })
         .optional(),
 
     website: z.string().trim().url({ message: 'Địa chỉ website không hợp lệ' }).or(z.literal('')),
