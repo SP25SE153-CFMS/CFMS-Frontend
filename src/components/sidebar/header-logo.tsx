@@ -11,7 +11,7 @@ export function HeaderLogo() {
                     <div className="grid flex-1 text-left text-sm leading-tight">
                         <span className="truncate font-semibold">CFMS</span>
                         <span className="truncate text-xs">
-                            {currentUser.roleName === 'manager' ? 'Quản lý' : 'Chủ trang trại'}
+                            {currentUser.systemRole === '1' ? 'Quản lý' : 'Chủ trang trại'}
                         </span>
                     </div>
                 </SidebarMenuButton>

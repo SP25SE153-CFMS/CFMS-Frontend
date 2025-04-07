@@ -1,14 +1,15 @@
-// currentUser contains userId(uuid), fullName, phoneNumber, dateOfBirth, status, address, CCCD, mail, avatar, roleName
-export const currentUser = {
-    userId: 'c1a2b3d4-e5f6-4560-a1b2-c3d4e5f67891',
-    fullName: 'Hải Đăng',
-    phoneNumber: '0123456789',
-    dateOfBirth: '1990-01-01',
-    status: 'active',
-    address: 'TP Hồ Chí Minh',
-    CCCD: '0742123456',
-    mail: 'dangthse171362@fpt.edu.vn',
-    avatar: 'https://i.pravatar.cc/300',
-    roleName: 'manager',
+import { User } from '../schemas/user.schema';
 
-}
+// currentUser contains userId(uuid), fullName, phoneNumber, dateOfBirth, status, address, CCCD, mail, avatar, roleName
+export const currentUser: User = {
+    userId: '46a0ba68-69c7-440c-ab29-3a1443449449',
+    fullName: 'Duong Truong',
+    phoneNumber: '+84 987 654 321',
+    dateOfBirth: '1990-01-01',
+    status: '1',
+    address: 'TP Hồ Chí Minh',
+    cccd: '0742123456',
+    mail: 'duongtruong@gmail.com',
+    avatar: 'https://cbam.edu.vn/wp-content/uploads/2024/10/avatar-anh-meo-cute-188ro9NxD.jpg',
+    systemRole: '1',
+};

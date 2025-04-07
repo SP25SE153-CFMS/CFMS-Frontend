@@ -28,11 +28,10 @@ export const UserSchema = z.object({
         .string()
         .regex(/^\d{12}$/, { message: 'CCCD phải có 12 chữ số' })
         .optional(),
-    systemRole: z
-        .enum(['0', '1', '2', '3'], {
-            message: 'Vai trò hệ thống không hợp lệ',
-        })
-        .transform((value) => parseInt(value)),
+    systemRole: z.enum(['0', '1', '2', '3'], {
+        message: 'Vai trò hệ thống không hợp lệ',
+    }),
+    // .transform((value) => parseInt(value)),
     googleId: z.string().optional(),
     hashedPassword: z.string().optional(),
 });

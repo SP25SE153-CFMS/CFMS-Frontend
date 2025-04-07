@@ -13,7 +13,7 @@ export const AssignmentSchema = z.object({
         .string()
         .datetime({ message: 'Ngày phân công không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
 
-    shiftScheduleId: z.string().uuid({ message: 'ID lịch ca không hợp lệ, phải là UUID' }),
+    // shiftScheduleId: z.string().uuid({ message: 'ID lịch ca không hợp lệ, phải là UUID' }),
 
     taskScheduleId: z.string().uuid({ message: 'ID lịch công việc không hợp lệ, phải là UUID' }),
 

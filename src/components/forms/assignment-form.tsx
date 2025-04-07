@@ -43,7 +43,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
             taskId: '',
             assignedToId: '',
             assignedDate: new Date().toISOString(),
-            shiftScheduleId: '',
+            // shiftScheduleId: '',
             taskScheduleId: '',
             status: '',
             note: '',
@@ -149,7 +149,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                     />
 
                     {/* Shift Schedule ID */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="shiftScheduleId"
                         render={({ field }) => (
@@ -161,7 +161,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
                     {/* Task Schedule ID */}
                     <FormField
