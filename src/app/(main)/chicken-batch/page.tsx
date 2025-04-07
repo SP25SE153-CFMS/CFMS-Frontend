@@ -60,10 +60,9 @@ export default function Page() {
         queryFn: async () => {
             const farmId = getCookie(config.cookies.farmId) ?? '';
             const areas = await getBreedingAreasByFarmId(farmId);
-            console.log(areas);
-
-            sessionStorage.setItem('breedingAreas', JSON.stringify(areas));
-            return areas.filter((area) => area.chickenCoops.length > 0);
+            const filteredAreas = areas.filter((area) => area.chickenCoops.length > 0);
+            sessionStorage.setItem('breedingAreas', JSON.stringify(filteredAreas));
+            return filteredAreas;
         },
     });
 
