@@ -1,3 +1,5 @@
+'use client';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,6 +15,9 @@ import config from '@/configs';
 import { currentUser } from '@/utils/data/mock.data';
 import initials from 'initials';
 import Link from 'next/link';
+import { signOutUser } from '@/utils/functions/sign-out.function';
+import { BadgeCheck } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
 export function ProfileDropdown() {
     return (
@@ -26,26 +31,33 @@ export function ProfileDropdown() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{currentUser.fullName}</p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                            {currentUser.mail}
-                        </p>
+                <DropdownMenuLabel className="p-0 font-normal">
+                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                        <Avatar className="size-8 rounded-lg">
+                            <AvatarImage src={currentUser.avatar} alt={currentUser.fullName} />
+                            <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                        </Avatar>
+                        <div className="grid flex-1 text-left text-sm leading-tight">
+                            <span className="truncate font-semibold">{currentUser.fullName}</span>
+                            <span className="truncate text-xs">{currentUser.mail}</span>
+                        </div>
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
-                        <Link href={config.routes.profile}>Thông tin cá nhân</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link href={config.routes.signIn}>Cài đặt</Link>
+                        <Link href={config.routes.profile}>
+                            <BadgeCheck />
+                            Tài khoản
+                        </Link>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                    <Link href={config.routes.signIn}>Đăng xuất</Link>
+                    <Link href={config.routes.signIn} onClick={async () => await signOutUser()}>
+                        <LogOut />
+                        Đăng xuất
+                    </Link>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

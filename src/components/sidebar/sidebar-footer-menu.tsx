@@ -23,6 +23,7 @@ import initials from 'initials';
 import Link from 'next/link';
 import config from '@/configs';
 import { currentUser } from '@/utils/data/mock.data';
+import { signOutUser } from '@/utils/functions/sign-out.function';
 
 export default function SidebarFooterMenu() {
     const { isMobile } = useSidebar();
@@ -80,7 +81,10 @@ export default function SidebarFooterMenu() {
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
-                            <Link href={config.routes.signIn}>
+                            <Link
+                                href={config.routes.signIn}
+                                onClick={async () => await signOutUser()}
+                            >
                                 <LogOut />
                                 Đăng xuất
                             </Link>

@@ -10,8 +10,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Trash } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import config from '@/configs';
 import {
     Dialog,
     DialogContent,
@@ -27,37 +25,28 @@ import {
     AlertDialogTitle,
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
-import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
-import { deleteChickenCoop } from '@/services/chicken-coop.service';
 import toast from 'react-hot-toast';
-import ChickenCoopForm from '@/components/forms/chicken-coop-form';
+import { deleteShift } from '@/services/shift.service';
+import { Shift } from '@/utils/schemas/shift.schema';
+import ShiftForm from '@/components/forms/shift-form';
 import { useQueryClient } from '@tanstack/react-query';
-import useQueryParams from '@/hooks/use-query-params';
 
 interface Props<T> {
     row: Row<T>;
 }
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
-    const router = useRouter();
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
     const queryClient = useQueryClient();
-    const { breedingAreaId } = useQueryParams();
 
     const handleDelete = async () => {
-        await deleteChickenCoop((row.original as ChickenCoop).chickenCoopId).then(() => {
-            toast.success('Xóa chuồng nuôi thành công');
-            queryClient.invalidateQueries({ queryKey: ['chickenCoops', breedingAreaId] });
+        await deleteShift((row.original as Shift).shiftId).then(() => {
+            toast.success('Xóa ca làm việc thành công');
+            queryClient.invalidateQueries({ queryKey: ['shifts'] });
             setOpenDelete(false);
         });
-    };
-
-    const handleClickDetail = () => {
-        router.push(config.routes.chickenCoop + '/' + (row.original as ChickenCoop).chickenCoopId);
-        // const chickenCoops = row.getAllCells().map((cell) => cell.row.original);
-        // sessionStorage.setItem('chickenCoops', JSON.stringify(chickenCoops));
     };
 
     return (
@@ -70,7 +59,6 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <DropdownMenuItem onClick={handleClickDetail}>Xem chi tiết</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                         Cập nhật
                     </DropdownMenuItem>
@@ -83,15 +71,15 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
             {/* Update Dialog */}
             <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
-                <DialogContent className="max-w-2xl">
+                <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Cập nhật chuồng nuôi</DialogTitle>
+                        <DialogTitle>Cập nhật ca làm việc</DialogTitle>
                         <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                     </DialogHeader>
                     <ScrollArea className="max-h-[600px]">
-                        <ChickenCoopForm
+                        <ShiftForm
                             closeDialog={() => setOpenUpdate(false)}
-                            defaultValues={row.original as ChickenCoop}
+                            defaultValues={row.original as Shift}
                         />
                     </ScrollArea>
                 </DialogContent>
@@ -103,7 +91,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa chuồng nuôi này?
+                            Bạn có chắc chắn muốn xóa ca làm việc này?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="flex justify-end space-x-2">

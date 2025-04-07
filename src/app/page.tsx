@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import configs from '@/configs';
 import { IoChevronForward, IoLockClosedSharp } from 'react-icons/io5';
+import { ThemeSwitch } from '@/components/theme-switch';
 
 const NAV_BAR = [
     {
@@ -27,6 +28,10 @@ export default function Home() {
 
     return (
         <>
+            <div className="absolute bottom-4 right-4 border rounded-full">
+                <ThemeSwitch />
+            </div>
+
             <header className="navbar text-navy container relative z-[500] mx-auto flex h-24 items-center justify-between px-4 text-sm font-medium sm:px-6 lg:px-8">
                 <Link
                     className="relative z-[60] flex items-center gap-4"
@@ -56,7 +61,7 @@ export default function Home() {
 
                 <Link
                     href={configs.routes.signIn}
-                    className="w-36 rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-2 font-semibold leading-5 text-white transition-colors duration-300 focus:outline-none"
+                    className="w-36 rounded-md bg-gradient-to-r from-primary to-secondary text-center p-2 font-semibold leading-5 text-white transition-colors duration-300 focus:outline-none"
                 >
                     Đăng nhập
                 </Link>
@@ -75,10 +80,10 @@ export default function Home() {
                         trại.
                     </p>
                     <Link
-                        href={configs.routes.dashboard}
+                        href={configs.routes.signIn}
                         className="group relative flex items-center rounded-md bg-gradient-to-r from-primary to-secondary px-6 py-3 pr-10 font-semibold leading-5 text-white transition-colors duration-300 focus:outline-none"
                     >
-                        Khám Phá Ngay
+                        Đăng Nhập Ngay
                         <IoChevronForward className="absolute right-5 ml-2 transition-all duration-300 ease-in-out group-hover:right-4" />
                     </Link>
                 </div>

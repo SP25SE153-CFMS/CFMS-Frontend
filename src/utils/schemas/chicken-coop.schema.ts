@@ -29,7 +29,7 @@ export const ChickenCoopSchema = z.object({
 
     purposeId: z.string().uuid({ message: 'ID mục đích không hợp lệ, phải là UUID' }),
 
-    density: z.coerce.number().min(0).int({ message: 'Mật độ phải là số nguyên' }),
+    density: z.coerce.number().min(0).positive({ message: 'Mật độ phải là số dương' }),
 
     densityUnitId: z.string().uuid({ message: 'Đơn vị mật độ không hợp lệ, phải là UUID' }),
 
