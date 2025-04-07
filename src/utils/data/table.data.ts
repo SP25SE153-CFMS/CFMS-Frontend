@@ -21,6 +21,7 @@ import { InventoryReceipt } from '../schemas/inventory-receipt.schema';
 import { InventoryReceiptDetail } from '../schemas/inventory-receipt-detail.schema';
 import { Food } from '../schemas/food.schema';
 import { EvaluationTemplate } from '../schemas/evaluation-template.schema';
+import { Supplier } from '../schemas/supplier.schema';
 
 export const labels = [
     {
@@ -1967,3 +1968,97 @@ export const shifts = [
     { id: 2, name: 'Ca 2', timeRange: '14:00 - 22:00', startHour: 14, endHour: 22 },
     { id: 3, name: 'Ca 3', timeRange: '22:00 - 6:00', startHour: 22, endHour: 6 },
 ];
+
+export const suppliers: Supplier[] = [
+    {
+        supplierId: '550e8400-e29b-41d4-a716-446655440000',
+        supplierName: 'Công ty TNHH Thực Phẩm Việt',
+        supplierCode: 'SUP001',
+        address: '123 Đường Lê Lợi, Quận 1, TP.HCM',
+        phoneNumber: '0912345678',
+        bankAccount: '123456789012',
+        status: 1,
+    },
+    {
+        supplierId: '660e8400-e29b-41d4-a716-446655440001',
+        supplierName: 'Công ty CP Nông Sản Xanh',
+        supplierCode: 'SUP002',
+        address: '45B Đường Nguyễn Trãi, Quận 5, TP.HCM',
+        phoneNumber: '0987654321',
+        bankAccount: '987654321098',
+        status: 1,
+    },
+    {
+        supplierId: '770e8400-e29b-41d4-a716-446655440002',
+        supplierName: 'Công ty TNHH Xuất Nhập Khẩu Minh Quân',
+        supplierCode: 'SUP003',
+        address: '56C Trần Phú, Hà Nội',
+        phoneNumber: '0934567890',
+        bankAccount: '567890123456',
+        status: 0,
+    },
+    {
+        supplierId: '880e8400-e29b-41d4-a716-446655440003',
+        supplierName: 'Công ty TNHH Gia Vị An Nam',
+        supplierCode: 'SUP004',
+        address: '29 Lý Thường Kiệt, Quận Hoàn Kiếm, Hà Nội',
+        phoneNumber: '0978123456',
+        bankAccount: '234567890123',
+        status: 0,
+    },
+    {
+        supplierId: '990e8400-e29b-41d4-a716-446655440004',
+        supplierName: 'Công ty CP Thủy Hải Sản Bình An',
+        supplierCode: 'SUP005',
+        address: '102 Võ Văn Kiệt, Quận 1, TP.HCM',
+        phoneNumber: '0945678901',
+        bankAccount: '345678901234',
+        status: 1,
+    },
+    {
+        supplierId: 'aa0e8400-e29b-41d4-a716-446655440005',
+        supplierName: 'Công ty TNHH Chăn Nuôi Thành Công',
+        supplierCode: 'SUP006',
+        address: '67 Nguyễn Hữu Thọ, Quận 7, TP.HCM',
+        phoneNumber: '0967890123',
+        bankAccount: '456789012345',
+        status: 0,
+    },
+    {
+        supplierId: 'bb0e8400-e29b-41d4-a716-446655440006',
+        supplierName: 'Công ty CP Bột Mì Việt Nam',
+        supplierCode: 'SUP007',
+        address: '32C Lê Văn Lương, Hà Nội',
+        phoneNumber: '0956789012',
+        bankAccount: '567890123456',
+        status: 1,
+    },
+    {
+        supplierId: 'cc0e8400-e29b-41d4-a716-446655440007',
+        supplierName: 'Công ty TNHH Ngũ Cốc Hữu Cơ',
+        supplierCode: 'SUP008',
+        address: '88B Trường Chinh, TP. Đà Nẵng',
+        phoneNumber: '0901234567',
+        bankAccount: '678901234567',
+        status: 0,
+    },
+    {
+        supplierId: 'dd0e8400-e29b-41d4-a716-446655440008',
+        supplierName: 'Công ty CP Dầu Thực Vật Đại Phát',
+        supplierCode: 'SUP009',
+        address: '15 Nguyễn Du, TP. Hải Phòng',
+        phoneNumber: '0923456789',
+        bankAccount: '789012345678',
+        status: 1,
+    },
+    {
+        supplierId: 'ee0e8400-e29b-41d4-a716-446655440009',
+        supplierName: 'Công ty TNHH Thực Phẩm An Toàn',
+        supplierCode: 'SUP010',
+        address: '99 Phạm Văn Đồng, TP. Cần Thơ',
+        phoneNumber: '0919876543',
+        bankAccount: '890123456789',
+        status: 0,
+    },
+];
+

@@ -31,6 +31,8 @@ const routes = {
     task: '/task',
     createTask: '/task/create',
     assignment: '/assignment',
+    supplier: '/supplier',
+    resourceSupplier: 'supplier/resource-supplier'
 };
 
 export default routes;

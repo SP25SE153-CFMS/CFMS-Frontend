@@ -23,7 +23,7 @@ export enum CategoryStatus {
 }
 
 export const categoryStatusLabels: Record<string, string> = {
-    [CategoryStatus.INACTIVE]: 'Không hooạt động',
+    [CategoryStatus.INACTIVE]: 'Không hoạt động',
     [CategoryStatus.ACTIVE]: 'Hoạt động',
 };
 
@@ -256,4 +256,39 @@ export const assignmentBadge: Record<string, any> = {
     [AssignmentStatus.ASSIGNED]: 'bg-blue-50 text-blue-700 border-blue-200',
     [AssignmentStatus.COMPLETED]: 'bg-green-50 text-green-700 border-green-200',
     [AssignmentStatus.CANCELLED]: 'bg-red-50 text-red-700 border-red-200',
+};
+
+// Supplier
+export enum SuppilerStatus {
+    INACTIVE,
+    ACTIVE,
+}
+
+export const supplierStatusLabels: Record<string, string> = {
+    [SuppilerStatus.INACTIVE]: 'Ngừng hoạt động',
+    [SuppilerStatus.ACTIVE]: 'Đang hoạt động',
+};
+
+export const supplierStatusVariant: Record<string, any> = {
+    [SuppilerStatus.INACTIVE]: 'destructive',
+    [SuppilerStatus.ACTIVE]: 'default',
+};
+
+// Inventory receipt
+export enum ReceiptStatus {
+    PENDING,
+    REJECTED,
+    APPROVED,
+}
+
+export const receiptStatusLabels: Record<string, string> = {
+    [ReceiptStatus.PENDING]: 'Đang chờ duyệt',
+    [ReceiptStatus.REJECTED]: 'Từ chối',
+    [ReceiptStatus.APPROVED]: 'Đã duyệt',
+};
+
+export const receiptStatusVariant: Record<string, any> = {
+    [ReceiptStatus.PENDING]: 'outline',
+    [ReceiptStatus.REJECTED]: 'destructive',
+    [ReceiptStatus.APPROVED]: 'default',
 };
