@@ -145,7 +145,7 @@ export default function Page() {
                     <CardContent className="flex flex-col justify-center items-center pt-6 pb-8 gap-6">
                         <div className="relative w-64 h-64">
                             <Image
-                                src="/select-area.jpg"
+                                src="/breeding-area.avif"
                                 fill
                                 className="object-contain"
                                 alt="Chọn khu vực"
@@ -397,7 +397,7 @@ export default function Page() {
             </Card>
 
             <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent className="sm:max-w-[500px]">
+                <DialogContent className="max-w-2xl">
                     <DialogHeader>
                         <DialogTitle>Tạo chuồng nuôi mới</DialogTitle>
                         <DialogDescription>

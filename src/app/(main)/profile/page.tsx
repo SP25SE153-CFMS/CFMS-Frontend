@@ -1,14 +1,70 @@
+'use client';
+
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { z } from 'zod';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { currentUser } from '@/utils/data/mock.data';
-import { CalendarIcon, Mail, MapPin, Phone, User } from 'lucide-react';
+import { CalendarIcon, Check, Loader2, Mail, MapPin, Phone, User } from 'lucide-react';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
+import toast from 'react-hot-toast';
+
+// Define the user profile schema
+const profileSchema = z.object({
+    fullName: z.string().min(2, { message: 'Họ và tên phải có ít nhất 2 ký tự' }),
+    phoneNumber: z.string().regex(/^[0-9]{10}$/, { message: 'Số điện thoại không hợp lệ' }),
+    address: z.string().optional(),
+    dateOfBirth: z.string().optional(),
+    cccd: z.string().optional(),
+});
+
+type ProfileFormValues = z.infer<typeof profileSchema>;
+
+// API function to update user profile
+async function updateUserProfile(data: ProfileFormValues) {
+    // In a real app, this would be a fetch call to your API
+    const response = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Có lỗi xảy ra khi cập nhật thông tin');
+    }
+
+    return response.json();
+}
 
 export default function ProfilePage() {
+    const [isEditing, setIsEditing] = useState(false);
+    const queryClient = useQueryClient();
+
     // Map status code to readable text
     const statusMap = {
         '1': 'Hoạt Động',
@@ -22,12 +78,52 @@ export default function ProfilePage() {
         '3': 'Khách',
     };
 
+    // Initialize form with current user data
+    const form = useForm<ProfileFormValues>({
+        resolver: zodResolver(profileSchema),
+        defaultValues: {
+            fullName: currentUser.fullName,
+            phoneNumber: currentUser.phoneNumber,
+            address: currentUser.address || '',
+            dateOfBirth: currentUser.dateOfBirth || '',
+            cccd: currentUser.cccd || '',
+        },
+    });
+
+    // Setup mutation for updating profile
+    const mutation = useMutation({
+        mutationFn: updateUserProfile,
+        onSuccess: (data) => {
+            // Update the cache with the new user data
+            queryClient.setQueryData(['currentUser'], data);
+            setIsEditing(false);
+            toast.success('Thông tin cá nhân đã được cập nhật.');
+        },
+        onError: (error: Error) => {
+            toast.error(error.message || 'Có lỗi xảy ra khi cập nhật thông tin.');
+        },
+    });
+
+    // Handle form submission
+    function onSubmit(data: ProfileFormValues) {
+        mutation.mutate(data);
+    }
+
+    // Cancel editing
+    function cancelEdit() {
+        form.reset();
+        setIsEditing(false);
+    }
+
     return (
         <div className="container mx-auto py-10">
             <div className="flex flex-col gap-8">
                 <div className="flex items-center justify-between">
                     <h1 className="text-3xl font-bold">Hồ Sơ</h1>
-                    {/* <Button>Chỉnh Sửa Hồ Sơ</Button> */}
+                    {/* TODO: Add edit button */}
+                    {/* {!isEditing && (
+                        <Button onClick={() => setIsEditing(true)}>Chỉnh Sửa Hồ Sơ</Button>
+                    )} */}
                 </div>
 
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -61,24 +157,24 @@ export default function ProfilePage() {
                             </div>
                             <div className="flex items-center gap-3">
                                 <Phone className="h-4 w-4 text-muted-foreground" />
-                                <span className="text-sm">{currentUser.phoneNumber}</span>
+                                <span className="text-sm">{form.getValues('phoneNumber')}</span>
                             </div>
                             <div className="flex items-center gap-3">
                                 <MapPin className="h-4 w-4 text-muted-foreground" />
                                 <span className="text-sm">
-                                    {currentUser.address || 'Chưa cung cấp địa chỉ'}
+                                    {form.getValues('address') || 'Chưa cung cấp địa chỉ'}
                                 </span>
                             </div>
                             <div className="flex items-center gap-3">
                                 <CalendarIcon className="h-4 w-4 text-muted-foreground" />
                                 <span className="text-sm">
-                                    {currentUser.dateOfBirth || 'Chưa cung cấp ngày sinh'}
+                                    {form.getValues('dateOfBirth') || 'Chưa cung cấp ngày sinh'}
                                 </span>
                             </div>
                             <div className="flex items-center gap-3">
                                 <User className="h-4 w-4 text-muted-foreground" />
                                 <span className="text-sm">
-                                    CCCD: {currentUser.cccd || 'Chưa cung cấp'}
+                                    CCCD: {form.getValues('cccd') || 'Chưa cung cấp'}
                                 </span>
                             </div>
                         </CardContent>
@@ -89,7 +185,9 @@ export default function ProfilePage() {
                         <CardHeader>
                             <CardTitle>Thông Tin Tài Khoản</CardTitle>
                             <CardDescription>
-                                Xem và quản lý thông tin tài khoản của bạn
+                                {isEditing
+                                    ? 'Chỉnh sửa thông tin cá nhân của bạn'
+                                    : 'Xem và quản lý thông tin tài khoản của bạn'}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -100,64 +198,163 @@ export default function ProfilePage() {
                                     <TabsTrigger value="activity">Hoạt Động</TabsTrigger>
                                 </TabsList>
                                 <TabsContent value="personal" className="space-y-6 pt-4">
-                                    <div className="space-y-4">
-                                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                            <div className="space-y-2">
-                                                <Label htmlFor="fullName">Họ và Tên</Label>
-                                                <Input
-                                                    id="fullName"
-                                                    value={currentUser.fullName}
-                                                    readOnly
-                                                />
+                                    {isEditing ? (
+                                        <Form {...form}>
+                                            <form
+                                                onSubmit={form.handleSubmit(onSubmit)}
+                                                className="space-y-4"
+                                            >
+                                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="fullName"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Họ và Tên</FormLabel>
+                                                                <FormControl>
+                                                                    <Input {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    <div className="space-y-2">
+                                                        <Label htmlFor="email">Email</Label>
+                                                        <Input
+                                                            id="email"
+                                                            value={currentUser.mail}
+                                                            readOnly
+                                                            disabled
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="phoneNumber"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Số Điện Thoại</FormLabel>
+                                                                <FormControl>
+                                                                    <Input {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="dateOfBirth"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Ngày Sinh</FormLabel>
+                                                                <FormControl>
+                                                                    <Input type="date" {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </div>
+                                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="address"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Địa Chỉ</FormLabel>
+                                                                <FormControl>
+                                                                    <Input {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="cccd"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>
+                                                                    Căn Cước Công Dân
+                                                                </FormLabel>
+                                                                <FormControl>
+                                                                    <Input {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </div>
+                                            </form>
+                                        </Form>
+                                    ) : (
+                                        <div className="space-y-4">
+                                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="fullName">Họ và Tên</Label>
+                                                    <Input
+                                                        id="fullName"
+                                                        value={form.getValues('fullName')}
+                                                        readOnly
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="email">Email</Label>
+                                                    <Input
+                                                        id="email"
+                                                        value={currentUser.mail}
+                                                        readOnly
+                                                    />
+                                                </div>
                                             </div>
-                                            <div className="space-y-2">
-                                                <Label htmlFor="email">Email</Label>
-                                                <Input
-                                                    id="email"
-                                                    value={currentUser.mail}
-                                                    readOnly
-                                                />
+                                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="phone">Số Điện Thoại</Label>
+                                                    <Input
+                                                        id="phone"
+                                                        value={form.getValues('phoneNumber')}
+                                                        readOnly
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="dob">Ngày Sinh</Label>
+                                                    <Input
+                                                        id="dob"
+                                                        value={
+                                                            form.getValues('dateOfBirth') ||
+                                                            'Chưa cung cấp'
+                                                        }
+                                                        readOnly
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="address">Địa Chỉ</Label>
+                                                    <Input
+                                                        id="address"
+                                                        value={
+                                                            form.getValues('address') ||
+                                                            'Chưa cung cấp'
+                                                        }
+                                                        readOnly
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="id">Căn Cước Công Dân</Label>
+                                                    <Input
+                                                        id="id"
+                                                        value={
+                                                            form.getValues('cccd') ||
+                                                            'Chưa cung cấp'
+                                                        }
+                                                        readOnly
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                            <div className="space-y-2">
-                                                <Label htmlFor="phone">Số Điện Thoại</Label>
-                                                <Input
-                                                    id="phone"
-                                                    value={currentUser.phoneNumber}
-                                                    readOnly
-                                                />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <Label htmlFor="dob">Ngày Sinh</Label>
-                                                <Input
-                                                    id="dob"
-                                                    value={
-                                                        currentUser.dateOfBirth || 'Chưa cung cấp'
-                                                    }
-                                                    readOnly
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                            <div className="space-y-2">
-                                                <Label htmlFor="address">Địa Chỉ</Label>
-                                                <Input
-                                                    id="address"
-                                                    value={currentUser.address || 'Chưa cung cấp'}
-                                                    readOnly
-                                                />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <Label htmlFor="id">Căn Cước Công Dân</Label>
-                                                <Input
-                                                    id="id"
-                                                    value={currentUser.cccd || 'Chưa cung cấp'}
-                                                    readOnly
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
+                                    )}
                                 </TabsContent>
                                 <TabsContent value="security" className="space-y-6 pt-4">
                                     <div className="space-y-4">
@@ -196,14 +393,6 @@ export default function ProfilePage() {
                                                 readOnly
                                             />
                                         </div>
-                                        {/* <div className="space-y-2">
-                                            <Label htmlFor="startDate">Ngày Bắt Đầu</Label>
-                                            <Input
-                                                id="startDate"
-                                                value={currentUser.startDate || 'Chưa cung cấp'}
-                                                readOnly
-                                            />
-                                        </div> */}
                                         <Separator className="my-4" />
                                         <div className="space-y-2">
                                             <Label htmlFor="password">Mật Khẩu</Label>
@@ -228,10 +417,29 @@ export default function ProfilePage() {
                                 </TabsContent>
                             </Tabs>
                         </CardContent>
-                        {/* <CardFooter className="flex justify-between">
-                            <Button variant="outline">Hủy</Button>
-                            <Button>Lưu Thay Đổi</Button>
-                        </CardFooter> */}
+                        {isEditing && (
+                            <CardFooter className="flex justify-end gap-4">
+                                <Button variant="outline" onClick={cancelEdit}>
+                                    Hủy
+                                </Button>
+                                <Button
+                                    onClick={form.handleSubmit(onSubmit)}
+                                    disabled={mutation.isPending}
+                                >
+                                    {mutation.isPending ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Đang lưu...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Check className="mr-2 h-4 w-4" />
+                                            Lưu Thay Đổi
+                                        </>
+                                    )}
+                                </Button>
+                            </CardFooter>
+                        )}
                     </Card>
                 </div>
             </div>

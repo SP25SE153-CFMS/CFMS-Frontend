@@ -60,8 +60,9 @@ export default function Page() {
         queryFn: async () => {
             const farmId = getCookie(config.cookies.farmId) ?? '';
             const areas = await getBreedingAreasByFarmId(farmId);
-            sessionStorage.setItem('breedingAreas', JSON.stringify(areas));
-            return areas.filter((area) => area.chickenCoops.length > 0);
+            const filteredAreas = areas.filter((area) => area.chickenCoops.length > 0);
+            sessionStorage.setItem('breedingAreas', JSON.stringify(filteredAreas));
+            return filteredAreas;
         },
     });
 
@@ -195,7 +196,7 @@ export default function Page() {
                     <CardContent className="flex flex-col justify-center items-center pt-6 pb-8 gap-6">
                         <div className="relative w-64 h-64">
                             <Image
-                                src="/select-area.jpg"
+                                src="/chicken-coop.avif"
                                 fill
                                 className="object-contain"
                                 alt="Chọn khu vực"
@@ -208,7 +209,10 @@ export default function Page() {
                             </p>
                         </div>
                         <div className="w-full max-w-xs">
-                            <Select onValueChange={handleBreedingAreaChange}>
+                            <Select
+                                value={selectedBreedingAreaId}
+                                onValueChange={handleBreedingAreaChange}
+                            >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Chọn khu vực nuôi" />
                                 </SelectTrigger>
@@ -248,105 +252,105 @@ export default function Page() {
         );
     }
 
-    if (!chickenBatches || chickenBatches.length === 0) {
-        return (
-            <div className="space-y-6">
-                <div className="flex items-center text-sm text-muted-foreground">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="gap-1 p-0"
-                        onClick={() => window.history.back()}
-                    >
-                        <ChevronLeft className="h-4 w-4" />
-                        Khu vực nuôi
-                    </Button>
-                    <span className="mx-2">/</span>
-                    <span>Lứa nuôi</span>
-                </div>
+    // if (!chickenBatches) {
+    //     return (
+    //         <div className="space-y-6">
+    //             <div className="flex items-center text-sm text-muted-foreground">
+    //                 <Button
+    //                     variant="ghost"
+    //                     size="sm"
+    //                     className="gap-1 p-0"
+    //                     onClick={() => window.history.back()}
+    //                 >
+    //                     <ChevronLeft className="h-4 w-4" />
+    //                     Khu vực nuôi
+    //                 </Button>
+    //                 <span className="mx-2">/</span>
+    //                 <span>Lứa nuôi</span>
+    //             </div>
 
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <div>
-                        <div className="flex items-center gap-3">
-                            <h1 className="text-3xl font-bold tracking-tight">
-                                Danh sách lứa nuôi
-                            </h1>
-                            <Badge variant="outline" className="text-sm">
-                                {currentChickenCoop?.chickenCoopName}
-                            </Badge>
-                        </div>
-                        <p className="text-muted-foreground mt-1">
-                            Quản lý tất cả các lứa nuôi trong khu vực
-                        </p>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                        <Select
-                            value={selectedBreedingAreaId}
-                            onValueChange={handleBreedingAreaChange}
-                        >
-                            <SelectTrigger className="w-[200px]">
-                                <SelectValue placeholder="Chọn khu vực nuôi" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {breedingAreas.map((area) => (
-                                    <SelectItem
-                                        key={area.breedingAreaId}
-                                        value={area.breedingAreaId}
-                                    >
-                                        {area.breedingAreaName}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <Button className="h-9" onClick={openModal}>
-                            <Plus className="mr-2 h-4 w-4" />
-                            Tạo lứa nuôi
-                        </Button>
-                    </div>
-                </div>
+    //             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    //                 <div>
+    //                     <div className="flex items-center gap-3">
+    //                         <h1 className="text-3xl font-bold tracking-tight">
+    //                             Danh sách lứa nuôi
+    //                         </h1>
+    //                         <Badge variant="outline" className="text-sm">
+    //                             {currentChickenCoop?.chickenCoopName}
+    //                         </Badge>
+    //                     </div>
+    //                     <p className="text-muted-foreground mt-1">
+    //                         Quản lý tất cả các lứa nuôi trong khu vực
+    //                     </p>
+    //                 </div>
+    //                 <div className="flex flex-wrap gap-2">
+    //                     <Select
+    //                         value={selectedBreedingAreaId}
+    //                         onValueChange={handleBreedingAreaChange}
+    //                     >
+    //                         <SelectTrigger className="w-[200px]">
+    //                             <SelectValue placeholder="Chọn khu vực nuôi" />
+    //                         </SelectTrigger>
+    //                         <SelectContent>
+    //                             {breedingAreas.map((area) => (
+    //                                 <SelectItem
+    //                                     key={area.breedingAreaId}
+    //                                     value={area.breedingAreaId}
+    //                                 >
+    //                                     {area.breedingAreaName}
+    //                                 </SelectItem>
+    //                             ))}
+    //                         </SelectContent>
+    //                     </Select>
+    //                     <Button className="h-9" onClick={openModal}>
+    //                         <Plus className="mr-2 h-4 w-4" />
+    //                         Tạo lứa nuôi
+    //                     </Button>
+    //                 </div>
+    //             </div>
 
-                <div className="w-full h-[50vh] flex items-center justify-center p-4">
-                    <Card className="w-full max-w-md shadow-lg border-muted/40 mt-24">
-                        <CardContent className="flex flex-col justify-center items-center pt-6 pb-8 gap-6">
-                            <div className="relative w-64 h-64">
-                                <Image
-                                    src="/no-data.jpg"
-                                    fill
-                                    className="object-contain"
-                                    alt="Không có dữ liệu"
-                                />
-                            </div>
-                            <div className="text-center space-y-2">
-                                <h1 className="text-2xl font-bold">Chưa có lứa nuôi nào</h1>
-                                <p className="text-muted-foreground">
-                                    Hãy tạo lứa nuôi đầu tiên cho khu vực này
-                                </p>
-                            </div>
-                            <Button onClick={openModal}>
-                                <Plus className="mr-1 h-4 w-4" />
-                                Tạo lứa nuôi
-                            </Button>
-                        </CardContent>
-                    </Card>
-                </div>
+    //             <div className="w-full h-[50vh] flex items-center justify-center p-4">
+    //                 <Card className="w-full max-w-md shadow-lg border-muted/40 mt-24">
+    //                     <CardContent className="flex flex-col justify-center items-center pt-6 pb-8 gap-6">
+    //                         <div className="relative w-64 h-64">
+    //                             <Image
+    //                                 src="/no-data.jpg"
+    //                                 fill
+    //                                 className="object-contain"
+    //                                 alt="Không có dữ liệu"
+    //                             />
+    //                         </div>
+    //                         <div className="text-center space-y-2">
+    //                             <h1 className="text-2xl font-bold">Chưa có lứa nuôi nào</h1>
+    //                             <p className="text-muted-foreground">
+    //                                 Hãy tạo lứa nuôi đầu tiên cho khu vực này
+    //                             </p>
+    //                         </div>
+    //                         <Button onClick={openModal}>
+    //                             <Plus className="mr-1 h-4 w-4" />
+    //                             Tạo lứa nuôi
+    //                         </Button>
+    //                     </CardContent>
+    //                 </Card>
+    //             </div>
 
-                <Dialog open={open} onOpenChange={onOpenChange}>
-                    <DialogContent className="sm:max-w-[500px]">
-                        <DialogHeader>
-                            <DialogTitle>Tạo lứa nuôi mới</DialogTitle>
-                            <DialogDescription>
-                                Hãy nhập các thông tin dưới đây để tạo lứa nuôi mới.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <ChickenBatchForm
-                            chickenCoopName={currentChickenCoop?.chickenCoopName ?? ''}
-                            closeDialog={() => setOpen(false)}
-                        />
-                    </DialogContent>
-                </Dialog>
-            </div>
-        );
-    }
+    //             <Dialog open={open} onOpenChange={onOpenChange}>
+    //                 <DialogContent className="sm:max-w-[500px]">
+    //                     <DialogHeader>
+    //                         <DialogTitle>Tạo lứa nuôi mới</DialogTitle>
+    //                         <DialogDescription>
+    //                             Hãy nhập các thông tin dưới đây để tạo lứa nuôi mới.
+    //                         </DialogDescription>
+    //                     </DialogHeader>
+    //                     <ChickenBatchForm
+    //                         chickenCoopName={currentChickenCoop?.chickenCoopName ?? ''}
+    //                         closeDialog={() => setOpen(false)}
+    //                     />
+    //                 </DialogContent>
+    //             </Dialog>
+    //         </div>
+    //     );
+    // }
 
     const inactiveBatches = filteredData?.filter((batch) => batch.status.toString() === '0');
     const activeBatches = filteredData?.filter((batch) => batch.status.toString() === '1');
@@ -405,7 +409,7 @@ export default function Page() {
                     <Button
                         variant="outline"
                         className="h-9"
-                        onClick={() => downloadCSV(chickenBatches, 'chicken-batches.csv')}
+                        onClick={() => downloadCSV(chickenBatches || [], 'chicken-batches.csv')}
                     >
                         <Download className="mr-2 h-4 w-4" />
                         Xuất CSV
@@ -469,7 +473,9 @@ export default function Page() {
                 <CardContent>
                     <Tabs defaultValue="all" className="w-full">
                         <TabsList className="mb-4">
-                            <TabsTrigger value="all">Tất cả ({chickenBatches.length})</TabsTrigger>
+                            <TabsTrigger value="all">
+                                Tất cả ({chickenBatches?.length ?? 0})
+                            </TabsTrigger>
                             <TabsTrigger value="active">
                                 Đang hoạt động ({activeBatches?.length ?? 0})
                             </TabsTrigger>
