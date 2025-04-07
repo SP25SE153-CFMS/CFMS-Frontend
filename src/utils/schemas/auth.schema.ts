@@ -28,13 +28,12 @@ export const SignUpRequestSchema = z
             .min(2, { message: 'Tên phải có ít nhất 2 ký tự' })
             .max(100, { message: 'Tên không được vượt quá 100 ký tự' })
             .regex(/^[A-Za-zÀ-ỹ\s'-]+$/, { message: 'Tên chỉ được chứa chữ cái và dấu' }),
-        phoneNumber: z
-            .string()
-            .trim()
-            .regex(/^(0|\+84)([0-9]{9,10})$/, {
-                message:
-                    'Số điện thoại không hợp lệ (phải bắt đầu bằng 0 hoặc +84 và có 9-10 chữ số)',
-            }),
+        phoneNumber: z.string().trim(),
+        // TODO: Remove this code
+        // .regex(/^(0|\+84)([0-9]{9,10})$/, {
+        //     message:
+        //         'Số điện thoại không hợp lệ (phải bắt đầu bằng 0 hoặc +84 và có 9-10 chữ số)',
+        // }),
         mail: z
             .string()
             .trim()

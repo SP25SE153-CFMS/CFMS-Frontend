@@ -41,8 +41,8 @@ export default function SignUp() {
             // Redirect to farm page
             router.push(config.routes.farm);
         },
-        onError: (error) => {
-            toast.error(error.message);
+        onError: (error: any) => {
+            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại');
         },
     });
     const onSubmit = (data: SignUpRequest) => {
