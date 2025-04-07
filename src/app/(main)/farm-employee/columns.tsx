@@ -6,11 +6,7 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import dayjs from 'dayjs';
 import { Badge } from '@/components/ui/badge';
 import { FarmEmployee } from '@/utils/schemas/farm-employee.schema';
-import {
-    EmployeeStatus,
-    employeeStatusLabels,
-    employeeStatusVariant,
-} from '@/utils/enum/status.enum';
+import { userStatusLabels, userStatusVariant, FarmEmployeeStatus } from '@/utils/enum/status.enum';
 import { User } from '@/utils/schemas/user.schema';
 import { DataTableRowActions } from './data-table-row-actions';
 import { farmRoleLabels } from '@/utils/enum';
@@ -52,8 +48,8 @@ export const columns: ColumnDef<FarmEmployee>[] = [
         accessorKey: 'user',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Nhân viên" />,
         cell: ({ row }) => {
-            const user = row.getValue('user') as User;
-            return <div>{user?.fullName ?? '-'}</div>;
+            const user = row.getValue('user') as User | null;
+            return <div>{user?.fullName as string}</div>;
         },
     },
     {
@@ -81,12 +77,8 @@ export const columns: ColumnDef<FarmEmployee>[] = [
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
         cell: ({ row }) => {
-            const status = row.getValue('status') as EmployeeStatus;
-            return (
-                <Badge variant={employeeStatusVariant[status]}>
-                    {employeeStatusLabels[status]}
-                </Badge>
-            );
+            const status = row.getValue('status') as FarmEmployeeStatus;
+            return <Badge variant={userStatusVariant[status]}>{userStatusLabels[status]}</Badge>;
         },
     },
     {

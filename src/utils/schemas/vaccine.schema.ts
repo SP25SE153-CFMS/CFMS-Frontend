@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { VaccinationLogStatus } from '../enum/status.enum';
 
 // Schema Vaccine
 export const VaccineSchema = z.object({
@@ -37,9 +38,7 @@ export const VaccinationLogSchema = z.object({
         .int()
         .positive('Số lượng phải là số nguyên dương')
         .min(1, 'Số lượng phải ít nhất là 1'),
-    status: z.enum(['0', '1'], {
-        errorMap: () => ({ message: 'Trạng thái phải là 0 (đã tiêm) hoặc  1 (chưa tiêm)' }),
-    }),
+    status: z.nativeEnum(VaccinationLogStatus, { message: 'Trạng thái không hợp lệ' }),
     reaction: z.string().nullable(),
     createdAt: z.coerce.date().refine((date) => !isNaN(date.getTime()), {
         message: 'Ngày tạo không hợp lệ',

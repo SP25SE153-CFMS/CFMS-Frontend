@@ -1,5 +1,5 @@
 import { z } from 'zod';
-
+import { CategoryStatus } from '../enum/status.enum';
 export const CategorySchema = z.object({
     categoryId: z.string().uuid({ message: 'ID danh mục không hợp lệ, phải là UUID' }),
 
@@ -9,7 +9,7 @@ export const CategorySchema = z.object({
 
     description: z.string().trim().optional(),
 
-    status: z.enum(['0', '1'], {
+    status: z.nativeEnum(CategoryStatus, {
         message: 'Trạng thái không hợp lệ, phải là 0 hoặc 1',
     }),
 });

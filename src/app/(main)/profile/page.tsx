@@ -30,6 +30,7 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import toast from 'react-hot-toast';
+import { userStatusLabels } from '@/utils/enum/status.enum';
 
 // Define the user profile schema
 const profileSchema = z.object({
@@ -64,12 +65,6 @@ async function updateUserProfile(data: ProfileFormValues) {
 export default function ProfilePage() {
     const [isEditing, setIsEditing] = useState(false);
     const queryClient = useQueryClient();
-
-    // Map status code to readable text
-    const statusMap = {
-        '1': 'Hoạt Động',
-        '0': 'Không Hoạt Động',
-    };
 
     // Map system role to readable text
     const roleMap = {
@@ -147,7 +142,7 @@ export default function ProfilePage() {
                                 {roleMap[currentUser.systemRole as keyof typeof roleMap]}
                             </CardDescription>
                             <div className="mt-2 flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                                {statusMap[currentUser.status as keyof typeof statusMap]}
+                                {userStatusLabels[currentUser.status]}
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -385,11 +380,7 @@ export default function ProfilePage() {
                                             <Label htmlFor="status">Trạng Thái Tài Khoản</Label>
                                             <Input
                                                 id="status"
-                                                value={
-                                                    statusMap[
-                                                        currentUser.status as keyof typeof statusMap
-                                                    ]
-                                                }
+                                                value={userStatusLabels[currentUser.status]}
                                                 readOnly
                                             />
                                         </div>

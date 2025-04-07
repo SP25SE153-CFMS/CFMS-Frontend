@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
+import { vi } from 'date-fns/locale';
 
 export default function StartChickenBatchForm({ closeDialog }: { closeDialog: () => void }) {
     const queryClient = useQueryClient();
@@ -195,6 +196,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                             <CalendarComponent
                                 mode="single"
                                 selected={startDate}
+                                locale={vi}
                                 onSelect={(day) => setStartDate(day ?? new Date())}
                                 initialFocus
                             />

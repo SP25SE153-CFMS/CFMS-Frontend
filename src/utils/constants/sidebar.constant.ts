@@ -37,7 +37,7 @@ export const sidebarItems: NavGroup[] = [
                 ],
             },
             {
-                title: 'Quản lý đàn gà',
+                title: 'Quản lý lứa nuôi',
                 path: basePath,
                 icon: Egg,
                 subItems: [

@@ -42,11 +42,11 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
             chickenCoopId: '',
             chickenCoopCode: '',
             chickenCoopName: '',
-            capacity: 0,
-            status: '0',
+            maxQuantity: 0,
+            status: 0,
             breedingAreaId: breedingAreaId || '',
             area: 0,
-            currentQuantity: 0,
+            // currentQuantity: 0,
             description: '',
             // TODO: Change to default value
             purposeId: getSubCategoryByCategoryType(CategoryType.PURPOSE)?.[0].subCategoryId,
@@ -131,7 +131,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                     {/* Sức chứa */}
                     <FormField
                         control={form.control}
-                        name="capacity"
+                        name="maxQuantity"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Sức chứa</FormLabel>
@@ -143,11 +143,12 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                         {...field}
                                         onChange={(e) => {
                                             field.onChange(e.target.value);
-                                            const capacity = Number(e.target.value);
-                                            if (capacity === 0) {
+                                            const maxQuantity = Number(e.target.value);
+                                            if (maxQuantity === 0) {
                                                 form.setValue('density', 0);
                                             } else {
-                                                const density = form.getValues('area') / capacity;
+                                                const density =
+                                                    maxQuantity / form.getValues('area');
                                                 form.setValue('density', density);
                                             }
                                         }}
@@ -201,7 +202,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                             const area = Number(e.target.value);
                                             form.setValue(
                                                 'density',
-                                                area / form.getValues('capacity'),
+                                                form.getValues('maxQuantity') / area,
                                             );
                                         }}
                                     />
@@ -330,13 +331,13 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                         </FormControl>
                                         <SelectContent>
                                             {getSubCategoryByCategoryType(
-                                                CategoryType.PURPOSE,
-                                            )?.map((purpose) => (
+                                                CategoryType.CHICKEN,
+                                            )?.map((chicken) => (
                                                 <SelectItem
-                                                    key={purpose.subCategoryId}
-                                                    value={purpose.subCategoryId}
+                                                    key={chicken.subCategoryId}
+                                                    value={chicken.subCategoryId}
                                                 >
-                                                    {purpose.subCategoryName}
+                                                    {chicken.subCategoryName}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>

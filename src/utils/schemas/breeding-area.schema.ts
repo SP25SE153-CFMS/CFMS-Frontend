@@ -32,4 +32,5 @@ export type BreedingArea = z.infer<typeof BreedingAreaSchema>;
 export const CreateBreedingAreaSchema = BreedingAreaSchema.omit({
     breedingAreaId: true,
     imageUrl: true,
+    status: true,
 });

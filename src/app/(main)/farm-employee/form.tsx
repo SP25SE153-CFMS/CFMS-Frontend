@@ -64,7 +64,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
             userId: '',
             startDate: new Date().toISOString(),
             endDate: null,
-            status: '1',
+            status: 1,
             farmRole: 0,
             ...defaultValues,
         },

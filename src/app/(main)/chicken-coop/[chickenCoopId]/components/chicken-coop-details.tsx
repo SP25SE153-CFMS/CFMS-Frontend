@@ -88,8 +88,14 @@ const ChickenCoopDetails = () => {
                 />
 
                 <InfoItem
-                    label="Số lượng"
+                    label="Số lượng hiện tại"
                     value={`${chickenCoop?.currentQuantity ?? 0} con`}
+                    icon={<Users size={16} />}
+                />
+
+                <InfoItem
+                    label="Sức chứa"
+                    value={`${chickenCoop?.maxQuantity ?? 0} con`}
                     icon={<Users size={16} />}
                 />
 
@@ -114,7 +120,7 @@ const ChickenCoopDetails = () => {
                 <InfoItem
                     label="Trạng thái"
                     value={
-                        chickenCoop?.status ? (
+                        chickenCoop?.status || chickenCoop?.status === 0 ? (
                             <Badge
                                 variant={chickenCoopStatusVariant[chickenCoop?.status]}
                                 className="ml-2 animate-in fade-in"

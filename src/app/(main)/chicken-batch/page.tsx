@@ -231,7 +231,7 @@ export default function Page() {
                                 value={selectedChickenCoopId}
                                 onValueChange={handleChickenCoopChange}
                             >
-                                <SelectTrigger className="w-[200px]">
+                                <SelectTrigger className="mt-4">
                                     <SelectValue placeholder="Chọn chuồng nuôi" />
                                 </SelectTrigger>
                                 <SelectContent>

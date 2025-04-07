@@ -23,11 +23,17 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
-import { AssignmentSchema, type Assignment } from '@/utils/schemas/assignment.schema';
+import {
+    AssignmentSchema,
+    CreateAssignmentSchema,
+    type Assignment,
+} from '@/utils/schemas/assignment.schema';
 import dayjs from 'dayjs';
 import { createAssignment, updateAssignment } from '@/services/assignment.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { mapEnumToValues } from '@/utils/functions/enum.function';
+import { AssignmentStatus } from '@/utils/enum/status.enum';
 
 interface AssignmentFormProps {
     defaultValues?: Partial<Assignment>;
@@ -37,7 +43,7 @@ interface AssignmentFormProps {
 export default function AssignmentForm({ defaultValues, closeDialog }: AssignmentFormProps) {
     // Initialize form
     const form = useForm<Assignment>({
-        resolver: zodResolver(AssignmentSchema),
+        resolver: zodResolver(defaultValues ? AssignmentSchema : CreateAssignmentSchema),
         defaultValues: {
             assignmentId: '',
             taskId: '',
@@ -45,7 +51,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
             assignedDate: new Date().toISOString(),
             // shiftScheduleId: '',
             taskScheduleId: '',
-            status: '',
+            status: 0,
             note: '',
             ...defaultValues,
         },
@@ -192,16 +198,17 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                 <FormControl>
                                     <Select
                                         onValueChange={field.onChange}
-                                        defaultValue={field.value}
+                                        defaultValue={field.value?.toString()}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Chọn trạng thái" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="active">Đang hoạt động</SelectItem>
-                                            <SelectItem value="inactive">
-                                                Ngừng hoạt động
-                                            </SelectItem>
+                                            {mapEnumToValues(AssignmentStatus).map((status) => (
+                                                <SelectItem key={status} value={status}>
+                                                    {status}
+                                                </SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                 </FormControl>
