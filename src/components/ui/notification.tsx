@@ -64,8 +64,6 @@ export default function Notification() {
         );
     };
 
-    console.log(notifications);
-
     // eslint-disable-next-line no-unused-vars
     const formatNotificationTime = (dateString: string) => {
         try {
@@ -153,7 +151,9 @@ export default function Notification() {
                                             </span> */}
                                         </button>
                                         {/* <div className="text-xs text-muted-foreground">
-                                            {formatNotificationTime(notification.createdAt)}
+                                            {formatNotificationTime(
+                                                notification?.createdWhen?.toString() ?? '',
+                                            )}
                                         </div> */}
                                     </div>
                                     {!notification.isRead && (

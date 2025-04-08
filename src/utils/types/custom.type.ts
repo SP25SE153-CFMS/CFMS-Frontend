@@ -24,6 +24,17 @@ import { Task } from '../schemas/task.schema';
 import { User } from '../schemas/user.schema';
 import { VaccinationLog } from '../schemas/vaccine.schema';
 
+export type EntityAudit = {
+    isDeleted: boolean;
+    deletedWhen: string | Date | null;
+    createdByUserId: string;
+    createdByUser: User | null;
+    createdWhen: string | Date | null;
+    lastEditedByUserId: string;
+    lastEditedByUser: User | null;
+    lastEditedWhen: string | Date | null;
+};
+
 export type ChickenCoopResponse = ChickenCoop & {
     chickenBatches: ChickenBatch[];
     taskLogs: TaskLog[];
@@ -113,6 +124,6 @@ export type ChickenDetailRequest = {
     quantity: number;
 };
 
-export type NotificationResponse = Notification & {
+export type NotificationResponse = (Notification & EntityAudit) & {
     user: User;
 };
