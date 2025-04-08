@@ -44,7 +44,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
             chickenCoopName: '',
             maxQuantity: 0,
             status: 0,
-            breedingAreaId: breedingAreaId || '',
+            breedingAreaId: breedingAreaId || sessionStorage.getItem('breedingAreaId') || '',
             area: 0,
             // currentQuantity: 0,
             description: '',
