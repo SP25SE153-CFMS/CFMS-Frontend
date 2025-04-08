@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
@@ -11,7 +11,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { getNotificationForCurrentUser } from '@/services/notification.service';
+import {
+    getNotificationForCurrentUser,
+    readOneNotification,
+} from '@/services/notification.service';
 
 function Dot({ className }: { className?: string }) {
     return (
@@ -30,17 +33,16 @@ function Dot({ className }: { className?: string }) {
 }
 
 export default function Notification() {
-    const { data: initialNotifications, isLoading } = useQuery({
+    const {
+        data: notifications,
+        isLoading,
+        refetch,
+    } = useQuery({
         queryKey: ['notifications'],
         queryFn: () => getNotificationForCurrentUser(),
     });
 
-    const [notifications, setNotifications] = useState(initialNotifications);
     const [open, setOpen] = useState(false);
-
-    useEffect(() => {
-        setNotifications(initialNotifications);
-    }, [initialNotifications]);
 
     // Count unread notifications (note: checking !isRead since true means it has been read)
     const unreadCount = notifications?.filter((n) => !n.isRead).length || 0;
@@ -55,13 +57,8 @@ export default function Notification() {
     // };
 
     const handleNotificationClick = (id: string) => {
-        setNotifications(
-            notifications?.map((notification) =>
-                notification.notificationId === id
-                    ? { ...notification, isRead: true }
-                    : notification,
-            ),
-        );
+        readOneNotification(id);
+        refetch();
     };
 
     // eslint-disable-next-line no-unused-vars

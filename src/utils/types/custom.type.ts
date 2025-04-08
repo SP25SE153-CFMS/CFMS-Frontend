@@ -23,6 +23,9 @@ import { TaskLog } from '../schemas/task-log.schema';
 import { Task } from '../schemas/task.schema';
 import { User } from '../schemas/user.schema';
 import { VaccinationLog } from '../schemas/vaccine.schema';
+import { NutritionPlan } from '../schemas/nutrition-plan.schema';
+import { NutritionPlanDetail } from '../schemas/nutrition-plan-detail.schema';
+import { FeedSession } from '../schemas/feed-session.schema';
 
 export type EntityAudit = {
     isDeleted: boolean;
@@ -126,4 +129,9 @@ export type ChickenDetailRequest = {
 
 export type NotificationResponse = (Notification & EntityAudit) & {
     user: User;
+};
+
+export type NutritionPlanResponse = NutritionPlan & {
+    nutritionPlanDetails: NutritionPlanDetail[];
+    feedSessions: FeedSession[];
 };

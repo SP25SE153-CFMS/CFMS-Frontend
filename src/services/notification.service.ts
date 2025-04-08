@@ -29,9 +29,15 @@ export const createNotification = async (body: Notification) => {
     return response.data;
 };
 
-export const updateNotification = async (body: Notification) => {
+// export const updateNotification = async (body: Notification) => {
+//     const endpoint = PREFIX;
+//     const response = await put<Response<string>>(endpoint, body);
+//     return response.data;
+// };
+
+export const readOneNotification = async (notificationId: string) => {
     const endpoint = PREFIX;
-    const response = await put<Response<string>>(endpoint, body);
+    const response = await put<Response<string>>(endpoint, { notificationId });
     return response.data;
 };
 
