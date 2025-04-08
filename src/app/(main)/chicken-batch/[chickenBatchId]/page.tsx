@@ -5,7 +5,6 @@ import {
     Calendar,
     ClipboardList,
     Database,
-    Egg,
     FileText,
     Info,
     InfoIcon,
@@ -153,7 +152,7 @@ export default function Page() {
                                     value={chicken?.chickenName || 'Không có tên gà'}
                                 />
 
-                                <InfoItem
+                                {/* <InfoItem
                                     icon={<Egg className="h-4 w-4" />}
                                     label="Tổng số lượng"
                                     value={
@@ -161,7 +160,7 @@ export default function Page() {
                                             ? chicken?.totalQuantity.toString()
                                             : 'Không có số lượng'
                                     }
-                                />
+                                /> */}
 
                                 <InfoItem
                                     icon={<FileText className="h-4 w-4" />}
@@ -201,7 +200,7 @@ export default function Page() {
                                             <span>Xem chi tiết</span>
                                         </Button>
                                     }
-                                    chickenDetails={chicken?.chickenDetails}
+                                    chickenDetails={chickenBatch?.chickenDetails}
                                 />
                             </div>
                         ) : (

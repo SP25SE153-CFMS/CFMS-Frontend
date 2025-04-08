@@ -238,7 +238,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                                     Bắt đầu lứa nuôi mới
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-md">
+                            <DialogContent className="max-w-4xl">
                                 <DialogHeader>
                                     <DialogTitle>Bắt đầu lứa nuôi mới</DialogTitle>
                                     <DialogDescription>

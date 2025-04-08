@@ -98,6 +98,7 @@ export const farms: Farm[] = [
             'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
         latitude: 10.7769,
         longitude: 106.7009,
+        areaUnitId: '',
     },
     {
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
@@ -112,6 +113,7 @@ export const farms: Farm[] = [
             'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
         latitude: 10.801,
         longitude: 106.7155,
+        areaUnitId: '',
     },
     {
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
@@ -126,6 +128,7 @@ export const farms: Farm[] = [
             'https://www.hcmtoplist.com/wp-content/uploads/2022/05/trang-trai-ga-ta-giong-vuon-nha-tui-hcmtoplist.jpg',
         latitude: 10.7623,
         longitude: 106.7048,
+        areaUnitId: '',
     },
 ];
 
@@ -139,6 +142,7 @@ export const breedingAreas: BreedingArea[] = [
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801',
         status: 1,
+        areaUnitId: '',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67892',
@@ -149,6 +153,7 @@ export const breedingAreas: BreedingArea[] = [
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
         status: 1,
+        areaUnitId: '',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67893',
@@ -159,6 +164,7 @@ export const breedingAreas: BreedingArea[] = [
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801',
         status: 1,
+        areaUnitId: '',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67894',
@@ -169,6 +175,7 @@ export const breedingAreas: BreedingArea[] = [
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
         status: 1,
+        areaUnitId: '',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67895',
@@ -179,6 +186,7 @@ export const breedingAreas: BreedingArea[] = [
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
         status: 1,
+        areaUnitId: '',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67896',
@@ -189,6 +197,7 @@ export const breedingAreas: BreedingArea[] = [
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801',
         status: 1,
+        areaUnitId: '',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67897',
@@ -199,6 +208,7 @@ export const breedingAreas: BreedingArea[] = [
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
         status: 1,
+        areaUnitId: '',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67898',
@@ -209,6 +219,7 @@ export const breedingAreas: BreedingArea[] = [
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
         status: 1,
+        areaUnitId: '',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67899',
@@ -219,6 +230,7 @@ export const breedingAreas: BreedingArea[] = [
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
         status: 1,
+        areaUnitId: '',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f678910',
@@ -229,6 +241,7 @@ export const breedingAreas: BreedingArea[] = [
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67801',
         status: 1,
+        areaUnitId: '',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f678911',
@@ -239,6 +252,7 @@ export const breedingAreas: BreedingArea[] = [
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67802',
         status: 1,
+        areaUnitId: '',
     },
     {
         breedingAreaId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f678912',
@@ -249,6 +263,7 @@ export const breedingAreas: BreedingArea[] = [
         area: 100,
         farmId: 'c1a2b3d4-e5f6-7890-a1b2-c3d4e5f67803',
         status: 1,
+        areaUnitId: '',
     },
 ];
 

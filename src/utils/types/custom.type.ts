@@ -1,3 +1,4 @@
+import { ChickenGender } from '../enum/gender.enum';
 import { Assignment } from '../schemas/assignment.schema';
 import { BreedingArea } from '../schemas/breeding-area.schema';
 import { Category } from '../schemas/category.schema';
@@ -43,6 +44,7 @@ export type ChickenBatchResponse = ChickenBatch & {
     feedLogs: FeedLog[];
     chicken: ChickenResponse;
     growthBatches: GrowthBatchResponse[];
+    chickenDetails: ChickenDetail[];
 };
 
 export type CategoryResponse = Category & {
@@ -64,6 +66,7 @@ export type StartChickenBatch = {
     chickenBatchName: string;
     stageCode: string;
     startDate: string | Date;
+    chickenDetailRequests: ChickenDetailRequest[];
 };
 
 export type FarmEmployeeResponse = FarmEmployee & {
@@ -102,4 +105,9 @@ export type TaskResponse = Task & {
     assignments: Assignment[];
     startWorkDate: string | Date;
     endWorkDate: string | Date;
+};
+
+export type ChickenDetailRequest = {
+    gender: ChickenGender;
+    quantity: number;
 };

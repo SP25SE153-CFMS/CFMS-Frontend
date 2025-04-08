@@ -69,7 +69,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
         mutationFn: defaultValues ? updateChickenCoop : createChickenCoop,
         onSuccess: () => {
             closeDialog();
-            queryClient.invalidateQueries({ queryKey: ['chicken-coops', breedingAreaId] });
+            queryClient.invalidateQueries({ queryKey: ['chickenCoops', breedingAreaId] });
             toast.success(
                 defaultValues ? 'Cập nhật chuồng gà thành công' : 'Tạo chuồng gà thành công',
             );

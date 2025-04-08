@@ -923,17 +923,19 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
                                         />
                                     </div>
 
-                                    <div className="md:col-span-2 flex justify-end items-end h-full pb-1">
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() => remove(index)}
-                                            className="h-9 w-9 text-destructive hover:text-destructive hover:bg-destructive/10"
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
-                                    </div>
+                                    {fields.length > 0 && (
+                                        <div className="md:col-span-2 flex justify-end items-end h-full pb-1">
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => remove(index)}
+                                                className="h-9 w-9 text-destructive hover:text-destructive hover:bg-destructive/10"
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>
