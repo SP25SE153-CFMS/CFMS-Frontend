@@ -1,68 +1,17 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { formatDistanceToNow } from 'date-fns';
+import { vi } from 'date-fns/locale';
+import Image from 'next/image';
+import { BellIcon, InboxIcon } from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { BellIcon } from 'lucide-react';
-import Image from 'next/image';
-import { useState } from 'react';
-
-const initialNotifications = [
-    {
-        id: 1,
-        image: 'https://res.cloudinary.com/dvqtkzmr5/image/upload/v1742739905/br6rdpwxl96f7ho9vl59.png',
-        user: 'Chris Tompson',
-        action: 'requested review on',
-        target: 'PR #42: Feature implementation',
-        timestamp: '15 phút trước',
-        unread: true,
-    },
-    {
-        id: 2,
-        image: 'https://res.cloudinary.com/dvqtkzmr5/image/upload/v1742739905/br6rdpwxl96f7ho9vl59.png',
-        user: 'Emma Davis',
-        action: 'shared',
-        target: 'New component library',
-        timestamp: '45 phút trước',
-        unread: true,
-    },
-    {
-        id: 3,
-        image: 'https://res.cloudinary.com/dvqtkzmr5/image/upload/v1742739905/br6rdpwxl96f7ho9vl59.png',
-        user: 'James Wilson',
-        action: 'assigned you to',
-        target: 'API integration task',
-        timestamp: '4 giờ trước',
-        unread: false,
-    },
-    {
-        id: 4,
-        image: 'https://res.cloudinary.com/dvqtkzmr5/image/upload/v1742739905/br6rdpwxl96f7ho9vl59.png',
-        user: 'Alex Morgan',
-        action: 'replied to your comment in',
-        target: 'Authentication flow',
-        timestamp: '12 giờ trước',
-        unread: false,
-    },
-    {
-        id: 5,
-        image: 'https://res.cloudinary.com/dvqtkzmr5/image/upload/v1742739905/br6rdpwxl96f7ho9vl59.png',
-        user: 'Sarah Chen',
-        action: 'commented on',
-        target: 'Dashboard redesign',
-        timestamp: '2 ngày trước',
-        unread: false,
-    },
-    {
-        id: 6,
-        image: 'https://res.cloudinary.com/dvqtkzmr5/image/upload/v1742739905/br6rdpwxl96f7ho9vl59.png',
-        user: 'Miky Derya',
-        action: 'mentioned you in',
-        target: 'Origin UI open graph image',
-        timestamp: '2 weeks ago',
-        unread: false,
-    },
-];
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { getNotificationForCurrentUser } from '@/services/notification.service';
 
 function Dot({ className }: { className?: string }) {
     return (
@@ -81,99 +30,152 @@ function Dot({ className }: { className?: string }) {
 }
 
 export default function Notification() {
+    const { data: initialNotifications, isLoading } = useQuery({
+        queryKey: ['notifications'],
+        queryFn: () => getNotificationForCurrentUser(),
+    });
+
     const [notifications, setNotifications] = useState(initialNotifications);
-    const unreadCount = notifications.filter((n) => n.unread).length;
+    const [open, setOpen] = useState(false);
 
-    const handleMarkAllAsRead = () => {
-        setNotifications(
-            notifications.map((notification) => ({
-                ...notification,
-                unread: false,
-            })),
-        );
-    };
+    useEffect(() => {
+        setNotifications(initialNotifications);
+    }, [initialNotifications]);
 
-    const handleNotificationClick = (id: number) => {
+    // Count unread notifications (note: checking !isRead since true means it has been read)
+    const unreadCount = notifications?.filter((n) => !n.isRead).length || 0;
+
+    // const handleMarkAllAsRead = () => {
+    //     setNotifications(
+    //         notifications?.map((notification) => ({
+    //             ...notification,
+    //             isRead: true,
+    //         })),
+    //     );
+    // };
+
+    const handleNotificationClick = (id: string) => {
         setNotifications(
-            notifications.map((notification) =>
-                notification.id === id ? { ...notification, unread: false } : notification,
+            notifications?.map((notification) =>
+                notification.notificationId === id
+                    ? { ...notification, isRead: true }
+                    : notification,
             ),
         );
     };
 
+    console.log(notifications);
+
+    // eslint-disable-next-line no-unused-vars
+    const formatNotificationTime = (dateString: string) => {
+        try {
+            const date = new Date(dateString);
+            return formatDistanceToNow(date, { addSuffix: true, locale: vi });
+        } catch (error) {
+            return '';
+        }
+    };
+
     return (
-        <Popover>
+        <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 <Button
                     size="icon"
                     variant="ghost"
-                    className="relative"
-                    aria-label="Open notifications"
+                    className="relative h-9 w-9 rounded-full"
+                    aria-label={`${unreadCount > 0 ? `${unreadCount} thông báo chưa đọc` : 'Không có thông báo mới'}`}
                 >
-                    <BellIcon size={14} aria-hidden="true" />
+                    <BellIcon className="h-5 w-5" aria-hidden="true" />
                     {unreadCount > 0 && (
-                        <Badge className="absolute -top-2 left-full min-w-5 -translate-x-1/2 px-1 justify-center">
+                        <Badge
+                            className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs"
+                            variant="destructive"
+                        >
                             {unreadCount > 99 ? '99+' : unreadCount}
                         </Badge>
                     )}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80 p-1">
-                <div className="flex items-baseline justify-between gap-4 px-3 py-2">
-                    <div className="text-sm font-semibold">Thông báo</div>
-                    {unreadCount > 0 && (
-                        <button
-                            className="text-xs font-medium hover:underline"
+            <PopoverContent className="w-80 p-0" align="end">
+                <div className="flex items-center justify-between border-b px-4 py-3">
+                    <h3 className="font-medium">Thông báo</h3>
+                    {/* {unreadCount > 0 && (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 gap-1 text-xs font-medium"
                             onClick={handleMarkAllAsRead}
                         >
+                            <CheckIcon className="h-3.5 w-3.5" />
                             Đánh dấu tất cả đã đọc
-                        </button>
-                    )}
+                        </Button>
+                    )} */}
                 </div>
-                <div
-                    role="separator"
-                    aria-orientation="horizontal"
-                    className="bg-border -mx-1 my-1 h-px"
-                ></div>
-                {notifications.map((notification) => (
-                    <div
-                        key={notification.id}
-                        className="hover:bg-accent rounded-md px-3 py-2 text-sm transition-colors"
-                    >
-                        <div className="relative flex items-start gap-3 pe-3">
-                            <Image
-                                className="size-9 rounded-md"
-                                src={notification.image}
-                                width={32}
-                                height={32}
-                                alt={notification.user}
-                            />
-                            <div className="flex-1 space-y-1">
-                                <button
-                                    className="text-foreground/80 text-left after:absolute after:inset-0"
-                                    onClick={() => handleNotificationClick(notification.id)}
-                                >
-                                    <span className="text-foreground font-medium hover:underline">
-                                        {notification.user}
-                                    </span>{' '}
-                                    {notification.action}{' '}
-                                    <span className="text-foreground font-medium hover:underline">
-                                        {notification.target}
-                                    </span>
-                                    .
-                                </button>
-                                <div className="text-muted-foreground text-xs">
-                                    {notification.timestamp}
+
+                {isLoading ? (
+                    <div className="flex h-[300px] items-center justify-center">
+                        <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                    </div>
+                ) : notifications && notifications.length > 0 ? (
+                    <ScrollArea className="h-[300px]">
+                        {notifications.map((notification) => (
+                            <div
+                                key={notification.notificationId}
+                                className={`relative border-b px-4 py-3 transition-colors hover:bg-accent ${!notification.isRead ? 'bg-accent/30' : ''}`}
+                            >
+                                <div className="flex gap-3">
+                                    <Image
+                                        className="h-10 w-10 rounded-full object-cover"
+                                        src={
+                                            notification.user.avatar ||
+                                            '/placeholder.svg?height=40&width=40'
+                                        }
+                                        width={40}
+                                        height={40}
+                                        alt={notification.user.fullName}
+                                    />
+                                    <div className="flex-1 space-y-1">
+                                        <button
+                                            className="text-left text-sm after:absolute after:inset-0"
+                                            onClick={() =>
+                                                handleNotificationClick(notification.notificationId)
+                                            }
+                                        >
+                                            <span className="font-semibold hover:underline">
+                                                {notification.user.fullName}
+                                            </span>{' '}
+                                            <div className="hover:underline">
+                                                {notification.notificationName}
+                                            </div>
+                                            {/* {notification.content}{' '}
+                                            <span className="font-medium hover:underline">
+                                                {notification.notificationName}
+                                            </span> */}
+                                        </button>
+                                        {/* <div className="text-xs text-muted-foreground">
+                                            {formatNotificationTime(notification.createdAt)}
+                                        </div> */}
+                                    </div>
+                                    {!notification.isRead && (
+                                        <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                                            <Dot className="h-2 w-2 fill-primary" />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
-                            {notification.unread && (
-                                <div className="absolute end-0 self-center">
-                                    <Dot />
-                                </div>
-                            )}
+                        ))}
+                    </ScrollArea>
+                ) : (
+                    <div className="flex h-[200px] flex-col items-center justify-center gap-2 p-4 text-center">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                            <InboxIcon className="h-6 w-6 text-muted-foreground" />
                         </div>
+                        <h4 className="text-sm font-medium">Không có thông báo</h4>
+                        <p className="text-xs text-muted-foreground">
+                            Bạn sẽ nhận được thông báo khi có hoạt động mới
+                        </p>
                     </div>
-                ))}
+                )}
             </PopoverContent>
         </Popover>
     );

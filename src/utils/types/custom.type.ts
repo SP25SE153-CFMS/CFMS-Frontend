@@ -15,6 +15,7 @@ import { GrowthBatch } from '../schemas/growth-batch.schema';
 import { GrowthStage } from '../schemas/growth-stage.schema';
 import { HealthLog } from '../schemas/health-log.schema';
 import { Medicine } from '../schemas/medicine.schema';
+import { Notification } from '../schemas/notification.schema';
 import { QuantityLog } from '../schemas/quantity-log.schema';
 import { Resource } from '../schemas/resource.schema';
 import { SubCategory } from '../schemas/sub-category.schema';
@@ -110,4 +111,8 @@ export type TaskResponse = Task & {
 export type ChickenDetailRequest = {
     gender: ChickenGender;
     quantity: number;
+};
+
+export type NotificationResponse = Notification & {
+    user: User;
 };

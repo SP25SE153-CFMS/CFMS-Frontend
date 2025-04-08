@@ -1,12 +1,19 @@
 import { Notification } from '@/utils/schemas/notification.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
+import { NotificationResponse } from '@/utils/types/custom.type';
 
-const PREFIX = '/api/Notification';
+const PREFIX = '/api/Noti';
 
-export const getNotifications = async () => {
+// export const getNotifications = async () => {
+//     const endpoint = PREFIX;
+//     const response = await get<Response<Notification[]>>(endpoint);
+//     return response.data.data;
+// };
+
+export const getNotificationForCurrentUser = async () => {
     const endpoint = PREFIX;
-    const response = await get<Response<Notification[]>>(endpoint);
+    const response = await get<Response<NotificationResponse[]>>(endpoint);
     return response.data.data;
 };
 

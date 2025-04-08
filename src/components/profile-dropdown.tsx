@@ -12,14 +12,33 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import config from '@/configs';
-import { currentUser } from '@/utils/data/mock.data';
 import initials from 'initials';
 import Link from 'next/link';
 import { signOutUser } from '@/utils/functions/sign-out.function';
 import { BadgeCheck } from 'lucide-react';
 import { LogOut } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { getCurrentUser } from '@/services/auth.service';
+import { LoadingSpinner } from './ui/loading-spinner';
 
 export function ProfileDropdown() {
+    const { data: currentUser, isLoading } = useQuery({
+        queryKey: ['currentUser'],
+        queryFn: async () => {
+            const user = await getCurrentUser();
+            sessionStorage.setItem('userId', user.userId);
+            return user;
+        },
+    });
+
+    if (isLoading) {
+        return <LoadingSpinner className="size-8" />;
+    }
+
+    if (!currentUser) {
+        return <h1>Không tìm thấy thông tin người dùng</h1>;
+    }
+
     return (
         <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>

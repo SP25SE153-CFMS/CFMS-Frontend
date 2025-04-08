@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -19,7 +19,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { currentUser } from '@/utils/data/mock.data';
 import { CalendarIcon, Check, Loader2, Mail, MapPin, Phone, User } from 'lucide-react';
 import {
     Form,
@@ -31,6 +30,7 @@ import {
 } from '@/components/ui/form';
 import toast from 'react-hot-toast';
 import { userStatusLabels } from '@/utils/enum/status.enum';
+import { getCurrentUser } from '@/services/auth.service';
 
 // Define the user profile schema
 const profileSchema = z.object({
@@ -66,6 +66,11 @@ export default function ProfilePage() {
     const [isEditing, setIsEditing] = useState(false);
     const queryClient = useQueryClient();
 
+    const { data: currentUser } = useQuery({
+        queryKey: ['currentUser'],
+        queryFn: () => getCurrentUser(),
+    });
+
     // Map system role to readable text
     const roleMap = {
         '1': 'Quản Trị Viên',
@@ -77,11 +82,11 @@ export default function ProfilePage() {
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(profileSchema),
         defaultValues: {
-            fullName: currentUser.fullName,
-            phoneNumber: currentUser.phoneNumber,
-            address: currentUser.address || '',
-            dateOfBirth: currentUser.dateOfBirth || '',
-            cccd: currentUser.cccd || '',
+            fullName: currentUser?.fullName || '',
+            phoneNumber: currentUser?.phoneNumber || '',
+            address: currentUser?.address || '',
+            dateOfBirth: currentUser?.dateOfBirth || '',
+            cccd: currentUser?.cccd || '',
         },
     });
 
@@ -110,6 +115,10 @@ export default function ProfilePage() {
         setIsEditing(false);
     }
 
+    if (!currentUser) {
+        return <h1>Không tìm thấy thông tin người dùng</h1>;
+    }
+
     return (
         <div className="container mx-auto py-10">
             <div className="flex flex-col gap-8">
@@ -121,7 +130,7 @@ export default function ProfilePage() {
                     )} */}
                 </div>
 
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+                <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
                     {/* Left column - User card */}
                     <Card className="md:col-span-1">
                         <CardHeader className="flex flex-col items-center text-center">
