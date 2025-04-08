@@ -61,6 +61,12 @@ export const getChickenTypes = async () => {
     return response.data.data;
 };
 
+export const getSubByType = async (categoryType: CategoryType) => {
+    const endpoint = PREFIX + '/sub-by-type/' + categoryType;
+    const response = await get<Response<SubCategory[]>>(endpoint);
+    return response.data.data;
+};
+
 export const getUnits = async () => {
     return await getCategoryByType(CategoryType.UNIT);
 };
@@ -79,4 +85,12 @@ export const getResources = async () => {
 
 export const getChickens = async () => {
     return await getCategoryByType(CategoryType.CHICKEN);
+};
+
+export const getSubPackage = async () => {
+    return await getSubByType(CategoryType.PACKAGE_UNIT);
+};
+
+export const getSubUnit = async () => {
+    return await getSubByType(CategoryType.WEIGHT_UNIT);
 };

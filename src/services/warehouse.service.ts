@@ -11,15 +11,21 @@ export const getWarehouses = async () => {
     return response.data.data;
 };
 
+export const getWareById = async (id: string) => {
+    const endpoint = PREFIX + '/' + id;
+    const response = await get<Response<Warehouse>>(endpoint);
+    return response.data.data;
+};
+
 export const getWareByFarmId = async (id: string) => {
-    const endpoint = PREFIX + '/' + "farmId" + "/" + id;
+    const endpoint = PREFIX + '/' + 'farmId' + '/' + id;
     const response = await get<Response<WareStockResponse[]>>(endpoint);
     return response.data.data;
 };
 
 export const getWareStockByResourceTypeId = async (wareId: string, resourceTypeId: string) => {
-    const endpoint = PREFIX + '/' + "warestocks" + '/' + wareId + '/' + resourceTypeId;
-    console.log("WareStock End Point: ", endpoint)
+    const endpoint = PREFIX + '/' + 'warestocks' + '/' + wareId + '/' + resourceTypeId;
+    console.log('WareStock End Point: ', endpoint);
     const response = await get<Response<WareStockResponse[]>>(endpoint);
     return response.data.data;
 };

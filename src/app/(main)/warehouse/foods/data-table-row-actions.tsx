@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { deleteProduct } from '@/services/warehouse-product.service';
+import { Food } from '@/utils/schemas/food.schema';
 import { WarehouseProduct } from '@/utils/schemas/warehouse-product.schema';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useQueryClient } from '@tanstack/react-query';
@@ -76,12 +77,12 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         <DialogTitle>Cập nhật sản phẩm</DialogTitle>
                         <DialogDescription>Nhập</DialogDescription>
                     </DialogHeader>
-                    <ScrollArea>
+                    {/* <ScrollArea>
                         <WarehouseProductForm
                             closeModal={() => setOpenUpdate(false)}
-                            defaultValues={row.original as WarehouseProduct}
+                            defaultValues={row.original as Food}
                         />
-                    </ScrollArea>
+                    </ScrollArea> */}
                 </DialogContent>
             </Dialog>
 

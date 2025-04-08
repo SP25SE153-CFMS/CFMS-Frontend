@@ -34,7 +34,7 @@ const routes = {
     shift: '/shift',
     settings: '/settings',
     supplier: '/supplier',
-    resourceSupplier: 'supplier/resource-supplier',,
+    resourceSupplier: 'supplier/resource-supplier',
     ware: '/warehouse',
 };
 
