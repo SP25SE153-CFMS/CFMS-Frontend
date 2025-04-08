@@ -105,4 +105,5 @@ export type WareStockResponse = Warehouse & {
     specQuantity: string,
     unitSpecification: string,
     resourceTypeName: string,
+    resourceId: string
 }

@@ -15,7 +15,7 @@ import { WareStockResponse } from '@/utils/types/custom.type';
 import { getWareStockByResourceTypeId } from '@/services/warehouse.service';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
-import FoodsForm from '@/components/forms/food-form';
+import CreateFoodForm from '@/components/forms/food-create-form';
 
 export default function Foods() {
     const [open, setOpen] = useState(false);
@@ -23,8 +23,6 @@ export default function Foods() {
     const wareId: string = searchParams.get('w') || '';
     const resourceTypeId: string = searchParams.get('r') || '';
 
-    console.log('Warehouse ID:', wareId);
-    console.log('Resource Type ID:', resourceTypeId);
 
     const openModal = () => setOpen(true);
     const closeModal = () => setOpen(false);
@@ -87,7 +85,7 @@ export default function Foods() {
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <FoodsForm closeModal={closeModal} />
+                                <CreateFoodForm closeModal={closeModal} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>

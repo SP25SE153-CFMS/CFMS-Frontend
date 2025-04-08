@@ -5,12 +5,8 @@ export const FoodSchema = z.object({
     foodCode: z.string().min(1, { message: 'Mã thức ăn là bắt buộc' }),
     foodName: z.string().min(1, { message: 'Tên thức ăn là bắt buộc' }),
     note: z.string().optional(),
-    productionDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
-        message: 'Ngày sản xuất không hợp lệ, định dạng phải là YYYY-MM-DD',
-    }),
-    expiryDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
-        message: 'Hạn sử dụng không hợp lệ, định dạng phải là YYYY-MM-DD',
-    }),
+    productionDate: z.string().min(1, { message: 'Ngày sản xuất là bắt buộc' }),
+    expiryDate: z.string().min(1, { message: 'Hạn sử dụng là bắt buộc' }),
 });
 
 export type Food = z.infer<typeof FoodSchema>;
