@@ -123,7 +123,7 @@ export default function Notification() {
                                         className="h-10 w-10 rounded-full object-cover"
                                         src={
                                             notification.user.avatar ||
-                                            '/placeholder.svg?height=40&width=40'
+                                            '/no-data.jpg?height=40&width=40'
                                         }
                                         width={40}
                                         height={40}
