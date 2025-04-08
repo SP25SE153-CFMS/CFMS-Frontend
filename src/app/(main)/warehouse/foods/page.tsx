@@ -2,28 +2,22 @@
 
 import { useState } from 'react';
 import { DataTable } from '@/components/table/data-table';
-import { warehouseProducts } from '@/utils/data/table.data';
 import { columns } from './columns';
-import Search from '@/components/search';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Plus } from 'lucide-react';
-import WarehouseProductForm from '@/components/forms/warehouse-product-form';
 import { useQuery } from '@tanstack/react-query';
-import { getFoods } from '@/services/food.service';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { WareStockResponse } from '@/utils/types/custom.type';
 import { getWareStockByResourceTypeId } from '@/services/warehouse.service';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
-import CreateFoodForm from './create/page';
-import FoodsForm from '@/components/forms/warehouse-product-form';
+import FoodsForm from '@/components/forms/food-form';
 
 export default function Foods() {
-    const [searchValue, setSearchValue] = useState('');
     const [open, setOpen] = useState(false);
     const searchParams = useSearchParams();
     const wareId: string = searchParams.get('w') || '';
@@ -93,7 +87,7 @@ export default function Foods() {
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <FoodsForm closeModal={closeModal} wId={wareId} />
+                                <FoodsForm closeModal={closeModal} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>
