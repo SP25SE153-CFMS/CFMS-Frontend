@@ -10,6 +10,8 @@ import { Equipment } from '../schemas/equipment.schema';
 import { FarmEmployee } from '../schemas/farm-employee.schema';
 import { FeedLog } from '../schemas/feed-log.schema';
 import { Food } from '../schemas/food.schema';
+import { GrowthBatch } from '../schemas/growth-batch.schema';
+import { GrowthStage } from '../schemas/growth-stage.schema';
 import { HealthLog } from '../schemas/health-log.schema';
 import { Medicine } from '../schemas/medicine.schema';
 import { QuantityLog } from '../schemas/quantity-log.schema';
@@ -30,12 +32,17 @@ export type ChickenResponse = Chicken & {
     chickenDetails: ChickenDetail[];
 };
 
+export type GrowthBatchResponse = GrowthBatch & {
+    growthStage: GrowthStage;
+};
+
 export type ChickenBatchResponse = ChickenBatch & {
     vaccineLogs: VaccinationLog[];
     healthLogs: HealthLog[];
     quantityLogs: QuantityLog[];
     feedLogs: FeedLog[];
     chicken: ChickenResponse;
+    growthBatches: GrowthBatchResponse[];
 };
 
 export type CategoryResponse = Category & {
@@ -96,4 +103,3 @@ export type TaskResponse = Task & {
     startWorkDate: string | Date;
     endWorkDate: string | Date;
 };
-

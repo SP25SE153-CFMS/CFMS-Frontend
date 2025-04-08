@@ -12,7 +12,6 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
@@ -31,9 +30,14 @@ import {
 import dayjs from 'dayjs';
 import { createAssignment, updateAssignment } from '@/services/assignment.service';
 import toast from 'react-hot-toast';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { mapEnumToValues } from '@/utils/functions/enum.function';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getTasks } from '@/services/task.service';
+import { getEmployeesByFarmId } from '@/services/farm.service';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
+import { Textarea } from '../ui/textarea';
 import { AssignmentStatus } from '@/utils/enum/status.enum';
+import { vi } from 'date-fns/locale';
 
 interface AssignmentFormProps {
     defaultValues?: Partial<Assignment>;
@@ -50,11 +54,22 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
             assignedToId: '',
             assignedDate: new Date().toISOString(),
             // shiftScheduleId: '',
-            taskScheduleId: '',
-            status: 0,
+            // taskScheduleId: '',
+            status: AssignmentStatus.ASSIGNED,
             note: '',
             ...defaultValues,
         },
+    });
+
+    const { data: tasks } = useQuery({
+        queryKey: ['tasks'],
+        queryFn: () => getTasks(),
+    });
+
+    const { data: farmEmployees } = useQuery({
+        queryKey: ['farm-employees'],
+        queryFn: () => getEmployeesByFarmId(getCookie(config.cookies.farmId) ?? ''),
+        enabled: !!getCookie(config.cookies.farmId),
     });
 
     // Query client
@@ -84,16 +99,30 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
+                <div className="grid grid-cols-1 gap-6 px-1">
                     {/* Task ID */}
                     <FormField
                         control={form.control}
                         name="taskId"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>ID Công việc</FormLabel>
+                                <FormLabel>Công việc</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập ID công việc" {...field} />
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn công việc" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {tasks?.map((task) => (
+                                                <SelectItem key={task.taskId} value={task.taskId}>
+                                                    {task.taskName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -106,13 +135,26 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                         name="assignedToId"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>ID Người được phân công</FormLabel>
+                                <FormLabel>Người được phân công</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        type="text"
-                                        placeholder="Nhập ID người được phân công"
-                                        {...field}
-                                    />
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn người được phân công" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {farmEmployees?.map((employee) => (
+                                                <SelectItem
+                                                    key={employee.userId}
+                                                    value={employee.userId}
+                                                >
+                                                    {employee.user.fullName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -146,6 +188,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                             }
                                             onSelect={(date) => field.onChange(date?.toISOString())}
                                             initialFocus
+                                            locale={vi}
                                         />
                                     </PopoverContent>
                                 </Popover>
@@ -170,7 +213,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                     /> */}
 
                     {/* Task Schedule ID */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="taskScheduleId"
                         render={({ field }) => (
@@ -186,10 +229,10 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
                     {/* Status */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="status"
                         render={({ field }) => (
@@ -206,7 +249,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                         <SelectContent>
                                             {mapEnumToValues(AssignmentStatus).map((status) => (
                                                 <SelectItem key={status} value={status}>
-                                                    {status}
+                                                    {assignmentStatusLabels[status]}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
@@ -215,7 +258,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
                     {/* Note */}
                     <FormField
@@ -225,16 +268,17 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                             <FormItem>
                                 <FormLabel>Ghi chú</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập ghi chú" {...field} />
+                                    <Textarea placeholder="Nhập ghi chú" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
                 </div>
-                <Button type="submit" className="mx-auto mt-6 w-60">
+                {/* TODO: Update this code */}
+                {/* <Button type="submit" className="mx-auto mt-6 w-60">
                     Gửi
-                </Button>
+                </Button> */}
             </form>
         </Form>
     );

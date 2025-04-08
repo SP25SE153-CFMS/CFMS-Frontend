@@ -350,7 +350,7 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
                 </CardContent>
                 <CardFooter>
                     <Button type="submit" className="w-full">
-                        Đăng ký trang trại
+                        {defaultValues ? 'Cập nhật trang trại' : 'Đăng ký trang trại'}
                     </Button>
                 </CardFooter>
             </form>

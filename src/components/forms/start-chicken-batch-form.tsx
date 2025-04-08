@@ -189,7 +189,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                                 )}
                             >
                                 <CalendarIcon />
-                                {format(startDate, 'PPP')}
+                                {format(startDate, 'PPP', { locale: vi })}
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">

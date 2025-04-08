@@ -144,6 +144,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                                     <Select
                                         onValueChange={field.onChange}
                                         defaultValue={field.value}
+                                        disabled={!!defaultValues}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Chọn nhân viên" />
