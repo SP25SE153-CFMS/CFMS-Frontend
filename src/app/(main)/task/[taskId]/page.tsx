@@ -131,29 +131,29 @@ export default function TaskDetail() {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {task.taskResources.map((resource) => (
-                                            <TableRow key={resource.taskResourceId}>
+                                        {task.taskResources.map((taskRes) => (
+                                            <TableRow key={taskRes.taskResourceId}>
                                                 <TableCell className="font-medium">
-                                                    {resource.resource?.resourceType ===
-                                                        'Thực phẩm' && resource.resource?.foodName}
-                                                    {resource.resource?.resourceType ===
+                                                    {taskRes.resource?.resourceType ===
+                                                        'Thực phẩm' && taskRes.resource?.foodName}
+                                                    {taskRes.resource?.resourceType ===
                                                         'Dược phẩm' &&
-                                                        resource.resource?.medicineName}
-                                                    {resource.resource?.resourceType ===
+                                                        taskRes.resource?.medicineName}
+                                                    {taskRes.resource?.resourceType ===
                                                         'Thiết bị' &&
-                                                        resource.resource?.equipmentName}
+                                                        taskRes.resource?.equipmentName}
                                                     {![
                                                         'Thực phẩm',
                                                         'Dược phẩm',
                                                         'Thiết bị',
-                                                    ].includes(resource.resource?.resourceType) &&
+                                                    ].includes(taskRes.resource?.resourceType) &&
                                                         'Tài nguyên khác'}
                                                 </TableCell>
                                                 <TableCell className="text-right">
-                                                    {resource.quantity}
+                                                    {taskRes.quantity}
                                                 </TableCell>
                                                 <TableCell className="text-right">
-                                                    {getQuantityUnit(resource.unitId) || 'đơn vị'}
+                                                    {getQuantityUnit(taskRes.unitId) || 'đơn vị'}
                                                 </TableCell>
                                             </TableRow>
                                         ))}
