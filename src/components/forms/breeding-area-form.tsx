@@ -201,12 +201,14 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                             <FormField
                                 control={form.control}
                                 name="imageUrl"
-                                render={({ field }) => (
+                                render={() => (
                                     <FormItem>
                                         <FormLabel>Hình ảnh khu nuôi</FormLabel>
                                         <FormControl>
                                             <CloudinaryImageUpload
-                                                onUploadComplete={(url) => field.onChange(url)}
+                                                onUploadComplete={(url) =>
+                                                    form.setValue('imageUrl', url)
+                                                }
                                                 defaultImage={defaultValues?.imageUrl}
                                             />
                                         </FormControl>

@@ -39,6 +39,7 @@ import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { formatDate } from '@/utils/functions';
 import { vi } from 'date-fns/locale';
+import { useState } from 'react';
 
 interface AddEmployeeFormProps {
     defaultValues?: Partial<FarmEmployee>;
@@ -57,6 +58,17 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
         queryKey: ['users'],
         queryFn: () => getUsers(),
     });
+
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const filteredUsers = users?.filter(
+        (user) =>
+            user.mail.toLowerCase() === searchQuery.toLowerCase() ||
+            (user.phoneNumber &&
+                user.phoneNumber.split(' ').splice(1).join('') ===
+                    searchQuery.replace(/\s/g, '')) ||
+            user.cccd?.toLowerCase() === searchQuery.toLowerCase(),
+    );
 
     // Initialize form
     const form = useForm<FarmEmployee>({
@@ -99,7 +111,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
+                <div className="grid grid-cols-1 gap-6 px-1">
                     {/* Chọn trang trại */}
                     <FormField
                         control={form.control}
@@ -152,7 +164,15 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                                             <SelectValue placeholder="Chọn nhân viên" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {users?.map((user) => (
+                                            <div className="p-2">
+                                                <Input
+                                                    placeholder="Tìm kiếm theo email, SĐT, CCCD"
+                                                    value={searchQuery}
+                                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                                    className="mb-2"
+                                                />
+                                            </div>
+                                            {filteredUsers?.map((user) => (
                                                 <SelectItem key={user.userId} value={user.userId}>
                                                     {user.fullName}
                                                 </SelectItem>
