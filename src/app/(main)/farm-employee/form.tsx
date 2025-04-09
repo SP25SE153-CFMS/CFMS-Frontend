@@ -32,14 +32,13 @@ import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { addEmployeeToFarm, getFarms, updateEmployeeInFarm } from '@/services/farm.service';
 import { getUsers } from '@/services/user.service';
-import { mapEnumToValues } from '@/utils/functions/enum.function';
-import { FarmRole, farmRoleLabels } from '@/utils/enum';
 import { Input } from '@/components/ui/input';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { formatDate } from '@/utils/functions';
 import { vi } from 'date-fns/locale';
 import { useState } from 'react';
+import { FarmRole } from '@/utils/enum';
 
 interface AddEmployeeFormProps {
     defaultValues?: Partial<FarmEmployee>;
@@ -79,7 +78,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
             startDate: new Date().toISOString(),
             endDate: null,
             status: 1,
-            farmRole: 0,
+            farmRole: FarmRole.STAFF,
             ...defaultValues,
         },
     });
@@ -291,7 +290,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                     )}
 
                     {/* Farm role */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="farmRole"
                         render={({ field }) => (
@@ -317,7 +316,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
                     {/* Trạng thái  */}
                     {/* <FormField

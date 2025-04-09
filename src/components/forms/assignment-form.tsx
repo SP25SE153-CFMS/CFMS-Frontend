@@ -38,6 +38,8 @@ import { Textarea } from '../ui/textarea';
 import { AssignmentStatus, TaskStatus } from '@/utils/enum/status.enum';
 import { vi } from 'date-fns/locale';
 import { formatDate } from '@/utils/functions';
+import MultipleSelector from '../ui/multiselect';
+import { useState } from 'react';
 
 interface AssignmentFormProps {
     defaultValues?: Partial<Assignment>;
@@ -96,14 +98,22 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
         },
     });
 
+    const [assignedToIds, setAssignedToIds] = useState<string[]>([]);
+
     // Form submit handler
-    async function onSubmit(values: Assignment) {
+    async function onSubmit(values: any) {
+        values.assignedToIds = assignedToIds;
         mutation.mutate(values);
+    }
+
+    function onError(error: any) {
+        console.error(error);
+        // toast.error(error?.response?.data?.message);
     }
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
                 <div className="grid grid-cols-1 gap-6 px-1">
                     {/* Task ID */}
                     <FormField
@@ -142,7 +152,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                             <FormItem>
                                 <FormLabel>Người được phân công</FormLabel>
                                 <FormControl>
-                                    <Select
+                                    {/* <Select
                                         onValueChange={field.onChange}
                                         defaultValue={field.value}
                                     >
@@ -159,7 +169,26 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
-                                    </Select>
+                                    </Select> */}
+                                    <MultipleSelector
+                                        commandProps={{
+                                            label: 'Chọn người được phân công',
+                                        }}
+                                        // value={field.value}
+                                        onChange={(value) => {
+                                            setAssignedToIds(value.map((item) => item.value));
+                                        }}
+                                        defaultOptions={farmEmployees?.map((employee) => ({
+                                            value: employee.userId,
+                                            label: employee.user.fullName,
+                                        }))}
+                                        placeholder="Chọn người được phân công"
+                                        hideClearAllButton
+                                        hidePlaceholderWhenSelected
+                                        emptyIndicator={
+                                            <p className="text-center text-sm">Không tìm thấy</p>
+                                        }
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -280,10 +309,9 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                         )}
                     />
                 </div>
-                {/* TODO: Update this code */}
-                {/* <Button type="submit" className="mx-auto mt-6 w-60">
-                    Gửi
-                </Button> */}
+                <Button type="submit" className="mx-auto mt-6 w-60">
+                    Giao việc
+                </Button>
             </form>
         </Form>
     );
