@@ -80,3 +80,9 @@ export const getResources = async () => {
 export const getChickens = async () => {
     return await getCategoryByType(CategoryType.CHICKEN);
 };
+
+export const getSubCategoriesByType = async (type: CategoryType) => {
+    const endpoint = PREFIX + '/sub-by-type/' + type;
+    const response = await get<Response<SubCategory[]>>(endpoint);
+    return response.data.data;
+};
