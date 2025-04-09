@@ -23,7 +23,6 @@ export default function Foods() {
     const wareId: string = searchParams.get('w') || '';
     const resourceTypeId: string = searchParams.get('r') || '';
 
-
     const openModal = () => setOpen(true);
     const closeModal = () => setOpen(false);
     const onOpenChange = (val: boolean) => setOpen(val);
@@ -65,8 +64,10 @@ export default function Foods() {
     }
     return (
         <div className="flex flex-col gap-y-5">
-            <h1 className="text-2xl font-bold tracking-tight">Quản lý kho thức ăn</h1>
-
+            <div>
+                <h1 className="text-2xl font-bold tracking-tight">Quản lý kho thức ăn</h1>
+                <p className="text-muted-foreground">Danh sách tất cả thức ăn trong trang trại</p>
+            </div>
             <div className="flex relative gap-x-4 items-center mb-4">
                 {/* <p className="font-semibold whitespace-nowrap">Tìm kiếm:</p>
                 <Search onSearch={setSearchValue} /> */}

@@ -1,13 +1,13 @@
 'use client';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { getWareByFarmId, getWarehouses } from '@/services/warehouse.service';
+import { getWareByFarmId } from '@/services/warehouse.service';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { wareStatusLabels, wareStatusVariant } from '@/utils/enum/status.enum';
-import { Package, Info, Scale, Plus } from 'lucide-react';
+import { Package, Info, Scale } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
@@ -21,7 +21,6 @@ export default function Ware() {
     const { data: wares = [], isLoading } = useQuery<WareStockResponse[]>({
         queryKey: ['wares', farmId],
         queryFn: () => getWareByFarmId(farmId),
-        enabled: !!farmId,
     });
 
     if (isLoading) {
@@ -64,10 +63,10 @@ export default function Ware() {
             case 'Thực phẩm':
                 route = '/warehouse/foods';
                 break;
-            case 'Thiết bị':
-                route = '/warehouse/vaccines';
-                break;
             case 'Dược phẩm':
+                route = '/warehouse/medicines';
+                break;
+            case 'Thiết bị':
                 route = '/equipment';
                 break;
         }

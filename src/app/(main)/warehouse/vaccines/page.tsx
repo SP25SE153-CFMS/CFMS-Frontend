@@ -69,13 +69,6 @@ export default function Page() {
                     </p>
                 </div>
                 <div className="flex gap-2">
-                    <Button
-                        variant="outline"
-                        className="space-x-1"
-                        onClick={() => downloadCSV(vaccines, 'vaccines.csv')}
-                    >
-                        <span>Tải file</span> <Download size={18} />
-                    </Button>
                     <Button className="space-x-1" onClick={openModal}>
                         <span>Tạo</span> <Plus size={18} />
                     </Button>

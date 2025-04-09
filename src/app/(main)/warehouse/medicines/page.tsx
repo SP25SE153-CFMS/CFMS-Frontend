@@ -1,9 +1,8 @@
 'use client';
 
 import { DataTable } from '@/components/table/data-table';
-import { columns } from './columns';
 import { Button } from '@/components/ui/button';
-import { Download, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -13,32 +12,36 @@ import {
 } from '@/components/ui/dialog';
 import { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import EquipmentForm from '@/components/forms/equipment-form';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
+import VaccineForm from '@/components/forms/vaccine-form';
 import { useSearchParams } from 'next/navigation';
 import { WareStockResponse } from '@/utils/types/custom.type';
 import { getWareStockByResourceTypeId } from '@/services/warehouse.service';
+import { columns } from './columns';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
-
-    const openModal = () => setOpen(true);
-    const onOpenChange = (val: boolean) => setOpen(val);
 
     const searchParams = useSearchParams();
     const wId: string = searchParams.get('w') || '';
     const rId: string = searchParams.get('r') || '';
 
-    const { data: equipments = [], isLoading } = useQuery<WareStockResponse[]>({
-        queryKey: ['equipments', wId, rId],
+    // Get data medicine trong ware-stock
+    const { data: medicines = [], isLoading } = useQuery<WareStockResponse[]>({
+        queryKey: ['medicines', wId, rId],
         queryFn: () => getWareStockByResourceTypeId(wId, rId),
         enabled: !!wId && !!rId,
     });
 
-    // Check if equipments is loading
+    console.log("All medicine: ", medicines);
+
+    const openModal = () => setOpen(true);
+    const onOpenChange = (val: boolean) => setOpen(val);
+
+    // Check if vaccines is loading
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -47,8 +50,8 @@ export default function Page() {
         );
     }
 
-    // Check if equipments is not null, undefined
-    if (!equipments) {
+    // Check if vaccines is not null, undefined
+    if (!medicines) {
         return (
             <div className="w-full h-full flex items-center justify-center">
                 <Card className="px-36 py-8">
@@ -69,10 +72,8 @@ export default function Page() {
         <div>
             <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight">Quản lý trang thiết bị</h2>
-                    <p className="text-muted-foreground">
-                        Danh sách tất cả các trang thiết bị trong trang trại
-                    </p>
+                    <h2 className="text-2xl font-bold tracking-tight">Danh mục thuốc</h2>
+                    <p className="text-muted-foreground">Danh sách tất cả thuốc trong trang trại</p>
                 </div>
                 <div className="flex gap-2">
                     <Button className="space-x-1" onClick={openModal}>
@@ -81,20 +82,20 @@ export default function Page() {
                     <Dialog open={open} onOpenChange={onOpenChange}>
                         <DialogContent className="max-w-2xl">
                             <DialogHeader>
-                                <DialogTitle>Tạo trang thiết bị mới</DialogTitle>
+                                <DialogTitle>Tạo thuốc mới</DialogTitle>
                                 <DialogDescription>
                                     Hãy nhập các thông tin dưới đây.
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <EquipmentForm closeDialog={() => setOpen(false)} />
+                                <VaccineForm closeDialog={() => setOpen(false)} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={equipments} columns={columns} />
+                <DataTable data={medicines} columns={columns} />
             </div>
         </div>
     );

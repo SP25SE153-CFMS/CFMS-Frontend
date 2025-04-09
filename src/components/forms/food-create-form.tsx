@@ -67,7 +67,7 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
         onSuccess: () => {
             closeModal();
             queryClient.invalidateQueries({ queryKey: ['foods'] });
-            toast.success('Tạo thực phẩm thành công');
+            toast.success('Tạo thức ăn thành công');
         },
         onError: (error: any) => {
             console.error(error);
@@ -99,10 +99,10 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                         name="foodName"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Tên thực phẩm</FormLabel>
+                                <FormLabel>Tên thức ăn</FormLabel>
                                 <FormControl>
                                     <div>
-                                        <Input placeholder="Nhập tên thực phẩm..." {...field} />
+                                        <Input placeholder="Nhập tên thức ăn..." {...field} />
                                     </div>
                                 </FormControl>
                             </FormItem>
@@ -114,10 +114,10 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                         name="foodCode"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Mã thực phẩm</FormLabel>
+                                <FormLabel>Mã thức ăn</FormLabel>
                                 <FormControl>
                                     <div>
-                                        <Input placeholder="Nhập mã thực phẩm..." {...field} />
+                                        <Input placeholder="Nhập mã thức ăn..." {...field} />
                                     </div>
                                 </FormControl>
                             </FormItem>

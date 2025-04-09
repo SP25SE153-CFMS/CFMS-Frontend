@@ -12,10 +12,7 @@ export const EquipmentSchema = z.object({
         .trim()
         .min(1, { message: 'Tên thiết bị là bắt buộc' })
         .max(300, { message: 'Tên thiết bị không được dài quá 300 ký tự' }),
-    purchaseDate: z
-        .string()
-        .datetime({ message: 'Ngày mua không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
-
+    purchaseDate: z.string({ message: 'Ngày mua không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
     material: z.string().optional(),
     materialId: z.string().uuid({ message: 'Chất liệu không hợp lệ' }),
     usage: z.string().optional(),
