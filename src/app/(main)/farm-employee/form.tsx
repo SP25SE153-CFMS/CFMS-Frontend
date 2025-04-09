@@ -172,9 +172,29 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                                                     className="mb-2"
                                                 />
                                             </div>
+                                            {filteredUsers?.length === 0 && (
+                                                <SelectItem value="not-found">
+                                                    Không tìm thấy kết quả
+                                                </SelectItem>
+                                            )}
                                             {filteredUsers?.map((user) => (
                                                 <SelectItem key={user.userId} value={user.userId}>
-                                                    {user.fullName}
+                                                    {user.fullName} (
+                                                    {user.mail.toLowerCase() ===
+                                                    searchQuery.toLowerCase()
+                                                        ? user.mail
+                                                        : user.phoneNumber &&
+                                                            user.phoneNumber
+                                                                .split(' ')
+                                                                .splice(1)
+                                                                .join('') ===
+                                                                searchQuery.replace(/\s/g, '')
+                                                          ? user.phoneNumber
+                                                          : user.cccd?.toLowerCase() ===
+                                                              searchQuery.toLowerCase()
+                                                            ? user.cccd
+                                                            : ''}
+                                                    )
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
