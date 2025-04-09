@@ -33,3 +33,23 @@ export const deleteGrowthStage = async (id: string) => {
     const response = await remove<Response<string>>(endpoint);
     return response.data;
 };
+
+export const addNutritionPlanToGrowthStage = async (
+    growthStageId: string,
+    nutritionPlanId: string,
+) => {
+    const endpoint = PREFIX + '/add-nutritionplan';
+    const body = { growthStageId, nutritionPlanId };
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const deleteNutritionPlanFromGrowthStage = async (
+    growthStageId: string,
+    nutritionPlanId: string,
+) => {
+    const endpoint = PREFIX + '/delete-nutritionplan';
+    const body = { growthStageId, nutritionPlanId };
+    const response = await put<Response<string>>(endpoint, body);
+    return response.data;
+};

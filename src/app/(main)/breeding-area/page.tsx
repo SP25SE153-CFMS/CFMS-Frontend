@@ -44,6 +44,7 @@ import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import BreedingAreaCard from './card';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
+import Link from 'next/link';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -181,15 +182,12 @@ export default function Page() {
         <div className="space-y-6">
             {/* Header */}
             <div className="flex items-center text-sm text-muted-foreground">
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="gap-1 p-0"
-                    onClick={() => window.history.back()}
-                >
-                    <ChevronLeft className="h-4 w-4" />
-                    Trang trại
-                </Button>
+                <Link href={config.routes.farm}>
+                    <Button variant="ghost" size="sm" className="gap-1 p-0">
+                        <ChevronLeft className="h-4 w-4" />
+                        Trang trại
+                    </Button>
+                </Link>
                 <span className="mx-2">/</span>
                 <span>Khu nuôi</span>
             </div>
