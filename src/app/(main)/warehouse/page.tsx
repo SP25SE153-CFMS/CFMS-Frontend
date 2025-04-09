@@ -1,4 +1,5 @@
 'use client';
+
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getWareByFarmId } from '@/services/warehouse.service';
 import { useQuery } from '@tanstack/react-query';
@@ -7,11 +8,10 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { wareStatusLabels, wareStatusVariant } from '@/utils/enum/status.enum';
-import { Package, Info, Scale } from 'lucide-react';
-import { Progress } from '@/components/ui/progress';
+import { Info, ArrowRight } from 'lucide-react';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
-import { WareStockResponse } from '@/utils/types/custom.type';
+import type { WareStockResponse } from '@/utils/types/custom.type';
 import { useRouter } from 'next/navigation';
 
 export default function Ware() {
@@ -31,7 +31,7 @@ export default function Ware() {
         );
     }
 
-    if (!wares) {
+    if (!wares || wares.length === 0) {
         return (
             <div className="w-full h-full flex items-center justify-center">
                 <Card className="px-8 py-8 md:px-36">
@@ -80,91 +80,53 @@ export default function Ware() {
                 <h1 className="text-2xl font-bold tracking-tight">Danh sách kho</h1>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {wares.map((ware, index) => {
-                    // Calculate percentages for visual indicators
-                    const quantityPercentage = Math.min(
-                        100,
-                        (ware.currentQuantity / ware.maxQuantity) * 100,
-                    );
-                    const weightPercentage = Math.min(
-                        100,
-                        (ware.currentWeight / ware.maxWeight) * 100,
-                    );
-
-                    return (
-                        <Card
-                            key={index}
-                            className="overflow-hidden hover:shadow-md transition-shadow"
-                        >
-                            <CardHeader className="pb-2 bg-muted/30">
-                                <CardTitle className="flex justify-between items-center">
-                                    <span className="truncate">{ware.warehouseName}</span>
-                                    <Badge variant={wareStatusVariant[ware.status]}>
-                                        {wareStatusLabels[ware.status]}
-                                    </Badge>
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="pt-4">
-                                <div className="space-y-4">
-                                    <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                                        <Info size={16} className="mt-1 shrink-0" />
-                                        <p className="line-clamp-2">
-                                            {ware.description || 'Không có mô tả'}
-                                        </p>
-                                    </div>
-
-                                    <div className="space-y-3">
-                                        <div>
-                                            <div className="flex justify-between items-center mb-1">
-                                                <div className="flex items-center gap-1.5 text-sm font-medium">
-                                                    <Package size={16} />
-                                                    <span>Số lượng</span>
-                                                </div>
-                                                <span className="text-sm">
-                                                    {ware.currentQuantity}/{ware.maxQuantity}
-                                                </span>
-                                            </div>
-                                            <Progress value={quantityPercentage} className="h-2" />
-                                        </div>
-
-                                        <div>
-                                            <div className="flex justify-between items-center mb-1">
-                                                <div className="flex items-center gap-1.5 text-sm font-medium">
-                                                    <Scale size={16} />
-                                                    <span>Khối lượng</span>
-                                                </div>
-                                                <span className="text-sm">
-                                                    {ware.currentWeight}/{ware.maxWeight}
-                                                </span>
-                                            </div>
-                                            <Progress value={weightPercentage} className="h-2" />
-                                        </div>
-                                    </div>
-
-                                    <div className="flex justify-between items-center gap-2 pt-2">
-                                        <div className="text-sm font-medium">
-                                            {ware.resourceTypeName}
-                                        </div>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() =>
-                                                navigateResourceType(
-                                                    ware.resourceTypeName,
-                                                    ware.wareId,
-                                                    ware.resourceTypeId,
-                                                )
-                                            }
-                                        >
-                                            Chi tiết
-                                        </Button>
-                                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {wares.map((ware, index) => (
+                    <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow">
+                        <CardHeader className="pb-3 bg-muted/30">
+                            <CardTitle className="flex justify-between items-center">
+                                <span className="truncate text-xl">{ware.warehouseName}</span>
+                                <Badge
+                                    variant={wareStatusVariant[ware.status]}
+                                    className="text-sm px-5 py-1 flex items-center"
+                                >
+                                    {wareStatusLabels[ware.status]}
+                                </Badge>
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="pt-4">
+                            <div className="space-y-6">
+                                <div className="flex items-start gap-3 text-muted-foreground">
+                                    <Info size={20} className="mt-1 shrink-0" />
+                                    <p className="line-clamp-2 text-base">
+                                        {ware.description || 'Không có mô tả'}
+                                    </p>
                                 </div>
-                            </CardContent>
-                        </Card>
-                    );
-                })}
+
+                                <div className="flex justify-between items-center gap-2 pt-2">
+                                    <div className="text-base font-medium">
+                                        Loại: {ware.resourceTypeName}
+                                    </div>
+                                    <Button
+                                        variant="default"
+                                        size="default"
+                                        className="gap-2 text-base font-medium hover:gap-3 transition-all"
+                                        onClick={() =>
+                                            navigateResourceType(
+                                                ware.resourceTypeName,
+                                                ware.wareId,
+                                                ware.resourceTypeId,
+                                            )
+                                        }
+                                    >
+                                        Chi tiết
+                                        <ArrowRight size={20} />
+                                    </Button>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
             </div>
         </div>
     );

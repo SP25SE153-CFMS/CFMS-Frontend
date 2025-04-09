@@ -16,7 +16,6 @@ import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
-import VaccineForm from '@/components/forms/vaccine-form';
 import { useSearchParams } from 'next/navigation';
 import { WareStockResponse } from '@/utils/types/custom.type';
 import { getWareStockByResourceTypeId } from '@/services/warehouse.service';
@@ -36,8 +35,6 @@ export default function Page() {
         queryFn: () => getWareStockByResourceTypeId(wId, rId),
         enabled: !!wId && !!rId,
     });
-
-    console.log('All medicine: ', medicines);
 
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);

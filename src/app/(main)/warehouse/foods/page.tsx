@@ -63,17 +63,16 @@ export default function Foods() {
         );
     }
     return (
-        <div className="flex flex-col gap-y-5">
-            <div>
-                <h1 className="text-2xl font-bold tracking-tight">Quản lý kho thức ăn</h1>
-                <p className="text-muted-foreground">Danh sách tất cả thức ăn trong trang trại</p>
-            </div>
-            <div className="flex relative gap-x-4 items-center mb-4">
-                {/* <p className="font-semibold whitespace-nowrap">Tìm kiếm:</p>
-                <Search onSearch={setSearchValue} /> */}
-
-                <div className="absolute right-0">
-                    <Button onClick={openModal}>
+        <div>
+            <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
+                <div>
+                    <h1 className="text-2xl font-bold tracking-tight">Quản lý kho thức ăn</h1>
+                    <p className="text-muted-foreground">
+                        Danh sách tất cả thức ăn trong trang trại
+                    </p>
+                </div>
+                <div className="flex gap-2">
+                    <Button className="space-x-1" onClick={openModal}>
                         <span>Tạo</span> <Plus size={18} />
                     </Button>
 
@@ -92,8 +91,9 @@ export default function Foods() {
                     </Dialog>
                 </div>
             </div>
-
-            <DataTable data={foods} columns={columns} />
+            <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
+                <DataTable data={foods} columns={columns} />
+            </div>
         </div>
     );
 }

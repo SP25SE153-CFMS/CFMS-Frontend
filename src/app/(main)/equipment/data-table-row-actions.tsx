@@ -32,6 +32,7 @@ import EquipmentForm from '@/components/forms/equipment-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { WareStockResponse } from '@/utils/types/custom.type';
 import { deleteResource } from '@/services/resource.service';
+import UpdateEquipmentForm from '@/components/forms/equipment-update-form';
 
 interface Props<T> {
     row: Row<T>;
@@ -40,6 +41,8 @@ interface Props<T> {
 export function DataTableRowActions<T>({ row }: Props<T>) {
     // Lấy dữ liệu từ row
     const rowData = row.original as WareStockResponse;
+    const eData = rowData.equipments || (rowData as unknown as Equipment);
+    const equipmentId = eData.equipmentId;
 
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
@@ -84,9 +87,31 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                     </DialogHeader>
                     <ScrollArea className="max-h-[600px]">
-                        <EquipmentForm
+                        <UpdateEquipmentForm
+                            equipment={{
+                                equipmentId: equipmentId,
+                                equipmentCode: eData.equipmentCode || '',
+                                equipmentName: eData.equipmentName || '',
+                                usage: eData.usage || '',
+                                material: eData.material || '',
+                                materialId: eData.materialId || '',
+                                purchaseDate: eData.purchaseDate || '',
+                                sizeUnitId: eData.sizeUnitId || '',
+                                size:
+                                    typeof eData.size === 'number'
+                                        ? eData.size
+                                        : Number(eData.size) || 0,
+                                warranty:
+                                    typeof eData.warranty === 'number'
+                                        ? eData.warranty
+                                        : Number(eData.warranty) || 0,
+                                weight:
+                                    typeof eData.weight === 'number'
+                                        ? eData.weight
+                                        : Number(eData.weight) || 0,
+                                weightUnitId: eData.weightUnitId || '',
+                            }}
                             closeDialog={() => setOpenUpdate(false)}
-                            defaultValues={row.original as Equipment}
                         />
                     </ScrollArea>
                 </DialogContent>

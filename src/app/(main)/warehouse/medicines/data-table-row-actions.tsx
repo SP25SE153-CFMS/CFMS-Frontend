@@ -29,6 +29,8 @@ import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import { deleteResource } from '@/services/resource.service';
 import { WareStockResponse } from '@/utils/types/custom.type';
+import UpdateMedicineForm from '@/components/forms/medicine-update-form';
+import { Medicine } from '@/utils/schemas/medicine.schema';
 
 interface Props<T> {
     row: Row<T>;
@@ -37,7 +39,10 @@ interface Props<T> {
 export function DataTableRowActions<T>({ row }: Props<T>) {
     // Lấy dữ liệu từ row
     const rowData = row.original as WareStockResponse;
+    const mData = rowData.medicine || (rowData as unknown as Medicine);
+    const medicineId = mData.medicineId;
 
+    // console.log('Disease id: ', mData.diseaseId);
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
@@ -79,7 +84,22 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         <DialogTitle>Cập nhật thuốc</DialogTitle>
                         <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                     </DialogHeader>
-                    <ScrollArea className="max-h-[600px]"></ScrollArea>
+                    <ScrollArea className="max-h-[600px]">
+                        <UpdateMedicineForm
+                            medicine={{
+                                medicineId: medicineId,
+                                medicineName: mData.medicineName || '',
+                                medicineCode: mData.medicineCode || '',
+                                usage: mData.usage || '',
+                                diseaseId: mData.diseaseId || '',
+                                dosageForm: mData.dosageForm || '',
+                                storageCondition: mData.storageCondition || '',
+                                productionDate: mData.productionDate || '',
+                                expiryDate: mData.expiryDate || '',
+                            }}
+                            closeModal={() => setOpenUpdate(false)}
+                        />
+                    </ScrollArea>
                 </DialogContent>
             </Dialog>
 

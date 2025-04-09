@@ -241,7 +241,7 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                     {/* Size */}
                     <FormField
                         control={form.control}
-                        name="packageSize"
+                        name="size"
                         render={({ field }) => {
                             return (
                                 <FormItem>

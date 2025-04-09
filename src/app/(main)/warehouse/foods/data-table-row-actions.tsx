@@ -49,7 +49,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     // Xác định dữ liệu food từ rowData
     // Nếu rowData.foods tồn tại, sử dụng nó, nếu không thử sử dụng rowData trực tiếp
     const foodData = rowData.foods || (rowData as unknown as Food);
-
+console.log("Food data: ", foodData);
     // Lấy foodId từ nguồn phù hợp
     const foodId = foodData.foodId || (rowData as any).foodId;
 
