@@ -38,12 +38,13 @@ interface Props<T> {
     row: Row<T>;
 }
 export function DataTableRowActions<T>({ row }: Props<T>) {
+    // Lấy dữ liệu từ row
+    const rowData = row.original as WareStockResponse;
+    
     const [openDelete, setOpenDelete] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
     const queryClient = useQueryClient();
 
-    // Lấy dữ liệu từ row
-    const rowData = row.original as WareStockResponse;
 
     // Xác định dữ liệu food từ rowData
     // Nếu rowData.foods tồn tại, sử dụng nó, nếu không thử sử dụng rowData trực tiếp

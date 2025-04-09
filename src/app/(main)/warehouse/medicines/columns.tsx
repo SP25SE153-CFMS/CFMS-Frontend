@@ -3,6 +3,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { WareStockResponse } from '@/utils/types/custom.type';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
+import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<WareStockResponse>[] = [
     {
@@ -89,6 +90,6 @@ export const columns: ColumnDef<WareStockResponse>[] = [
     },
     {
         id: 'actions',
-        // cell: ({ row }) => <DataTableRowActions row={row} />,
+        cell: ({ row }) => <DataTableRowActions row={row} />,
     },
 ];
