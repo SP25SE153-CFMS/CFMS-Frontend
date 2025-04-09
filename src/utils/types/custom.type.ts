@@ -26,6 +26,8 @@ import { VaccinationLog } from '../schemas/vaccine.schema';
 import { NutritionPlan } from '../schemas/nutrition-plan.schema';
 import { NutritionPlanDetail } from '../schemas/nutrition-plan-detail.schema';
 import { FeedSession } from '../schemas/feed-session.schema';
+import { ShiftSchedule } from '../schemas/shift-schedule.schema';
+import { TaskResource } from '../schemas/task-resource.schema';
 
 export type EntityAudit = {
     isDeleted: boolean;
@@ -118,8 +120,11 @@ export type ResourceResponse = Resource & {
 
 export type TaskResponse = Task & {
     assignments: Assignment[];
-    startWorkDate: string | Date;
-    endWorkDate: string | Date;
+    startWorkDate: string;
+    endWorkDate: string;
+    shiftSchedules: ShiftSchedule[];
+    taskResources: TaskResource[];
+    taskType: SubCategory;
 };
 
 export type ChickenDetailRequest = {

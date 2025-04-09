@@ -9,7 +9,7 @@ import { addDays, format } from 'date-fns';
 import { vi } from 'date-fns/locale';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateTask, CreateTaskSchema } from '@/utils/schemas/task.schema';
+import { CreateTask, CreateTaskSchema, Task } from '@/utils/schemas/task.schema';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -88,7 +88,7 @@ const LOCATION_TYPES = [
     { value: 'WARE', label: 'Nhà kho' },
 ];
 
-export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
+export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [locationType, setLocationType] = useState<string>('');
