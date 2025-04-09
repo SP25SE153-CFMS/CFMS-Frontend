@@ -33,7 +33,7 @@ import InfoItem from '@/components/info-item';
 import { Activity, Calendar, IdCard, Mail, MapPin, Phone, Tag } from 'lucide-react';
 import dayjs from 'dayjs';
 import { Badge } from '@/components/ui/badge';
-import { employeeStatusLabels, employeeStatusVariant } from '@/utils/enum/status.enum';
+import { userStatusLabels, userStatusVariant } from '@/utils/enum/status.enum';
 import FarmEmployeeForm from './form';
 import { FarmEmployeeResponse } from '@/utils/types/custom.type';
 
@@ -144,8 +144,8 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                             <InfoItem
                                 label="Trạng thái"
                                 value={
-                                    <Badge variant={employeeStatusVariant[employee.status]}>
-                                        {employeeStatusLabels[employee.status]}
+                                    <Badge variant={userStatusVariant[employee.status]}>
+                                        {userStatusLabels[employee.status]}
                                     </Badge>
                                 }
                                 icon={<Activity size={16} />}

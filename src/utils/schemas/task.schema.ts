@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { TaskStatus } from '../enum/status.enum';
 
 export const TaskSchema = z.object({
     taskId: z.string().uuid({ message: 'ID công việc không hợp lệ, phải là UUID' }),
@@ -6,7 +7,7 @@ export const TaskSchema = z.object({
     taskTypeId: z.string().uuid({ message: 'ID loại công việc không hợp lệ, phải là UUID' }),
     description: z.string().optional(),
     isHavest: z.boolean().default(false),
-    status: z.number().int().min(0).max(2),
+    status: z.nativeEnum(TaskStatus, { message: 'Trạng thái không hợp lệ' }),
 });
 
 export const CreateTaskSchema = TaskSchema.extend({

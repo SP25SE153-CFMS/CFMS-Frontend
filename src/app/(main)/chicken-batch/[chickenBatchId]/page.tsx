@@ -5,7 +5,6 @@ import {
     Calendar,
     ClipboardList,
     Database,
-    Egg,
     FileText,
     Info,
     InfoIcon,
@@ -28,14 +27,14 @@ import CardNutritionPlan from './components/nutrition/card';
 import CardHealthLog from './components/health/card';
 import CardQuantityLog from './components/quantity/card';
 import CardFeedLog from './components/feed/card';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Stepper } from '@/components/ui/stepper';
 import { Chart } from './chart';
 import { getChickenType } from '@/utils/functions/category.function';
 import InfoItem from '@/components/info-item';
 import { Button } from '@/components/ui/button';
 import ChickenDetailsDialog from '@/components/chicken-details-dialog';
-
+import { GrowthStage } from '@/utils/schemas/growth-stage.schema';
 export default function Page() {
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
 
@@ -47,7 +46,13 @@ export default function Page() {
 
     const chicken = chickenBatch?.chicken;
 
-    const [visitStep, setVisitStep] = useState(-1);
+    const [currentGrowthStage, setCurrentGrowthStage] = useState<GrowthStage | null>(
+        chickenBatch?.growthBatches[0]?.growthStage || null,
+    );
+
+    useEffect(() => {
+        setCurrentGrowthStage(chickenBatch?.growthBatches[0]?.growthStage || null);
+    }, [chickenBatch]);
 
     if (isLoading) {
         return (
@@ -147,7 +152,7 @@ export default function Page() {
                                     value={chicken?.chickenName || 'Không có tên gà'}
                                 />
 
-                                <InfoItem
+                                {/* <InfoItem
                                     icon={<Egg className="h-4 w-4" />}
                                     label="Tổng số lượng"
                                     value={
@@ -155,7 +160,7 @@ export default function Page() {
                                             ? chicken?.totalQuantity.toString()
                                             : 'Không có số lượng'
                                     }
-                                />
+                                /> */}
 
                                 <InfoItem
                                     icon={<FileText className="h-4 w-4" />}
@@ -195,7 +200,7 @@ export default function Page() {
                                             <span>Xem chi tiết</span>
                                         </Button>
                                     }
-                                    chickenDetails={chicken?.chickenDetails}
+                                    chickenDetails={chickenBatch?.chickenDetails}
                                 />
                             </div>
                         ) : (
@@ -270,22 +275,25 @@ export default function Page() {
             </div>
 
             <Stepper
-                steps={[
-                    'Giai đoạn 1',
-                    'Giai đoạn 2',
-                    'Giai đoạn 3',
-                    'Giai đoạn 4',
-                    'Giai đoạn 5',
-                    'Giai đoạn 6',
-                ]}
-                activeStep={2}
-                visitStep={visitStep}
-                onStepClick={(step) => setVisitStep(step)}
+                steps={chickenBatch?.growthBatches
+                    .map((batch) => batch.growthStage.stageName)
+                    .reverse()}
+                activeStep={
+                    chickenBatch?.growthBatches.findIndex((batch) => batch.status === 1) || 0
+                }
+                visitStep={chickenBatch?.growthBatches.findIndex(
+                    (batch) => batch.growthStageId === currentGrowthStage?.growthStageId,
+                )}
+                onStepClick={(step) =>
+                    setCurrentGrowthStage(chickenBatch?.growthBatches[step].growthStage)
+                }
                 className="mb-4 max-w-3xl mx-auto"
             />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 my-6">
                 <div>
-                    <CardNutritionPlan />
+                    {currentGrowthStage?.nutritionPlanId && (
+                        <CardNutritionPlan nutritionPlanId={currentGrowthStage?.nutritionPlanId} />
+                    )}
                 </div>
                 <div className="col-span-2">
                     <Chart />

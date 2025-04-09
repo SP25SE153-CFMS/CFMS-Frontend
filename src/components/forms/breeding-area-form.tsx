@@ -26,6 +26,9 @@ import { CloudinaryImageUpload } from '../cloudinary-image-upload';
 import { getFarmsForCurrentUser } from '@/services/farm.service';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
+import { CategoryType } from '@/utils/enum/category.enum';
+import { SelectNative } from '../ui/select-native';
+import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 interface BreedingAreaFormProps {
     defaultValues?: Partial<BreedingArea>;
     closeDialog: () => void;
@@ -41,6 +44,7 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
             breedingAreaCode: '',
             breedingAreaName: '',
             area: 0,
+            areaUnitId: '',
             imageUrl: '',
             notes: '',
             status: 1,
@@ -124,19 +128,40 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                                     control={form.control}
                                     name="area"
                                     render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Diện tích (m²)</FormLabel>
-                                            <FormControl>
+                                        <FormItem className="mt-[6px]">
+                                            <FormLabel className="flex items-center">
+                                                Diện tích
+                                            </FormLabel>
+                                            <div className="flex rounded-md shadow-sm">
                                                 <Input
+                                                    className="rounded-e-none h-10"
+                                                    placeholder="Nhập số lượng"
                                                     type="number"
-                                                    placeholder="Nhập diện tích"
                                                     min={0}
                                                     {...field}
-                                                    onChange={(e) =>
-                                                        field.onChange(Number(e.target.value))
-                                                    }
+                                                    onChange={(e) => {
+                                                        field.onChange(e.target.value);
+                                                    }}
                                                 />
-                                            </FormControl>
+                                                <SelectNative
+                                                    className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
+                                                    value={form.getValues('areaUnitId')}
+                                                    onChange={(e) => {
+                                                        form.setValue('areaUnitId', e.target.value);
+                                                    }}
+                                                >
+                                                    {getSubCategoryByCategoryType(
+                                                        CategoryType.AREA_UNIT,
+                                                    )?.map((unit) => (
+                                                        <option
+                                                            key={unit.subCategoryId}
+                                                            value={unit.subCategoryId}
+                                                        >
+                                                            {unit.subCategoryName}
+                                                        </option>
+                                                    ))}
+                                                </SelectNative>
+                                            </div>
                                             <FormMessage />
                                         </FormItem>
                                     )}

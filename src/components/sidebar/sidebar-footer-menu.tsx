@@ -22,13 +22,26 @@ import {
 import initials from 'initials';
 import Link from 'next/link';
 import config from '@/configs';
-import { currentUser } from '@/utils/data/mock.data';
 import { signOutUser } from '@/utils/functions/sign-out.function';
+import { useQuery } from '@tanstack/react-query';
+import { getCurrentUser } from '@/services/auth.service';
+import { LoadingSpinner } from '../ui/loading-spinner';
 
 export default function SidebarFooterMenu() {
     const { isMobile } = useSidebar();
 
-    const user = currentUser;
+    const { data: user, isLoading } = useQuery({
+        queryKey: ['user'],
+        queryFn: () => getCurrentUser(),
+    });
+
+    if (isLoading) {
+        return <LoadingSpinner className="size-8" />;
+    }
+
+    if (!user) {
+        return <h1>Không tìm thấy thông tin người dùng</h1>;
+    }
 
     return (
         <SidebarMenu>

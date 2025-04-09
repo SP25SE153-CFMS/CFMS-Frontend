@@ -27,10 +27,11 @@ interface CategoryFormProps {
 }
 
 export default function CategoryForm({ defaultValues, closeDialog }: CategoryFormProps) {
-    if (defaultValues && defaultValues.status) {
-        defaultValues.status = defaultValues.status.toString() as '0' | '1';
-    } else if (defaultValues) {
-        defaultValues.status = '1';
+    // if (defaultValues && defaultValues.status) {
+    //     defaultValues.status = defaultValues.status;
+    // } else
+    if (defaultValues) {
+        defaultValues.status = 1;
     }
 
     // Initialize form

@@ -13,6 +13,7 @@ interface Props<T> {
     row: Row<T>;
 }
 
+// eslint-disable-next-line no-unused-vars
 export function DataTableRowActions<T>({ row }: Props<T>) {
     return (
         <>

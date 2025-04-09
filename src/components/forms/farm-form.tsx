@@ -35,6 +35,9 @@ import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { Scale, scaleLabels } from '@/utils/enum/status.enum';
 import { getAddress } from '@/services/map.service';
 import { PhoneInput } from '@/components/ui/phone-input';
+import { SelectNative } from '../ui/select-native';
+import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { CategoryType } from '@/utils/enum/category.enum';
 
 // Dynamically import the map component with no SSR
 const LocationMapWithNoSSR = dynamic(() => import('../map/location-map'), { ssr: false });
@@ -56,6 +59,7 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
             farmCode: '',
             address: '',
             area: 0,
+            areaUnitId: '',
             scale: 0,
             phoneNumber: '',
             website: '',
@@ -142,17 +146,33 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
                             control={form.control}
                             name="area"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Diện tích (ha)</FormLabel>
-                                    <FormControl>
+                                <FormItem className="mt-[6px]">
+                                    <FormLabel className="flex items-center">Diện tích</FormLabel>
+                                    <div className="flex rounded-md shadow-sm">
                                         <Input
+                                            className="rounded-e-none h-10"
+                                            placeholder="Nhập số lượng"
                                             type="number"
                                             min={0}
-                                            placeholder="Nhập diện tích"
                                             {...field}
                                             onChange={(e) => field.onChange(Number(e.target.value))}
                                         />
-                                    </FormControl>
+                                        <SelectNative
+                                            className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
+                                            value={form.getValues('areaUnitId')}
+                                        >
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.AREA_UNIT,
+                                            )?.map((unit) => (
+                                                <option
+                                                    key={unit.subCategoryId}
+                                                    value={unit.subCategoryId}
+                                                >
+                                                    {unit.subCategoryName}
+                                                </option>
+                                            ))}
+                                        </SelectNative>
+                                    </div>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -350,7 +370,7 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
                 </CardContent>
                 <CardFooter>
                     <Button type="submit" className="w-full">
-                        Đăng ký trang trại
+                        {defaultValues ? 'Cập nhật trang trại' : 'Đăng ký trang trại'}
                     </Button>
                 </CardFooter>
             </form>

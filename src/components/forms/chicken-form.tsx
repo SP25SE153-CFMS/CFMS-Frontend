@@ -39,7 +39,7 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
             chickenId: '',
             chickenCode: '',
             chickenName: '',
-            totalQuantity: 0,
+            // totalQuantity: 0,
             description: '',
             status: 1,
             chickenTypeId: '',
@@ -106,7 +106,7 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                     />
 
                     {/* Total Quantity */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="totalQuantity"
                         render={({ field }) => (
@@ -123,7 +123,7 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
                     {/* Description */}
                     <FormField

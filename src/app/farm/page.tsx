@@ -37,7 +37,7 @@ export default function Page() {
 
     // Filter states
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedScale, setSelectedScale] = useState<number>(0);
+    const [selectedScale, setSelectedScale] = useState<number>(-1);
     const [areaRange, setAreaRange] = useState<[number, number]>([0, 10000]);
     const [showFilters, setShowFilters] = useState(true);
 

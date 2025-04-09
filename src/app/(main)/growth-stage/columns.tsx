@@ -4,11 +4,10 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { GrowthStage } from '@/utils/schemas/growth-stage.schema';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
-import Link from 'next/link';
 import { DataTableRowActions } from './data-table-row-actions';
-import config from '@/configs';
 import { getChickenType } from '@/utils/functions/category.function';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { NutritionPlan } from '@/utils/schemas/nutrition-plan.schema';
 
 export const columns: ColumnDef<GrowthStage>[] = [
     {
@@ -44,9 +43,10 @@ export const columns: ColumnDef<GrowthStage>[] = [
         accessorKey: 'stageName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên giai đoạn" />,
         cell: ({ row }) => (
-            <Link href={`${config.routes.growthStage}/${row.getValue('growthStageId')}`}>
-                {row.getValue('stageName')}
-            </Link>
+            // <Link href={`${config.routes.growthStage}/${row.getValue('growthStageId')}`}>
+            //     {row.getValue('stageName')}
+            // </Link>\
+            <div>{row.getValue('stageName')}</div>
         ),
     },
     {
@@ -56,7 +56,7 @@ export const columns: ColumnDef<GrowthStage>[] = [
             <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger>
-                        <div className="w-[300px] truncate">{row.getValue('description')}</div>
+                        <div className="max-w-[200px] truncate">{row.getValue('description')}</div>
                     </TooltipTrigger>
                     <TooltipContent>{row.getValue('description')}</TooltipContent>
                 </Tooltip>
@@ -66,9 +66,7 @@ export const columns: ColumnDef<GrowthStage>[] = [
     {
         accessorKey: 'stageCode',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mã giai đoạn" />,
-        cell: ({ row }) => (
-            <div className="w-[150px]">{row.getValue('stageCode') ?? 'Không có'}</div>
-        ),
+        cell: ({ row }) => <div>{row.getValue('stageCode') ?? 'Không có'}</div>,
     },
     {
         accessorKey: 'chickenType',
@@ -80,17 +78,27 @@ export const columns: ColumnDef<GrowthStage>[] = [
     },
     {
         accessorKey: 'minAgeWeek',
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Tuổi bắt đầu (tuần)" />
-        ),
-        cell: ({ row }) => <div>{row.getValue('minAgeWeek')}</div>,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Tuổi bắt đầu" />,
+        cell: ({ row }) => <div>Tuần {row.getValue('minAgeWeek')}</div>,
     },
     {
         accessorKey: 'maxAgeWeek',
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Tuổi kết thúc (tuần)" />
-        ),
-        cell: ({ row }) => <div>{row.getValue('maxAgeWeek')}</div>,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Tuổi kết thúc" />,
+        cell: ({ row }) => <div>Tuần {row.getValue('maxAgeWeek')}</div>,
+    },
+    {
+        accessorKey: 'nutritionPlanId',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Chế độ dinh dưỡng" />,
+        cell: ({ row }) => {
+            const nutritionPlanId = row.getValue('nutritionPlanId') as string;
+            const nutritionPlans = JSON.parse(
+                sessionStorage.getItem('nutritionPlans') || '[]',
+            ) as NutritionPlan[];
+            const nutritionPlan = nutritionPlans.find(
+                (plan) => plan.nutritionPlanId === nutritionPlanId,
+            );
+            return <div>{nutritionPlan?.name ?? 'Không có'}</div>;
+        },
     },
     {
         id: 'actions',

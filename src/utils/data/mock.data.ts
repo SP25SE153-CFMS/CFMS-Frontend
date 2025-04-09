@@ -6,7 +6,7 @@ export const currentUser: User = {
     fullName: 'Duong Truong',
     phoneNumber: '+84 987 654 321',
     dateOfBirth: '1990-01-01',
-    status: '1',
+    status: 1,
     address: 'TP Hồ Chí Minh',
     cccd: '0742123456',
     mail: 'duongtruong@gmail.com',

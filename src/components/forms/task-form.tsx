@@ -643,7 +643,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
                                     Chọn các ca làm việc cho công việc này.
                                 </FormDescription>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                 {shifts?.map((shift) => (
                                     <div
                                         key={shift.shiftId}
@@ -668,7 +668,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
                                             />
                                         </FormControl>
                                         <label className="font-normal cursor-pointer flex-1 text-sm">
-                                            {shift.shiftName}
+                                            {shift.shiftName} ({shift.startTime} - {shift.endTime})
                                         </label>
                                     </div>
                                 ))}
@@ -923,17 +923,19 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
                                         />
                                     </div>
 
-                                    <div className="md:col-span-2 flex justify-end items-end h-full pb-1">
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() => remove(index)}
-                                            className="h-9 w-9 text-destructive hover:text-destructive hover:bg-destructive/10"
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
-                                    </div>
+                                    {fields.length > 0 && (
+                                        <div className="md:col-span-2 flex justify-end items-end h-full pb-1">
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => remove(index)}
+                                                className="h-9 w-9 text-destructive hover:text-destructive hover:bg-destructive/10"
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>

@@ -60,10 +60,10 @@ export const columns: ColumnDef<ChickenResponse>[] = [
             return <span>{getChickenType(chickenTypeId)}</span>;
         },
     },
-    {
-        accessorKey: 'totalQuantity',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tổng số lượng" />,
-    },
+    // {
+    //     accessorKey: 'totalQuantity',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Tổng số lượng" />,
+    // },
     {
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,

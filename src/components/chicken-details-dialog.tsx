@@ -7,7 +7,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { ChickenDetail } from '@/utils/schemas/chicken-detail.schema';
-import { Award, Info, Weight } from 'lucide-react';
+import { Award, Info } from 'lucide-react';
 import { chickenGenderLabels, chickenGenderVariant } from '@/utils/enum/gender.enum';
 import { Badge } from './ui/badge';
 
@@ -41,12 +41,12 @@ export default function ChickenDetailsDialog({
                                     key={index}
                                     className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-md bg-muted/50 hover:bg-muted transition-colors"
                                 >
-                                    <div className="flex items-center mb-2 sm:mb-0">
+                                    {/* <div className="flex items-center mb-2 sm:mb-0">
                                         <Weight className="h-4 w-4 mr-2 text-primary" />
                                         <span className="font-medium">
                                             Trọng lượng: {detail.weight || 0} kg
                                         </span>
-                                    </div>
+                                    </div> */}
 
                                     <div className="flex items-center mb-2 sm:mb-0">
                                         <Award className="h-4 w-4 mr-2 text-primary" />

@@ -24,11 +24,11 @@ import {
 import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { useParams } from 'next/navigation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { getEquipments } from '@/services/equipment.service';
 import { addCoopEquipment, updateCoopEquipment } from '@/services/chicken-coop.service';
+import { vi } from 'date-fns/locale';
 
 interface CoopEquipmentFormProps {
     defaultValues?: Partial<CoopEquipment>;
@@ -55,7 +55,7 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
             lastMaintenanceDate: null,
             nextMaintenanceDate: null,
             maintenanceInterval: 1,
-            status: '0',
+            status: 0,
             note: '',
             ...defaultValues,
         },
@@ -99,14 +99,14 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
         console.error(errors);
     }
 
-    const chickenCoops: ChickenCoop[] = JSON.parse(sessionStorage.getItem('chickenCoops') || '[]');
+    // const chickenCoops: ChickenCoop[] = JSON.parse(sessionStorage.getItem('chickenCoops') || '[]');
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
                     {/* Chicken Coop ID */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="chickenCoopId"
                         render={() => (
@@ -129,7 +129,7 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
                     {/* Equipment ID */}
                     <FormField
@@ -233,6 +233,7 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                                                 );
                                             }}
                                             initialFocus
+                                            locale={vi}
                                         />
                                     </PopoverContent>
                                 </Popover>
@@ -285,6 +286,7 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                                                 );
                                             }}
                                             initialFocus
+                                            locale={vi}
                                         />
                                     </PopoverContent>
                                 </Popover> */}
@@ -330,6 +332,7 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                                             }
                                             onSelect={(date) => field.onChange(date?.toISOString())}
                                             initialFocus
+                                            locale={vi}
                                         />
                                     </PopoverContent>
                                 </Popover> */}

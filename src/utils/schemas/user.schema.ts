@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UserStatus } from '../enum/status.enum';
 
 export const UserSchema = z.object({
     userId: z.string().uuid({ message: 'ID người dùng không hợp lệ, phải là UUID' }),
@@ -20,9 +21,7 @@ export const UserSchema = z.object({
         .string()
         .datetime({ message: 'Ngày sinh không hợp lệ, phải là định dạng ngày giờ hợp lệ' })
         .optional(),
-    status: z.enum(['0', '1'], {
-        message: "status chỉ có thể là '0' (Ngừng hoạt động) hoặc '1' (Đang hoạt động)",
-    }),
+    status: z.nativeEnum(UserStatus, { message: 'Trạng thái không hợp lệ' }),
     address: z.string().max(500, { message: 'Địa chỉ không được vượt quá 500 ký tự' }).optional(),
     cccd: z
         .string()
@@ -37,4 +36,4 @@ export const UserSchema = z.object({
 });
 
 export type User = z.infer<typeof UserSchema>;
-export const CreateUserSchema = UserSchema.omit({ userId: true });
+export const CreateUserSchema = UserSchema.omit({ userId: true, status: true });

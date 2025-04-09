@@ -12,7 +12,7 @@ import {
     DropdownMenuTrigger,
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { Filter } from 'lucide-react';
+import { AlignRight } from 'lucide-react';
 
 interface BreedingAreaCardProps {
     area: BreedingArea;
@@ -60,7 +60,7 @@ export default function BreedingAreaCard({
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="sm">
                             <span className="sr-only">Mở menu</span>
-                            <Filter className="h-4 w-4" />
+                            <AlignRight className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">

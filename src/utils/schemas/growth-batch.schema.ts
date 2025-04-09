@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { CommonStatus } from '../enum/status.enum';
 
 export const GrowthBatchSchema = z.object({
     growthBatchId: z.string().uuid({ message: 'ID lô tăng trưởng không hợp lệ, phải là UUID' }),
@@ -19,7 +20,7 @@ export const GrowthBatchSchema = z.object({
         .number()
         .positive({ message: 'Lượng thức ăn tiêu thụ phải là số dương' }),
     note: z.string().optional(),
-    status: z.boolean({ message: 'Trạng thái phải là giá trị boolean' }),
+    status: z.nativeEnum(CommonStatus, { message: 'Trạng thái không hợp lệ' }),
 });
 
 export type GrowthBatch = z.infer<typeof GrowthBatchSchema>;

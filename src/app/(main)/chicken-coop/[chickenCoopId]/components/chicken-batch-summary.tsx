@@ -29,7 +29,11 @@ import {
 } from '@/components/ui/select';
 import { Button, buttonVariants } from '@/components/ui/button';
 import type { ChickenBatch } from '@/utils/schemas/chicken-batch.schema';
-import { chickenBatchStatusLabels, chickenBatchStatusVariant } from '@/utils/enum/status.enum';
+import {
+    ChickenBatchStatus,
+    chickenBatchStatusLabels,
+    chickenBatchStatusVariant,
+} from '@/utils/enum/status.enum';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import config from '@/configs';
@@ -47,6 +51,7 @@ import { calculateDuration } from './batch-progress';
 import { endChickenBatch } from '@/services/chicken-batch.service';
 import toast from 'react-hot-toast';
 import StartChickenBatchForm from '@/components/forms/start-chicken-batch-form';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[] }) => {
     const [open, setOpen] = useState(false);
@@ -68,14 +73,28 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
         }
     };
 
+    const queryClient = useQueryClient();
+
     const closeChickenBatch = async () => {
         try {
             await endChickenBatch(currentChickenBatch.chickenBatchId);
+            queryClient.invalidateQueries({
+                queryKey: ['chickenCoop', currentChickenBatch.chickenCoopId],
+            });
             toast.success('Kết thúc lứa nuôi thành công');
         } catch (error) {
             toast.error('Kết thúc lứa nuôi thất bại');
         }
     };
+
+    const duration = calculateDuration(
+        currentChickenBatch?.startDate,
+        currentChickenBatch?.endDate,
+    );
+
+    const isAllBatchCompleted = chickenBatches?.every(
+        (batch) => batch.status === ChickenBatchStatus.COMPLETED,
+    );
 
     // const timeOptions = ['ngày', 'tuần', 'tháng', 'năm'];
 
@@ -85,42 +104,45 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                 <h3 className="h-min font-bold pl-3 text-lg relative before:content-[''] before:absolute before:top-[3px] before:left-0 before:w-[4px] before:h-full before:bg-primary inline-block">
                     Lứa nuôi hiện tại
                 </h3>
-                <PopoverWithOverlay>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 rounded-full hover:bg-muted"
-                        >
-                            <AlignRight size={18} />
-                            <span className="sr-only">Chọn lứa nuôi</span>
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="p-0 w-64">
-                        <Select
-                            defaultValue={currentChickenBatch?.chickenBatchId}
-                            onValueChange={handleBatchChange}
-                        >
-                            <SelectTrigger className="border-0 focus:ring-0">
-                                <SelectValue placeholder="Đổi lứa nuôi..." />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {chickenBatches?.map((batch) => (
-                                    <SelectItem
-                                        key={batch.chickenBatchId}
-                                        value={batch.chickenBatchId}
-                                        className="cursor-pointer"
-                                    >
-                                        {batch.chickenBatchName}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </PopoverContent>
-                </PopoverWithOverlay>
+                {chickenBatches?.length > 0 && (
+                    <PopoverWithOverlay>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 rounded-full hover:bg-muted"
+                            >
+                                <AlignRight size={18} />
+                                <span className="sr-only">Chọn lứa nuôi</span>
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="p-0 w-64">
+                            <Select
+                                defaultValue={currentChickenBatch?.chickenBatchId}
+                                onValueChange={handleBatchChange}
+                            >
+                                <SelectTrigger className="border-0 focus:ring-0">
+                                    <SelectValue placeholder="Đổi lứa nuôi..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {chickenBatches?.map((batch) => (
+                                        <SelectItem
+                                            key={batch.chickenBatchId}
+                                            value={batch.chickenBatchId}
+                                            className="cursor-pointer"
+                                        >
+                                            {batch.chickenBatchName}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </PopoverContent>
+                    </PopoverWithOverlay>
+                )}
             </CardHeader>
 
-            {currentChickenBatch && currentChickenBatch?.status?.toString() !== '0' ? (
+            {/* {currentChickenBatch && currentChickenBatch?.status !== ChickenBatchStatus.COMPLETED ? ( */}
+            {currentChickenBatch && !isAllBatchCompleted ? (
                 <>
                     <CardContent className="pb-0">
                         <h3 className="mb-2 font-semibold">
@@ -154,7 +176,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
 
                         <InfoItem
                             label="Thời gian nuôi"
-                            value={`${calculateDuration(currentChickenBatch?.startDate, currentChickenBatch?.endDate)} ngày`}
+                            value={`${duration > 0 ? `${duration} ngày` : 'Chưa bắt đầu'}`}
                             icon={<Timer size={16} />}
                         />
                     </CardContent>
@@ -171,30 +193,32 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                             <span>Xem chi tiết</span>
                         </Link>
 
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button variant="destructive" className="w-full">
-                                    Kết thúc lứa nuôi
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>
-                                        Bạn có chắc chắn muốn kết thúc lứa nuôi này?
-                                    </AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        Ấn kết thúc khi lứa nuôi đã hoàn thành để có được thống kê
-                                        hoạt động và bắt đầu một lứa nuôi mới.
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Hủy</AlertDialogCancel>
-                                    <AlertDialogAction onClick={closeChickenBatch}>
-                                        Kết thúc
-                                    </AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
+                        {currentChickenBatch?.status === ChickenBatchStatus.ACTIVE && (
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button variant="destructive" className="w-full">
+                                        Kết thúc lứa nuôi
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>
+                                            Bạn có chắc chắn muốn kết thúc lứa nuôi này?
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            Ấn kết thúc khi lứa nuôi đã hoàn thành để có được thống
+                                            kê hoạt động và bắt đầu một lứa nuôi mới.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Hủy</AlertDialogCancel>
+                                        <AlertDialogAction onClick={closeChickenBatch}>
+                                            Kết thúc
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        )}
                     </CardFooter>
                 </>
             ) : (
@@ -214,7 +238,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                                     Bắt đầu lứa nuôi mới
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-md">
+                            <DialogContent className="max-w-4xl">
                                 <DialogHeader>
                                     <DialogTitle>Bắt đầu lứa nuôi mới</DialogTitle>
                                     <DialogDescription>
