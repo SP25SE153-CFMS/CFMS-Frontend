@@ -135,3 +135,10 @@ export type NutritionPlanResponse = NutritionPlan & {
     nutritionPlanDetails: NutritionPlanDetail[];
     feedSessions: FeedSession[];
 };
+
+export type DashboardResponse = {
+    totalChicken: number;
+    totalEmployee: number;
+    totalChickenDeath: number;
+    chickenBatches: ChickenBatchResponse[];
+};

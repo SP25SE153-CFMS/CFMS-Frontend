@@ -35,7 +35,7 @@ import { getEmployeesByFarmId } from '@/services/farm.service';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { Textarea } from '../ui/textarea';
-import { AssignmentStatus } from '@/utils/enum/status.enum';
+import { AssignmentStatus, TaskStatus } from '@/utils/enum/status.enum';
 import { vi } from 'date-fns/locale';
 import { formatDate } from '@/utils/functions';
 
@@ -63,7 +63,12 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
 
     const { data: tasks } = useQuery({
         queryKey: ['tasks'],
-        queryFn: () => getTasks(),
+        queryFn: async () => {
+            const tasks = await getTasks();
+            return tasks.filter(
+                (task) => task.status === TaskStatus.PENDING || task.status === TaskStatus.ASSIGNED,
+            );
+        },
     });
 
     const { data: farmEmployees } = useQuery({
