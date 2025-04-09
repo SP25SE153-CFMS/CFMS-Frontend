@@ -25,7 +25,6 @@ export const getWareByFarmId = async (id: string) => {
 
 export const getWareStockByResourceTypeId = async (wareId: string, resourceTypeId: string) => {
     const endpoint = PREFIX + '/' + 'warestocks' + '/' + wareId + '/' + resourceTypeId;
-    console.log('WareStock End Point: ', endpoint);
     const response = await get<Response<WareStockResponse[]>>(endpoint);
     return response.data.data;
 };
