@@ -67,9 +67,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
         queryKey: ['tasks'],
         queryFn: async () => {
             const tasks = await getTasks();
-            return tasks.filter(
-                (task) => task.status === TaskStatus.PENDING || task.status === TaskStatus.ASSIGNED,
-            );
+            return tasks.filter((task) => task.status === TaskStatus.PENDING);
         },
     });
 
