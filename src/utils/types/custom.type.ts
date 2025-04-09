@@ -118,12 +118,16 @@ export type ResourceResponse = Resource & {
     weight: number;
 };
 
+export type TaskResourceResponse = TaskResource & {
+    resource: ResourceResponse;
+};
+
 export type TaskResponse = Task & {
     assignments: Assignment[];
     startWorkDate: string;
     endWorkDate: string;
     shiftSchedules: ShiftSchedule[];
-    taskResources: TaskResource[];
+    taskResources: TaskResourceResponse[];
     taskType: SubCategory;
 };
 
