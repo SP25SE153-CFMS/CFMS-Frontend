@@ -21,6 +21,7 @@ import { useSearchParams } from 'next/navigation';
 import { WareStockResponse } from '@/utils/types/custom.type';
 import { getWareStockByResourceTypeId } from '@/services/warehouse.service';
 import { columns } from './columns';
+import CreateMedicineForm from '@/components/forms/medicine-create-form';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -36,7 +37,7 @@ export default function Page() {
         enabled: !!wId && !!rId,
     });
 
-    console.log("All medicine: ", medicines);
+    console.log('All medicine: ', medicines);
 
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
@@ -80,7 +81,7 @@ export default function Page() {
                         <span>Tạo</span> <Plus size={18} />
                     </Button>
                     <Dialog open={open} onOpenChange={onOpenChange}>
-                        <DialogContent className="max-w-2xl">
+                        <DialogContent className="max-w-4xl">
                             <DialogHeader>
                                 <DialogTitle>Tạo thuốc mới</DialogTitle>
                                 <DialogDescription>
@@ -88,7 +89,7 @@ export default function Page() {
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <VaccineForm closeDialog={() => setOpen(false)} />
+                                <CreateMedicineForm closeDialog={() => setOpen(false)} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>

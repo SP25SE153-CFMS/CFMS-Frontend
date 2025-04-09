@@ -12,5 +12,6 @@ export enum CategoryType {
     CHICKEN = 'CHICKEN',
     TASK_TYPE = 'TASK_TYPE',
     TIME_UNIT = 'TIME_UNIT',
-    QUANTITY_UNIT = 'QUANTITY_UNIT'
+    QUANTITY_UNIT = 'QUANTITY_UNIT',
+    DISEASE = 'DISEASE',
 }

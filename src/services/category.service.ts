@@ -106,3 +106,7 @@ export const getSubSize = async () => {
 export const getSubWeight = async () => {
     return await getSubByType(CategoryType.WEIGHT_UNIT);
 };
+
+export const getSubDisease = async () => {
+    return await getSubByType(CategoryType.DISEASE);
+};

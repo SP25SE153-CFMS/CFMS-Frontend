@@ -1,48 +1,39 @@
-import {
-    getSubMaterial,
-    getSubPackage,
-    getSubSize,
-    getSubUnit,
-    getSubWeight,
-} from '@/services/category.service';
-import { getWareById } from '@/services/warehouse.service';
-import { CreateEquipment, CreateEquipmentSchema } from '@/utils/schemas/equipment.schema';
-import { SubCategory } from '@/utils/schemas/sub-category.schema';
-import { Warehouse } from '@/utils/schemas/warehouse.schema';
+import { CreateMedicine, CreateMedicineSchema } from '@/utils/schemas/medicine.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import dayjs from 'dayjs';
 import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
+import { Warehouse } from '@/utils/schemas/warehouse.schema';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getWareById } from '@/services/warehouse.service';
+import { SubCategory } from '@/utils/schemas/sub-category.schema';
+import { getSubDisease, getSubPackage, getSubUnit } from '@/services/category.service';
+import { createMedicine } from '@/services/medicine.service';
+import toast from 'react-hot-toast';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { useState } from 'react';
-import dayjs from 'dayjs';
-import { createEquipment } from '@/services/equipment.service';
-import toast from 'react-hot-toast';
 import { Button } from '../ui/button';
 
-interface CreateEquipmentProps {
+interface CreateMedicineProps {
     closeDialog: () => void;
 }
 
-export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProps) {
+export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps) {
     const searchParams = useSearchParams();
     const wId: string = searchParams.get('w') || '';
 
-    const form = useForm<CreateEquipment>({
-        resolver: zodResolver(CreateEquipmentSchema),
+    const form = useForm<CreateMedicine>({
+        resolver: zodResolver(CreateMedicineSchema),
         defaultValues: {
-            equipmentCode: '',
-            equipmentName: '',
-            materialId: '',
+            medicineCode: '',
+            medicineName: '',
             usage: '',
-            warranty: 0,
-            size: 0,
-            sizeUnitId: '',
-            weight: 0,
-            weightUnitId: '',
-            purchaseDate: dayjs().format('YYYY-MM-DD'),
+            dosageForm: '',
+            storageCondition: '',
+            diseaseId: '',
+            productionDate: dayjs().format('YYYY-MM-DD'),
+            expiryDate: dayjs().format('YYYY-MM-DD'),
             unitId: '',
             packageId: '',
             packageSize: 0,
@@ -57,7 +48,6 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
         queryFn: () => getWareById(wId),
         enabled: !!wId,
     });
-
     // Gọi sub package
     const { data: subPack = [] } = useQuery<SubCategory[]>({
         queryKey: ['subPack'],
@@ -70,32 +60,20 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
         queryFn: () => getSubUnit(),
     });
 
-    // Gọi sub size
-    const { data: subSize = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subSize'],
-        queryFn: () => getSubSize(),
-    });
-
-    // Gọi sub weight
-    const { data: subWeight = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subWeight'],
-        queryFn: () => getSubWeight(),
-    });
-
-    // Gọi sub material
-    const { data: subMaterial = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subMaterial'],
-        queryFn: () => getSubMaterial(),
+    // Gọi sub unit
+    const { data: subDisease = [] } = useQuery<SubCategory[]>({
+        queryKey: ['subDisease'],
+        queryFn: () => getSubDisease(),
     });
 
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: createEquipment,
+        mutationFn: createMedicine,
         onSuccess: () => {
             closeDialog();
-            queryClient.invalidateQueries({ queryKey: ['equipments'] });
-            toast.success('Tạo thiết bị thành công');
+            queryClient.invalidateQueries({ queryKey: ['medicines'] });
+            toast.success('Tạo thuốc thành công');
         },
         onError: (error: any) => {
             console.error(error);
@@ -103,10 +81,11 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
         },
     });
 
-    const onSubmit = async (values: CreateEquipment) => {
+    const onSubmit = async (values: CreateMedicine) => {
         const formattedData = {
             ...values,
-            purchaseDate: dayjs(values.purchaseDate).format('YYYY-MM-DD'),
+            productionDate: dayjs(values.productionDate).format('YYYY-MM-DD'),
+            expiryDate: dayjs(values.expiryDate).format('YYYY-MM-DD'),
         };
 
         await mutation.mutateAsync(formattedData);
@@ -120,32 +99,82 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
-                    {/* Equipment name */}
+                    {/* Medicine name */}
                     <FormField
                         control={form.control}
-                        name="equipmentName"
+                        name="medicineName"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Tên thiết bị</FormLabel>
+                                <FormLabel>Tên thuốc</FormLabel>
                                 <FormControl>
                                     <div>
-                                        <Input placeholder="Nhập tên thiết bị..." {...field} />
+                                        <Input placeholder="Nhập tên thuốc..." {...field} />
                                     </div>
                                 </FormControl>
                             </FormItem>
                         )}
                     />
 
-                    {/* Equipment code */}
+                    {/* Medicine name */}
                     <FormField
                         control={form.control}
-                        name="equipmentCode"
+                        name="medicineCode"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Mã thiết bị</FormLabel>
+                                <FormLabel>Mã thuốc</FormLabel>
                                 <FormControl>
                                     <div>
-                                        <Input placeholder="Nhập mã thiết bị..." {...field} />
+                                        <Input placeholder="Nhập mã thuốc..." {...field} />
+                                    </div>
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Disease */}
+                    <FormField
+                        control={form.control}
+                        name="diseaseId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Loại bệnh</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn loại" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {subDisease.map((d) => (
+                                                <SelectItem
+                                                    key={d.subCategoryId}
+                                                    value={d.subCategoryId}
+                                                >
+                                                    {d.subCategoryName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Storage condition */}
+                    <FormField
+                        control={form.control}
+                        name="storageCondition"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Điều kiện bảo quản</FormLabel>
+                                <FormControl>
+                                    <div>
+                                        <Input
+                                            placeholder="Nhập điều kiện bảo quản..."
+                                            {...field}
+                                        />
                                     </div>
                                 </FormControl>
                             </FormItem>
@@ -168,13 +197,29 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                         )}
                     />
 
-                    {/* Purchase date */}
+                    {/* Dosage Form */}
                     <FormField
                         control={form.control}
-                        name="purchaseDate"
+                        name="dosageForm"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Ngày mua</FormLabel>
+                                <FormLabel>Liều lượng</FormLabel>
+                                <FormControl>
+                                    <div>
+                                        <Input placeholder="Vd: 1 lần/khu vực" {...field} />
+                                    </div>
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Production date */}
+                    <FormField
+                        control={form.control}
+                        name="productionDate"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Ngày sản xuất</FormLabel>
                                 <FormControl>
                                     <Input placeholder="DD-MM-YYYY" {...field} />
                                 </FormControl>
@@ -182,163 +227,15 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                         )}
                     />
 
-                    {/* Material */}
+                    {/* Expiry date */}
                     <FormField
                         control={form.control}
-                        name="materialId"
+                        name="expiryDate"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Chất liệu</FormLabel>
+                                <FormLabel>Hạn sử dụng</FormLabel>
                                 <FormControl>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Chọn chất liệu" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {subMaterial.map((m) => (
-                                                <SelectItem
-                                                    key={m.subCategoryId}
-                                                    value={m.subCategoryId}
-                                                >
-                                                    {m.subCategoryName}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Ware */}
-                    <FormField
-                        control={form.control}
-                        name="wareId"
-                        render={({ field }) => {
-                            return (
-                                <FormItem>
-                                    <FormLabel>Kho</FormLabel>
-                                    <FormControl>
-                                        <div>
-                                            {/* Hidden input để lưu wareId */}
-                                            <input type="hidden" {...field} value={wId} />
-                                            {/* Input hiển thị để show warehouseName */}
-                                            <Input
-                                                value={ware?.warehouseName || ''}
-                                                disabled
-                                                className="bg-background"
-                                            />
-                                        </div>
-                                    </FormControl>
-                                </FormItem>
-                            );
-                        }}
-                    />
-
-                    {/* Size */}
-                    <FormField
-                        control={form.control}
-                        name="packageSize"
-                        render={({ field }) => {
-                            return (
-                                <FormItem>
-                                    <FormLabel>Kích thước</FormLabel>
-                                    <FormControl>
-                                        <div>
-                                            <Input
-                                                {...field}
-                                                value="0"
-                                                disabled
-                                                className="bg-background"
-                                            />
-                                        </div>
-                                    </FormControl>
-                                </FormItem>
-                            );
-                        }}
-                    />
-
-                    {/* Size Unit */}
-                    <FormField
-                        control={form.control}
-                        name="sizeUnitId"
-                        render={({ field }) => (
-                            <FormItem className="mt-8">
-                                <FormControl>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Chọn đơn vị độ dài" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {subSize.map((s) => (
-                                                <SelectItem
-                                                    key={s.subCategoryId}
-                                                    value={s.subCategoryId}
-                                                >
-                                                    {s.subCategoryName}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Weight */}
-                    <FormField
-                        control={form.control}
-                        name="weight"
-                        render={({ field }) => {
-                            return (
-                                <FormItem>
-                                    <FormLabel>Khối lượng</FormLabel>
-                                    <FormControl>
-                                        <div>
-                                            <Input
-                                                {...field}
-                                                value="0"
-                                                disabled
-                                                className="bg-background"
-                                            />
-                                        </div>
-                                    </FormControl>
-                                </FormItem>
-                            );
-                        }}
-                    />
-
-                    {/* Weight Unit */}
-                    <FormField
-                        control={form.control}
-                        name="weightUnitId"
-                        render={({ field }) => (
-                            <FormItem className="mt-8">
-                                <FormControl>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Chọn đơn vị khối lượng" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {subWeight.map((w) => (
-                                                <SelectItem
-                                                    key={w.subCategoryId}
-                                                    value={w.subCategoryId}
-                                                >
-                                                    {w.subCategoryName}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <Input placeholder="DD-MM-YYYY" {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -429,19 +326,21 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                         />
                     </div>
 
-                    {/* Warranty */}
+                    {/* Ware */}
                     <FormField
                         control={form.control}
-                        name="warranty"
+                        name="wareId"
                         render={({ field }) => {
                             return (
                                 <FormItem>
-                                    <FormLabel>Bảo hành</FormLabel>
+                                    <FormLabel>Kho</FormLabel>
                                     <FormControl>
                                         <div>
+                                            {/* Hidden input để lưu wareId */}
+                                            <input type="hidden" {...field} value={wId} />
+                                            {/* Input hiển thị để show warehouseName */}
                                             <Input
-                                                {...field}
-                                                value="0"
+                                                value={ware?.warehouseName || ''}
                                                 disabled
                                                 className="bg-background"
                                             />

@@ -123,23 +123,6 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                             </FormItem>
                         )}
                     />
-
-                    {/* Note */}
-                    <FormField
-                        control={form.control}
-                        name="note"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Ghi chú</FormLabel>
-                                <FormControl>
-                                    <div>
-                                        <Input placeholder="Ghi chú..." {...field} />
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-
                     {/* Production date */}
                     <FormField
                         control={form.control}
@@ -163,6 +146,22 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                                 <FormLabel>Hạn sử dụng</FormLabel>
                                 <FormControl>
                                     <Input placeholder="DD-MM-YYYY" {...field} />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Note */}
+                    <FormField
+                        control={form.control}
+                        name="note"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Ghi chú</FormLabel>
+                                <FormControl>
+                                    <div>
+                                        <Input placeholder="Ghi chú..." {...field} />
+                                    </div>
                                 </FormControl>
                             </FormItem>
                         )}
@@ -193,47 +192,36 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                         }}
                     />
 
-                    {/* Cách đóng gói */}
+                    {/* Quy cách tính */}
                     <FormField
                         control={form.control}
-                        name="packageId"
+                        name="packageSize"
                         render={({ field }) => {
                             return (
                                 <FormItem>
-                                    <FormLabel>Đóng gói</FormLabel>
+                                    <FormLabel>Quy cách tính</FormLabel>
                                     <FormControl>
-                                        <Select
-                                            onValueChange={field.onChange}
-                                            defaultValue={field.value}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Chọn cách đóng gói" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {subPack.map((p) => (
-                                                    <SelectItem
-                                                        key={p.subCategoryId}
-                                                        value={p.subCategoryId}
-                                                    >
-                                                        {p.subCategoryName}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                        <div>
+                                            <Input
+                                                {...field}
+                                                value="0"
+                                                disabled
+                                                className="bg-background"
+                                            />
+                                        </div>
                                     </FormControl>
                                 </FormItem>
                             );
                         }}
                     />
 
-                    {/* Đơn vị */}
-                    <FormField
-                        control={form.control}
-                        name="unitId"
-                        render={({ field }) => {
-                            return (
-                                <FormItem>
-                                    <FormLabel>Đơn vị</FormLabel>
+                    <div className="flex space-x-8">
+                        {/* Unit Select */}
+                        <FormField
+                            control={form.control}
+                            name="unitId"
+                            render={({ field }) => (
+                                <FormItem className="mt-8">
                                     <FormControl>
                                         <Select
                                             onValueChange={field.onChange}
@@ -255,32 +243,39 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                                         </Select>
                                     </FormControl>
                                 </FormItem>
-                            );
-                        }}
-                    />
+                            )}
+                        />
 
-                    {/* Số lượng */}
-                    <FormField
-                        control={form.control}
-                        name="packageSize"
-                        render={({ field }) => {
-                            return (
-                                <FormItem>
-                                    <FormLabel>Số lượng</FormLabel>
+                        {/* Package Select */}
+                        <FormField
+                            control={form.control}
+                            name="packageId"
+                            render={({ field }) => (
+                                <FormItem className="mt-8">
                                     <FormControl>
-                                        <div>
-                                            <Input
-                                                {...field}
-                                                value="0"
-                                                disabled
-                                                className="bg-background"
-                                            />
-                                        </div>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Chọn đơn vị đóng gói" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {subPack.map((p) => (
+                                                    <SelectItem
+                                                        key={p.subCategoryId}
+                                                        value={p.subCategoryId}
+                                                    >
+                                                        {p.subCategoryName}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
                                     </FormControl>
                                 </FormItem>
-                            );
-                        }}
-                    />
+                            )}
+                        />
+                    </div>
                 </div>
 
                 <Button type="submit" className="ml-auto mt-6 w-40 flex">

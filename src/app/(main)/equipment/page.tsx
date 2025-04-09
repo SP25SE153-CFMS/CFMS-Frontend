@@ -81,7 +81,7 @@ export default function Page() {
                         <span>Tạo</span> <Plus size={18} />
                     </Button>
                     <Dialog open={open} onOpenChange={onOpenChange}>
-                        <DialogContent className="max-w-2xl">
+                        <DialogContent className="max-w-4xl">
                             <DialogHeader>
                                 <DialogTitle>Tạo trang thiết bị mới</DialogTitle>
                                 <DialogDescription>

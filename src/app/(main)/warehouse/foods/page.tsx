@@ -78,7 +78,7 @@ export default function Foods() {
                     </Button>
 
                     <Dialog open={open} onOpenChange={onOpenChange}>
-                        <DialogContent>
+                        <DialogContent className="max-w-4xl">
                             <DialogHeader>
                                 <DialogTitle className="font-semibold">Tạo hàng hóa</DialogTitle>
                                 <DialogDescription>
