@@ -1,4 +1,4 @@
-import { Medicine } from '@/utils/schemas/medicine.schema';
+import { CreateMedicine, Medicine } from '@/utils/schemas/medicine.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 
@@ -16,7 +16,7 @@ export const getMedicineById = async (id: string) => {
     return response.data.data;
 };
 
-export const createMedicine = async (body: Medicine) => {
+export const createMedicine = async (body: CreateMedicine) => {
     const endpoint = PREFIX;
     const response = await post<Response<string>>(endpoint, body);
     return response.data;

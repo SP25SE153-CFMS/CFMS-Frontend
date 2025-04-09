@@ -92,5 +92,17 @@ export const getSubPackage = async () => {
 };
 
 export const getSubUnit = async () => {
+    return await getSubByType(CategoryType.QUANTITY_UNIT);
+};
+
+export const getSubMaterial = async () => {
+    return await getSubByType(CategoryType.MATERIAL);
+};
+
+export const getSubSize = async () => {
+    return await getSubByType(CategoryType.LENGTH_UNIT);
+};
+
+export const getSubWeight = async () => {
     return await getSubByType(CategoryType.WEIGHT_UNIT);
 };

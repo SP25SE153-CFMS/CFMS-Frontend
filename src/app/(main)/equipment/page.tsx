@@ -21,11 +21,13 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { WareStockResponse } from '@/utils/types/custom.type';
 import { getWareStockByResourceTypeId } from '@/services/warehouse.service';
+import CreateEquipmentForm from '@/components/forms/equipment-create-form';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
 
     const openModal = () => setOpen(true);
+    const closeModal = () => setOpen(false);
     const onOpenChange = (val: boolean) => setOpen(val);
 
     const searchParams = useSearchParams();
@@ -87,7 +89,7 @@ export default function Page() {
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <EquipmentForm closeDialog={() => setOpen(false)} />
+                                <CreateEquipmentForm closeDialog={closeModal} />
                             </ScrollArea>
                         </DialogContent>
                     </Dialog>
