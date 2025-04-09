@@ -1,18 +1,20 @@
 'use client';
 
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { getWareByFarmId } from '@/services/warehouse.service';
+import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
+import { getCookie } from 'cookies-next';
+import { Info, ArrowRight, Wheat, BriefcaseMedical, Wrench, Warehouse } from 'lucide-react';
+
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import { wareStatusLabels, wareStatusVariant } from '@/utils/enum/status.enum';
-import { Info, ArrowRight } from 'lucide-react';
-import { getCookie } from 'cookies-next';
-import config from '@/configs';
+import { getWareByFarmId } from '@/services/warehouse.service';
 import type { WareStockResponse } from '@/utils/types/custom.type';
-import { useRouter } from 'next/navigation';
+import config from '@/configs';
 
 export default function Ware() {
     const router = useRouter();
@@ -25,29 +27,40 @@ export default function Ware() {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center h-full">
-                <LoadingSpinner />
+            <div className="flex items-center justify-center h-[70vh]">
+                <LoadingSpinner className="w-10 h-10" />
             </div>
         );
     }
 
     if (!wares || wares.length === 0) {
         return (
-            <div className="w-full h-full flex items-center justify-center">
-                <Card className="px-8 py-8 md:px-36">
-                    <div className="flex flex-col justify-center items-center h-[300px] gap-4">
-                        <Image
-                            src="/no-data.jpg"
-                            width={300}
-                            height={300}
-                            alt="Not Found"
-                            className="object-contain"
-                        />
-                        <h1 className="text-2xl font-bold">Danh sách không tồn tại</h1>
-                        <Button variant="outline" onClick={() => window.history.back()}>
+            <div className="w-full h-[70vh] flex items-center justify-center p-4">
+                <Card className="w-full max-w-md shadow-md">
+                    <CardContent className="flex flex-col items-center justify-center pt-6 pb-8 space-y-6">
+                        <div className="relative w-48 h-48">
+                            <Image
+                                src="/no-data.jpg"
+                                fill
+                                alt="Không tìm thấy dữ liệu"
+                                className="object-contain"
+                            />
+                        </div>
+                        <div className="text-center space-y-2">
+                            <h1 className="text-2xl font-bold">Danh sách không tồn tại</h1>
+                            <p className="text-muted-foreground">
+                                Không tìm thấy dữ liệu kho trong trang trại này
+                            </p>
+                        </div>
+                        <Button
+                            variant="default"
+                            onClick={() => window.history.back()}
+                            className="px-6"
+                        >
+                            <ArrowRight className="mr-2 h-4 w-4 rotate-180" />
                             Quay lại
                         </Button>
-                    </div>
+                    </CardContent>
                 </Card>
             </div>
         );
@@ -61,70 +74,98 @@ export default function Ware() {
         let route = '';
         switch (resourceTypeName) {
             case 'Thực phẩm':
-                route = '/warehouse/foods';
+                route = config.routes.food;
                 break;
             case 'Dược phẩm':
-                route = '/warehouse/medicines';
+                route = config.routes.medicine;
                 break;
             case 'Thiết bị':
-                route = '/equipment';
+                route = config.routes.equipment;
                 break;
         }
         const url = `${route}?w=${wareId}&r=${resourceTypeId}`;
         router.push(url);
     };
 
+    const getResourceIcon = (resourceTypeName: string) => {
+        switch (resourceTypeName) {
+            case 'Thực phẩm':
+                return <Wheat className="w-5 h-5 text-green-600" />;
+            case 'Dược phẩm':
+                return <BriefcaseMedical className="w-5 h-5 text-blue-600" />;
+            case 'Thiết bị':
+                return <Wrench className="w-5 h-5 text-amber-600" />;
+            default:
+                return <Warehouse className="w-5 h-5 text-slate-600" />;
+        }
+    };
+
     return (
-        <div className="flex flex-col gap-y-5">
-            <div className="flex justify-between items-center">
+        <div className="container mx-auto py-6 space-y-6">
+            <div className="flex items-center gap-3 mb-2">
+                <Warehouse className="h-6 w-6 text-muted-foreground" />
                 <h1 className="text-2xl font-bold tracking-tight">Danh sách kho</h1>
             </div>
+            <Separator className="mb-6" />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {wares.map((ware, index) => (
-                    <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow">
-                        <CardHeader className="pb-3 bg-muted/30">
-                            <CardTitle className="flex justify-between items-center">
-                                <span className="truncate text-xl">{ware.warehouseName}</span>
+                    <Card
+                        key={index}
+                        className="overflow-hidden border border-muted hover:shadow-md transition-all duration-300 flex flex-col"
+                    >
+                        <CardHeader className="pb-2 space-y-0 bg-muted/20">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    {getResourceIcon(ware.resourceTypeName)}
+                                    <CardTitle className="text-lg font-semibold line-clamp-1">
+                                        {ware.warehouseName}
+                                    </CardTitle>
+                                </div>
                                 <Badge
                                     variant={wareStatusVariant[ware.status]}
-                                    className="text-sm px-5 py-1 flex items-center"
+                                    className="text-xs px-3 py-1 ml-2 whitespace-nowrap"
                                 >
                                     {wareStatusLabels[ware.status]}
                                 </Badge>
-                            </CardTitle>
+                            </div>
                         </CardHeader>
-                        <CardContent className="pt-4">
-                            <div className="space-y-6">
-                                <div className="flex items-start gap-3 text-muted-foreground">
-                                    <Info size={20} className="mt-1 shrink-0" />
-                                    <p className="line-clamp-2 text-base">
-                                        {ware.description || 'Không có mô tả'}
-                                    </p>
-                                </div>
-
-                                <div className="flex justify-between items-center gap-2 pt-2">
-                                    <div className="text-base font-medium">
-                                        Loại: {ware.resourceTypeName}
-                                    </div>
-                                    <Button
-                                        variant="default"
-                                        size="default"
-                                        className="gap-2 text-base font-medium hover:gap-3 transition-all"
-                                        onClick={() =>
-                                            navigateResourceType(
-                                                ware.resourceTypeName,
-                                                ware.wareId,
-                                                ware.resourceTypeId,
-                                            )
-                                        }
-                                    >
-                                        Chi tiết
-                                        <ArrowRight size={20} />
-                                    </Button>
-                                </div>
+                        <Separator />
+                        <CardContent className="pt-4 flex-grow">
+                            <div className="flex items-start gap-3 text-muted-foreground mb-4">
+                                <Info
+                                    size={18}
+                                    className="mt-0.5 shrink-0 text-muted-foreground/70"
+                                />
+                                <p className="line-clamp-3 text-sm">
+                                    {ware.description || 'Không có mô tả'}
+                                </p>
+                            </div>
+                            <div className="text-sm font-medium text-muted-foreground mt-2">
+                                Loại:{' '}
+                                <span className="text-foreground">{ware.resourceTypeName}</span>
                             </div>
                         </CardContent>
+                        <CardFooter className="pt-2 pb-4 bg-muted/10">
+                            <Button
+                                variant="default"
+                                size="sm"
+                                className="w-full gap-1 group"
+                                onClick={() =>
+                                    navigateResourceType(
+                                        ware.resourceTypeName,
+                                        ware.wareId,
+                                        ware.resourceTypeId,
+                                    )
+                                }
+                            >
+                                Chi tiết
+                                <ArrowRight
+                                    size={16}
+                                    className="transition-transform group-hover:translate-x-1"
+                                />
+                            </Button>
+                        </CardFooter>
                     </Card>
                 ))}
             </div>

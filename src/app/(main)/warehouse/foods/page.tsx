@@ -1,99 +1,112 @@
-'use client';
+"use client"
 
-import { useState } from 'react';
-import { DataTable } from '@/components/table/data-table';
-import { columns } from './columns';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
-import { DialogTitle } from '@radix-ui/react-dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Plus } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { useSearchParams } from 'next/navigation';
-import { WareStockResponse } from '@/utils/types/custom.type';
-import { getWareStockByResourceTypeId } from '@/services/warehouse.service';
-import { Card } from '@/components/ui/card';
-import Image from 'next/image';
-import CreateFoodForm from '@/components/forms/food-create-form';
+import { useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useQuery } from "@tanstack/react-query"
+import Image from "next/image"
+import { ArrowLeft, Plus, Wheat } from "lucide-react"
+
+import { DataTable } from "@/components/table/data-table"
+import { columns } from "./columns"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import CreateFoodForm from "@/components/forms/food-create-form"
+import type { WareStockResponse } from "@/utils/types/custom.type"
+import { getWareStockByResourceTypeId } from "@/services/warehouse.service"
+import config from "@/configs"
 
 export default function Foods() {
-    const [open, setOpen] = useState(false);
-    const searchParams = useSearchParams();
-    const wareId: string = searchParams.get('w') || '';
-    const resourceTypeId: string = searchParams.get('r') || '';
+  const router = useRouter()
+  const [open, setOpen] = useState(false)
+  const searchParams = useSearchParams()
+  const wareId: string = searchParams.get("w") || ""
+  const resourceTypeId: string = searchParams.get("r") || ""
 
-    const openModal = () => setOpen(true);
-    const closeModal = () => setOpen(false);
-    const onOpenChange = (val: boolean) => setOpen(val);
+  const openModal = () => setOpen(true)
+  const closeModal = () => setOpen(false)
+  const onOpenChange = (val: boolean) => setOpen(val)
 
-    const { data: foods = [], isLoading } = useQuery<WareStockResponse[]>({
-        queryKey: ['foods', wareId, resourceTypeId],
-        queryFn: () => getWareStockByResourceTypeId(wareId, resourceTypeId),
-        enabled: !!wareId && !!resourceTypeId,
-    });
+  const { data: foods = [], isLoading } = useQuery<WareStockResponse[]>({
+    queryKey: ["foods", wareId, resourceTypeId],
+    queryFn: () => getWareStockByResourceTypeId(wareId, resourceTypeId),
+    enabled: !!wareId && !!resourceTypeId,
+  })
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center h-full">
-                <LoadingSpinner />
-            </div>
-        );
-    }
-
-    if (!foods) {
-        return (
-            <div className="w-full h-full flex items-center justify-center">
-                <Card className="px-8 py-8 md:px-36">
-                    <div className="flex flex-col justify-center items-center h-[300px] gap-4">
-                        <Image
-                            src="/no-data.jpg"
-                            width={300}
-                            height={300}
-                            alt="Not Found"
-                            className="object-contain"
-                        />
-                        <h1 className="text-2xl font-bold">Danh sách không tồn tại</h1>
-                        <Button variant="outline" onClick={() => window.history.back()}>
-                            Quay lại
-                        </Button>
-                    </div>
-                </Card>
-            </div>
-        );
-    }
+  if (isLoading) {
     return (
-        <div>
-            <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
-                <div>
-                    <h1 className="text-2xl font-bold tracking-tight">Quản lý kho thức ăn</h1>
-                    <p className="text-muted-foreground">
-                        Danh sách tất cả thức ăn trong trang trại
-                    </p>
-                </div>
-                <div className="flex gap-2">
-                    <Button className="space-x-1" onClick={openModal}>
-                        <span>Tạo</span> <Plus size={18} />
-                    </Button>
+      <div className="flex items-center justify-center h-[70vh]">
+        <LoadingSpinner className="w-10 h-10" />
+      </div>
+    )
+  }
 
-                    <Dialog open={open} onOpenChange={onOpenChange}>
-                        <DialogContent className="max-w-4xl">
-                            <DialogHeader>
-                                <DialogTitle className="font-semibold">Tạo hàng hóa</DialogTitle>
-                                <DialogDescription>
-                                    Nhập đầy đủ các thông tin dưới.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <ScrollArea className="max-h-[600px]">
-                                <CreateFoodForm closeModal={closeModal} />
-                            </ScrollArea>
-                        </DialogContent>
-                    </Dialog>
-                </div>
+  if (!foods) {
+    return (
+      <div className="w-full h-[70vh] flex items-center justify-center p-4">
+        <Card className="w-full max-w-md shadow-md">
+          <CardContent className="flex flex-col items-center justify-center pt-6 pb-8 space-y-6">
+            <div className="relative w-48 h-48">
+              <Image src="/no-data.jpg" fill alt="Không tìm thấy dữ liệu" className="object-contain" />
             </div>
-            <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={foods} columns={columns} />
+            <div className="text-center space-y-2">
+              <h1 className="text-2xl font-bold">Danh sách không tồn tại</h1>
+              <p className="text-muted-foreground">Không tìm thấy dữ liệu cho kho thức ăn này</p>
             </div>
-        </div>
-    );
+            <Button variant="default" onClick={() => window.history.back()} className="px-6">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Quay lại
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  return (
+    <div className="container mx-auto py-6 space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <Button type="button" variant="outline" onClick={() => router.push(config.routes.ware)} className="w-auto">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Trở về
+        </Button>
+
+        <Button onClick={openModal} className="w-full sm:w-auto">
+          <Plus className="mr-2 h-4 w-4" />
+          Tạo mới
+        </Button>
+      </div>
+
+      <Card className="shadow-sm border-muted">
+        <CardHeader className="pb-6 items-center justify-center">
+          <div className="flex items-center gap-2">
+            <Wheat className="h-5 w-5 text-muted-foreground" />
+            <CardTitle className="text-2xl font-bold">Quản lý kho thức ăn</CardTitle>
+          </div>
+          <CardDescription className="text-sm">Danh sách tất cả thức ăn trong trang trại</CardDescription>
+        </CardHeader>
+        <Separator />
+        <CardContent className="pt-6">
+          <DataTable data={foods} columns={columns} />
+        </CardContent>
+      </Card>
+
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold">Tạo hàng hóa</DialogTitle>
+            <DialogDescription>Nhập đầy đủ các thông tin dưới.</DialogDescription>
+          </DialogHeader>
+          <ScrollArea className="max-h-[70vh]">
+            <div className="p-1">
+              <CreateFoodForm closeModal={closeModal} />
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
+    </div>
+  )
 }

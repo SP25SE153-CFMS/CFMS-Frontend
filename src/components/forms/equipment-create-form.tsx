@@ -1,8 +1,8 @@
 import {
+    getSubEquipmentUnit,
     getSubMaterial,
     getSubPackage,
     getSubSize,
-    getSubUnit,
     getSubWeight,
 } from '@/services/category.service';
 import { getWareById } from '@/services/warehouse.service';
@@ -18,7 +18,7 @@ import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { useState } from 'react';
 import dayjs from 'dayjs';
-import { createEquipment } from '@/services/equipment.service';
+import { createEquipmentInWare } from '@/services/equipment.service';
 import toast from 'react-hot-toast';
 import { Button } from '../ui/button';
 
@@ -67,7 +67,7 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
     // Gọi sub unit
     const { data: subUnit = [] } = useQuery<SubCategory[]>({
         queryKey: ['subUnit'],
-        queryFn: () => getSubUnit(),
+        queryFn: () => getSubEquipmentUnit(),
     });
 
     // Gọi sub size
@@ -91,7 +91,7 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: createEquipment,
+        mutationFn: createEquipmentInWare,
         onSuccess: () => {
             closeDialog();
             queryClient.invalidateQueries({ queryKey: ['equipments'] });

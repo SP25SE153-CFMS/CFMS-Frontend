@@ -8,7 +8,7 @@ import { Warehouse } from '@/utils/schemas/warehouse.schema';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getWareById } from '@/services/warehouse.service';
 import { SubCategory } from '@/utils/schemas/sub-category.schema';
-import { getSubDisease, getSubPackage, getSubUnit } from '@/services/category.service';
+import { getSubDisease, getSubMedicineUnit, getSubPackage } from '@/services/category.service';
 import { createMedicine } from '@/services/medicine.service';
 import toast from 'react-hot-toast';
 import { Input } from '../ui/input';
@@ -57,7 +57,7 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
     // Gọi sub unit
     const { data: subUnit = [] } = useQuery<SubCategory[]>({
         queryKey: ['subUnit'],
-        queryFn: () => getSubUnit(),
+        queryFn: () => getSubMedicineUnit(),
     });
 
     // Gọi sub unit

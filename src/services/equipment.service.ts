@@ -16,7 +16,7 @@ export const getEquipmentById = async (id: string) => {
     return response.data.data;
 };
 
-export const createEquipment = async (body: CreateEquipment) => {
+export const createEquipment = async (body: Equipment) => {
     const endpoint = PREFIX;
     const response = await post<Response<string>>(endpoint, body);
     return response.data;
@@ -33,3 +33,11 @@ export const deleteEquipment = async (id: string) => {
     const response = await remove<Response<string>>(endpoint);
     return response.data;
 };
+
+export const createEquipmentInWare = async (body: CreateEquipment) => {
+    const endpoint = PREFIX;
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+

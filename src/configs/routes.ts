@@ -35,6 +35,7 @@ const routes = {
     supplier: '/supplier',
     resourceSupplier: 'supplier/resource-supplier',
     ware: '/warehouse',
+    medicine: '/warehouse/medicines',
 };
 
 export default routes;

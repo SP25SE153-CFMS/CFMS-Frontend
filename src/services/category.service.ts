@@ -91,8 +91,16 @@ export const getSubPackage = async () => {
     return await getSubByType(CategoryType.PACKAGE_UNIT);
 };
 
-export const getSubUnit = async () => {
-    return await getSubByType(CategoryType.QUANTITY_UNIT);
+export const getSubFoodUnit = async () => {
+    return await getSubByType(CategoryType.F_QUANTITY_UNIT);
+};
+
+export const getSubEquipmentUnit = async () => {
+    return await getSubByType(CategoryType.E_QUANTITY_UNIT);
+};
+
+export const getSubMedicineUnit = async () => {
+    return await getSubByType(CategoryType.M_QUANTITY_UNIT);
 };
 
 export const getSubMaterial = async () => {

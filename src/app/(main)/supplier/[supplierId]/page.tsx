@@ -83,7 +83,7 @@ export default function ResourceSuppliers() {
         <div className="w-full h-full flex flex-col">
             <div className="flex justify-center items-center mb-4 px-1">
                 <h3 className="font-bold pl-3 text-2xl relative inline-block">
-                    Thông tin chi tiết
+                    Thông tin các mặt hàng
                 </h3>
             </div>
 
@@ -149,7 +149,6 @@ export default function ResourceSuppliers() {
 }
 
 function ResourceList({ resources }: { resources: ResourceResponse[] }) {
-    console.log('Data Test: ', resources);
 
     return (
         <ScrollArea className="h-[calc(100vh-200px)] w-full pr-2">

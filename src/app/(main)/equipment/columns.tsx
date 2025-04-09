@@ -41,7 +41,7 @@ export const columns: ColumnDef<WareStockResponse>[] = [
     {
         accessorKey: 'equipmentCode',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mã thiết bị" />,
-        cell: ({ row }) => <div>{row.getValue('equipmentCode')}</div>,
+        cell: ({ row }) => <div className="w-[40px]">{row.getValue('equipmentCode')}</div>,
     },
     {
         accessorKey: 'equipmentName',
@@ -88,7 +88,7 @@ export const columns: ColumnDef<WareStockResponse>[] = [
     },
     {
         accessorKey: 'unitSpecification',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Đơn vị" />,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Quy cách tính" />,
         cell: ({ row }) => <div>{row.getValue('unitSpecification')}</div>,
     },
     {

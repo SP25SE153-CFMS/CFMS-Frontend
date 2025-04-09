@@ -10,7 +10,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Warehouse } from '@/utils/schemas/warehouse.schema';
 import { getWareById } from '@/services/warehouse.service';
 import type { SubCategory } from '@/utils/schemas/sub-category.schema';
-import { getSubPackage, getSubUnit } from '@/services/category.service';
+import { getSubFoodUnit, getSubPackage,  } from '@/services/category.service';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { createFood } from '@/services/food.service';
 import dayjs from 'dayjs';
@@ -57,7 +57,7 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
     // Gọi sub unit
     const { data: subUnit = [] } = useQuery<SubCategory[]>({
         queryKey: ['subUnit'],
-        queryFn: () => getSubUnit(),
+        queryFn: () => getSubFoodUnit(),
     });
 
     const queryClient = useQueryClient();

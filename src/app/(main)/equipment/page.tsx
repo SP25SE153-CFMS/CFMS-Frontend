@@ -1,38 +1,40 @@
 'use client';
 
+import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import Image from 'next/image';
+import { ArrowLeft, Plus, Wrench } from 'lucide-react';
+
 import { DataTable } from '@/components/table/data-table';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
-import { Download, Plus } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogDescription,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import EquipmentForm from '@/components/forms/equipment-form';
-import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { Card } from '@/components/ui/card';
-import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
-import { WareStockResponse } from '@/utils/types/custom.type';
-import { getWareStockByResourceTypeId } from '@/services/warehouse.service';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import CreateEquipmentForm from '@/components/forms/equipment-create-form';
+import type { WareStockResponse } from '@/utils/types/custom.type';
+import { getWareStockByResourceTypeId } from '@/services/warehouse.service';
+import config from '@/configs';
 
 export default function Page() {
+    const router = useRouter();
     const [open, setOpen] = useState(false);
+    const searchParams = useSearchParams();
+    const wId: string = searchParams.get('w') || '';
+    const rId: string = searchParams.get('r') || '';
 
     const openModal = () => setOpen(true);
     const closeModal = () => setOpen(false);
     const onOpenChange = (val: boolean) => setOpen(val);
-
-    const searchParams = useSearchParams();
-    const wId: string = searchParams.get('w') || '';
-    const rId: string = searchParams.get('r') || '';
 
     const { data: equipments = [], isLoading } = useQuery<WareStockResponse[]>({
         queryKey: ['equipments', wId, rId],
@@ -40,64 +42,97 @@ export default function Page() {
         enabled: !!wId && !!rId,
     });
 
-    // Check if equipments is loading
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center h-full">
-                <LoadingSpinner />
+            <div className="flex items-center justify-center h-[70vh]">
+                <LoadingSpinner className="w-10 h-10" />
             </div>
         );
     }
 
-    // Check if equipments is not null, undefined
     if (!equipments) {
         return (
-            <div className="w-full h-full flex items-center justify-center">
-                <Card className="px-36 py-8">
-                    <div className="flex flex-col justify-center items-center h-[300px] gap-4">
-                        <Image src="/no-data.jpg" width={300} height={300} alt="Not Found" />
-                        <h1 className="text-2xl font-bold">Danh sách không tồn tại</h1>
-                        <Button variant="outline" onClick={() => window.history.back()}>
+            <div className="w-full h-[70vh] flex items-center justify-center p-4">
+                <Card className="w-full max-w-md shadow-md">
+                    <CardContent className="flex flex-col items-center justify-center pt-6 pb-8 space-y-6">
+                        <div className="relative w-48 h-48">
+                            <Image
+                                src="/no-data.jpg"
+                                fill
+                                alt="Không tìm thấy dữ liệu"
+                                className="object-contain"
+                            />
+                        </div>
+                        <div className="text-center space-y-2">
+                            <h1 className="text-2xl font-bold">Danh sách không tồn tại</h1>
+                            <p className="text-muted-foreground">
+                                Không tìm thấy dữ liệu cho trang thiết bị này
+                            </p>
+                        </div>
+                        <Button
+                            variant="default"
+                            onClick={() => window.history.back()}
+                            className="px-6"
+                        >
+                            <ArrowLeft className="mr-2 h-4 w-4" />
                             Quay lại
                         </Button>
-                    </div>
+                    </CardContent>
                 </Card>
             </div>
         );
     }
 
-    // Return the page
     return (
-        <div>
-            <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
-                <div>
-                    <h2 className="text-2xl font-bold tracking-tight">Quản lý trang thiết bị</h2>
-                    <p className="text-muted-foreground">
+        <div className="container mx-auto py-6 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => router.push(config.routes.ware)}
+                    className="w-auto"
+                >
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Trở về
+                </Button>
+
+                <Button onClick={openModal} className="w-full sm:w-auto">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Tạo mới
+                </Button>
+            </div>
+
+            <Card className="shadow-sm border-muted">
+                <CardHeader className="pb-6 items-center justify-center">
+                    <div className="flex items-center gap-2">
+                        <Wrench className="h-5 w-5 text-muted-foreground" />
+                        <CardTitle className="text-2xl font-bold">Quản lý trang thiết bị</CardTitle>
+                    </div>
+                    <CardDescription className="text-sm">
                         Danh sách tất cả các trang thiết bị trong trang trại
-                    </p>
-                </div>
-                <div className="flex gap-2">
-                    <Button className="space-x-1" onClick={openModal}>
-                        <span>Tạo</span> <Plus size={18} />
-                    </Button>
-                    <Dialog open={open} onOpenChange={onOpenChange}>
-                        <DialogContent className="max-w-4xl">
-                            <DialogHeader>
-                                <DialogTitle>Tạo trang thiết bị mới</DialogTitle>
-                                <DialogDescription>
-                                    Hãy nhập các thông tin dưới đây.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <ScrollArea className="max-h-[600px]">
-                                <CreateEquipmentForm closeDialog={closeModal} />
-                            </ScrollArea>
-                        </DialogContent>
-                    </Dialog>
-                </div>
-            </div>
-            <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={equipments} columns={columns} />
-            </div>
+                    </CardDescription>
+                </CardHeader>
+                <Separator />
+                <CardContent className="pt-6">
+                    <DataTable data={equipments} columns={columns} />
+                </CardContent>
+            </Card>
+
+            <Dialog open={open} onOpenChange={onOpenChange}>
+                <DialogContent className="max-w-4xl">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-semibold">
+                            Tạo trang thiết bị mới
+                        </DialogTitle>
+                        <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
+                    </DialogHeader>
+                    <ScrollArea className="max-h-[70vh]">
+                        <div className="p-1">
+                            <CreateEquipmentForm closeDialog={closeModal} />
+                        </div>
+                    </ScrollArea>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
