@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { getFoods } from '@/services/food.service';
-import { getNutritionPlans } from '@/services/nutrition-plan.service';
+import { getNutritionPlanById } from '@/services/nutrition-plan.service';
 import { getWeightUnit } from '@/utils/functions/category.function';
 import { useQuery } from '@tanstack/react-query';
 import { Utensils, Info } from 'lucide-react';
@@ -10,11 +10,16 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
-export default function CardNutritionPlan() {
+interface CardNutritionPlanProps {
+    nutritionPlanId: string;
+}
+
+export default function CardNutritionPlan({ nutritionPlanId }: CardNutritionPlanProps) {
     // Get nutrition plans
-    const { data: nutritionPlans, isLoading: isLoadingPlans } = useQuery({
-        queryKey: ['nutritionPlans'],
-        queryFn: () => getNutritionPlans(),
+    const { data: nutritionPlan, isLoading: isLoadingPlan } = useQuery({
+        queryKey: ['nutritionPlan', nutritionPlanId],
+        queryFn: () => getNutritionPlanById(nutritionPlanId),
+        enabled: !!nutritionPlanId,
     });
 
     // Get all foods
@@ -23,14 +28,13 @@ export default function CardNutritionPlan() {
         queryFn: () => getFoods(),
     });
 
-    const isLoading = isLoadingPlans || isLoadingFoods;
-    const nutritionPlan = nutritionPlans?.[0];
+    const isLoading = isLoadingPlan || isLoadingFoods;
 
     if (isLoading) {
         return <NutritionCardSkeleton />;
     }
 
-    if (!nutritionPlan) {
+    if (!nutritionPlanId || !nutritionPlan) {
         return (
             <Card className="w-full">
                 <CardContent className="pt-6 flex flex-col items-center justify-center min-h-[200px] text-muted-foreground">

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ChickenBatchStatus } from '../enum/status.enum';
 
 export const ChickenBatchSchema = z.object({
     chickenBatchId: z.string().uuid({ message: 'ID lứa nuôi không hợp lệ, phải là UUID' }),
@@ -20,7 +21,7 @@ export const ChickenBatchSchema = z.object({
         .nullable(),
 
     note: z.string().max(255, 'Ghi chú không được vượt quá 255 ký tự').optional(),
-    status: z.enum(['0', '1', '2', '3'], {
+    status: z.nativeEnum(ChickenBatchStatus, {
         message: 'Trạng thái không hợp lệ',
     }),
 });

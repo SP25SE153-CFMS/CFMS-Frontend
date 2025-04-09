@@ -51,26 +51,42 @@ export const chickenCoopStatusVariant: Record<string, any> = {
     [ChickenCoopStatus.UNDER_MAINTENANCE]: 'warning',
 };
 
-// Employee status
-export enum EmployeeStatus {
+// User status
+export enum UserStatus {
     INACTIVE,
     ACTIVE,
     BANNED,
     FIRED,
 }
 
-export const employeeStatusLabels: Record<string, string> = {
-    [EmployeeStatus.INACTIVE]: 'Không hoạt động',
-    [EmployeeStatus.ACTIVE]: 'Đang làm việc',
-    [EmployeeStatus.BANNED]: 'Bị cấm',
-    [EmployeeStatus.FIRED]: 'Đã sa thải',
+export const userStatusLabels: Record<string, string> = {
+    [UserStatus.INACTIVE]: 'Không hoạt động',
+    [UserStatus.ACTIVE]: 'Đang làm việc',
+    [UserStatus.BANNED]: 'Bị cấm',
+    [UserStatus.FIRED]: 'Nghỉ việc',
 };
 
-export const employeeStatusVariant: Record<string, any> = {
-    [EmployeeStatus.INACTIVE]: 'muted',
-    [EmployeeStatus.ACTIVE]: 'default',
-    [EmployeeStatus.BANNED]: 'warning',
-    [EmployeeStatus.FIRED]: 'destructive',
+export const userStatusVariant: Record<string, any> = {
+    [UserStatus.INACTIVE]: 'muted',
+    [UserStatus.ACTIVE]: 'default',
+    [UserStatus.BANNED]: 'warning',
+    [UserStatus.FIRED]: 'destructive',
+};
+
+// Farm employee status
+export enum FarmEmployeeStatus {
+    INACTIVE,
+    ACTIVE,
+}
+
+export const farmEmployeeStatusLabels: Record<string, string> = {
+    [FarmEmployeeStatus.INACTIVE]: 'Không hoạt động',
+    [FarmEmployeeStatus.ACTIVE]: 'Đang làm việc',
+};
+
+export const farmEmployeeStatusVariant: Record<string, any> = {
+    [FarmEmployeeStatus.INACTIVE]: 'muted',
+    [FarmEmployeeStatus.ACTIVE]: 'default',
 };
 
 // Equipment status

@@ -1,3 +1,4 @@
+import { ChickenGender } from '../enum/gender.enum';
 import { Assignment } from '../schemas/assignment.schema';
 import { BreedingArea } from '../schemas/breeding-area.schema';
 import { Category } from '../schemas/category.schema';
@@ -10,8 +11,11 @@ import { Equipment } from '../schemas/equipment.schema';
 import { FarmEmployee } from '../schemas/farm-employee.schema';
 import { FeedLog } from '../schemas/feed-log.schema';
 import { Food } from '../schemas/food.schema';
+import { GrowthBatch } from '../schemas/growth-batch.schema';
+import { GrowthStage } from '../schemas/growth-stage.schema';
 import { HealthLog } from '../schemas/health-log.schema';
 import { Medicine } from '../schemas/medicine.schema';
+import { Notification } from '../schemas/notification.schema';
 import { QuantityLog } from '../schemas/quantity-log.schema';
 import { Resource } from '../schemas/resource.schema';
 import { SubCategory } from '../schemas/sub-category.schema';
@@ -19,6 +23,20 @@ import { TaskLog } from '../schemas/task-log.schema';
 import { Task } from '../schemas/task.schema';
 import { User } from '../schemas/user.schema';
 import { VaccinationLog } from '../schemas/vaccine.schema';
+import { NutritionPlan } from '../schemas/nutrition-plan.schema';
+import { NutritionPlanDetail } from '../schemas/nutrition-plan-detail.schema';
+import { FeedSession } from '../schemas/feed-session.schema';
+
+export type EntityAudit = {
+    isDeleted: boolean;
+    deletedWhen: string | Date | null;
+    createdByUserId: string;
+    createdByUser: User | null;
+    createdWhen: string | Date | null;
+    lastEditedByUserId: string;
+    lastEditedByUser: User | null;
+    lastEditedWhen: string | Date | null;
+};
 
 export type ChickenCoopResponse = ChickenCoop & {
     chickenBatches: ChickenBatch[];
@@ -30,12 +48,18 @@ export type ChickenResponse = Chicken & {
     chickenDetails: ChickenDetail[];
 };
 
+export type GrowthBatchResponse = GrowthBatch & {
+    growthStage: GrowthStage;
+};
+
 export type ChickenBatchResponse = ChickenBatch & {
     vaccineLogs: VaccinationLog[];
     healthLogs: HealthLog[];
     quantityLogs: QuantityLog[];
     feedLogs: FeedLog[];
     chicken: ChickenResponse;
+    growthBatches: GrowthBatchResponse[];
+    chickenDetails: ChickenDetail[];
 };
 
 export type CategoryResponse = Category & {
@@ -57,6 +81,7 @@ export type StartChickenBatch = {
     chickenBatchName: string;
     stageCode: string;
     startDate: string | Date;
+    chickenDetailRequests: ChickenDetailRequest[];
 };
 
 export type FarmEmployeeResponse = FarmEmployee & {
@@ -97,3 +122,16 @@ export type TaskResponse = Task & {
     endWorkDate: string | Date;
 };
 
+export type ChickenDetailRequest = {
+    gender: ChickenGender;
+    quantity: number;
+};
+
+export type NotificationResponse = (Notification & EntityAudit) & {
+    user: User;
+};
+
+export type NutritionPlanResponse = NutritionPlan & {
+    nutritionPlanDetails: NutritionPlanDetail[];
+    feedSessions: FeedSession[];
+};

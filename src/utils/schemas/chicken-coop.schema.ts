@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ChickenCoopStatus } from '../enum/status.enum';
 
 export const ChickenCoopSchema = z.object({
     chickenCoopId: z.string().uuid({ message: 'ID chuồng gà không hợp lệ, phải là UUID' }),
@@ -15,15 +16,16 @@ export const ChickenCoopSchema = z.object({
         .min(1, { message: 'Tên chuồng gà là bắt buộc' })
         .max(100, { message: 'Tên chuồng không được dài quá 100 ký tự' }),
 
-    capacity: z.coerce.number().min(0).int({ message: 'Sức chứa phải là số nguyên' }),
-    status: z.enum(['0', '1', '2'], {
-        message: 'Trạng thái không hợp lệ',
-    }),
+    maxQuantity: z.coerce.number().min(0).int({ message: 'Sức chứa phải là số nguyên' }),
+    status: z.nativeEnum(ChickenCoopStatus, { message: 'Trạng thái không hợp lệ' }),
 
     breedingAreaId: z.string().uuid({ message: 'ID khu vực chăn nuôi không hợp lệ, phải là UUID' }),
     area: z.coerce.number().positive({ message: 'Diện tích phải là số dương' }),
 
-    currentQuantity: z.coerce.number().int({ message: 'Số lượng hiện tại phải là số nguyên' }),
+    currentQuantity: z.coerce
+        .number()
+        .int({ message: 'Số lượng hiện tại phải là số nguyên' })
+        .optional(),
 
     description: z.string().trim().optional(),
 
@@ -38,5 +40,9 @@ export const ChickenCoopSchema = z.object({
 
 export type ChickenCoop = z.infer<typeof ChickenCoopSchema>;
 
-export const CreateChickenCoopSchema = ChickenCoopSchema.omit({ chickenCoopId: true });
+export const CreateChickenCoopSchema = ChickenCoopSchema.omit({
+    chickenCoopId: true,
+    status: true,
+    currentQuantity: true,
+});
 export type CreateChickenCoop = z.infer<typeof CreateChickenCoopSchema>;

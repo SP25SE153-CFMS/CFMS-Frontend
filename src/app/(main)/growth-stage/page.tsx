@@ -23,6 +23,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import { getNutritionPlans } from '@/services/nutrition-plan.service';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -34,6 +35,15 @@ export default function Page() {
     const { data: growthStages, isLoading } = useQuery({
         queryKey: ['growthStages'],
         queryFn: () => getGrowthStages(),
+    });
+
+    useQuery({
+        queryKey: ['nutritionPlans'],
+        queryFn: async () => {
+            const nutritionPlans = await getNutritionPlans();
+            sessionStorage.setItem('nutritionPlans', JSON.stringify(nutritionPlans));
+            return nutritionPlans;
+        },
     });
 
     // Check if growthStages is loading

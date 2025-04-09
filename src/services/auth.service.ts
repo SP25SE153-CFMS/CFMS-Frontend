@@ -1,5 +1,6 @@
-import { post } from '@/utils/functions/axios.function';
+import { get, post } from '@/utils/functions/axios.function';
 import { SignInRequest, SignUpRequest } from '@/utils/schemas/auth.schema';
+import { User } from '@/utils/schemas/user.schema';
 import { Response } from '@/utils/types';
 
 const PREFIX = '/api/Auth';
@@ -30,4 +31,10 @@ export const signOut = async () => {
     const endpoint = PREFIX + '/signout';
     const response = await post<Response<string>>(endpoint, {});
     return response.data;
+};
+
+export const getCurrentUser = async () => {
+    const endpoint = PREFIX + '/me';
+    const response = await get<Response<User>>(endpoint);
+    return response.data.data;
 };

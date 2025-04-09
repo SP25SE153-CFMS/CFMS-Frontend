@@ -6,10 +6,8 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import config from '@/configs';
 import {
@@ -77,10 +75,10 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                         Cập nhật
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
+                    {/* <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
                         Xóa <Trash size={16} className="ml-auto" />
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                 </DropdownMenuContent>
             </DropdownMenu>
 

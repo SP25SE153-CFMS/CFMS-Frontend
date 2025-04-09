@@ -26,8 +26,6 @@ import {
 } from '@/utils/schemas/sub-category.schema';
 import { Textarea } from '../ui/textarea';
 import { useParams } from 'next/navigation';
-import { mapEnumToValues } from '@/utils/functions/enum.function';
-import { CategoryStatus, categoryStatusLabels } from '@/utils/enum/status.enum';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { addSubCategory, updateSubCategory } from '@/services/category.service';
@@ -53,7 +51,7 @@ export default function SubCategoryForm({
             subCategoryId: '',
             subCategoryName: '',
             description: '',
-            status: '0',
+            status: 0,
             dataType: DataType.STRING,
             categoryId: categoryId as string,
             ...defaultValues,
@@ -172,7 +170,7 @@ export default function SubCategoryForm({
                     />
 
                     {/* Trạng thái */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="status"
                         render={({ field }) => (
@@ -198,7 +196,7 @@ export default function SubCategoryForm({
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
                 </div>
 
                 <Button type="submit" className="mx-auto w-60">

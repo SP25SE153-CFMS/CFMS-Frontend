@@ -64,7 +64,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
             userId: '',
             startDate: new Date().toISOString(),
             endDate: null,
-            status: '1',
+            status: 1,
             farmRole: 0,
             ...defaultValues,
         },
@@ -144,6 +144,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                                     <Select
                                         onValueChange={field.onChange}
                                         defaultValue={field.value}
+                                        disabled={!!defaultValues}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Chọn nhân viên" />

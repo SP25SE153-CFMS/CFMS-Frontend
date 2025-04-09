@@ -28,6 +28,7 @@ import {
 import { assignmentBackground } from '@/utils/enum/status.enum';
 import { Badge } from '../ui/badge';
 import { Event, ShiftEvent } from './type';
+import AssignmentForm from '../forms/assignment-form';
 
 type ViewMode = 'month' | 'week';
 
@@ -258,7 +259,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                             }}
                         >
                             <Plus className="h-4 w-4" />
-                            <span className="sr-only">Thêm sự kiện</span>
+                            <span className="sr-only">Giao việc</span>
                         </Button>
                     </div>
                     <div className="space-y-1 overflow-y-auto">
@@ -369,7 +370,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                                         }}
                                     >
                                         <Plus className="h-3 w-3" />
-                                        <span className="sr-only">Thêm sự kiện</span>
+                                        <span className="sr-only">Giao việc</span>
                                     </Button>
 
                                     {/* Events for this day and shift */}
@@ -499,7 +500,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                             onClick={() => openAddEvent(selectedDate)}
                         >
                             <Plus className="h-4 w-4 mr-2" />
-                            Thêm sự kiện
+                            Giao việc
                         </Button>
                     </div>
                     <div className="mt-4">
@@ -531,7 +532,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                             <div className="text-muted-foreground p-4 text-center bg-background/50 rounded-lg">
                                 <p>Không có sự kiện nào</p>
                                 <p className="text-sm mt-1">
-                                    Nhấn &ldquo;Thêm sự kiện&rdquo; để tạo mới
+                                    Nhấn &ldquo;Giao việc&rdquo; để tạo mới
                                 </p>
                             </div>
                         )}
@@ -545,7 +546,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                     <DialogHeader>
                         <DialogTitle>Giao công việc mới</DialogTitle>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
+                    {/* <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
                             <Label htmlFor="event-title">Tiêu đề sự kiện</Label>
                             <Input
@@ -614,12 +615,13 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                                 {selectedDate && formatDateVN(selectedDate)}
                             </div>
                         </div>
-                    </div>
+                    </div> */}
+                    <AssignmentForm closeDialog={() => setIsAddEventOpen(false)} />
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setIsAddEventOpen(false)}>
                             Hủy
                         </Button>
-                        <Button onClick={handleAddEvent}>Thêm sự kiện</Button>
+                        <Button onClick={handleAddEvent}>Giao việc</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

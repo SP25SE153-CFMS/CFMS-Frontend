@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { EquipmentStatus } from '../enum/status.enum';
 
 export const CoopEquipmentSchema = z.object({
     coopEquipmentId: z.string().uuid({ message: 'ID thiết bị chuồng không hợp lệ, phải là UUID' }),
@@ -21,7 +22,7 @@ export const CoopEquipmentSchema = z.object({
         .number()
         .int()
         .positive({ message: 'Khoảng thời gian bảo trì phải là số nguyên dương' }),
-    status: z.string().optional(),
+    status: z.nativeEnum(EquipmentStatus, { message: 'Trạng thái không hợp lệ' }),
     note: z.string().optional(),
 });
 

@@ -203,7 +203,7 @@ export function CloudinaryImageUpload({
                                 >
                                     <Image
                                         fill
-                                        src={file.preview || '/placeholder.svg'}
+                                        src={file.preview || '/no-data.jpg'}
                                         alt={file.file.name}
                                         className="h-full w-full object-contain"
                                         sizes="(max-width: 768px) 100vw, 300px"

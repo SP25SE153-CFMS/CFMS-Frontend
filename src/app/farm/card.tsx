@@ -5,17 +5,18 @@ import { Farm } from '@/utils/schemas/farm.schema';
 import { setCookie } from 'cookies-next';
 import { Ruler, Scale3d } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export function FarmCard({ farm }: { farm: Farm }) {
+    const router = useRouter();
+
     return (
-        <Link
-            href={`${config.routes.dashboard}?farmCode=${farm.farmCode}`}
-            key={farm.farmId}
-            rel="noopener noreferrer"
+        <div
+            // href={`${config.routes.dashboard}?farmCode=${farm.farmCode}`}
             onClick={() => {
                 sessionStorage.setItem('activeFarm', JSON.stringify(farm));
                 setCookie(config.cookies.farmId, farm.farmId);
+                router.push(`${config.routes.dashboard}?farmCode=${farm.farmCode}`);
             }}
         >
             <Card className="hover:shadow-lg transition-shadow duration-300 mb-4">
@@ -57,6 +58,6 @@ export function FarmCard({ farm }: { farm: Farm }) {
                     </div> */}
                 </CardContent>
             </Card>
-        </Link>
+        </div>
     );
 }

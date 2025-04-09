@@ -101,7 +101,7 @@ export function FirebaseImageUpload({
                 {preview ? (
                     <div className="relative aspect-square w-full max-w-[200px] overflow-hidden rounded-md">
                         <Image
-                            src={preview || '/placeholder.svg'}
+                            src={preview || '/no-data.jpg'}
                             alt="Preview"
                             fill
                             className="object-cover"

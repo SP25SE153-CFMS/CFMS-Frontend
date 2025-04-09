@@ -1,8 +1,6 @@
 import { nutritions, warehouseProducts } from '@/utils/data/table.data';
 import { Card } from '@/components/ui/card';
-import CardFoodSchedule from './food-schedule/card';
 import dayjs from 'dayjs';
-import CardFood from './food/card';
 
 export default function FlockNutritionDetail({ nutritionId }: { nutritionId: string }) {
     const nutrition = nutritions.find((nutrition) => nutrition.nutritionId === nutritionId);
@@ -74,12 +72,12 @@ export default function FlockNutritionDetail({ nutritionId }: { nutritionId: str
 
                     {/* Feed Session */}
                     <div className="col-span-3">
-                        <CardFoodSchedule nutritionId={nutritionId} />
+                        {/* <CardFeedSession nutritionId={nutritionId} /> */}
                     </div>
                 </div>
 
                 {/* Food */}
-                <CardFood />
+                {/* <CardFood /> */}
             </div>
         </div>
     );

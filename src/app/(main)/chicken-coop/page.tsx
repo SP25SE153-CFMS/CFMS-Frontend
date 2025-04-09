@@ -382,13 +382,13 @@ export default function Page() {
                         </TabsContent>
                         <TabsContent value="active" className="m-0">
                             <DataTable
-                                data={filteredData?.filter((coop) => coop.status === '0') || []}
+                                data={filteredData?.filter((coop) => coop.status === 0) || []}
                                 columns={columns}
                             />
                         </TabsContent>
                         <TabsContent value="inactive" className="m-0">
                             <DataTable
-                                data={filteredData?.filter((coop) => coop.status === '1') || []}
+                                data={filteredData?.filter((coop) => coop.status === 1) || []}
                                 columns={columns}
                             />
                         </TabsContent>

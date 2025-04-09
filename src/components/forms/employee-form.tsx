@@ -13,17 +13,10 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
-import { UserSchema, type User } from '@/utils/schemas/user.schema';
+import { CreateUserSchema, UserSchema, type User } from '@/utils/schemas/user.schema';
 import dayjs from 'dayjs';
 import { createUser, updateUser } from '@/services/user.service';
 import toast from 'react-hot-toast';
@@ -37,7 +30,7 @@ interface EmployeeFormProps {
 export default function EmployeeForm({ defaultValues, closeDialog }: EmployeeFormProps) {
     // Initialize form
     const form = useForm<User>({
-        resolver: zodResolver(UserSchema),
+        resolver: zodResolver(defaultValues ? UserSchema : CreateUserSchema),
         defaultValues: {
             userId: '',
             fullName: '',
@@ -45,7 +38,7 @@ export default function EmployeeForm({ defaultValues, closeDialog }: EmployeeFor
             mail: '',
             avatar: '',
             dateOfBirth: new Date().toISOString(),
-            status: '1',
+            status: 1,
             address: '',
             cccd: '',
             systemRole: '0',
@@ -230,7 +223,7 @@ export default function EmployeeForm({ defaultValues, closeDialog }: EmployeeFor
                     />
 
                     {/* Trạng thái */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="status"
                         render={({ field }) => (
@@ -253,7 +246,7 @@ export default function EmployeeForm({ defaultValues, closeDialog }: EmployeeFor
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
                 </div>
                 <Button type="submit" className="mx-auto mt-6 w-60">
                     Gửi

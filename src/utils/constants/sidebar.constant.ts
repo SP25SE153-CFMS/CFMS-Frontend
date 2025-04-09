@@ -37,7 +37,7 @@ export const sidebarItems: NavGroup[] = [
                 ],
             },
             {
-                title: 'Quản lý đàn gà',
+                title: 'Quản lý lứa nuôi',
                 path: basePath,
                 icon: Egg,
                 subItems: [
@@ -45,7 +45,6 @@ export const sidebarItems: NavGroup[] = [
                     { title: 'Danh sách giống gà', path: config.routes.chicken },
                     { title: 'Giai đoạn phát triển', path: config.routes.growthStage },
                     { title: 'Chế độ dinh dưỡng', path: config.routes.nutritionPlan },
-                    { title: 'Tiêu chí đánh giá SK', path: config.routes.breadingArea },
                 ],
             },
             {
@@ -71,7 +70,7 @@ export const sidebarItems: NavGroup[] = [
                     { title: 'Danh sách nhà cung cấp', path: config.routes.supplier },
                     { title: 'Danh sách phiếu yêu cầu', path: config.routes.request },
                     {
-                        title: 'Danh sách phiếu nhập/xuất kho',
+                        title: 'DS phiếu nhập/xuất kho',
                         path: config.routes.inventoryReceipt,
                     },
                 ],
