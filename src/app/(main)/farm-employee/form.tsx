@@ -37,6 +37,8 @@ import { FarmRole, farmRoleLabels } from '@/utils/enum';
 import { Input } from '@/components/ui/input';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
+import { formatDate } from '@/utils/functions';
+import { vi } from 'date-fns/locale';
 
 interface AddEmployeeFormProps {
     defaultValues?: Partial<FarmEmployee>;
@@ -180,9 +182,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                                                         'w-full pl-3 text-left font-normal',
                                                     )}
                                                 >
-                                                    {dayjs(new Date(field.value)).format(
-                                                        'DD/MM/YYYY',
-                                                    )}
+                                                    {formatDate(field.value)}
                                                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                                 </Button>
                                             </FormControl>
@@ -195,6 +195,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                                                     field.onChange(date?.toISOString())
                                                 }
                                                 initialFocus
+                                                locale={vi}
                                             />
                                         </PopoverContent>
                                     </Popover>

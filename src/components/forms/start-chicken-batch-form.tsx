@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
-import { format } from 'date-fns';
 import { AlertCircle, CalendarIcon, Plus, Trash2 } from 'lucide-react';
 import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
@@ -25,6 +24,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { vi } from 'date-fns/locale';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { formatDate } from '@/utils/functions';
 
 export default function StartChickenBatchForm({ closeDialog }: { closeDialog: () => void }) {
     const queryClient = useQueryClient();
@@ -97,8 +97,8 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                                         !startDate && 'text-muted-foreground',
                                     )}
                                 >
+                                    {formatDate(startDate.toISOString())}
                                     <CalendarIcon />
-                                    {format(startDate, 'PPP', { locale: vi })}
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto p-0" align="start">

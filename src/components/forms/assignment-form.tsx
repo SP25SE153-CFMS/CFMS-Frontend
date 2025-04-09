@@ -27,7 +27,6 @@ import {
     CreateAssignmentSchema,
     type Assignment,
 } from '@/utils/schemas/assignment.schema';
-import dayjs from 'dayjs';
 import { createAssignment, updateAssignment } from '@/services/assignment.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -38,6 +37,7 @@ import config from '@/configs';
 import { Textarea } from '../ui/textarea';
 import { AssignmentStatus } from '@/utils/enum/status.enum';
 import { vi } from 'date-fns/locale';
+import { formatDate } from '@/utils/functions';
 
 interface AssignmentFormProps {
     defaultValues?: Partial<Assignment>;
@@ -175,7 +175,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                                 variant={'outline'}
                                                 className={cn('w-full pl-3 text-left font-normal')}
                                             >
-                                                {dayjs(field.value).format('DD/MM/YYYY')}
+                                                {formatDate(field.value)}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                             </Button>
                                         </FormControl>
