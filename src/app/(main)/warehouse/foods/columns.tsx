@@ -77,7 +77,7 @@ export const columns: ColumnDef<WareStockResponse>[] = [
     },
     {
         accessorKey: 'unitSpecification',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Đơn vị" />,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Quy cách tính" />,
         cell: ({ row }) => <div>{row.getValue('unitSpecification')}</div>,
     },
     {
