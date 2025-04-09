@@ -1,7 +1,6 @@
 import { CreateMedicine, CreateMedicineSchema } from '@/utils/schemas/medicine.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
-import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
 import { Warehouse } from '@/utils/schemas/warehouse.schema';
@@ -14,14 +13,14 @@ import toast from 'react-hot-toast';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Button } from '../ui/button';
+import { useEffect, useState } from 'react';
 
 interface CreateMedicineProps {
     closeDialog: () => void;
 }
 
 export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps) {
-    const searchParams = useSearchParams();
-    const wId: string = searchParams.get('w') || '';
+    const [wId, setWId] = useState('');
 
     const form = useForm<CreateMedicine>({
         resolver: zodResolver(CreateMedicineSchema),
@@ -37,10 +36,16 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
             unitId: '',
             packageId: '',
             packageSize: 0,
-            wareId: wId,
+            wareId: '',
         },
         mode: 'onChange',
     });
+
+    useEffect(() => {
+        const storedWId = sessionStorage.getItem('wareId') ?? '';
+        setWId(storedWId);
+        form.setValue('wareId', storedWId);
+    }, [form]);
 
     // Gọi data ware để lấy id và tên kho
     const { data: ware } = useQuery<Warehouse>({
@@ -331,14 +336,14 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
                         control={form.control}
                         name="wareId"
                         render={({ field }) => {
+                            useEffect(() => {
+                                field.onChange(wId);
+                            }, [wId, field]);
                             return (
                                 <FormItem>
                                     <FormLabel>Kho</FormLabel>
                                     <FormControl>
                                         <div>
-                                            {/* Hidden input để lưu wareId */}
-                                            <input type="hidden" {...field} value={wId} />
-                                            {/* Input hiển thị để show warehouseName */}
                                             <Input
                                                 value={ware?.warehouseName || ''}
                                                 disabled

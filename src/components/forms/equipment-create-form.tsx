@@ -11,12 +11,11 @@ import { SubCategory } from '@/utils/schemas/sub-category.schema';
 import { Warehouse } from '@/utils/schemas/warehouse.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { createEquipmentInWare } from '@/services/equipment.service';
 import toast from 'react-hot-toast';
@@ -27,8 +26,7 @@ interface CreateEquipmentProps {
 }
 
 export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProps) {
-    const searchParams = useSearchParams();
-    const wId: string = searchParams.get('w') || '';
+    const [wId, setWId] = useState('');
 
     const form = useForm<CreateEquipment>({
         resolver: zodResolver(CreateEquipmentSchema),
@@ -46,10 +44,16 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
             unitId: '',
             packageId: '',
             packageSize: 0,
-            wareId: wId,
+            wareId: '',
         },
         mode: 'onChange',
     });
+
+    useEffect(() => {
+        const storedWId = sessionStorage.getItem('wareId') ?? '';
+        setWId(storedWId);
+        form.setValue('wareId', storedWId);
+    }, [form]);
 
     // Gọi data ware để lấy id và tên kho
     const { data: ware } = useQuery<Warehouse>({
@@ -218,14 +222,14 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                         control={form.control}
                         name="wareId"
                         render={({ field }) => {
+                            useEffect(() => {
+                                field.onChange(wId);
+                            }, [wId, field]);
                             return (
                                 <FormItem>
                                     <FormLabel>Kho</FormLabel>
                                     <FormControl>
                                         <div>
-                                            {/* Hidden input để lưu wareId */}
-                                            <input type="hidden" {...field} value={wId} />
-                                            {/* Input hiển thị để show warehouseName */}
                                             <Input
                                                 value={ware?.warehouseName || ''}
                                                 disabled

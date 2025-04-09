@@ -10,20 +10,19 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Warehouse } from '@/utils/schemas/warehouse.schema';
 import { getWareById } from '@/services/warehouse.service';
 import type { SubCategory } from '@/utils/schemas/sub-category.schema';
-import { getSubFoodUnit, getSubPackage,  } from '@/services/category.service';
+import { getSubFoodUnit, getSubPackage } from '@/services/category.service';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { createFood } from '@/services/food.service';
 import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
-import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface CreateFoodProps {
     closeModal: () => void;
 }
 
 export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
-    const searchParams = useSearchParams();
-    const wId: string = searchParams.get('w') || '';
+    const [wId, setWId] = useState('');
 
     const form = useForm<CreateFood>({
         resolver: zodResolver(CreateFoodSchema),
@@ -31,7 +30,7 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
             foodCode: '',
             foodName: '',
             note: '',
-            wareId: wId,
+            wareId: '',
             packageId: '',
             unitId: '',
             packageSize: 0,
@@ -40,6 +39,12 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
         },
         mode: 'onChange',
     });
+
+    useEffect(() => {
+        const storedWId = sessionStorage.getItem('wareId') ?? '';
+        setWId(storedWId);
+        form.setValue('wareId', storedWId);
+    }, [form]);
 
     // Gọi data ware để lấy id và tên kho
     const { data: ware } = useQuery<Warehouse>({
@@ -167,19 +172,19 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                         )}
                     />
 
-                    {/* Kho */}
+                    {/* Ware */}
                     <FormField
                         control={form.control}
                         name="wareId"
                         render={({ field }) => {
+                            useEffect(() => {
+                                field.onChange(wId);
+                            }, [wId, field]);
                             return (
                                 <FormItem>
                                     <FormLabel>Kho</FormLabel>
                                     <FormControl>
                                         <div>
-                                            {/* Hidden input để lưu wareId */}
-                                            <input type="hidden" {...field} value={wId} />
-                                            {/* Input hiển thị để show warehouseName */}
                                             <Input
                                                 value={ware?.warehouseName || ''}
                                                 disabled

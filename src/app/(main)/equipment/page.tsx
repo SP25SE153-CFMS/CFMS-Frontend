@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { ArrowLeft, Plus, Wrench } from 'lucide-react';
@@ -28,13 +28,20 @@ import config from '@/configs';
 export default function Page() {
     const router = useRouter();
     const [open, setOpen] = useState(false);
-    const searchParams = useSearchParams();
-    const wId: string = searchParams.get('w') || '';
-    const rId: string = searchParams.get('r') || '';
+    const [wId, setWId] = useState('');
+    const [rId, setRId] = useState('');
 
     const openModal = () => setOpen(true);
     const closeModal = () => setOpen(false);
     const onOpenChange = (val: boolean) => setOpen(val);
+
+    useEffect(() => {
+        const wId = sessionStorage.getItem('wareId') ?? '';
+        const rId = sessionStorage.getItem('resourceTypeId') ?? '';
+
+        setWId(wId);
+        setRId(rId);
+    }, []);
 
     const { data: equipments = [], isLoading } = useQuery<WareStockResponse[]>({
         queryKey: ['equipments', wId, rId],

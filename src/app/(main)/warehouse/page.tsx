@@ -71,6 +71,11 @@ export default function Ware() {
         wareId: string,
         resourceTypeId: string,
     ) => {
+        // Lưu vào sessionStorage
+        sessionStorage.setItem('wareId', wareId);
+        sessionStorage.setItem('resourceTypeId', resourceTypeId);
+
+        // Chuyển route như cũ
         let route = '';
         switch (resourceTypeName) {
             case 'Thực phẩm':

@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { ArrowLeft, Plus, Pill } from 'lucide-react';
@@ -28,13 +28,20 @@ import config from '@/configs';
 export default function Page() {
     const router = useRouter();
     const [open, setOpen] = useState(false);
-    const searchParams = useSearchParams();
-    const wId: string = searchParams.get('w') || '';
-    const rId: string = searchParams.get('r') || '';
+    const [wId, setWId] = useState('');
+    const [rId, setRId] = useState('');
 
     const openModal = () => setOpen(true);
     const closeModal = () => setOpen(false);
     const onOpenChange = (val: boolean) => setOpen(val);
+
+    useEffect(() => {
+        const wId = sessionStorage.getItem('wareId') ?? '';
+        const rId = sessionStorage.getItem('resourceTypeId') ?? '';
+
+        setWId(wId);
+        setRId(rId);
+    }, []);
 
     // Get data medicine trong ware-stock
     const { data: medicines = [], isLoading } = useQuery<WareStockResponse[]>({
@@ -107,7 +114,7 @@ export default function Page() {
                 <CardHeader className="pb-6 items-center justify-center">
                     <div className="flex items-center gap-2">
                         <Pill className="h-5 w-5 text-muted-foreground" />
-                        <CardTitle className="text-2xl font-bold">Danh mục thuốc</CardTitle>
+                        <CardTitle className="text-2xl font-bold">Quản lý kho thuốc</CardTitle>
                     </div>
                     <CardDescription className="text-sm">
                         Danh sách tất cả thuốc trong trang trại
