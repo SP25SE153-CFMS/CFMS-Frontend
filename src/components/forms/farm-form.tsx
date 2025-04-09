@@ -164,7 +164,6 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
                                         />
                                         <SelectNative
                                             className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
-                                            value={form.getValues('areaUnitId')}
                                             onChange={(e) =>
                                                 form.setValue('areaUnitId', e.target.value)
                                             }

@@ -317,7 +317,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                                         }}
                                     />
                                 </div>
-                                {index > 0 && (
+                                {chickenDetailRequests.length > 1 && (
                                     <Button
                                         type="button"
                                         variant="destructive"
