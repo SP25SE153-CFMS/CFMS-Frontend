@@ -31,7 +31,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
 import config from '@/configs';
-import { TaskStatus } from '@/utils/enum/status.enum';
+import { TaskStatus, taskStatusLabels } from '@/utils/enum/status.enum';
 import { getShifts } from '@/services/shift.service';
 
 // Mock resource names - in a real app, these would be fetched from an API
@@ -85,37 +85,6 @@ export default function TaskDetail() {
         );
     }
 
-    const getStatusBadge = (statusCode: number) => {
-        switch (statusCode) {
-            case 0:
-                return (
-                    <Badge variant="outline" className="bg-gray-100">
-                        Chưa bắt đầu
-                    </Badge>
-                );
-            case 1:
-                return (
-                    <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
-                        Đang thực hiện
-                    </Badge>
-                );
-            case 2:
-                return (
-                    <Badge variant="outline" className="bg-green-100 text-green-800">
-                        Hoàn thành
-                    </Badge>
-                );
-            case 3:
-                return (
-                    <Badge variant="outline" className="bg-red-100 text-red-800">
-                        Đã hủy
-                    </Badge>
-                );
-            default:
-                return <Badge variant="outline">Không xác định</Badge>;
-        }
-    };
-
     const updateStatus = async (newStatus: number) => {
         await updateTaskStatus(taskId, newStatus);
         toast.success('Cập nhật trạng thái thành công');
@@ -139,7 +108,7 @@ export default function TaskDetail() {
                                         {task.taskName}
                                     </CardTitle>
                                 </div>
-                                {getStatusBadge(task.status)}
+                                {taskStatusLabels[task.status]}
                             </div>
                         </CardHeader>
                         <CardContent>
