@@ -25,6 +25,7 @@ import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
+import { CommonStatus } from '@/utils/enum/status.enum';
 
 interface ChickenFormProps {
     defaultValues?: Partial<Chicken>;
@@ -41,7 +42,7 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
             chickenName: '',
             // totalQuantity: 0,
             description: '',
-            status: 1,
+            status: CommonStatus.ACTIVE,
             chickenTypeId: '',
             ...defaultValues,
         },
@@ -141,7 +142,7 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                     />
 
                     {/* Status */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="status"
                         render={({ field }) => (
@@ -164,7 +165,7 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
                     {/* Chicken Type ID */}
                     <FormField

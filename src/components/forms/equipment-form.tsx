@@ -21,10 +21,11 @@ import {
     type Equipment,
     EquipmentSchema,
 } from '@/utils/schemas/equipment.schema';
-import dayjs from 'dayjs';
 import { createEquipment, updateEquipment } from '@/services/equipment.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { formatDate } from '@/utils/functions';
+import { vi } from 'date-fns/locale';
 
 interface EquipmentFormProps {
     defaultValues?: Partial<Equipment>;
@@ -125,7 +126,7 @@ export default function EquipmentForm({ defaultValues, closeDialog }: EquipmentF
                                                     !field.value && 'text-muted-foreground',
                                                 )}
                                             >
-                                                {dayjs(new Date(field.value)).format('DD/MM/YYYY')}
+                                                {formatDate(field.value)}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                             </Button>
                                         </FormControl>
@@ -140,6 +141,7 @@ export default function EquipmentForm({ defaultValues, closeDialog }: EquipmentF
                                                 field.onChange(date ? date.toISOString() : '');
                                             }}
                                             initialFocus
+                                            locale={vi}
                                         />
                                     </PopoverContent>
                                 </Popover>

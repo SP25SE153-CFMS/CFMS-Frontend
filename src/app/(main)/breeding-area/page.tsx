@@ -2,7 +2,16 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Download, Plus, Search, Filter, ChevronLeft, LayoutGrid, List } from 'lucide-react';
+import {
+    Download,
+    Plus,
+    Search,
+    Filter,
+    ChevronLeft,
+    LayoutGrid,
+    List,
+    InboxIcon,
+} from 'lucide-react';
 
 import { columns } from './columns';
 
@@ -44,6 +53,7 @@ import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import BreedingAreaCard from './card';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
+import Link from 'next/link';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -146,7 +156,7 @@ export default function Page() {
 
     // Filter breeding areas based on search term and status
     const filteredBreedingAreas = breedingAreas
-        .filter((area) => statusFilter === 'all' || area.status.toString() === statusFilter)
+        // .filter((area) => statusFilter === 'all' || area.status.toString() === statusFilter)
         .filter(
             (area) =>
                 searchTerm === '' ||
@@ -158,13 +168,25 @@ export default function Page() {
     const inactiveAreas = filteredBreedingAreas.filter((area) => area.status.toString() === '0');
     const activeAreas = filteredBreedingAreas.filter((area) => area.status.toString() === '1');
 
-    const renderBreedingAreas = () => {
+    const renderBreedingAreas = (statusFilter: string) => {
+        const areas =
+            statusFilter === 'all'
+                ? filteredBreedingAreas
+                : filteredBreedingAreas.filter((area) => area.status.toString() === statusFilter);
         if (viewMode === 'table') {
-            return <DataTable data={filteredBreedingAreas} columns={columns} />;
+            return <DataTable data={areas} columns={columns} />;
         }
         return (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredBreedingAreas.map((area) => (
+                {areas.length === 0 && (
+                    <div className="flex h-[200px] flex-col items-center justify-center gap-2 p-4 text-center mx-auto col-span-1 md:col-span-2 lg:col-span-3">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                            <InboxIcon className="h-6 w-6 text-muted-foreground" />
+                        </div>
+                        <h4 className="text-sm font-medium">Không có khu nuôi nào</h4>
+                    </div>
+                )}
+                {areas.map((area) => (
                     <BreedingAreaCard
                         key={area.breedingAreaId}
                         area={area}
@@ -181,15 +203,12 @@ export default function Page() {
         <div className="space-y-6">
             {/* Header */}
             <div className="flex items-center text-sm text-muted-foreground">
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="gap-1 p-0"
-                    onClick={() => window.history.back()}
-                >
-                    <ChevronLeft className="h-4 w-4" />
-                    Trang trại
-                </Button>
+                <Link href={config.routes.farm}>
+                    <Button variant="ghost" size="sm" className="gap-1 p-0">
+                        <ChevronLeft className="h-4 w-4" />
+                        Trang trại
+                    </Button>
+                </Link>
                 <span className="mx-2">/</span>
                 <span>Khu nuôi</span>
             </div>
@@ -299,9 +318,9 @@ export default function Page() {
                                 Đang hoạt động ({activeAreas.length})
                             </TabsTrigger>
                         </TabsList>
-                        <TabsContent value="all">{renderBreedingAreas()}</TabsContent>
-                        <TabsContent value="0">{renderBreedingAreas()}</TabsContent>
-                        <TabsContent value="1">{renderBreedingAreas()}</TabsContent>
+                        <TabsContent value="all">{renderBreedingAreas('all')}</TabsContent>
+                        <TabsContent value="0">{renderBreedingAreas('0')}</TabsContent>
+                        <TabsContent value="1">{renderBreedingAreas('1')}</TabsContent>
                     </Tabs>
                 </CardContent>
             </Card>

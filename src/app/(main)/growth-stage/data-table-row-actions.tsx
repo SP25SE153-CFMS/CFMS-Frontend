@@ -10,8 +10,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Trash } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import config from '@/configs';
 import {
     AlertDialog,
     AlertDialogContent,
@@ -20,7 +18,11 @@ import {
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
 import toast from 'react-hot-toast';
-import { deleteGrowthStage } from '@/services/growth-stage.service';
+import {
+    addNutritionPlanToGrowthStage,
+    deleteGrowthStage,
+    deleteNutritionPlanFromGrowthStage,
+} from '@/services/growth-stage.service';
 import { GrowthStage } from '@/utils/schemas/growth-stage.schema';
 import GrowthStageForm from '@/components/forms/growth-stage-form';
 import {
@@ -31,16 +33,32 @@ import {
     DialogDescription,
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+    Select,
+    SelectItem,
+    SelectContent,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { getNutritionPlans } from '@/services/nutrition-plan.service';
 
 interface Props<T> {
     row: Row<T>;
 }
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
-    const router = useRouter();
+    const [openCreate, setOpenCreate] = useState(false);
+    const [openDeleteNutritionPlan, setOpenDeleteNutritionPlan] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
+
+    const { data: nutritionPlans } = useQuery({
+        queryKey: ['nutritionPlans'],
+        queryFn: () => getNutritionPlans(),
+    });
+
+    const [nutritionPlanId, setNutritionPlanId] = useState<string>('');
 
     const queryClient = useQueryClient();
 
@@ -53,6 +71,30 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
         });
     };
 
+    const handleDeleteNutritionPlan = async () => {
+        const growthStageId = (row.original as GrowthStage).growthStageId;
+        const nutritionPlanId = (row.original as GrowthStage).nutritionPlanId;
+        if (!nutritionPlanId) {
+            toast.error('Không tìm thấy chế độ dinh dưỡng');
+            return;
+        }
+        await deleteNutritionPlanFromGrowthStage(growthStageId, nutritionPlanId).then(() => {
+            toast.success('Đã xóa chế độ dinh dưỡng');
+            queryClient.invalidateQueries({ queryKey: ['growthStages'] });
+            setOpenDeleteNutritionPlan(false);
+        });
+    };
+
+    const addNutritionPlan = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const growthStageId = (row.original as GrowthStage).growthStageId;
+        await addNutritionPlanToGrowthStage(growthStageId, nutritionPlanId).then(() => {
+            toast.success('Đã thêm chế độ dinh dưỡng');
+            queryClient.invalidateQueries({ queryKey: ['growthStages'] });
+            setOpenCreate(false);
+        });
+    };
+
     return (
         <>
             <DropdownMenu modal={false}>
@@ -62,8 +104,8 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         <span className="sr-only">Mở menu</span>
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[160px]">
-                    <DropdownMenuItem
+                <DropdownMenuContent align="end" className="w-full">
+                    {/* <DropdownMenuItem
                         onClick={() => {
                             router.push(
                                 `${config.routes.growthStage}/${row.getValue('growthStageId')}`,
@@ -71,16 +113,83 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         }}
                     >
                         Xem chi tiết
+                    </DropdownMenuItem> */}
+                    <DropdownMenuItem onClick={() => setOpenCreate(true)}>
+                        Thêm chế độ dinh dưỡng
                     </DropdownMenuItem>
+
                     <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                         Cập nhật
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
-                        Xóa <Trash size={16} className="ml-auto" />
+                        Xóa giai đoạn phát triển
+                        <Trash size={16} className="ml-auto" />
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() => setOpenDeleteNutritionPlan(true)}
+                        className="text-red-600"
+                    >
+                        Xóa chế độ dinh dưỡng <Trash size={16} className="ml-auto" />
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* Add Nutrition Plan Dialog */}
+            <Dialog open={openCreate} onOpenChange={(val) => setOpenCreate(val)}>
+                <DialogContent className="max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Thêm chế độ dinh dưỡng</DialogTitle>
+                        <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={addNutritionPlan} className="flex flex-col">
+                        <div className="grid grid-cols-1 gap-6 px-1 w-full">
+                            <Select onValueChange={(value) => setNutritionPlanId(value)}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Chọn chế độ dinh dưỡng" />
+                                </SelectTrigger>
+                                <SelectContent className="w-full">
+                                    {nutritionPlans?.map((nutritionPlan) => (
+                                        <SelectItem
+                                            key={nutritionPlan.nutritionPlanId}
+                                            value={nutritionPlan.nutritionPlanId}
+                                        >
+                                            {nutritionPlan.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <Button type="submit" className="mx-auto mt-6 w-60">
+                            Gửi
+                        </Button>
+                    </form>
+                </DialogContent>
+            </Dialog>
+
+            {/* Delete Nutrition Plan Dialog */}
+            <Dialog
+                open={openDeleteNutritionPlan}
+                onOpenChange={(val) => setOpenDeleteNutritionPlan(val)}
+            >
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Xóa chế độ dinh dưỡng</DialogTitle>
+                        <DialogDescription>
+                            Bạn có chắc chắn muốn xóa chế độ dinh dưỡng này?
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex justify-end space-x-2">
+                        <Button variant="outline" onClick={() => setOpenDeleteNutritionPlan(false)}>
+                            Hủy
+                        </Button>
+                        <Button variant="destructive" onClick={handleDeleteNutritionPlan}>
+                            Xóa
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
 
             {/* Update Dialog */}
             <Dialog open={openUpdate} onOpenChange={(val) => setOpenUpdate(val)}>

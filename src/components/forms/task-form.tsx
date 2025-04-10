@@ -9,7 +9,7 @@ import { addDays, format } from 'date-fns';
 import { vi } from 'date-fns/locale';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateTask, CreateTaskSchema } from '@/utils/schemas/task.schema';
+import { CreateTask, CreateTaskSchema, Task } from '@/utils/schemas/task.schema';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -76,19 +76,15 @@ import config from '@/configs';
 import { createTask } from '@/services/task.service';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { capitalizeFirstLetter } from '@/utils/functions';
-import { mapEnumToValues } from '@/utils/functions/enum.function';
-import {
-    assignmentBadge,
-    AssignmentStatus,
-    assignmentStatusLabels,
-} from '@/utils/enum/status.enum';
+import dayjs from 'dayjs';
+import { TaskStatus } from '@/utils/enum/status.enum';
 
 const LOCATION_TYPES = [
     { value: 'COOP', label: 'Chuồng nuôi' },
     { value: 'WARE', label: 'Nhà kho' },
 ];
 
-export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
+export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [locationType, setLocationType] = useState<string>('');
@@ -121,12 +117,12 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
             taskTypeId: '',
             description: '',
             isHavest: false,
-            status: 0,
+            status: TaskStatus.PENDING,
             frequency: 0,
             timeUnitId: '',
             startWorkDate: new Date(),
             endWorkDate: new Date(),
-            shiftIds: [''],
+            shiftIds: [],
             locationType: '',
             locationId: '',
             taskResources: [
@@ -138,6 +134,8 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
             ...defaultValues,
         },
     });
+
+    console.log(form.getValues());
 
     const { fields, append, remove } = useFieldArray({
         control: form.control,
@@ -214,10 +212,15 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
         setSelectedDates(dates);
     }, [calculateWorkDates]);
 
-    async function onSubmit(values: CreateTask) {
+    async function onSubmit(values: any) {
         setIsSubmitting(true);
         try {
             console.log('Submitting form data:', values);
+            values.startWorkDate = isFrequencyAssigned
+                ? calculateWorkDates().map((d) => dayjs(d).format('YYYY-MM-DD'))
+                : [dayjs(values.startWorkDate).format('YYYY-MM-DD')];
+            values.endWorkDate = dayjs(values.endWorkDate).format('YYYY-MM-DD');
+            values.isHavest = values.isHavest ? 1 : 0;
             await createTask(values);
             router.push(config.routes.task);
             router.refresh();
@@ -226,6 +229,10 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
         } finally {
             setIsSubmitting(false);
         }
+    }
+
+    function onError(error: any) {
+        console.log(error);
     }
 
     const getCoopName = useCallback(
@@ -354,7 +361,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
                         )}
                     />
 
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="status"
                         render={({ field }) => (
@@ -392,7 +399,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
                 </div>
             </div>
         ),
@@ -948,7 +955,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: CreateTask }) {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-8">
                 {renderBasicInfoSection}
                 {renderScheduleSection}
                 {renderLocationSection}

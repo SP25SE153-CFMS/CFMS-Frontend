@@ -30,14 +30,14 @@ import { createFarm, updateFarm } from '@/services/farm.service';
 import { useRouter } from 'next/navigation';
 import config from '@/configs';
 import { CloudinaryImageUpload } from '@/components/cloudinary-image-upload';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { Scale, scaleLabels } from '@/utils/enum/status.enum';
 import { getAddress } from '@/services/map.service';
 import { PhoneInput } from '@/components/ui/phone-input';
 import { SelectNative } from '../ui/select-native';
-import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
+import { getSubCategoriesByType } from '@/services/category.service';
 
 // Dynamically import the map component with no SSR
 const LocationMapWithNoSSR = dynamic(() => import('../map/location-map'), { ssr: false });
@@ -50,6 +50,11 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
     const router = useRouter();
     const [imageUrl, setImageUrl] = useState<string>('');
     const [mapVisible, setMapVisible] = useState(false);
+
+    const { data: areaUnits } = useQuery({
+        queryKey: ['area-units'],
+        queryFn: () => getSubCategoriesByType(CategoryType.AREA_UNIT),
+    });
 
     // Initialize form
     const form = useForm<Farm>({
@@ -75,10 +80,10 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
         onSuccess: () => {
             if (defaultValues) {
                 toast.success('Cập nhật trang trại thành công');
-                router.push(config.routes.farm);
             } else {
                 toast.success('Tạo trang trại thành công');
             }
+            router.push(config.routes.farm);
         },
         onError: (err: any) => {
             toast.error(err?.response?.data?.message);
@@ -159,11 +164,11 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
                                         />
                                         <SelectNative
                                             className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
-                                            value={form.getValues('areaUnitId')}
+                                            onChange={(e) =>
+                                                form.setValue('areaUnitId', e.target.value)
+                                            }
                                         >
-                                            {getSubCategoryByCategoryType(
-                                                CategoryType.AREA_UNIT,
-                                            )?.map((unit) => (
+                                            {areaUnits?.map((unit) => (
                                                 <option
                                                     key={unit.subCategoryId}
                                                     value={unit.subCategoryId}

@@ -158,7 +158,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                         <InfoItem
                             label="Trạng thái"
                             value={
-                                currentChickenBatch?.status ? (
+                                currentChickenBatch?.status || currentChickenBatch?.status === 0 ? (
                                     <Badge
                                         variant={
                                             chickenBatchStatusVariant[currentChickenBatch?.status]
@@ -193,7 +193,8 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                             <span>Xem chi tiết</span>
                         </Link>
 
-                        {currentChickenBatch?.status === ChickenBatchStatus.ACTIVE && (
+                        {/* {currentChickenBatch?.status === ChickenBatchStatus.ACTIVE && ( */}
+                        {currentChickenBatch?.status !== ChickenBatchStatus.COMPLETED && (
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
                                     <Button variant="destructive" className="w-full">

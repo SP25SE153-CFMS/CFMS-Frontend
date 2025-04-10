@@ -66,3 +66,9 @@ export function getTaskType(taskTypeId: string): string {
     const taskType = categories.find((cat) => cat.subCategoryId === taskTypeId);
     return taskType?.description ?? '';
 }
+
+export function getQuantityUnit(quantityUnitId: string): string {
+    const categories = getSubCategoryByCategoryType(CategoryType.QUANTITY_UNIT);
+    const quantityUnit = categories.find((cat) => cat.subCategoryId === quantityUnitId);
+    return quantityUnit?.subCategoryName ?? '';
+}

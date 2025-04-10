@@ -617,12 +617,12 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                         </div>
                     </div> */}
                     <AssignmentForm closeDialog={() => setIsAddEventOpen(false)} />
-                    <DialogFooter>
+                    {/* <DialogFooter>
                         <Button variant="outline" onClick={() => setIsAddEventOpen(false)}>
                             Hủy
                         </Button>
                         <Button onClick={handleAddEvent}>Giao việc</Button>
-                    </DialogFooter>
+                    </DialogFooter> */}
                 </DialogContent>
             </Dialog>
         </div>

@@ -17,10 +17,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { CreateUserSchema, UserSchema, type User } from '@/utils/schemas/user.schema';
-import dayjs from 'dayjs';
 import { createUser, updateUser } from '@/services/user.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { formatDate } from '@/utils/functions';
+import { vi } from 'date-fns/locale';
 
 interface EmployeeFormProps {
     defaultValues?: Partial<User>;
@@ -37,7 +38,7 @@ export default function EmployeeForm({ defaultValues, closeDialog }: EmployeeFor
             phoneNumber: '',
             mail: '',
             avatar: '',
-            dateOfBirth: new Date().toISOString(),
+            dateOfBirth: '',
             status: 1,
             address: '',
             cccd: '',
@@ -201,7 +202,7 @@ export default function EmployeeForm({ defaultValues, closeDialog }: EmployeeFor
                                                 variant={'outline'}
                                                 className={cn('w-full pl-3 text-left font-normal')}
                                             >
-                                                {dayjs(field.value).format('DD/MM/YYYY')}
+                                                {formatDate(field.value ?? '')}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                             </Button>
                                         </FormControl>
@@ -214,6 +215,7 @@ export default function EmployeeForm({ defaultValues, closeDialog }: EmployeeFor
                                             }
                                             onSelect={(date) => field.onChange(date?.toISOString())}
                                             initialFocus
+                                            locale={vi}
                                         />
                                     </PopoverContent>
                                 </Popover>

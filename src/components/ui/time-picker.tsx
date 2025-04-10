@@ -33,8 +33,6 @@ export const TimePicker: React.FC<TimePickerProps> = ({
 }) => {
     const [open, setOpen] = React.useState(false);
 
-    console.log(value);
-
     const times = useMemo(() => generateTimeOptions(interval), [interval]);
 
     return (

@@ -31,6 +31,7 @@ import { getSubCategoryByCategoryType } from '@/utils/functions/category.functio
 import { CategoryType } from '@/utils/enum/category.enum';
 import { SelectNative } from '../ui/select-native';
 import { addFeedSession, updateFeedSession } from '@/services/nutrition-plan.service';
+import { formatDate } from '@/utils/functions';
 interface FeedSessionFormProps {
     defaultValues?: Partial<FeedSession>;
     closeDialog: () => void;
@@ -104,11 +105,7 @@ export default function FeedSessionForm({ defaultValues, closeDialog }: FeedSess
                                                     !field.value && 'text-muted-foreground',
                                                 )}
                                             >
-                                                {field.value ? (
-                                                    dayjs(field.value).format('DD/MM/YYYY')
-                                                ) : (
-                                                    <span>Chọn thời gian</span>
-                                                )}
+                                                {formatDate(field.value)}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                             </Button>
                                         </FormControl>
@@ -156,7 +153,6 @@ export default function FeedSessionForm({ defaultValues, closeDialog }: FeedSess
                                     <SelectNative
                                         className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
                                         onChange={(e) => form.setValue('unitId', e.target.value)}
-                                        value={form.getValues('unitId')}
                                     >
                                         {getSubCategoryByCategoryType(
                                             CategoryType.WEIGHT_UNIT,

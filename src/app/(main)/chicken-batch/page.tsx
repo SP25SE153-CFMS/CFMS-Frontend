@@ -414,10 +414,10 @@ export default function Page() {
                         <Download className="mr-2 h-4 w-4" />
                         Xuất CSV
                     </Button>
-                    <Button className="h-9" onClick={openModal}>
+                    {/* <Button className="h-9" onClick={openModal}>
                         <Plus className="mr-2 h-4 w-4" />
                         Tạo lứa nuôi
-                    </Button>
+                    </Button> */}
                 </div>
             </div>
 
@@ -442,7 +442,7 @@ export default function Page() {
                                         Lọc
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-[220px]">
+                                <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Khu vực nuôi</DropdownMenuLabel>
                                     {breedingAreas.map((area) => (
                                         <DropdownMenuItem

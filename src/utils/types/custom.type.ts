@@ -26,6 +26,8 @@ import { VaccinationLog } from '../schemas/vaccine.schema';
 import { NutritionPlan } from '../schemas/nutrition-plan.schema';
 import { NutritionPlanDetail } from '../schemas/nutrition-plan-detail.schema';
 import { FeedSession } from '../schemas/feed-session.schema';
+import { ShiftSchedule } from '../schemas/shift-schedule.schema';
+import { TaskResource } from '../schemas/task-resource.schema';
 
 export type EntityAudit = {
     isDeleted: boolean;
@@ -116,10 +118,17 @@ export type ResourceResponse = Resource & {
     weight: number;
 };
 
+export type TaskResourceResponse = TaskResource & {
+    resource: ResourceResponse;
+};
+
 export type TaskResponse = Task & {
     assignments: Assignment[];
-    startWorkDate: string | Date;
-    endWorkDate: string | Date;
+    startWorkDate: string;
+    endWorkDate: string;
+    shiftSchedules: ShiftSchedule[];
+    taskResources: TaskResourceResponse[];
+    taskType: SubCategory;
 };
 
 export type ChickenDetailRequest = {
@@ -134,4 +143,11 @@ export type NotificationResponse = (Notification & EntityAudit) & {
 export type NutritionPlanResponse = NutritionPlan & {
     nutritionPlanDetails: NutritionPlanDetail[];
     feedSessions: FeedSession[];
+};
+
+export type DashboardResponse = {
+    totalChicken: number;
+    totalEmployee: number;
+    totalChickenDeath: number;
+    chickenBatches: ChickenBatchResponse[];
 };

@@ -27,7 +27,6 @@ import {
     CreateAssignmentSchema,
     type Assignment,
 } from '@/utils/schemas/assignment.schema';
-import dayjs from 'dayjs';
 import { createAssignment, updateAssignment } from '@/services/assignment.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -36,8 +35,11 @@ import { getEmployeesByFarmId } from '@/services/farm.service';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { Textarea } from '../ui/textarea';
-import { AssignmentStatus } from '@/utils/enum/status.enum';
+import { AssignmentStatus, TaskStatus } from '@/utils/enum/status.enum';
 import { vi } from 'date-fns/locale';
+import { formatDate } from '@/utils/functions';
+import MultipleSelector from '../ui/multiselect';
+import { useState } from 'react';
 
 interface AssignmentFormProps {
     defaultValues?: Partial<Assignment>;
@@ -63,7 +65,10 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
 
     const { data: tasks } = useQuery({
         queryKey: ['tasks'],
-        queryFn: () => getTasks(),
+        queryFn: async () => {
+            const tasks = await getTasks();
+            return tasks.filter((task) => task.status === TaskStatus.PENDING);
+        },
     });
 
     const { data: farmEmployees } = useQuery({
@@ -91,14 +96,22 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
         },
     });
 
+    const [assignedToIds, setAssignedToIds] = useState<string[]>([]);
+
     // Form submit handler
-    async function onSubmit(values: Assignment) {
+    async function onSubmit(values: any) {
+        values.assignedToIds = assignedToIds;
         mutation.mutate(values);
+    }
+
+    function onError(error: any) {
+        console.error(error);
+        // toast.error(error?.response?.data?.message);
     }
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
                 <div className="grid grid-cols-1 gap-6 px-1">
                     {/* Task ID */}
                     <FormField
@@ -137,7 +150,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                             <FormItem>
                                 <FormLabel>Người được phân công</FormLabel>
                                 <FormControl>
-                                    <Select
+                                    {/* <Select
                                         onValueChange={field.onChange}
                                         defaultValue={field.value}
                                     >
@@ -154,7 +167,26 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
-                                    </Select>
+                                    </Select> */}
+                                    <MultipleSelector
+                                        commandProps={{
+                                            label: 'Chọn người được phân công',
+                                        }}
+                                        // value={field.value}
+                                        onChange={(value) => {
+                                            setAssignedToIds(value.map((item) => item.value));
+                                        }}
+                                        defaultOptions={farmEmployees?.map((employee) => ({
+                                            value: employee.userId,
+                                            label: employee.user.fullName,
+                                        }))}
+                                        placeholder="Chọn người được phân công"
+                                        hideClearAllButton
+                                        hidePlaceholderWhenSelected
+                                        emptyIndicator={
+                                            <p className="text-center text-sm">Không tìm thấy</p>
+                                        }
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -175,7 +207,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                                 variant={'outline'}
                                                 className={cn('w-full pl-3 text-left font-normal')}
                                             >
-                                                {dayjs(field.value).format('DD/MM/YYYY')}
+                                                {formatDate(field.value)}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                             </Button>
                                         </FormControl>
@@ -275,10 +307,9 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                         )}
                     />
                 </div>
-                {/* TODO: Update this code */}
-                {/* <Button type="submit" className="mx-auto mt-6 w-60">
-                    Gửi
-                </Button> */}
+                <Button type="submit" className="mx-auto mt-6 w-60">
+                    Giao việc
+                </Button>
             </form>
         </Form>
     );

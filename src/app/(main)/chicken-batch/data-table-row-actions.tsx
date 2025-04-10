@@ -9,7 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Trash } from 'lucide-react';
+import { Trash, Check, StopCircle } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -26,7 +26,7 @@ import {
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
 import toast from 'react-hot-toast';
-import { deleteChickenBatch } from '@/services/chicken-batch.service';
+import { deleteChickenBatch, endChickenBatch } from '@/services/chicken-batch.service';
 import { ChickenBatch } from '@/utils/schemas/chicken-batch.schema';
 import ChickenBatchForm from '@/components/forms/chicken-batch-form';
 import { useRouter } from 'next/navigation';
@@ -44,8 +44,21 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
     const queryClient = useQueryClient();
 
+    const chickenBatchId = (row.original as ChickenBatch).chickenBatchId;
+
+    const closeChickenBatch = async () => {
+        try {
+            await endChickenBatch(chickenBatchId);
+            const chickenCoopId = sessionStorage.getItem('chickenCoopId');
+            queryClient.invalidateQueries({ queryKey: ['chickenBatches', chickenCoopId] });
+            toast.success('Kết thúc lứa nuôi thành công');
+        } catch (error) {
+            toast.error('Kết thúc lứa nuôi thất bại');
+        }
+    };
+
     const handleDelete = async () => {
-        await deleteChickenBatch((row.original as ChickenBatch).chickenBatchId).then(() => {
+        await deleteChickenBatch(chickenBatchId).then(() => {
             toast.success('Xóa lứa nuôi thành công');
             const chickenCoopId = sessionStorage.getItem('chickenCoopId');
             queryClient.invalidateQueries({ queryKey: ['chickenBatches', chickenCoopId] });
@@ -62,7 +75,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         <span className="sr-only">Mở menu</span>
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[160px]">
+                <DropdownMenuContent align="end">
                     <DropdownMenuItem
                         onClick={() =>
                             router.push(
@@ -72,10 +85,13 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     >
                         Xem chi tiết
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
+                    {/* <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                         Cập nhật
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                     <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={closeChickenBatch}>
+                        Kết thúc lứa nuôi <StopCircle size={16} className="ml-auto" />
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
                         Xóa <Trash size={16} className="ml-auto" />
                     </DropdownMenuItem>
