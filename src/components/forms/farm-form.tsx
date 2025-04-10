@@ -80,10 +80,10 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
         onSuccess: () => {
             if (defaultValues) {
                 toast.success('Cập nhật trang trại thành công');
-                router.push(config.routes.farm);
             } else {
                 toast.success('Tạo trang trại thành công');
             }
+            router.push(config.routes.farm);
         },
         onError: (err: any) => {
             toast.error(err?.response?.data?.message);

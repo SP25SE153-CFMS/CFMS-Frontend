@@ -318,7 +318,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                         name="purposeId"
                         render={({ field }) => (
                             <FormItem className="mt-[-8px]">
-                                <FormLabel>Mục đích</FormLabel>
+                                <FormLabel>Loại gà</FormLabel>
                                 <FormControl>
                                     <Select
                                         onValueChange={field.onChange}
@@ -326,7 +326,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                     >
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Chọn mục đích" />
+                                                <SelectValue placeholder="Chọn loại gà" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>

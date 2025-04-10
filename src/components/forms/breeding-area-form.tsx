@@ -74,6 +74,9 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
     // Form error handler
     const onError = (error: any) => {
         console.error(error);
+        // const firstKey = Object.keys(error)[0];
+        // const firstMessage = error[firstKey].message;
+        // toast.error(firstMessage);
     };
 
     const { data: farms } = useQuery({
@@ -148,6 +151,7 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                                                     onChange={(e) => {
                                                         form.setValue('areaUnitId', e.target.value);
                                                     }}
+                                                    defaultValue={form.getValues('areaUnitId')}
                                                 >
                                                     {getSubCategoryByCategoryType(
                                                         CategoryType.AREA_UNIT,

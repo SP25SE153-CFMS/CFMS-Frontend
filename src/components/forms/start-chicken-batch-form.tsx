@@ -307,7 +307,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                                     <Input
                                         id={`quantity-${index}`}
                                         type="number"
-                                        min="0"
+                                        min="1"
                                         value={detail.quantity}
                                         onChange={(e) => {
                                             const newDetails = [...chickenDetailRequests];

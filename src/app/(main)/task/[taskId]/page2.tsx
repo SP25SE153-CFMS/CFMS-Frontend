@@ -98,7 +98,7 @@ export default function Page() {
                                 <InfoItem
                                     label="Trạng thái"
                                     value={
-                                        assignment.status ? (
+                                        assignment.status || assignment.status === 0 ? (
                                             <Badge
                                                 variant={assignmentStatusVariant[assignment.status]}
                                             >
