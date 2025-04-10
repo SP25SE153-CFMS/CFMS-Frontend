@@ -4,11 +4,11 @@ import dayjs from 'dayjs';
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
-import { Equipment } from '@/utils/schemas/equipment.schema';
 import { DataTableRowActions } from './data-table-row-actions';
 import { getLengthUnit, getMaterial, getWeightUnit } from '@/utils/functions/category.function';
+import { WareStockResponse } from '@/utils/types/custom.type';
 
-export const columns: ColumnDef<Equipment>[] = [
+export const columns: ColumnDef<WareStockResponse>[] = [
     {
         id: 'select',
         header: ({ table }) => (
@@ -34,12 +34,44 @@ export const columns: ColumnDef<Equipment>[] = [
         enableHiding: false,
     },
     {
+        accessorKey: 'equipmentId',
+        header: () => null,
+        cell: () => null,
+    },
+    {
         accessorKey: 'equipmentCode',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mã thiết bị" />,
+        cell: ({ row }) => <div className="w-[40px]">{row.getValue('equipmentCode')}</div>,
     },
     {
         accessorKey: 'equipmentName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên thiết bị" />,
+        cell: ({ row }) => <div>{row.getValue('equipmentName')}</div>,
+    },
+    {
+        accessorKey: 'material',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Chất liệu" />,
+        cell: ({ row }) => <div>{row.getValue('material')}</div>,
+    },
+    {
+        accessorKey: 'usage',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Cách sử dụng" />,
+        cell: ({ row }) => <div>{row.getValue('usage')}</div>,
+    },
+    {
+        accessorKey: 'warranty',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Bảo hành (tháng)" />,
+        cell: ({ row }) => <div>{row.getValue('warranty')}</div>,
+    },
+    {
+        accessorKey: 'size',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Kích thước" />,
+        cell: ({ row }) => <div>{row.getValue('size')}</div>,
+    },
+    {
+        accessorKey: 'weight',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Khối lượng" />,
+        cell: ({ row }) => <div>{row.getValue('weight')}</div>,
     },
     {
         accessorKey: 'purchaseDate',
@@ -49,71 +81,15 @@ export const columns: ColumnDef<Equipment>[] = [
             return <div>{dayjs(date).format('DD/MM/YYYY')}</div>;
         },
     },
-    // {
-    //     accessorKey: 'warrantyPeriod',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Bảo hành (tháng)" />,
-    // },
-    // {
-    //     accessorKey: 'status',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
-    //     cell: ({ row }) => {
-    //         const status = row.getValue('status') as string;
-    //         return (
-    //             <Badge variant={equipmentStatusVariant[status]}>
-    //                 {equipmentStatusLabels[status]}
-    //             </Badge>
-    //         );
-    //     },
-    // },
-    // {
-    //     accessorKey: 'cost',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Chi phí" />,
-    //     cell: ({ row }) => <div>{row.getValue('cost')?.toLocaleString()} VNĐ</div>,
-    // },
-    // {
-    //     accessorKey: 'quantity',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng" />,
-    // },
     {
-        accessorKey: 'materialId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Chất liệu" />,
-        cell: ({ row }) => <div>{getMaterial(row.getValue('materialId'))}</div>,
+        accessorKey: 'specQuantity',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng" />,
+        cell: ({ row }) => <div>{row.getValue('specQuantity')}</div>,
     },
     {
-        accessorKey: 'usage',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Công dụng" />,
-    },
-    {
-        accessorKey: 'warranty',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Bảo hành (tháng)" />,
-    },
-    {
-        accessorKey: 'sizeUnitId', // Ensure the data exists in the row
-        header: () => null, // No header
-        cell: () => null, // Hidden cell
-    },
-    {
-        accessorKey: 'size',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Kích thước" />,
-        cell: ({ row }) => (
-            <div>
-                {row.getValue('size')} {getLengthUnit(row.getValue('sizeUnitId'))}
-            </div>
-        ),
-    },
-    {
-        accessorKey: 'weightUnitId', // Ensure the data exists in the row
-        header: () => null, // No header
-        cell: () => null, // Hidden cell
-    },
-    {
-        accessorKey: 'weight',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Khối lượng" />,
-        cell: ({ row }) => (
-            <div>
-                {row.getValue('weight')} {getWeightUnit(row.getValue('weightUnitId'))}
-            </div>
-        ),
+        accessorKey: 'unitSpecification',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Quy cách tính" />,
+        cell: ({ row }) => <div>{row.getValue('unitSpecification')}</div>,
     },
     {
         id: 'actions',

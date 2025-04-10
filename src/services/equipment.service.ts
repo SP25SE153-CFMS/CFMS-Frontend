@@ -1,4 +1,4 @@
-import { Equipment } from '@/utils/schemas/equipment.schema';
+import { CreateEquipment, Equipment } from '@/utils/schemas/equipment.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 
@@ -33,3 +33,11 @@ export const deleteEquipment = async (id: string) => {
     const response = await remove<Response<string>>(endpoint);
     return response.data;
 };
+
+export const createEquipmentInWare = async (body: CreateEquipment) => {
+    const endpoint = PREFIX;
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+

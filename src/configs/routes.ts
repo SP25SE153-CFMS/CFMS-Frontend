@@ -15,7 +15,6 @@ const routes = {
     category: '/category',
     categoryAll: '/category/all',
     categoryUnit: '/category/unit',
-    vaccine: '/warehouse/vaccines',
     employee: '/employee',
     farmEmployee: '/farm-employee',
     inventoryReceipt: '/warehouse/inventory-receipt',
@@ -35,6 +34,8 @@ const routes = {
     settings: '/settings',
     supplier: '/supplier',
     resourceSupplier: 'supplier/resource-supplier',
+    ware: '/warehouse',
+    medicine: '/warehouse/medicines',
 };
 
 export default routes;

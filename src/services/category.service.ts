@@ -61,6 +61,12 @@ export const getChickenTypes = async () => {
     return response.data.data;
 };
 
+export const getSubByType = async (categoryType: CategoryType) => {
+    const endpoint = PREFIX + '/sub-by-type/' + categoryType;
+    const response = await get<Response<SubCategory[]>>(endpoint);
+    return response.data.data;
+};
+
 export const getUnits = async () => {
     return await getCategoryByType(CategoryType.UNIT);
 };
@@ -85,4 +91,36 @@ export const getSubCategoriesByType = async (type: CategoryType) => {
     const endpoint = PREFIX + '/sub-by-type/' + type;
     const response = await get<Response<SubCategory[]>>(endpoint);
     return response.data.data;
+};
+
+export const getSubPackage = async () => {
+    return await getSubByType(CategoryType.PACKAGE_UNIT);
+};
+
+export const getSubFoodUnit = async () => {
+    return await getSubByType(CategoryType.F_QUANTITY_UNIT);
+};
+
+export const getSubEquipmentUnit = async () => {
+    return await getSubByType(CategoryType.E_QUANTITY_UNIT);
+};
+
+export const getSubMedicineUnit = async () => {
+    return await getSubByType(CategoryType.M_QUANTITY_UNIT);
+};
+
+export const getSubMaterial = async () => {
+    return await getSubByType(CategoryType.MATERIAL);
+};
+
+export const getSubSize = async () => {
+    return await getSubByType(CategoryType.LENGTH_UNIT);
+};
+
+export const getSubWeight = async () => {
+    return await getSubByType(CategoryType.WEIGHT_UNIT);
+};
+
+export const getSubDisease = async () => {
+    return await getSubByType(CategoryType.DISEASE);
 };

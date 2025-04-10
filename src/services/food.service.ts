@@ -1,3 +1,4 @@
+import { CreateFood, CreateFoodSchema } from './../utils/schemas/food.schema';
 import { Food } from '@/utils/schemas/food.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
@@ -16,7 +17,7 @@ export const getFoodById = async (id: string) => {
     return response.data.data;
 };
 
-export const createFood = async (body: Food) => {
+export const createFood = async (body: CreateFood) => {
     const endpoint = PREFIX;
     const response = await post<Response<string>>(endpoint, body);
     return response.data;

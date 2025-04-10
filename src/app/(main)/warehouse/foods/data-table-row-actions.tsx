@@ -1,4 +1,5 @@
-import WarehouseProductForm from '@/components/forms/warehouse-product-form';
+'use client';
+import UpdateFoodForm from '@/components/forms/food-update-form';
 import {
     AlertDialog,
     AlertDialogContent,
@@ -22,11 +23,13 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { deleteResource } from '@/services/resource.service';
 import { deleteProduct } from '@/services/warehouse-product.service';
-import { WarehouseProduct } from '@/utils/schemas/warehouse-product.schema';
+import type { Food } from '@/utils/schemas/food.schema';
+import type { WareStockResponse } from '@/utils/types/custom.type';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useQueryClient } from '@tanstack/react-query';
-import { Row } from '@tanstack/react-table';
+import type { Row } from '@tanstack/react-table';
 import { Trash } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -35,19 +38,34 @@ interface Props<T> {
     row: Row<T>;
 }
 export function DataTableRowActions<T>({ row }: Props<T>) {
+    // Lấy dữ liệu từ row
+    const rowData = row.original as WareStockResponse;
+    
     const [openDelete, setOpenDelete] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
-
     const queryClient = useQueryClient();
 
+
+    // Xác định dữ liệu food từ rowData
+    // Nếu rowData.foods tồn tại, sử dụng nó, nếu không thử sử dụng rowData trực tiếp
+    const foodData = rowData.foods || (rowData as unknown as Food);
+    
+    // Lấy foodId từ nguồn phù hợp
+    const foodId = foodData.foodId || (rowData as any).foodId;
+
+    
+    const resourceId = rowData.resourceId;
+
     const handleDelete = async () => {
-        const id = (row.original as WarehouseProduct).productId;
-        await deleteProduct(id);
-        toast.success('Xóa sản phẩm thành công!');
-        // TODO: Update query key
-        queryClient.invalidateQueries({ queryKey: ['foods'] });
-        setOpenDelete(false);
+        await deleteResource(resourceId).then(() => {
+            toast.success('Xóa thức ăn thành công');
+            queryClient.invalidateQueries({queryKey: ['foods']});
+            setOpenDelete(false)
+        })
     };
+
+    // Kiểm tra xem có đủ dữ liệu để cập nhật không
+    const canUpdate = !!foodId;
 
     return (
         <>
@@ -59,31 +77,44 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
+                    <DropdownMenuItem onClick={() => setOpenUpdate(true)} disabled={!canUpdate}>
                         Cập nhật
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
+                    <DropdownMenuItem
+                        onClick={() => setOpenDelete(true)}
+                        className="text-red-600"
+                        disabled={!foodId}
+                    >
                         Xóa <Trash size={16} />
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
 
             {/* Update */}
-            <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Cập nhật sản phẩm</DialogTitle>
-                        <DialogDescription>Nhập</DialogDescription>
-                    </DialogHeader>
-                    <ScrollArea>
-                        <WarehouseProductForm
-                            closeModal={() => setOpenUpdate(false)}
-                            defaultValues={row.original as WarehouseProduct}
-                        />
-                    </ScrollArea>
-                </DialogContent>
-            </Dialog>
+            {canUpdate && (
+                <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Cập nhật sản phẩm</DialogTitle>
+                            <DialogDescription>Nhập thông tin cập nhật</DialogDescription>
+                        </DialogHeader>
+                        <ScrollArea>
+                            <UpdateFoodForm
+                                food={{
+                                    foodId: foodId,
+                                    foodCode: foodData.foodCode || '',
+                                    foodName: foodData.foodName || '',
+                                    note: foodData.note || '',
+                                    productionDate: foodData.productionDate || '',
+                                    expiryDate: foodData.expiryDate || '',
+                                }}
+                                closeModal={() => setOpenUpdate(false)}
+                            />
+                        </ScrollArea>
+                    </DialogContent>
+                </Dialog>
+            )}
 
             {/* Delete */}
             <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>

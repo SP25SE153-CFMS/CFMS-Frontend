@@ -39,6 +39,7 @@ export type EntityAudit = {
     lastEditedByUser: User | null;
     lastEditedWhen: string | Date | null;
 };
+import { Warehouse } from '../schemas/warehouse.schema';
 
 export type ChickenCoopResponse = ChickenCoop & {
     chickenBatches: ChickenBatch[];
@@ -150,4 +151,14 @@ export type DashboardResponse = {
     totalEmployee: number;
     totalChickenDeath: number;
     chickenBatches: ChickenBatchResponse[];
+};
+export type WareStockResponse = Warehouse & {
+    foods?: Food;
+    equipments?: Equipment;
+    medicine?: Medicine;
+    specQuantity: string;
+    unitSpecification: string;
+    resourceTypeName: string;
+    resourceId: string;
+    disease: string;
 };

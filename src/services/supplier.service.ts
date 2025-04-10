@@ -17,6 +17,12 @@ export const getSupplierById = async (id: string) => {
     return response.data.data;
 };
 
+export const getSuppliersByFarmId = async (id: string) => {
+    const endpoint = `${PREFIX}/byFarmId/${id}`;
+    const response = await get<Response<Supplier[]>>(endpoint);
+    return response.data.data;
+};
+
 export const createSupplier = async (body: Supplier) => {
     const endpoint = PREFIX;
     const response = await post<Response<string>>(endpoint, body);

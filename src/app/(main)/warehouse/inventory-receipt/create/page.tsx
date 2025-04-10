@@ -56,7 +56,7 @@ export default function CreateReceipt() {
 
         // Simulate API call
         setTimeout(() => {
-            console.log('Form submitted:', formData);
+            // console.log('Form submitted:', formData);
             setIsSubmitting(false);
             // TODO: Khi có API, gọi API tại đây
             router.push(config.routes.inventoryReceipt);

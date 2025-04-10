@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import { ArrowLeft, Plus, Wheat } from 'lucide-react';
+import { ArrowLeft, Plus, Pill } from 'lucide-react';
 
 import { DataTable } from '@/components/table/data-table';
 import { columns } from './columns';
@@ -20,12 +20,12 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import CreateFoodForm from '@/components/forms/food-create-form';
+import CreateMedicineForm from '@/components/forms/medicine-create-form';
 import type { WareStockResponse } from '@/utils/types/custom.type';
 import { getWareStockByResourceTypeId } from '@/services/warehouse.service';
 import config from '@/configs';
 
-export default function Foods() {
+export default function Page() {
     const router = useRouter();
     const [open, setOpen] = useState(false);
     const [wId, setWId] = useState('');
@@ -43,8 +43,9 @@ export default function Foods() {
         setRId(rId);
     }, []);
 
-    const { data: foods = [], isLoading } = useQuery<WareStockResponse[]>({
-        queryKey: ['foods', wId, rId],
+    // Get data medicine trong ware-stock
+    const { data: medicines = [], isLoading } = useQuery<WareStockResponse[]>({
+        queryKey: ['medicines', wId, rId],
         queryFn: () => getWareStockByResourceTypeId(wId, rId),
         enabled: !!wId && !!rId,
     });
@@ -57,7 +58,7 @@ export default function Foods() {
         );
     }
 
-    if (!foods) {
+    if (!medicines) {
         return (
             <div className="w-full h-[70vh] flex items-center justify-center p-4">
                 <Card className="w-full max-w-md shadow-md">
@@ -73,7 +74,7 @@ export default function Foods() {
                         <div className="text-center space-y-2">
                             <h1 className="text-2xl font-bold">Danh sách không tồn tại</h1>
                             <p className="text-muted-foreground">
-                                Không tìm thấy dữ liệu cho kho thức ăn này
+                                Không tìm thấy dữ liệu cho danh mục thuốc này
                             </p>
                         </div>
                         <Button
@@ -112,28 +113,28 @@ export default function Foods() {
             <Card className="shadow-sm border-muted">
                 <CardHeader className="pb-6 items-center justify-center">
                     <div className="flex items-center gap-2">
-                        <Wheat className="h-5 w-5 text-muted-foreground" />
-                        <CardTitle className="text-2xl font-bold">Quản lý kho thức ăn</CardTitle>
+                        <Pill className="h-5 w-5 text-muted-foreground" />
+                        <CardTitle className="text-2xl font-bold">Quản lý kho thuốc</CardTitle>
                     </div>
                     <CardDescription className="text-sm">
-                        Danh sách tất cả thức ăn trong trang trại
+                        Danh sách tất cả thuốc trong trang trại
                     </CardDescription>
                 </CardHeader>
                 <Separator />
                 <CardContent className="pt-6">
-                    <DataTable data={foods} columns={columns} />
+                    <DataTable data={medicines} columns={columns} />
                 </CardContent>
             </Card>
 
             <Dialog open={open} onOpenChange={onOpenChange}>
                 <DialogContent className="max-w-4xl">
                     <DialogHeader>
-                        <DialogTitle className="text-xl font-semibold">Tạo hàng hóa</DialogTitle>
-                        <DialogDescription>Nhập đầy đủ các thông tin dưới.</DialogDescription>
+                        <DialogTitle className="text-xl font-semibold">Tạo thuốc mới</DialogTitle>
+                        <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                     </DialogHeader>
                     <ScrollArea className="max-h-[70vh]">
                         <div className="p-1">
-                            <CreateFoodForm closeModal={closeModal} />
+                            <CreateMedicineForm closeDialog={closeModal} />
                         </div>
                     </ScrollArea>
                 </DialogContent>

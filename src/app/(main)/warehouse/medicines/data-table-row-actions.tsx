@@ -26,25 +26,33 @@ import {
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
 import toast from 'react-hot-toast';
-import { deleteVaccine } from '@/services/vaccine.service';
-import { Vaccine } from '@/utils/schemas/vaccine.schema';
-import VaccineForm from '@/components/forms/vaccine-form';
 import { useQueryClient } from '@tanstack/react-query';
+import { deleteResource } from '@/services/resource.service';
+import { WareStockResponse } from '@/utils/types/custom.type';
+import UpdateMedicineForm from '@/components/forms/medicine-update-form';
+import { Medicine } from '@/utils/schemas/medicine.schema';
 
 interface Props<T> {
     row: Row<T>;
 }
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
+    // Lấy dữ liệu từ row
+    const rowData = row.original as WareStockResponse;
+    const mData = rowData.medicine || (rowData as unknown as Medicine);
+    const medicineId = mData.medicineId;
+
+    // console.log('Disease id: ', mData.diseaseId);
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
     const queryClient = useQueryClient();
 
+    const resourceId = rowData.resourceId;
     const handleDelete = async () => {
-        await deleteVaccine((row.original as Vaccine).vaccineId).then(() => {
-            toast.success('Xóa vắc xin thành công');
-            queryClient.invalidateQueries({ queryKey: 'vaccines' });
+        await deleteResource(resourceId).then(() => {
+            toast.success('Xóa thuốc thành công');
+            queryClient.invalidateQueries({ queryKey: ['medicines'] });
             setOpenDelete(false);
         });
     };
@@ -73,13 +81,23 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
                 <DialogContent className="max-w-2xl">
                     <DialogHeader>
-                        <DialogTitle>Cập nhật vắc xin</DialogTitle>
+                        <DialogTitle>Cập nhật thuốc</DialogTitle>
                         <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                     </DialogHeader>
                     <ScrollArea className="max-h-[600px]">
-                        <VaccineForm
-                            closeDialog={() => setOpenUpdate(false)}
-                            defaultValues={row.original as Vaccine}
+                        <UpdateMedicineForm
+                            medicine={{
+                                medicineId: medicineId,
+                                medicineName: mData.medicineName || '',
+                                medicineCode: mData.medicineCode || '',
+                                usage: mData.usage || '',
+                                diseaseId: mData.diseaseId || '',
+                                dosageForm: mData.dosageForm || '',
+                                storageCondition: mData.storageCondition || '',
+                                productionDate: mData.productionDate || '',
+                                expiryDate: mData.expiryDate || '',
+                            }}
+                            closeModal={() => setOpenUpdate(false)}
                         />
                     </ScrollArea>
                 </DialogContent>
@@ -91,7 +109,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa vắc xin này?
+                            Bạn có chắc chắn muốn xóa thuốc này?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="flex justify-end space-x-2">

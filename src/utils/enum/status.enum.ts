@@ -311,3 +311,19 @@ export const receiptStatusVariant: Record<string, any> = {
     [ReceiptStatus.REJECTED]: 'destructive',
     [ReceiptStatus.APPROVED]: 'default',
 };
+
+// Warehouse
+export enum WareStatus {
+    INACTIVE,
+    ACTIVE,
+}
+
+export const wareStatusLabels: Record<string, string> = {
+    [WareStatus.INACTIVE]: 'Ngừng hoạt động',
+    [WareStatus.ACTIVE]: 'Hoạt động',
+};
+
+export const wareStatusVariant: Record<string,any> = {
+    [WareStatus.INACTIVE]: 'destructive',
+    [WareStatus.ACTIVE]: 'default',
+}

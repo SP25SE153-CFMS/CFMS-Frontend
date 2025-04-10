@@ -1809,7 +1809,6 @@ export const foods: Food[] = [
         foodCode: 'TA001',
         foodName: 'Thức ăn gà con',
         note: 'Dùng cho gà con dưới 1 tháng tuổi',
-        foodIngredientId: 'a3f1c2d4-5b67-4e89-8a2b-3c4d5e6f7g8h',
         productionDate: '2023-09-01T08:00:00Z',
         expiryDate: '2024-09-01T08:00:00Z',
     },
@@ -1818,7 +1817,6 @@ export const foods: Food[] = [
         foodCode: 'TA002',
         foodName: 'Thức ăn tăng trưởng',
         note: 'Dùng cho gà từ 1 đến 3 tháng tuổi',
-        foodIngredientId: 'b4f2c3d5-6e78-4f90-9b3c-4d5e6f7g8h9i',
         productionDate: '2023-08-15T08:00:00Z',
         expiryDate: '2024-08-15T08:00:00Z',
     },
@@ -1827,7 +1825,6 @@ export const foods: Food[] = [
         foodCode: 'TA003',
         foodName: 'Thức ăn đẻ trứng',
         note: 'Dùng cho gà mái đẻ trứng',
-        foodIngredientId: 'c5d3e4f6-7g89-4h01-9b3c-4d5e6f7g8h9i',
         productionDate: '2023-07-10T08:00:00Z',
         expiryDate: '2024-07-10T08:00:00Z',
     },
@@ -1836,7 +1833,6 @@ export const foods: Food[] = [
         foodCode: 'TA004',
         foodName: 'Thức ăn tăng trọng',
         note: 'Dùng cho gà thịt trước khi xuất chuồng',
-        foodIngredientId: 'd6e4f5g7-8h90-4i12-9b3c-4d5e6f7g8h9i',
         productionDate: '2023-06-20T08:00:00Z',
         expiryDate: '2024-06-20T08:00:00Z',
     },
@@ -1845,7 +1841,6 @@ export const foods: Food[] = [
         foodCode: 'TA005',
         foodName: 'Thức ăn bổ sung',
         note: 'Dùng để bổ sung dinh dưỡng cho gà',
-        foodIngredientId: 'e7f5g6h8-9i01-4j23-9b3c-4d5e6f7g8h9i',
         productionDate: '2023-05-05T08:00:00Z',
         expiryDate: '2024-05-05T08:00:00Z',
     },
@@ -2061,7 +2056,6 @@ export const suppliers: Supplier[] = [
         status: 0,
     },
 ];
-
 export const notifications = [
     {
         id: 1,
