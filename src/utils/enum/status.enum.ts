@@ -215,20 +215,23 @@ export const breedingAreaStatusVariant: Record<string, any> = {
 // Task status
 export enum TaskStatus {
     PENDING,
-    IN_PROGRESS,
+    ASSIGNED,
     COMPLETED,
+    CANCELLED,
 }
 
 export const taskStatusLabels: Record<string, string> = {
-    [TaskStatus.PENDING]: 'Chờ xử lý',
-    [TaskStatus.IN_PROGRESS]: 'Đang thực hiện',
+    [TaskStatus.PENDING]: 'Chưa giao',
+    [TaskStatus.ASSIGNED]: 'Đã giao',
     [TaskStatus.COMPLETED]: 'Hoàn thành',
+    [TaskStatus.CANCELLED]: 'Đã hủy',
 };
 
 export const taskStatusVariant: Record<string, any> = {
     [TaskStatus.PENDING]: 'outline',
-    [TaskStatus.IN_PROGRESS]: 'default',
+    [TaskStatus.ASSIGNED]: 'default',
     [TaskStatus.COMPLETED]: 'success',
+    [TaskStatus.CANCELLED]: 'destructive',
 };
 
 // Assignment status

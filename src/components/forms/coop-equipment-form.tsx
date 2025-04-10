@@ -29,6 +29,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { getEquipments } from '@/services/equipment.service';
 import { addCoopEquipment, updateCoopEquipment } from '@/services/chicken-coop.service';
 import { vi } from 'date-fns/locale';
+import { formatDate } from '@/utils/functions';
 
 interface CoopEquipmentFormProps {
     defaultValues?: Partial<CoopEquipment>;
@@ -197,9 +198,7 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                                                 variant={'outline'}
                                                 className={cn('w-full pl-3 text-left font-normal')}
                                             >
-                                                {field.value
-                                                    ? dayjs(field.value).format('DD/MM/YYYY')
-                                                    : 'Chọn ngày'}
+                                                {formatDate(field.value)}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                             </Button>
                                         </FormControl>

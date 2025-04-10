@@ -42,6 +42,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
+import Link from 'next/link';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -128,10 +129,12 @@ export default function Page() {
                                 Hãy tạo khu vực nuôi trước khi tạo chuồng nuôi
                             </p>
                         </div>
-                        <Button variant="outline" onClick={() => window.history.back()}>
-                            <ChevronLeft className="mr-1 h-4 w-4" />
-                            Quay lại
-                        </Button>
+                        <Link href={config.routes.breadingArea}>
+                            <Button variant="outline">
+                                <ChevronLeft className="mr-1 h-4 w-4" />
+                                Quay lại
+                            </Button>
+                        </Link>
                     </CardContent>
                 </Card>
             </div>
@@ -268,15 +271,12 @@ export default function Page() {
     return (
         <div className="space-y-6">
             <div className="flex items-center text-sm text-muted-foreground">
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="gap-1 p-0"
-                    onClick={() => window.history.back()}
-                >
-                    <ChevronLeft className="h-4 w-4" />
-                    Khu vực nuôi
-                </Button>
+                <Link href={config.routes.breadingArea}>
+                    <Button variant="ghost" size="sm" className="gap-1 p-0">
+                        <ChevronLeft className="h-4 w-4" />
+                        Khu vực nuôi
+                    </Button>
+                </Link>
                 <span className="mx-2">/</span>
                 <span>Chuồng nuôi</span>
             </div>

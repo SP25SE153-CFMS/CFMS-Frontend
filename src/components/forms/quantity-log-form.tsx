@@ -27,9 +27,10 @@ import { CreateQuantityLogSchema, type QuantityLog } from '@/utils/schemas/quant
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Textarea } from '../ui/textarea';
-import dayjs from 'dayjs';
 import { useParams } from 'next/navigation';
 import { addQuantityLog } from '@/services/chicken-batch.service';
+import { formatDate } from '@/utils/functions';
+import { vi } from 'date-fns/locale';
 
 interface QuantityLogFormProps {
     defaultValues?: Partial<QuantityLog>;
@@ -129,7 +130,7 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
                                                 variant={'outline'}
                                                 className={cn('w-full pl-3 text-left font-normal')}
                                             >
-                                                {dayjs(field.value).format('DD/MM/YYYY')}
+                                                {formatDate(field.value)}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                             </Button>
                                         </FormControl>
@@ -142,6 +143,7 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
                                             }
                                             onSelect={(date) => field.onChange(date?.toISOString())}
                                             initialFocus
+                                            locale={vi}
                                         />
                                     </PopoverContent>
                                 </Popover>

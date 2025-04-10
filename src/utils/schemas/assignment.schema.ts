@@ -16,7 +16,7 @@ export const AssignmentSchema = z.object({
 
     // shiftScheduleId: z.string().uuid({ message: 'ID lịch ca không hợp lệ, phải là UUID' }),
 
-    taskScheduleId: z.string().uuid({ message: 'ID lịch công việc không hợp lệ, phải là UUID' }),
+    // taskScheduleId: z.string().uuid({ message: 'ID lịch công việc không hợp lệ, phải là UUID' }),
 
     status: z.nativeEnum(AssignmentStatus, { message: 'Trạng thái không hợp lệ' }),
 
@@ -25,4 +25,7 @@ export const AssignmentSchema = z.object({
 
 export type Assignment = z.infer<typeof AssignmentSchema>;
 
-export const CreateAssignmentSchema = AssignmentSchema.omit({ assignmentId: true });
+export const CreateAssignmentSchema = AssignmentSchema.omit({
+    assignmentId: true,
+    assignedToId: true,
+});

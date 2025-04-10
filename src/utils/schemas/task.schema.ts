@@ -10,11 +10,14 @@ export const TaskSchema = z.object({
     status: z.nativeEnum(TaskStatus, { message: 'Trạng thái không hợp lệ' }),
 });
 
-export const CreateTaskSchema = TaskSchema.extend({
+export const CreateTaskSchema = TaskSchema.omit({ taskId: true }).extend({
     frequency: z.number().int().min(0),
-    timeUnitId: z.string().uuid({
-        message: 'Vui lòng chọn đơn vị thời gian hợp lệ.',
-    }),
+    timeUnitId: z
+        .string()
+        // .uuid({
+        //     message: 'Vui lòng chọn đơn vị thời gian hợp lệ.',
+        // })
+        .optional(),
     startWorkDate: z.date({
         required_error: 'Ngày bắt đầu là bắt buộc.',
     }),
@@ -33,7 +36,7 @@ export const CreateTaskSchema = TaskSchema.extend({
     taskResources: z.array(
         z.object({
             resourceId: z.string().uuid(),
-            quantity: z.number().int().min(0),
+            quantity: z.coerce.number().int().min(0),
         }),
     ),
 });

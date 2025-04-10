@@ -11,5 +11,5 @@ export const chickenGenderLabels: Record<string, string> = {
 
 export const chickenGenderVariant: Record<string, any> = {
     [ChickenGender.ROOSTER]: 'default',
-    [ChickenGender.HEN]: 'primary',
+    [ChickenGender.HEN]: 'default',
 };

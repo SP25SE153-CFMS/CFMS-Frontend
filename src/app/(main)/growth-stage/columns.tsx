@@ -77,14 +77,23 @@ export const columns: ColumnDef<GrowthStage>[] = [
         },
     },
     {
-        accessorKey: 'minAgeWeek',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tuổi bắt đầu" />,
-        cell: ({ row }) => <div>Tuần {row.getValue('minAgeWeek')}</div>,
+        accessorKey: 'minAgeWeek', // Ensure the data exists in the row
+        header: () => null, // No header
+        cell: () => null, // Hidden cell
     },
+    // {
+    //     accessorKey: 'minAgeWeek',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Tuổi bắt đầu" />,
+    //     cell: ({ row }) => <div>Tuần {row.getValue('minAgeWeek')}</div>,
+    // },
     {
         accessorKey: 'maxAgeWeek',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tuổi kết thúc" />,
-        cell: ({ row }) => <div>Tuần {row.getValue('maxAgeWeek')}</div>,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Tuổi" />,
+        cell: ({ row }) => (
+            <div>
+                Tuần {row.getValue('minAgeWeek')} - {row.getValue('maxAgeWeek')}
+            </div>
+        ),
     },
     {
         accessorKey: 'nutritionPlanId',

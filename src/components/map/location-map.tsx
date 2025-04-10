@@ -21,8 +21,8 @@ const fixLeafletIcon = () => {
 
 // Custom farm marker icon
 const farmIcon = new L.Icon({
-    iconUrl: '/farm-marker.svg',
-    iconRetinaUrl: '/farm-marker.svg',
+    iconUrl: '/chicken-marker.svg',
+    iconRetinaUrl: '/chicken-marker.svg',
     iconSize: [38, 38],
     iconAnchor: [19, 38],
     popupAnchor: [0, -38],

@@ -32,11 +32,13 @@ import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { addEmployeeToFarm, getFarms, updateEmployeeInFarm } from '@/services/farm.service';
 import { getUsers } from '@/services/user.service';
-import { mapEnumToValues } from '@/utils/functions/enum.function';
-import { FarmRole, farmRoleLabels } from '@/utils/enum';
 import { Input } from '@/components/ui/input';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
+import { formatDate } from '@/utils/functions';
+import { vi } from 'date-fns/locale';
+import { useState } from 'react';
+import { FarmRole } from '@/utils/enum';
 
 interface AddEmployeeFormProps {
     defaultValues?: Partial<FarmEmployee>;
@@ -56,6 +58,17 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
         queryFn: () => getUsers(),
     });
 
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const filteredUsers = users?.filter(
+        (user) =>
+            user.mail.toLowerCase() === searchQuery.toLowerCase() ||
+            (user.phoneNumber &&
+                user.phoneNumber.split(' ').splice(1).join('') ===
+                    searchQuery.replace(/\s/g, '')) ||
+            user.cccd?.toLowerCase() === searchQuery.toLowerCase(),
+    );
+
     // Initialize form
     const form = useForm<FarmEmployee>({
         resolver: zodResolver(defaultValues ? FarmEmployeeSchema : CreateFarmEmployeeSchema),
@@ -65,7 +78,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
             startDate: new Date().toISOString(),
             endDate: null,
             status: 1,
-            farmRole: 0,
+            farmRole: FarmRole.STAFF,
             ...defaultValues,
         },
     });
@@ -97,7 +110,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
+                <div className="grid grid-cols-1 gap-6 px-1">
                     {/* Chọn trang trại */}
                     <FormField
                         control={form.control}
@@ -150,9 +163,37 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                                             <SelectValue placeholder="Chọn nhân viên" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {users?.map((user) => (
+                                            <div className="p-2">
+                                                <Input
+                                                    placeholder="Tìm kiếm theo email, SĐT, CCCD"
+                                                    value={searchQuery}
+                                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                                    className="mb-2"
+                                                />
+                                            </div>
+                                            {filteredUsers?.length === 0 && (
+                                                <SelectItem value="not-found">
+                                                    Không tìm thấy kết quả
+                                                </SelectItem>
+                                            )}
+                                            {filteredUsers?.map((user) => (
                                                 <SelectItem key={user.userId} value={user.userId}>
-                                                    {user.fullName}
+                                                    {user.fullName} (
+                                                    {user.mail.toLowerCase() ===
+                                                    searchQuery.toLowerCase()
+                                                        ? user.mail
+                                                        : user.phoneNumber &&
+                                                            user.phoneNumber
+                                                                .split(' ')
+                                                                .splice(1)
+                                                                .join('') ===
+                                                                searchQuery.replace(/\s/g, '')
+                                                          ? user.phoneNumber
+                                                          : user.cccd?.toLowerCase() ===
+                                                              searchQuery.toLowerCase()
+                                                            ? user.cccd
+                                                            : ''}
+                                                    )
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
@@ -180,9 +221,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                                                         'w-full pl-3 text-left font-normal',
                                                     )}
                                                 >
-                                                    {dayjs(new Date(field.value)).format(
-                                                        'DD/MM/YYYY',
-                                                    )}
+                                                    {formatDate(field.value)}
                                                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                                 </Button>
                                             </FormControl>
@@ -195,6 +234,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                                                     field.onChange(date?.toISOString())
                                                 }
                                                 initialFocus
+                                                locale={vi}
                                             />
                                         </PopoverContent>
                                     </Popover>
@@ -250,7 +290,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                     )}
 
                     {/* Farm role */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="farmRole"
                         render={({ field }) => (
@@ -276,7 +316,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
                     {/* Trạng thái  */}
                     {/* <FormField

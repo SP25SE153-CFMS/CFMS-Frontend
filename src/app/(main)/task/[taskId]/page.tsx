@@ -1,27 +1,45 @@
 'use client';
 
-import { TaskForm } from '@/components/forms/task-form';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Calendar, ClipboardList, FileText, TrendingUp } from 'lucide-react';
-import Link from 'next/link';
-import config from '@/configs';
-import { useParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
-import { getTaskById } from '@/services/task.service';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import Image from 'next/image';
-import { Card } from '@/components/ui/card';
-import InfoItem from '@/components/info-item';
-import { assignmentStatusLabels, assignmentStatusVariant } from '@/utils/enum/status.enum';
-import dayjs from 'dayjs';
-import { Badge } from '@/components/ui/badge';
+import { format } from 'date-fns';
+import { Box, Calendar, Clock, Egg, Home, Info, Package, Users } from 'lucide-react';
 
-export default function Page() {
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { getTaskById, updateTaskStatus } from '@/services/task.service';
+import { useQuery } from '@tanstack/react-query';
+import { useParams, useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { taskStatusLabels } from '@/utils/enum/status.enum';
+import { getShifts } from '@/services/shift.service';
+import { getQuantityUnit } from '@/utils/functions/category.function';
+
+// Mock resource names - in a real app, these would be fetched from an API
+// const resourceNames = {
+//     '680f8752-9ea3-4a0a-917d-9afb2cfdcb30': 'Hộp đựng trứng',
+//     '63f244d1-c260-4bbb-b10a-c6a7761e9aab': 'Găng tay',
+// };
+
+export default function TaskDetail() {
     const { taskId }: { taskId: string } = useParams();
 
     const { data: task, isLoading } = useQuery({
         queryKey: ['task', taskId],
         queryFn: () => getTaskById(taskId),
+    });
+
+    const { data: shiftNames } = useQuery({
+        queryKey: ['shiftNames'],
+        queryFn: () => getShifts(),
     });
 
     if (isLoading) {
@@ -33,7 +51,7 @@ export default function Page() {
         );
     }
 
-    if (!task) {
+    if (!task || !shiftNames) {
         return (
             <div className="w-full h-full flex items-center justify-center">
                 <Card className="px-36 py-8">
@@ -49,82 +67,187 @@ export default function Page() {
         );
     }
 
+    // const updateStatus = async (newStatus: number) => {
+    //     await updateTaskStatus(taskId, newStatus);
+    //     toast.success('Cập nhật trạng thái thành công');
+    //     router.push(config.routes.task);
+    // };
+
+    const formatDate = (dateString: string) => {
+        return format(new Date(dateString), 'dd/MM/yyyy');
+    };
+
     return (
-        <div className="container py-8 max-w-6xl mx-auto">
-            {/* Header with back button */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                <div className="flex items-center gap-3">
-                    <div className="bg-primary/10 p-2 rounded-full">
-                        <ClipboardList className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                        <h1 className="text-2xl font-bold">Thông tin công việc</h1>
-                        <p className="text-muted-foreground mt-1">
-                            Đây là những thông tin chi tiết của công việc
-                        </p>
-                    </div>
-                </div>
-                <Button variant="outline" size="sm" asChild className="w-full md:w-auto">
-                    <Link href={config.routes.task}>
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        Quay lại danh sách
-                    </Link>
-                </Button>
-            </div>
-
-            {/* Main content */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Form */}
-                <div className="lg:col-span-2">
-                    <TaskForm />
-                </div>
-
-                {/* Assignments */}
-                <div className="lg:col-span-1">
-                    <h2 className="text-lg font-bold mb-4">Phân công công việc</h2>
-
-                    {task.assignments.length === 0 && (
-                        <p className="text-muted-foreground">Không có phân công công việc</p>
-                    )}
-
-                    {task.assignments.map((assignment) => (
-                        <Card key={assignment.assignmentId}>
-                            <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4">
-                                <div className="flex justify-between items-center mb-4">
-                                    <h3 className="font-bold pl-3 text-lg relative before:content-[''] before:absolute before:top-[3px] before:left-0 before:w-[4px] before:h-full before:bg-primary inline-block">
-                                        Thông tin chi tiết
-                                    </h3>
+        <div className="container mx-auto py-6">
+            <div className="flex flex-col md:flex-row justify-between items-start gap-6">
+                <div className="w-full md:w-2/3">
+                    <Card className="w-full">
+                        <CardHeader className="pb-2">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <CardTitle className="text-2xl flex items-center gap-2">
+                                        <Egg className="h-6 w-6 text-yellow-500" />
+                                        {task.taskName}
+                                    </CardTitle>
                                 </div>
-                                <InfoItem
-                                    label="Trạng thái"
-                                    value={
-                                        assignment.status ? (
-                                            <Badge
-                                                variant={assignmentStatusVariant[assignment.status]}
-                                            >
-                                                {assignmentStatusLabels[assignment.status]}
-                                            </Badge>
-                                        ) : (
-                                            '-'
-                                        )
-                                    }
-                                    icon={<TrendingUp size={16} />}
-                                />
-                                <InfoItem
-                                    label="Ngày phân công"
-                                    value={dayjs(assignment.assignedDate).format(
-                                        'DD/MM/YYYY HH:mm',
-                                    )}
-                                    icon={<Calendar size={16} />}
-                                />
-                                <InfoItem
-                                    label="Ghi chú"
-                                    value={assignment.note || 'Không có ghi chú'}
-                                    icon={<FileText size={16} />}
-                                />
+                                {taskStatusLabels[task.status]}
                             </div>
-                        </Card>
-                    ))}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-4">
+                                <div>
+                                    <h3 className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1">
+                                        <Info className="h-4 w-4" /> Mô tả
+                                    </h3>
+                                    <p>{task.description}</p>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <h3 className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1">
+                                            <Calendar className="h-4 w-4" /> Ngày bắt đầu
+                                        </h3>
+                                        <p>{formatDate(task.startWorkDate)}</p>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1">
+                                            <Home className="h-4 w-4" /> Vị trí
+                                        </h3>
+                                        <p>Chuồng số 3</p>
+                                    </div>
+                                </div>
+
+                                <Separator />
+
+                                <h3 className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1">
+                                    <Box className="h-4 w-4" /> Tài nguyên
+                                </h3>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Tên tài nguyên</TableHead>
+                                            <TableHead className="text-right">Số lượng</TableHead>
+                                            <TableHead className="text-right">Đơn vị</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {task.taskResources.map((taskRes) => (
+                                            <TableRow key={taskRes.taskResourceId}>
+                                                <TableCell className="font-medium">
+                                                    {taskRes.resource?.resourceType ===
+                                                        'Thực phẩm' && taskRes.resource?.foodName}
+                                                    {taskRes.resource?.resourceType ===
+                                                        'Dược phẩm' &&
+                                                        taskRes.resource?.medicineName}
+                                                    {taskRes.resource?.resourceType ===
+                                                        'Thiết bị' &&
+                                                        taskRes.resource?.equipmentName}
+                                                    {![
+                                                        'Thực phẩm',
+                                                        'Dược phẩm',
+                                                        'Thiết bị',
+                                                    ].includes(taskRes.resource?.resourceType) &&
+                                                        'Tài nguyên khác'}
+                                                </TableCell>
+                                                <TableCell className="text-right">
+                                                    {taskRes.quantity}
+                                                </TableCell>
+                                                <TableCell className="text-right">
+                                                    {getQuantityUnit(taskRes.unitId) || 'đơn vị'}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+
+                                <Separator />
+
+                                <h3 className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1">
+                                    <Clock className="h-4 w-4" /> Lịch trình
+                                </h3>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Ngày</TableHead>
+                                            <TableHead>Ca làm việc</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {task.shiftSchedules.map((shift) => (
+                                            <TableRow key={shift.shiftScheduleId}>
+                                                <TableCell>{formatDate(shift.date)}</TableCell>
+                                                <TableCell>
+                                                    {shiftNames.find(
+                                                        (s) => s.shiftId === shift.shiftId,
+                                                    )?.shiftName || 'Ca không xác định'}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        </CardContent>
+                        {/* <CardFooter className="flex justify-between">
+                            <Button variant="outline">Chỉnh sửa</Button>
+                            <div className="space-x-2">
+                                {task.status !== TaskStatus.COMPLETED && (
+                                    <Button
+                                        variant="default"
+                                        className="bg-green-600 hover:bg-green-700"
+                                        onClick={() => updateStatus(TaskStatus.COMPLETED)}
+                                    >
+                                        Hoàn thành
+                                    </Button>
+                                )}
+                                {task.status !== TaskStatus.CANCELLED && (
+                                    <Button
+                                        variant="destructive"
+                                        onClick={() => updateStatus(TaskStatus.CANCELLED)}
+                                    >
+                                        Hủy
+                                    </Button>
+                                )}
+                            </div>
+                        </CardFooter> */}
+                    </Card>
+                </div>
+
+                <div className="w-full md:w-1/3">
+                    <Card className="w-full mb-6">
+                        <CardHeader>
+                            <CardTitle className="text-lg flex items-center gap-2">
+                                <Package className="h-5 w-5 text-green-500" />
+                                Phân công
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {task.assignments.length > 0 ? (
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Nhân viên</TableHead>
+                                            <TableHead>Vai trò</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {task.assignments.map((assignment, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell>Tên nhân viên</TableCell>
+                                                <TableCell>Vai trò</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center py-8 text-center">
+                                    <Users className="h-12 w-12 text-muted-foreground mb-2" />
+                                    <p className="text-muted-foreground">
+                                        Chưa có nhân viên nào được phân công
+                                    </p>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
         </div>

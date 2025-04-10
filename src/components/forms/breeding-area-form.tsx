@@ -74,6 +74,9 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
     // Form error handler
     const onError = (error: any) => {
         console.error(error);
+        // const firstKey = Object.keys(error)[0];
+        // const firstMessage = error[firstKey].message;
+        // toast.error(firstMessage);
     };
 
     const { data: farms } = useQuery({
@@ -145,10 +148,10 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                                                 />
                                                 <SelectNative
                                                     className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
-                                                    value={form.getValues('areaUnitId')}
                                                     onChange={(e) => {
                                                         form.setValue('areaUnitId', e.target.value);
                                                     }}
+                                                    defaultValue={form.getValues('areaUnitId')}
                                                 >
                                                     {getSubCategoryByCategoryType(
                                                         CategoryType.AREA_UNIT,
@@ -202,12 +205,14 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                             <FormField
                                 control={form.control}
                                 name="imageUrl"
-                                render={({ field }) => (
+                                render={() => (
                                     <FormItem>
                                         <FormLabel>Hình ảnh khu nuôi</FormLabel>
                                         <FormControl>
                                             <CloudinaryImageUpload
-                                                onUploadComplete={(url) => field.onChange(url)}
+                                                onUploadComplete={(url) =>
+                                                    form.setValue('imageUrl', url)
+                                                }
                                                 defaultImage={defaultValues?.imageUrl}
                                             />
                                         </FormControl>

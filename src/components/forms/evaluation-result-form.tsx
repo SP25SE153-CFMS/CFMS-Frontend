@@ -19,8 +19,9 @@ import {
     type EvaluationResult,
     CreateEvaluationResultSchema,
 } from '@/utils/schemas/evaluation-result.schema';
-import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
+import { formatDate } from '@/utils/functions';
+import { vi } from 'date-fns/locale';
 
 interface EvaluationResultFormProps {
     defaultValues?: Partial<EvaluationResult>;
@@ -107,7 +108,7 @@ export default function EvaluationResultForm({
                                             variant="outline"
                                             className={cn('w-full pl-3 text-left font-normal')}
                                         >
-                                            {dayjs(field.value).format('DD/MM/YYYY')}
+                                            {formatDate(field.value)}
                                         </Button>
                                     </FormControl>
                                 </PopoverTrigger>
@@ -117,6 +118,7 @@ export default function EvaluationResultForm({
                                         selected={field.value ? new Date(field.value) : new Date()}
                                         onSelect={(date) => field.onChange(date?.toISOString())}
                                         initialFocus
+                                        locale={vi}
                                     />
                                 </PopoverContent>
                             </Popover>

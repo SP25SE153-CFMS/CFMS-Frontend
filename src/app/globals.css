@@ -193,3 +193,7 @@ a {
         @apply bg-background text-foreground;
     }
 }
+
+.leaflet-control-container .leaflet-bottom.leaflet-right {
+    display: none;
+}

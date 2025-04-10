@@ -5,6 +5,7 @@ import {
     Calendar,
     ClipboardList,
     Database,
+    Egg,
     FileText,
     Info,
     InfoIcon,
@@ -91,7 +92,7 @@ export default function Page() {
                             <InfoItem
                                 label="Trạng thái"
                                 value={
-                                    chickenBatch?.status ? (
+                                    chickenBatch?.status || chickenBatch?.status === 0 ? (
                                         <Badge
                                             variant={
                                                 chickenBatchStatusVariant[chickenBatch?.status]
@@ -152,15 +153,16 @@ export default function Page() {
                                     value={chicken?.chickenName || 'Không có tên gà'}
                                 />
 
-                                {/* <InfoItem
+                                <InfoItem
                                     icon={<Egg className="h-4 w-4" />}
                                     label="Tổng số lượng"
                                     value={
-                                        chicken?.totalQuantity !== undefined
-                                            ? chicken?.totalQuantity.toString()
-                                            : 'Không có số lượng'
+                                        chickenBatch?.chickenDetails.reduce(
+                                            (acc, curr) => acc + curr.quantity,
+                                            0,
+                                        ) || '-'
                                     }
-                                /> */}
+                                />
 
                                 <InfoItem
                                     icon={<FileText className="h-4 w-4" />}
@@ -178,7 +180,7 @@ export default function Page() {
                                     icon={<InfoIcon className="h-4 w-4" />}
                                     label="Trạng thái"
                                     value={
-                                        chicken?.status ? (
+                                        chicken?.status || chicken?.status === 0 ? (
                                             <Badge
                                                 variant={chickenBatchStatusVariant[chicken?.status]}
                                             >

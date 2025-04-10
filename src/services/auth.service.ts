@@ -1,3 +1,4 @@
+import { env } from '@/env';
 import { get, post } from '@/utils/functions/axios.function';
 import { SignInRequest, SignUpRequest } from '@/utils/schemas/auth.schema';
 import { User } from '@/utils/schemas/user.schema';
@@ -17,7 +18,7 @@ export const signIn = async (body: SignInRequest) => {
 };
 
 export const signInGoogle = () => {
-    const endpoint = PREFIX + '/google-signin';
+    const endpoint = env.NEXT_PUBLIC_API_URL + PREFIX + '/google-signin';
     window.location.href = endpoint;
 };
 

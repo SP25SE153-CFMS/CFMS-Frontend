@@ -141,7 +141,7 @@ export default function Page() {
                         <DialogTrigger asChild>
                             <Button className="h-9" onClick={() => setOpen(true)}>
                                 <Plus className="mr-2 h-4 w-4" />
-                                Tạo giai đoạn
+                                Tạo chế độ
                             </Button>
                         </DialogTrigger>
                         <DialogContent className="max-w-5xl">

@@ -9,7 +9,11 @@ import {
     chickenCoopStatusLabels,
     chickenCoopStatusVariant,
 } from '@/utils/enum/status.enum';
-import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import {
+    getChickenType,
+    getPurpose,
+    getSubCategoryByCategoryType,
+} from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
 import Link from 'next/link';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
@@ -126,11 +130,9 @@ export const columns: ColumnDef<ChickenCoop>[] = [
     },
     {
         accessorKey: 'purposeId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Mục đích" />,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại gà" />,
         cell: ({ row }) => {
-            const purpose = getSubCategoryByCategoryType(CategoryType.PURPOSE)?.find(
-                (p) => p.subCategoryId === row.getValue('purposeId'),
-            )?.subCategoryName;
+            const purpose = getChickenType(row.getValue('purposeId'));
             return <div className="w-[120px]">{purpose || '-'}</div>;
         },
     },
