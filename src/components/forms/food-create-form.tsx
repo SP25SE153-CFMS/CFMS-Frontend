@@ -40,6 +40,13 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
         mode: 'onChange',
     });
 
+    // Add this new useEffect to update the form value when wId changes
+    useEffect(() => {
+        if (wId) {
+            form.setValue('wareId', wId);
+        }
+    }, [wId, form]);
+
     useEffect(() => {
         const storedWId = sessionStorage.getItem('wareId') ?? '';
         setWId(storedWId);
@@ -177,9 +184,9 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                         control={form.control}
                         name="wareId"
                         render={({ field }) => {
-                            useEffect(() => {
-                                field.onChange(wId);
-                            }, [wId, field]);
+                            // useEffect(() => {
+                            //     field.onChange(wId);
+                            // }, [wId, field]);
                             return (
                                 <FormItem>
                                     <FormLabel>Kho</FormLabel>
