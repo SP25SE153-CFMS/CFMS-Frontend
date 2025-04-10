@@ -193,8 +193,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                             <span>Xem chi tiết</span>
                         </Link>
 
-                        {/* {currentChickenBatch?.status === ChickenBatchStatus.ACTIVE && ( */}
-                        {currentChickenBatch?.status !== ChickenBatchStatus.COMPLETED && (
+                        {currentChickenBatch?.status === ChickenBatchStatus.ACTIVE && (
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
                                     <Button variant="destructive" className="w-full">
