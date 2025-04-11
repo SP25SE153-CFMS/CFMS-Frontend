@@ -12,11 +12,21 @@ import { getRequests } from '@/services/request.service';
 import Link from 'next/link';
 import config from '@/configs';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
+import { getUsers } from '@/services/user.service';
 
 export default function Page() {
     const { data: requests, isLoading } = useQuery({
         queryKey: ['requests'],
         queryFn: () => getRequests(),
+    });
+
+    useQuery({
+        queryKey: ['users'],
+        queryFn: async () => {
+            const users = await getUsers();
+            sessionStorage.setItem('users', JSON.stringify(users));
+            return users;
+        },
     });
 
     // Check if requests are loading

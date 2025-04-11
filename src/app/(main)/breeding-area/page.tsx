@@ -59,7 +59,7 @@ export default function Page() {
     const [open, setOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [viewMode, setViewMode] = useState<'table' | 'grid'>('grid');
-    const [statusFilter, setStatusFilter] = useState<string>('all');
+    const [tab, setTab] = useState('all');
 
     const {
         data: breedingAreas,
@@ -261,13 +261,13 @@ export default function Page() {
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-[200px]">
                                     <DropdownMenuLabel>Trạng thái</DropdownMenuLabel>
-                                    <DropdownMenuItem onClick={() => setStatusFilter('all')}>
+                                    <DropdownMenuItem onClick={() => setTab('all')}>
                                         Tất cả khu nuôi
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => setStatusFilter('1')}>
+                                    <DropdownMenuItem onClick={() => setTab('1')}>
                                         Đang hoạt động
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => setStatusFilter('0')}>
+                                    <DropdownMenuItem onClick={() => setTab('0')}>
                                         Tạm ngưng
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
@@ -304,11 +304,7 @@ export default function Page() {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <Tabs
-                        defaultValue="all"
-                        className="w-full"
-                        onValueChange={(value) => setStatusFilter(value === 'all' ? 'all' : value)}
-                    >
+                    <Tabs defaultValue={tab} className="w-full">
                         <TabsList className="mb-4">
                             <TabsTrigger value="all">
                                 Tất cả ({filteredBreedingAreas.length})

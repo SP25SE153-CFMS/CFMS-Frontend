@@ -15,9 +15,9 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { getTaskById, updateTaskStatus } from '@/services/task.service';
+import { getTaskById } from '@/services/task.service';
 import { useQuery } from '@tanstack/react-query';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { taskStatusLabels } from '@/utils/enum/status.enum';
 import { getShifts } from '@/services/shift.service';

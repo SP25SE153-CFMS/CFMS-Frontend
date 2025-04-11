@@ -1,4 +1,4 @@
-import { CreateTask, Task } from '@/utils/schemas/task.schema';
+import { CreateTask } from '@/utils/schemas/task.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 import { TaskResponse } from '@/utils/types/custom.type';

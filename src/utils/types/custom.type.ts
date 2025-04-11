@@ -28,6 +28,9 @@ import { NutritionPlanDetail } from '../schemas/nutrition-plan-detail.schema';
 import { FeedSession } from '../schemas/feed-session.schema';
 import { ShiftSchedule } from '../schemas/shift-schedule.schema';
 import { TaskResource } from '../schemas/task-resource.schema';
+import { Warehouse } from '../schemas/warehouse.schema';
+import { CreateInventoryReceipt } from '../schemas/inventory-receipt.schema';
+import { CreateInventoryReceiptDetail } from '../schemas/inventory-receipt-detail.schema';
 
 export type EntityAudit = {
     isDeleted: boolean;
@@ -39,7 +42,6 @@ export type EntityAudit = {
     lastEditedByUser: User | null;
     lastEditedWhen: string | Date | null;
 };
-import { Warehouse } from '../schemas/warehouse.schema';
 
 export type ChickenCoopResponse = ChickenCoop & {
     chickenBatches: ChickenBatch[];
@@ -152,6 +154,7 @@ export type DashboardResponse = {
     totalChickenDeath: number;
     chickenBatches: ChickenBatchResponse[];
 };
+
 export type WareStockResponse = Warehouse & {
     foods?: Food;
     equipments?: Equipment;
@@ -161,4 +164,9 @@ export type WareStockResponse = Warehouse & {
     resourceTypeName: string;
     resourceId: string;
     disease: string;
+};
+
+export type InventoryReceiptRequest = CreateInventoryReceipt & {
+    requestId: string;
+    receiptDetails: CreateInventoryReceiptDetail[];
 };

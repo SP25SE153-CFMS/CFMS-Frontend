@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import { Download, Plus, ChevronLeft, Search, Filter } from 'lucide-react';
+import { Download, ChevronLeft, Search, Filter } from 'lucide-react';
 
 import { DataTable } from '@/components/table/data-table';
 import { columns } from './columns';
@@ -51,7 +51,6 @@ export default function Page() {
     const [selectedBreedingAreaId, setSelectedBreedingAreaId] = useState('');
     const [selectedChickenCoopId, setSelectedChickenCoopId] = useState('');
 
-    const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
 
     // Fetch all breeding areas

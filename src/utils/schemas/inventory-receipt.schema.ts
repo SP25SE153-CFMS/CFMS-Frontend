@@ -20,6 +20,12 @@ export const InventoryReceiptSchema = z.object({
 });
 
 export type InventoryReceipt = z.infer<typeof InventoryReceiptSchema>;
+
 export const CreateInventoryReceiptSchema = InventoryReceiptSchema.omit({
     inventoryReceiptId: true,
+    inventoryCode: true,
+    createdBy: true,
+    createDate: true,
+    subcategoryName: true,
 });
+export type CreateInventoryReceipt = z.infer<typeof CreateInventoryReceiptSchema>;

@@ -9,7 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Trash, Check, StopCircle } from 'lucide-react';
+import { Trash, StopCircle } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -32,6 +32,7 @@ import ChickenBatchForm from '@/components/forms/chicken-batch-form';
 import { useRouter } from 'next/navigation';
 import config from '@/configs';
 import { useQueryClient } from '@tanstack/react-query';
+import { ChickenBatchStatus } from '@/utils/enum/status.enum';
 
 interface Props<T> {
     row: Row<T>;
@@ -89,7 +90,12 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         Cập nhật
                     </DropdownMenuItem> */}
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={closeChickenBatch}>
+                    <DropdownMenuItem
+                        onClick={closeChickenBatch}
+                        disabled={
+                            (row.original as ChickenBatch).status === ChickenBatchStatus.COMPLETED
+                        }
+                    >
                         Kết thúc lứa nuôi <StopCircle size={16} className="ml-auto" />
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">

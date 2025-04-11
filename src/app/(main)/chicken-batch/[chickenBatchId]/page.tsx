@@ -277,9 +277,7 @@ export default function Page() {
             </div>
 
             <Stepper
-                steps={chickenBatch?.growthBatches
-                    .map((batch) => batch.growthStage.stageName)
-                    .reverse()}
+                steps={chickenBatch?.growthBatches.map((batch) => batch.growthStage.stageName)}
                 activeStep={
                     chickenBatch?.growthBatches.findIndex((batch) => batch.status === 1) || 0
                 }

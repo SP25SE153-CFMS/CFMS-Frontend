@@ -9,11 +9,7 @@ import {
     chickenCoopStatusLabels,
     chickenCoopStatusVariant,
 } from '@/utils/enum/status.enum';
-import {
-    getChickenType,
-    getPurpose,
-    getSubCategoryByCategoryType,
-} from '@/utils/functions/category.function';
+import { getChickenType, getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
 import Link from 'next/link';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';

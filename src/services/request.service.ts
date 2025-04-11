@@ -1,6 +1,7 @@
 import { Request } from '@/utils/schemas/request.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
+import { InventoryReceiptRequest } from '@/utils/types/custom.type';
 
 const PREFIX = '/api/Request';
 
@@ -31,5 +32,11 @@ export const updateRequest = async (body: Request) => {
 export const deleteRequest = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
     const response = await remove<Response<string>>(endpoint);
+    return response.data;
+};
+
+export const createInvetoryReceiptFromRequest = async (body: InventoryReceiptRequest) => {
+    const endpoint = PREFIX + '/create-inventory-receipt';
+    const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };

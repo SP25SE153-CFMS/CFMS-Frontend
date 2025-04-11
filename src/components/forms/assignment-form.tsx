@@ -146,7 +146,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                     <FormField
                         control={form.control}
                         name="assignedToId"
-                        render={({ field }) => (
+                        render={() => (
                             <FormItem>
                                 <FormLabel>Người được phân công</FormLabel>
                                 <FormControl>
