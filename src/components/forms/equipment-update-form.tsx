@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { SubCategory } from '@/utils/schemas/sub-category.schema';
 import { getSubMaterial, getSubSize, getSubWeight } from '@/services/category.service';
 import { Button } from '../ui/button';
+import { generateCode } from '@/utils/functions/generate-code.function';
 
 interface UpdateEquipmentProps {
     equipment: Equipment;
@@ -77,6 +78,25 @@ export default function UpdateEquipmentForm({ equipment, closeDialog }: UpdateEq
         queryFn: () => getSubMaterial(),
     });
 
+    const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        const existingCodes = new Set(
+            JSON.parse(sessionStorage.getItem('equipments') || '[]').map(
+                (equipment: Equipment) => equipment.equipmentCode,
+            ),
+        );
+
+        let code;
+        let index = 1;
+        do {
+            code = generateCode(input, index);
+            index++;
+        } while (existingCodes.has(code));
+
+        form.setValue('equipmentCode', code);
+        form.setValue('equipmentName', input);
+    };
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
@@ -97,7 +117,11 @@ export default function UpdateEquipmentForm({ equipment, closeDialog }: UpdateEq
                                 <FormLabel>Tên thiết bị</FormLabel>
                                 <FormControl>
                                     <div>
-                                        <Input placeholder="Nhập tên thiết bị..." {...field} />
+                                        <Input
+                                            placeholder="Nhập tên thiết bị..."
+                                            {...field}
+                                            onBlur={handleGenerateCode}
+                                        />
                                     </div>
                                 </FormControl>
                             </FormItem>
@@ -113,7 +137,11 @@ export default function UpdateEquipmentForm({ equipment, closeDialog }: UpdateEq
                                 <FormLabel>Mã thiết bị</FormLabel>
                                 <FormControl>
                                     <div>
-                                        <Input placeholder="Nhập mã thiết bị..." {...field} />
+                                        <Input
+                                            placeholder="Nhập mã thiết bị..."
+                                            readOnly
+                                            {...field}
+                                        />
                                     </div>
                                 </FormControl>
                             </FormItem>

@@ -143,8 +143,8 @@ export default function Page() {
 
                                 <InfoItem
                                     icon={<Tag className="h-4 w-4" />}
-                                    label="Mã gà"
-                                    value={chicken?.chickenCode || 'Không có mã gà'}
+                                    label="Mã giống gà"
+                                    value={chicken?.chickenCode || 'Không có mã giống gà'}
                                 />
 
                                 <InfoItem

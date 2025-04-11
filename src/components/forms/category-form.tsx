@@ -74,8 +74,6 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
         console.error(error);
     };
 
-    console.log(mapEnumToValues(CategoryStatus));
-
     return (
         <Form {...form}>
             <form

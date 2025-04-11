@@ -1,4 +1,4 @@
-import { CreateMedicine, CreateMedicineSchema } from '@/utils/schemas/medicine.schema';
+import { CreateMedicine, CreateMedicineSchema, Medicine } from '@/utils/schemas/medicine.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
@@ -14,6 +14,7 @@ import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Button } from '../ui/button';
 import { useEffect, useState } from 'react';
+import { generateCode } from '@/utils/functions/generate-code.function';
 
 interface CreateMedicineProps {
     closeDialog: () => void;
@@ -107,6 +108,24 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
         console.error(error);
     };
 
+    const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        const existingCodes = new Set(
+            JSON.parse(sessionStorage.getItem('medicines') || '[]').map(
+                (medicine: Medicine) => medicine.medicineCode,
+            ),
+        );
+
+        let code;
+        let index = 1;
+        do {
+            code = generateCode(input, index);
+            index++;
+        } while (existingCodes.has(code));
+
+        form.setValue('medicineCode', code);
+        form.setValue('medicineName', input);
+    };
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
@@ -120,7 +139,11 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
                                 <FormLabel>Tên thuốc</FormLabel>
                                 <FormControl>
                                     <div>
-                                        <Input placeholder="Nhập tên thuốc..." {...field} />
+                                        <Input
+                                            placeholder="Nhập tên thuốc..."
+                                            {...field}
+                                            onBlur={handleGenerateCode}
+                                        />
                                     </div>
                                 </FormControl>
                             </FormItem>
@@ -136,7 +159,7 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
                                 <FormLabel>Mã thuốc</FormLabel>
                                 <FormControl>
                                     <div>
-                                        <Input placeholder="Nhập mã thuốc..." {...field} />
+                                        <Input placeholder="Nhập mã thuốc..." readOnly {...field} />
                                     </div>
                                 </FormControl>
                             </FormItem>
@@ -342,7 +365,7 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
                     <FormField
                         control={form.control}
                         name="wareId"
-                        render={({ field }) => {
+                        render={() => {
                             // useEffect(() => {
                             //     field.onChange(wId);
                             // }, [wId, field]);

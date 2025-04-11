@@ -26,6 +26,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
 import { CommonStatus } from '@/utils/enum/status.enum';
+import { generateCode } from '@/utils/functions/generate-code.function';
 
 interface ChickenFormProps {
     defaultValues?: Partial<Chicken>;
@@ -72,34 +73,63 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
         mutation.mutate(values);
     }
 
+    const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        const existingCodes = new Set(
+            JSON.parse(sessionStorage.getItem('chickens') || '[]').map(
+                (chicken: Chicken) => chicken.chickenCode,
+            ),
+        );
+
+        let code;
+        let index = 1;
+        do {
+            code = generateCode(input, index);
+            index++;
+        } while (existingCodes.has(code));
+
+        form.setValue('chickenCode', code);
+        form.setValue('chickenName', input);
+    };
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
-                    {/* Chicken Code */}
-                    <FormField
-                        control={form.control}
-                        name="chickenCode"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Mã gà</FormLabel>
-                                <FormControl>
-                                    <Input type="text" placeholder="Nhập mã gà" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
                     {/* Chicken Name */}
                     <FormField
                         control={form.control}
                         name="chickenName"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Tên gà</FormLabel>
+                                <FormLabel>Tên giống gà</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập tên gà" {...field} />
+                                    <Input
+                                        type="text"
+                                        placeholder="Nhập tên giống gà"
+                                        {...field}
+                                        onBlur={handleGenerateCode}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Chicken Code */}
+                    <FormField
+                        control={form.control}
+                        name="chickenCode"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Mã giống gà</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="text"
+                                        placeholder="Nhập mã giống gà"
+                                        readOnly
+                                        {...field}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

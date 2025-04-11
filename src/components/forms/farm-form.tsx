@@ -38,6 +38,7 @@ import { PhoneInput } from '@/components/ui/phone-input';
 import { SelectNative } from '../ui/select-native';
 import { CategoryType } from '@/utils/enum/category.enum';
 import { getSubCategoriesByType } from '@/services/category.service';
+import { generateCode } from '@/utils/functions/generate-code.function';
 
 // Dynamically import the map component with no SSR
 const LocationMapWithNoSSR = dynamic(() => import('../map/location-map'), { ssr: false });
@@ -112,6 +113,22 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
         toast.success('Vị trí đã được chọn');
     };
 
+    const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        const existingCodes = new Set(
+            JSON.parse(sessionStorage.getItem('farms') || '[]').map((farm: Farm) => farm.farmCode),
+        );
+
+        let code;
+        let index = 1;
+        do {
+            code = generateCode(input, index);
+            index++;
+        } while (existingCodes.has(code));
+
+        form.setValue('farmCode', code);
+        form.setValue('farmName', input);
+    };
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onError)}>
@@ -124,7 +141,11 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
                                 <FormItem>
                                     <FormLabel>Tên trang trại</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Nhập tên trang trại" {...field} />
+                                        <Input
+                                            placeholder="Nhập tên trang trại"
+                                            {...field}
+                                            onBlur={handleGenerateCode}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -138,7 +159,11 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
                                 <FormItem>
                                     <FormLabel>Mã trang trại</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Nhập mã trang trại" {...field} />
+                                        <Input
+                                            placeholder="Nhập mã trang trại"
+                                            {...field}
+                                            readOnly
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

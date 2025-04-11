@@ -26,6 +26,7 @@ import { getSubCategoryByCategoryType } from '@/utils/functions/category.functio
 import { CategoryType } from '@/utils/enum/category.enum';
 import useQueryParams from '@/hooks/use-query-params';
 import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from '../ui/select';
+import { generateCode } from '@/utils/functions/generate-code.function';
 
 interface ChickenCoopFormProps {
     defaultValues?: Partial<ChickenCoop>;
@@ -90,25 +91,29 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
         console.error(error);
     };
 
+    const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        const existingCodes = new Set(
+            JSON.parse(sessionStorage.getItem('chickenCoops') || '[]').map(
+                (chickenCoop: ChickenCoop) => chickenCoop.chickenCoopCode,
+            ),
+        );
+
+        let code;
+        let index = 1;
+        do {
+            code = generateCode(input, index);
+            index++;
+        } while (existingCodes.has(code));
+
+        form.setValue('chickenCoopCode', code);
+        form.setValue('chickenCoopName', input);
+    };
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
-                    {/* Mã chuồng gà */}
-                    <FormField
-                        control={form.control}
-                        name="chickenCoopCode"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Mã chuồng gà</FormLabel>
-                                <FormControl>
-                                    <Input type="text" placeholder="Nhập mã chuồng gà" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
                     {/* Tên chuồng gà */}
                     <FormField
                         control={form.control}
@@ -120,6 +125,27 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                     <Input
                                         type="text"
                                         placeholder="Nhập tên chuồng gà"
+                                        {...field}
+                                        onBlur={handleGenerateCode}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Mã chuồng gà */}
+                    <FormField
+                        control={form.control}
+                        name="chickenCoopCode"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Mã chuồng gà</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="text"
+                                        placeholder="Nhập mã chuồng gà"
+                                        readOnly
                                         {...field}
                                     />
                                 </FormControl>

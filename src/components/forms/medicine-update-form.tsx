@@ -11,6 +11,7 @@ import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { SubCategory } from '@/utils/schemas/sub-category.schema';
 import { getSubDisease } from '@/services/category.service';
+import { generateCode } from '@/utils/functions/generate-code.function';
 
 interface UpdateMedicineProps {
     medicine: Medicine;
@@ -55,8 +56,8 @@ export default function UpdateMedicineForm({ medicine, closeModal }: UpdateMedic
             expiryDate: dayjs(values.expiryDate).format('YYYY-MM-DD'),
             productionDate: dayjs(values.productionDate).format('YYYY-MM-DD'),
         };
-        
-        console.log("Medicine update submit: ", formattedData);
+
+        console.log('Medicine update submit: ', formattedData);
         await mutation.mutateAsync(formattedData);
     };
 
@@ -64,11 +65,29 @@ export default function UpdateMedicineForm({ medicine, closeModal }: UpdateMedic
         console.error(error);
     };
 
-        const { data: subDisease = [] } = useQuery<SubCategory[]>({
-            queryKey: ['subDisease'],
-            queryFn: () => getSubDisease(),
-        });
-    
+    const { data: subDisease = [] } = useQuery<SubCategory[]>({
+        queryKey: ['subDisease'],
+        queryFn: () => getSubDisease(),
+    });
+
+    const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        const existingCodes = new Set(
+            JSON.parse(sessionStorage.getItem('medicines') || '[]').map(
+                (medicine: Medicine) => medicine.medicineCode,
+            ),
+        );
+
+        let code;
+        let index = 1;
+        do {
+            code = generateCode(input, index);
+            index++;
+        } while (existingCodes.has(code));
+
+        form.setValue('medicineCode', code);
+        form.setValue('medicineName', input);
+    };
 
     return (
         <Form {...form}>
@@ -86,7 +105,11 @@ export default function UpdateMedicineForm({ medicine, closeModal }: UpdateMedic
                                 <FormLabel>Tên thuốc</FormLabel>
                                 <FormControl>
                                     <div>
-                                        <Input placeholder="Nhập tên thuốc..." {...field} />
+                                        <Input
+                                            placeholder="Nhập tên thuốc..."
+                                            {...field}
+                                            onBlur={handleGenerateCode}
+                                        />
                                     </div>
                                 </FormControl>
                             </FormItem>
@@ -102,7 +125,7 @@ export default function UpdateMedicineForm({ medicine, closeModal }: UpdateMedic
                                 <FormLabel>Mã thuốc</FormLabel>
                                 <FormControl>
                                     <div>
-                                        <Input placeholder="Nhập mã thuốc..." {...field} />
+                                        <Input placeholder="Nhập mã thuốc..." readOnly {...field} />
                                     </div>
                                 </FormControl>
                             </FormItem>

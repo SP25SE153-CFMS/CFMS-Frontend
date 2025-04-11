@@ -29,6 +29,7 @@ import config from '@/configs';
 import { CategoryType } from '@/utils/enum/category.enum';
 import { SelectNative } from '../ui/select-native';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { generateCode } from '@/utils/functions/generate-code.function';
 interface BreedingAreaFormProps {
     defaultValues?: Partial<BreedingArea>;
     closeDialog: () => void;
@@ -84,6 +85,25 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
         queryFn: () => getFarmsForCurrentUser(),
     });
 
+    const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        const existingCodes = new Set(
+            JSON.parse(sessionStorage.getItem('breedingAreas') || '[]').map(
+                (breedingArea: BreedingArea) => breedingArea.breedingAreaCode,
+            ),
+        );
+
+        let code;
+        let index = 1;
+        do {
+            code = generateCode(input, index);
+            index++;
+        } while (existingCodes.has(code));
+
+        form.setValue('breedingAreaCode', code);
+        form.setValue('breedingAreaName', input);
+    };
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-6">
@@ -96,21 +116,6 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                                 </h3>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {/* Breeding Area Code */}
-                                <FormField
-                                    control={form.control}
-                                    name="breedingAreaCode"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Mã khu nuôi</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Nhập mã khu nuôi" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
                                 {/* Breeding Area Name */}
                                 <FormField
                                     control={form.control}
@@ -119,7 +124,30 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                                         <FormItem>
                                             <FormLabel>Tên khu nuôi</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Nhập tên khu nuôi" {...field} />
+                                                <Input
+                                                    placeholder="Nhập tên khu nuôi"
+                                                    {...field}
+                                                    onBlur={handleGenerateCode}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* Breeding Area Code */}
+                                <FormField
+                                    control={form.control}
+                                    name="breedingAreaCode"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Mã khu nuôi</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Nhập mã khu nuôi"
+                                                    {...field}
+                                                    readOnly
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
