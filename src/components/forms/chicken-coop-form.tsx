@@ -110,6 +110,40 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
         form.setValue('chickenCoopName', input);
     };
 
+    const handleAreaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Set area
+        const area = Number(e.target.value);
+        form.setValue('area', area);
+
+        // Calculate density
+        // if (area === 0) {
+        //     form.setValue('density', 0);
+        // } else {
+        //     const result = form.getValues('maxQuantity') / area;
+        //     const density = result < 1 ? 1 : Math.round(result);
+        //     form.setValue('density', density);
+        // }
+
+        const result = area * form.getValues('density');
+        const maxQuantity = Math.round(result);
+        form.setValue('maxQuantity', maxQuantity);
+    };
+
+    const handleDensityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Set density
+        const density = Number(e.target.value);
+        form.setValue('density', density);
+
+        // Calculate max quantity
+        if (density === 0) {
+            form.setValue('maxQuantity', 0);
+        } else {
+            const result = form.getValues('area') * density;
+            const maxQuantity = Math.round(result);
+            form.setValue('maxQuantity', maxQuantity);
+        }
+    };
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
@@ -166,18 +200,19 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                         type="number"
                                         placeholder="Nhập sức chứa"
                                         min={0}
+                                        disabled
                                         {...field}
-                                        onChange={(e) => {
-                                            field.onChange(e.target.value);
-                                            const maxQuantity = Number(e.target.value);
-                                            if (maxQuantity === 0) {
-                                                form.setValue('density', 0);
-                                            } else {
-                                                const density =
-                                                    maxQuantity / form.getValues('area');
-                                                form.setValue('density', density);
-                                            }
-                                        }}
+                                        // onChange={(e) => {
+                                        //     field.onChange(e.target.value);
+                                        //     const maxQuantity = Number(e.target.value);
+                                        //     if (maxQuantity === 0) {
+                                        //         form.setValue('density', 0);
+                                        //     } else {
+                                        //         const result = maxQuantity / form.getValues('area');
+                                        //         const density = result < 1 ? 1 : Math.round(result);
+                                        //         form.setValue('density', density);
+                                        //     }
+                                        // }}
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -223,14 +258,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                         type="number"
                                         min={0}
                                         {...field}
-                                        onChange={(e) => {
-                                            field.onChange(e.target.value);
-                                            const area = Number(e.target.value);
-                                            form.setValue(
-                                                'density',
-                                                form.getValues('maxQuantity') / area,
-                                            );
-                                        }}
+                                        onChange={handleAreaChange}
                                     />
                                     <SelectNative
                                         className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
@@ -286,8 +314,10 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                         className="rounded-e-none h-10"
                                         placeholder="Nhập số lượng"
                                         type="number"
-                                        disabled
+                                        min={0}
+                                        // disabled
                                         {...field}
+                                        onChange={handleDensityChange}
                                     />
                                     <SelectNative
                                         className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
