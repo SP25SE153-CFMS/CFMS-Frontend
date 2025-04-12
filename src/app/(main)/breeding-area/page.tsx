@@ -262,13 +262,13 @@ export default function Page() {
                                 <DropdownMenuContent align="end" className="w-[200px]">
                                     <DropdownMenuLabel>Trạng thái</DropdownMenuLabel>
                                     <DropdownMenuItem onClick={() => setTab('all')}>
-                                        Tất cả khu nuôi
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => setTab('1')}>
-                                        Đang hoạt động
+                                        Tất cả
                                     </DropdownMenuItem>
                                     <DropdownMenuItem onClick={() => setTab('0')}>
                                         Tạm ngưng
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setTab('1')}>
+                                        Đang hoạt động
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuLabel>Hiển thị</DropdownMenuLabel>
@@ -304,7 +304,12 @@ export default function Page() {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <Tabs defaultValue={tab} className="w-full">
+                    <Tabs
+                        defaultValue={tab}
+                        className="w-full"
+                        onValueChange={(val) => setTab(val)}
+                        value={tab}
+                    >
                         <TabsList className="mb-4">
                             <TabsTrigger value="all">
                                 Tất cả ({filteredBreedingAreas.length})

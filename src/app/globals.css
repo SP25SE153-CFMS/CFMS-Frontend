@@ -194,10 +194,6 @@ a {
     }
 }
 
-.leaflet-control-container .leaflet-bottom.leaflet-right {
-    display: none;
-}
-
 /* Scrollbar */
 ::-webkit-scrollbar {
     border-radius: 0;
@@ -221,3 +217,8 @@ a {
     background: hsl(var(--primary));
     background: hsla(var(--primary), 1);
 } */
+
+/* Custom styles */
+.leaflet-control-container .leaflet-bottom.leaflet-right {
+    display: none;
+}

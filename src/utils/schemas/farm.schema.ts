@@ -34,4 +34,4 @@ export const FarmSchema = z.object({
 });
 
 export type Farm = z.infer<typeof FarmSchema>;
-export const CreateFarmSchema = FarmSchema.omit({ farmId: true, imageUrl: true });
+export const CreateFarmSchema = FarmSchema.omit({ farmId: true });

@@ -36,6 +36,7 @@ const routes = {
     resourceSupplier: 'supplier/resource-supplier',
     ware: '/warehouse',
     medicine: '/warehouse/medicines',
+    config: '/config',
 };
 
 export default routes;

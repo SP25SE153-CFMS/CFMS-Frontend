@@ -153,6 +153,12 @@ export default function FeedSessionForm({ defaultValues, closeDialog }: FeedSess
                                     <SelectNative
                                         className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
                                         onChange={(e) => form.setValue('unitId', e.target.value)}
+                                        defaultValue={
+                                            form.getValues('unitId') ||
+                                            getSubCategoryByCategoryType(
+                                                CategoryType.WEIGHT_UNIT,
+                                            )[0]?.subCategoryId
+                                        }
                                     >
                                         {getSubCategoryByCategoryType(
                                             CategoryType.WEIGHT_UNIT,

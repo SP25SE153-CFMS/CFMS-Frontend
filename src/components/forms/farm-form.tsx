@@ -30,7 +30,7 @@ import { createFarm, updateFarm } from '@/services/farm.service';
 import { useRouter } from 'next/navigation';
 import config from '@/configs';
 import { CloudinaryImageUpload } from '@/components/cloudinary-image-upload';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { Scale, scaleLabels } from '@/utils/enum/status.enum';
 import { getAddress } from '@/services/map.service';
@@ -49,7 +49,6 @@ interface FarmFormProps {
 
 const FarmForm = ({ defaultValues }: FarmFormProps) => {
     const router = useRouter();
-    const [imageUrl, setImageUrl] = useState<string>('');
     const [mapVisible, setMapVisible] = useState(false);
 
     const { data: areaUnits } = useQuery({
@@ -76,15 +75,18 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
         },
     });
 
+    const queryClient = useQueryClient();
+
     const mutation = useMutation({
         mutationFn: defaultValues ? updateFarm : createFarm,
         onSuccess: () => {
             if (defaultValues) {
                 toast.success('Cập nhật trang trại thành công');
+                queryClient.invalidateQueries({ queryKey: ['farms'] });
             } else {
                 toast.success('Tạo trang trại thành công');
+                router.push(config.routes.farm);
             }
-            router.push(config.routes.farm);
         },
         onError: (err: any) => {
             toast.error(err?.response?.data?.message);
@@ -93,7 +95,6 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
 
     // Form submit handler
     const onSubmit = async (values: Farm) => {
-        values.imageUrl = imageUrl;
         mutation.mutate(values);
     };
 
@@ -189,6 +190,10 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
                                         />
                                         <SelectNative
                                             className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
+                                            defaultValue={
+                                                form.getValues('areaUnitId') ||
+                                                areaUnits?.[0]?.subCategoryId
+                                            }
                                             onChange={(e) =>
                                                 form.setValue('areaUnitId', e.target.value)
                                             }
@@ -384,12 +389,14 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
                     <FormField
                         control={form.control}
                         name="imageUrl"
-                        render={() => (
+                        render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Hình ảnh trang trại</FormLabel>
                                 <FormControl>
                                     <CloudinaryImageUpload
-                                        onUploadComplete={(url) => setImageUrl(url)}
+                                        onUploadComplete={(url) => {
+                                            field.onChange(url);
+                                        }}
                                         defaultImage={defaultValues?.imageUrl}
                                     />
                                 </FormControl>

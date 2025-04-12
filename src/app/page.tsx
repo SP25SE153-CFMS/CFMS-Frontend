@@ -124,11 +124,18 @@ export default function Home() {
                         <div className="w-14" />
                     </div>
                     <Image
-                        src="/preview.png"
+                        src="/preview-light.png"
                         alt="Sắp ra mắt"
                         width="960"
                         height="520"
-                        className="rounded-b-xl"
+                        className="rounded-b-xl block dark:hidden"
+                    />
+                    <Image
+                        src="/preview-dark.png"
+                        alt="Sắp ra mắt"
+                        width="960"
+                        height="520"
+                        className="rounded-b-xl hidden dark:block"
                     />
                 </div>
 
@@ -157,11 +164,18 @@ export default function Home() {
                                 <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-2xl blur-xl opacity-70"></div>
                                 <div className="relative">
                                     <Image
-                                        src="/preview.png"
+                                        src="/preview-light.png"
                                         alt="Vấn đề hiện tại"
                                         width={600}
                                         height={400}
-                                        className="rounded-xl shadow-xl object-cover"
+                                        className="rounded-xl shadow-xl object-cover dark:hidden"
+                                    />
+                                    <Image
+                                        src="/preview-dark.png"
+                                        alt="Vấn đề hiện tại"
+                                        width={600}
+                                        height={400}
+                                        className="rounded-xl shadow-xl object-cover hidden dark:block"
                                     />
                                     <div className="absolute -bottom-5 -right-5 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 max-w-xs">
                                         <p className="text-sm font-medium text-gray-900 dark:text-gray-200">
@@ -674,13 +688,13 @@ export default function Home() {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
                             <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
                                 <div className="flex items-center mb-6">
                                     <div className="h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-700 mr-4"></div>
                                     <div>
                                         <h4 className="font-semibold dark:text-white">
-                                            Nguyễn Văn A
+                                            Phạm Huy Anh Dũng
                                         </h4>
                                         <p className="text-sm text-gray-600 dark:text-gray-400">
                                             Chủ Trang Trại Gà Miền Bắc
@@ -699,7 +713,26 @@ export default function Home() {
                                     <div className="h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-700 mr-4"></div>
                                     <div>
                                         <h4 className="font-semibold dark:text-white">
-                                            Trần Thị B
+                                            Trần Hải Đăng
+                                        </h4>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                            Quản Lý Trang Trại Gà Miền Bắc
+                                        </p>
+                                    </div>
+                                </div>
+                                <p className="text-gray-700 dark:text-gray-300 italic">
+                                    &quot;CFMS đã giúp tôi quản lý trang trại gà một cách chuyên
+                                    nghiệp hơn. Việc theo dõi thức ăn, thuốc men và lịch tiêm phòng
+                                    trở nên dễ dàng.&quot;
+                                </p>
+                            </div>
+
+                            <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
+                                <div className="flex items-center mb-6">
+                                    <div className="h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-700 mr-4"></div>
+                                    <div>
+                                        <h4 className="font-semibold dark:text-white">
+                                            Phạm Thị Ngọc Anh
                                         </h4>
                                         <p className="text-sm text-gray-600 dark:text-gray-400">
                                             Quản Lý Trang Trại Gà Miền Trung
@@ -718,7 +751,9 @@ export default function Home() {
                                 <div className="flex items-center mb-6">
                                     <div className="h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-700 mr-4"></div>
                                     <div>
-                                        <h4 className="font-semibold dark:text-white">Lê Văn C</h4>
+                                        <h4 className="font-semibold dark:text-white">
+                                            Trương Đình Đông Dương
+                                        </h4>
                                         <p className="text-sm text-gray-600 dark:text-gray-400">
                                             Chủ Trang Trại Gà Miền Nam
                                         </p>

@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import config from '@/configs';
-import { useChickenCoopStore } from '@/store/use-chicken-coop';
+import { useChickenCoopStore } from '@/store/chicken-coop.store';
 import { chickenCoopStatusLabels, chickenCoopStatusVariant } from '@/utils/enum/status.enum';
 import { getAreaUnit, getDensityUnit } from '@/utils/functions/category.function';
 import { BreedingArea } from '@/utils/schemas/breeding-area.schema';

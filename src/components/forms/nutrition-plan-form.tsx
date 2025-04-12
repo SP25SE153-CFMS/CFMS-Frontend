@@ -390,18 +390,19 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
                                             </div>
 
                                             {/* Remove Button */}
-                                            <div className="flex justify-end mt-4">
-                                                <Button
-                                                    type="button"
-                                                    variant="destructive"
-                                                    size="sm"
-                                                    onClick={() => removeNutriPlanDetail(index)}
-                                                    className="h-8"
-                                                >
-                                                    <Trash2 className="w-4 h-4 mr-1" />
-                                                    Xóa thức ăn
-                                                </Button>
-                                            </div>
+                                            {nutritionPlanDetails.length > 1 && (
+                                                <div className="flex justify-end mt-4">
+                                                    <Button
+                                                        type="button"
+                                                        variant="destructive"
+                                                        size="sm"
+                                                        onClick={() => removeNutriPlanDetail(index)}
+                                                    >
+                                                        <Trash2 className="w-4 h-4 mr-1" />
+                                                        Xóa thức ăn
+                                                    </Button>
+                                                </div>
+                                            )}
                                         </CardContent>
                                     </Card>
                                 ))
