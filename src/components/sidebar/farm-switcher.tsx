@@ -103,7 +103,7 @@ export function FarmSwitcher() {
         return (
             <>
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground">
-                    <FarmImage src={activeFarm.imageUrl} alt={activeFarm.farmName} />
+                    <FarmImage src={activeFarm.imageUrl} alt={activeFarm.farmCode} />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">{activeFarm.farmName}</span>
@@ -143,7 +143,7 @@ export function FarmSwitcher() {
                                     className="gap-2 p-2"
                                 >
                                     <div className="flex size-6 items-center justify-center rounded-sm border">
-                                        <FarmImage src={farm.imageUrl} alt={farm.farmName} />
+                                        <FarmImage src={farm.imageUrl} alt={farm.farmCode} />
                                     </div>
                                     {farm.farmName}
                                 </DropdownMenuItem>

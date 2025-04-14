@@ -17,3 +17,8 @@ export type FeedSession = z.infer<typeof FeedSessionSchema>;
 
 export const CreateFeedSessionSchema = FeedSessionSchema.omit({ feedSessionId: true });
 export type CreateFeedSession = z.infer<typeof CreateFeedSessionSchema>;
+
+export const CreateFSWithoutNutriPlanSchema = CreateFeedSessionSchema.omit({
+    nutritionPlanId: true,
+});
+export type CreateFSWithoutNutriPlan = z.infer<typeof CreateFSWithoutNutriPlanSchema>;

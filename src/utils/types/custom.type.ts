@@ -64,6 +64,7 @@ export type ChickenBatchResponse = ChickenBatch & {
     feedLogs: FeedLog[];
     chicken: ChickenResponse;
     growthBatches: GrowthBatchResponse[];
+    currentStageId: string;
     chickenDetails: ChickenDetail[];
 };
 
@@ -175,4 +176,10 @@ export type WareStockResponse = Warehouse & {
 export type InventoryReceiptRequest = CreateInventoryReceipt & {
     requestId: string;
     receiptDetails: CreateInventoryReceiptDetail[];
+};
+
+export type DashboardChickenBatch = {
+    activeChicken: number;
+    deadthChicken: number;
+    totalChicken: number;
 };

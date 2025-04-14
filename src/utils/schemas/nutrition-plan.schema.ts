@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { CreateNutritionPlanDetail } from './nutrition-plan-detail.schema';
+import { CreateFSWithoutNutriPlan } from './feed-session.schema';
 
 export const NutritionPlanSchema = z.object({
     nutritionPlanId: z
@@ -11,5 +12,6 @@ export const NutritionPlanSchema = z.object({
 
 export type NutritionPlan = z.infer<typeof NutritionPlanSchema> & {
     nutritionPlanDetails: CreateNutritionPlanDetail[];
+    feedSessions: CreateFSWithoutNutriPlan[];
 };
 export const CreateNutritionPlanSchema = NutritionPlanSchema.omit({ nutritionPlanId: true });

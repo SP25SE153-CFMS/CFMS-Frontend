@@ -312,7 +312,9 @@ export default function Page() {
             <Stepper
                 steps={chickenBatch?.growthBatches.map((batch) => batch.growthStage.stageName)}
                 activeStep={
-                    chickenBatch?.growthBatches.findIndex((batch) => batch.status === 1) || 0
+                    chickenBatch?.growthBatches.findIndex(
+                        (batch) => batch.growthStageId === chickenBatch.currentStageId,
+                    ) || 0
                 }
                 visitStep={chickenBatch?.growthBatches.findIndex(
                     (batch) => batch.growthStageId === currentGrowthStage?.growthStageId,
@@ -324,9 +326,9 @@ export default function Page() {
             />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 my-6">
                 <div>
-                    {currentGrowthStage?.nutritionPlanId && (
-                        <CardNutritionPlan nutritionPlanId={currentGrowthStage?.nutritionPlanId} />
-                    )}
+                    <CardNutritionPlan
+                        nutritionPlanId={currentGrowthStage?.nutritionPlanId ?? ''}
+                    />
                 </div>
                 <div className="col-span-2">
                     <Chart />

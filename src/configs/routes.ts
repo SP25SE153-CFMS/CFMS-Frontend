@@ -22,6 +22,7 @@ const routes = {
     profile: '/profile',
     chickenBatch: '/chicken-batch',
     nutritionPlan: '/nutrition-plan',
+    createNutritionPlan: '/nutrition-plan/create',
     forgotPassword: '/forgot-password',
     inputOTP: 'forgot-password/input-OTP',
     resetPassword: '/reset-password',
