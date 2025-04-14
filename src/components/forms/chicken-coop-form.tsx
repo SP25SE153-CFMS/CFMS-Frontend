@@ -24,9 +24,9 @@ import { Textarea } from '../ui/textarea';
 import { SelectNative } from '../ui/select-native';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
-import useQueryParams from '@/hooks/use-query-params';
 import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from '../ui/select';
 import { generateCode } from '@/utils/functions/generate-code.function';
+import { Loader2 } from 'lucide-react';
 
 interface ChickenCoopFormProps {
     defaultValues?: Partial<ChickenCoop>;
@@ -34,8 +34,6 @@ interface ChickenCoopFormProps {
 }
 
 export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenCoopFormProps) {
-    const { breedingAreaId } = useQueryParams();
-
     // Initialize form
     const form = useForm<ChickenCoop>({
         resolver: zodResolver(defaultValues ? ChickenCoopSchema : CreateChickenCoopSchema),
@@ -45,7 +43,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
             chickenCoopName: '',
             maxQuantity: 0,
             status: 0,
-            breedingAreaId: breedingAreaId || sessionStorage.getItem('breedingAreaId') || '',
+            breedingAreaId: sessionStorage.getItem('breedingAreaId') || '',
             area: 0,
             // currentQuantity: 0,
             description: '',
@@ -70,7 +68,9 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
         mutationFn: defaultValues ? updateChickenCoop : createChickenCoop,
         onSuccess: () => {
             closeDialog();
-            queryClient.invalidateQueries({ queryKey: ['chickenCoops', breedingAreaId] });
+            queryClient.invalidateQueries({
+                queryKey: ['chickenCoops', sessionStorage.getItem('breedingAreaId')],
+            });
             toast.success(
                 defaultValues ? 'Cập nhật chuồng gà thành công' : 'Tạo chuồng gà thành công',
             );
@@ -420,8 +420,9 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                     />
                 </div>
 
-                <Button type="submit" className="mx-auto mt-6 w-60">
-                    Gửi
+                <Button type="submit" className="mx-auto mt-6 w-60" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                    {defaultValues ? 'Cập nhật' : 'Tạo mới'}
                 </Button>
             </form>
         </Form>

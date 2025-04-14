@@ -27,9 +27,8 @@ import { Button } from '../ui/button';
 import { vi } from 'date-fns/locale';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { formatDate } from '@/utils/functions';
-import { addDays } from 'date-fns';
-import { DateRange } from 'react-day-picker';
 import { getChickenCoopsByBreedingAreaId } from '@/services/chicken-coop.service';
+import { Textarea } from '../ui/textarea';
 
 export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: () => void }) {
     const queryClient = useQueryClient();
@@ -55,14 +54,12 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
     const [chickenCoopId, setChickenCoopId] = useState('');
     const [startDate, setStartDate] = useState<Date>(new Date());
     const [chickenTypeId, setChickenTypeId] = useState('');
+    const [notes, setNotes] = useState('');
     const [chickenDetailRequests, setChickenDetailRequests] = useState<ChickenDetailRequest[]>([
         { gender: 0, quantity: 0 },
     ]);
 
-    const [growDays, setGrowDays] = useState<DateRange | undefined>({
-        from: new Date(),
-        to: addDays(new Date(), 20),
-    });
+    const [growDays, setGrowDays] = useState({ min: 0, max: 0 });
 
     const chickens = chickenTypes?.find((type) => type.subCategoryId === chickenTypeId)?.chickens;
 
@@ -78,8 +75,9 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
             chickenId,
             startDate: dayjs(startDate).format('YYYY-MM-DD'),
             chickenDetailRequests,
-            minGrowDays: dayjs(growDays?.from).format('YYYY-MM-DD'),
-            maxGrowDays: dayjs(growDays?.to).format('YYYY-MM-DD'),
+            minGrowDays: growDays.min,
+            maxGrowDays: growDays.max,
+            notes,
         };
 
         try {
@@ -95,29 +93,9 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
     return (
         <form className="space-y-5" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="space-y-4">
-                    {/* Chicken coop */}
-                    <div className="*:not-first:mt-2">
-                        <Label>Chuồng tiếp nhận</Label>
-                        <Select defaultValue={chickenCoopId} onValueChange={setChickenCoopId}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Chọn chuồng tiếp nhận" />
-                            </SelectTrigger>
-                            <SelectContent className="max-h-72">
-                                {chickenCoops?.map((coop) => (
-                                    <SelectItem key={coop.chickenCoopId} value={coop.chickenCoopId}>
-                                        {coop.chickenCoopName}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <p className="text-[0.8rem] text-muted-foreground">
-                            Đây là chuồng mà lứa nuôi sẽ được lưu sau khi tách lứa
-                        </p>
-                    </div>
-
+                <div className="space-y-2 grid grid-cols-2 gap-4">
                     {/* Chicken batch name */}
-                    <div className="*:not-first:mt-2">
+                    <div className="*:not-first:mt-2 col-span-2">
                         <Label htmlFor={`chickenBatchName`}>Tên lứa nuôi</Label>
                         <Input
                             id={`chickenBatchName`}
@@ -127,7 +105,7 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                     </div>
 
                     {/* Start date */}
-                    <div className="*:not-first:mt-2 grid gap-2">
+                    <div className="*:not-first:mt-2 grid gap-2 col-span-2">
                         <Label>Ngày bắt đầu của lứa nuôi</Label>
                         <Popover>
                             <PopoverTrigger asChild>
@@ -148,6 +126,7 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                                     selected={startDate}
                                     locale={vi}
                                     onSelect={(day) => setStartDate(day ?? new Date())}
+                                    disabled={(date) => date < new Date()}
                                     initialFocus
                                 />
                             </PopoverContent>
@@ -155,7 +134,7 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                     </div>
 
                     {/* Chicken type */}
-                    <div className="*:not-first:mt-2">
+                    <div className="*:not-first:mt-2 col-span-2">
                         <Label>Loại gà</Label>
                         <Select defaultValue={chickenTypeId} onValueChange={setChickenTypeId}>
                             <SelectTrigger>
@@ -174,7 +153,7 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                     {/* Growth stage */}
                     {chickenTypeId && (
                         <>
-                            <div className="*:not-first:mt-2">
+                            <div className="*:not-first:mt-2 col-span-2">
                                 <Label>Nhóm giai đoạn phát triển</Label>
                                 <Select>
                                     <SelectTrigger>
@@ -204,7 +183,7 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <div className="*:not-first:mt-2">
+                            <div className="*:not-first:mt-2 col-span-2">
                                 <Label htmlFor={`chickenBatchName`}>Giống gà</Label>
                                 <Select defaultValue={chickenId} onValueChange={setChickenId}>
                                     <SelectTrigger>
@@ -261,44 +240,25 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                     )}
 
                     <div className="*:not-first:mt-2">
-                        <Label>Ngày nuôi tối thiểu - tối đa</Label>
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    id="growDays"
-                                    variant={'outline'}
-                                    className={cn(
-                                        'w-full justify-start text-left font-normal',
-                                        !growDays && 'text-muted-foreground',
-                                    )}
-                                >
-                                    <CalendarIcon />
-                                    {growDays?.from ? (
-                                        growDays?.to ? (
-                                            <>
-                                                {formatDate(growDays?.from.toISOString())} -{' '}
-                                                {formatDate(growDays?.to.toISOString())}
-                                            </>
-                                        ) : (
-                                            formatDate(growDays?.from.toISOString())
-                                        )
-                                    ) : (
-                                        <span>Chọn ngày</span>
-                                    )}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                                <CalendarComponent
-                                    initialFocus
-                                    mode="range"
-                                    defaultMonth={growDays?.from}
-                                    selected={growDays}
-                                    onSelect={setGrowDays}
-                                    numberOfMonths={2}
-                                    locale={vi}
-                                />
-                            </PopoverContent>
-                        </Popover>
+                        <Label>Số ngày nuôi tối thiểu</Label>
+                        <Input
+                            type="number"
+                            min={0}
+                            onChange={(e) =>
+                                setGrowDays({ ...growDays, min: Number(e.target.value) })
+                            }
+                        />
+                    </div>
+
+                    <div className="*:not-first:mt-2">
+                        <Label>Số ngày nuôi tối đa</Label>
+                        <Input
+                            type="number"
+                            min={0}
+                            onChange={(e) =>
+                                setGrowDays({ ...growDays, max: Number(e.target.value) })
+                            }
+                        />
                     </div>
 
                     {/* Duration */}
@@ -322,6 +282,7 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                 </div> */}
                 </div>
 
+                {/* Chicken detail */}
                 <div className="*:not-first:mt-2">
                     <div className="flex justify-between items-center mb-2">
                         <Label htmlFor={`chickenBatchName`}>Chi tiết giống gà</Label>
@@ -431,12 +392,41 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                             </Alert>
                         )}
                     </div>
+
+                    {/* Chicken coop */}
+                    <div className="mt-4">
+                        <Label>Chuồng tiếp nhận</Label>
+                        <Select defaultValue={chickenCoopId} onValueChange={setChickenCoopId}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Chọn chuồng tiếp nhận" />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-72">
+                                {chickenCoops?.map((coop) => (
+                                    <SelectItem key={coop.chickenCoopId} value={coop.chickenCoopId}>
+                                        {coop.chickenCoopName}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <p className="text-[0.8rem] text-muted-foreground">
+                            Đây là chuồng mà lứa nuôi sẽ được lưu sau khi tách lứa
+                        </p>
+                    </div>
+
+                    {/* Notes */}
+                    <div className="mt-4">
+                        <Label>Ghi chú</Label>
+                        <Textarea
+                            placeholder="Ghi chú"
+                            onChange={(e) => setNotes(e.target.value)}
+                        />
+                    </div>
                 </div>
             </div>
 
             <div className="flex items-center justify-center">
                 <Button type="submit" className="block w-lg">
-                    Bắt đầu
+                    Tách lứa nuôi
                 </Button>
             </div>
         </form>

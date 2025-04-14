@@ -54,13 +54,16 @@ import { getSubCategoryByCategoryType } from '@/utils/functions/category.functio
 import { CategoryType } from '@/utils/enum/category.enum';
 import { CreateFSWithoutNutriPlan } from '@/utils/schemas/feed-session.schema';
 import { TimePicker } from '../ui/time-picker';
+import { useRouter } from 'next/navigation';
+import config from '@/configs';
 
 interface NutritionPlanFormProps {
     defaultValues?: Partial<NutritionPlan>;
-    closeDialog?: () => void;
 }
 
-export default function NutritionPlanForm({ defaultValues, closeDialog }: NutritionPlanFormProps) {
+export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormProps) {
+    const router = useRouter();
+
     // Get all foods
     const { data: foods, isLoading: foodsLoading } = useQuery({
         queryKey: ['foods'],
@@ -79,7 +82,18 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
               ],
     );
 
-    const [feedSessions, setFeedSessions] = useState<CreateFSWithoutNutriPlan[]>([]);
+    const [feedSessions, setFeedSessions] = useState<CreateFSWithoutNutriPlan[]>(
+        defaultValues?.feedSessions?.length
+            ? defaultValues.feedSessions
+            : [
+                  {
+                      feedingTime: '',
+                      feedAmount: 0,
+                      unitId: '',
+                      note: '',
+                  },
+              ],
+    );
 
     // Initialize form
     const form = useForm<NutritionPlan>({
@@ -99,13 +113,14 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
     const mutation = useMutation({
         mutationFn: defaultValues ? updateNutritionPlan : createNutritionPlan,
         onSuccess: () => {
-            closeDialog?.();
+            // closeDialog?.();
             queryClient.invalidateQueries({ queryKey: ['nutritionPlans'] });
             toast.success(
                 defaultValues
                     ? 'Cập nhật chế độ dinh dưỡng thành công'
                     : 'Tạo chế độ dinh dưỡng thành công',
             );
+            router.push(config.routes.nutritionPlan);
         },
         onError: (error: any) => {
             console.error(error);
@@ -196,7 +211,7 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
                 onSubmit={form.handleSubmit(onSubmit, onError)}
                 className="space-y-6"
             >
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Card>
                         <CardHeader className="pb-3">
                             <CardTitle className="text-xl font-bold flex items-center">
@@ -617,7 +632,6 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
                                                                                 e.target.value,
                                                                             )
                                                                         }
-                                                                        required
                                                                     />
                                                                 </FormControl>
                                                                 <FormMessage />

@@ -3,6 +3,7 @@ import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 import { NutritionPlanResponse } from '@/utils/types/custom.type';
 import { CreateFeedSession, FeedSession } from '@/utils/schemas/feed-session.schema';
+import { NutritionPlanDetail } from '@/utils/schemas/nutrition-plan-detail.schema';
 
 const PREFIX = '/api/NutritionPlan';
 
@@ -54,6 +55,22 @@ export const deleteFeedSession = async (feedSessionId: string, nutritionPlanId: 
         feedSessionId,
         nutritionPlanId,
     };
+    const response = await put<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const addNutritionPlanDetail = async (
+    body: Omit<NutritionPlanDetail, 'nutritionPlanId'>,
+) => {
+    const endpoint = PREFIX + '/add-nutritionplandetail';
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const updateNutritionPlanDetail = async (
+    body: Omit<NutritionPlanDetail, 'nutritionPlanId'>,
+) => {
+    const endpoint = PREFIX + '/update-nutritionplandetail';
     const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };

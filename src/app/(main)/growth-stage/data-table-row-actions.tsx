@@ -9,7 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Trash } from 'lucide-react';
+import { Trash, Trash2 } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogContent,
@@ -60,10 +60,12 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
     const [nutritionPlanId, setNutritionPlanId] = useState<string>('');
 
+    const growthStageId = (row.original as GrowthStage).growthStageId;
+    const currentNutritionPlanOfGrowthStage = (row.original as GrowthStage).nutritionPlanId;
+
     const queryClient = useQueryClient();
 
-    const handleDelete = async () => {
-        const growthStageId = (row.original as GrowthStage).growthStageId;
+    const handleDeleteGrowthStage = async () => {
         await deleteGrowthStage(growthStageId).then(() => {
             toast.success('Đã xóa giai đoạn phát triển');
             queryClient.invalidateQueries({ queryKey: ['growthStages'] });
@@ -72,13 +74,14 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     };
 
     const handleDeleteNutritionPlan = async () => {
-        const growthStageId = (row.original as GrowthStage).growthStageId;
-        const nutritionPlanId = (row.original as GrowthStage).nutritionPlanId;
-        if (!nutritionPlanId) {
+        if (!currentNutritionPlanOfGrowthStage) {
             toast.error('Không tìm thấy chế độ dinh dưỡng');
             return;
         }
-        await deleteNutritionPlanFromGrowthStage(growthStageId, nutritionPlanId).then(() => {
+        await deleteNutritionPlanFromGrowthStage(
+            growthStageId,
+            currentNutritionPlanOfGrowthStage,
+        ).then(() => {
             toast.success('Đã xóa chế độ dinh dưỡng');
             queryClient.invalidateQueries({ queryKey: ['growthStages'] });
             setOpenDeleteNutritionPlan(false);
@@ -87,7 +90,10 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
     const addNutritionPlan = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const growthStageId = (row.original as GrowthStage).growthStageId;
+        if (!nutritionPlanId) {
+            toast.error('Không tìm thấy chế độ dinh dưỡng');
+            return;
+        }
         await addNutritionPlanToGrowthStage(growthStageId, nutritionPlanId).then(() => {
             toast.success('Đã thêm chế độ dinh dưỡng');
             queryClient.invalidateQueries({ queryKey: ['growthStages'] });
@@ -114,7 +120,10 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     >
                         Xem chi tiết
                     </DropdownMenuItem> */}
-                    <DropdownMenuItem onClick={() => setOpenCreate(true)}>
+                    <DropdownMenuItem
+                        onClick={() => setOpenCreate(true)}
+                        disabled={!!currentNutritionPlanOfGrowthStage}
+                    >
                         Thêm chế độ dinh dưỡng
                     </DropdownMenuItem>
 
@@ -122,15 +131,16 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         Cập nhật
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
-                        Xóa giai đoạn phát triển
-                        <Trash size={16} className="ml-auto" />
-                    </DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={() => setOpenDeleteNutritionPlan(true)}
                         className="text-red-600"
+                        disabled={!currentNutritionPlanOfGrowthStage}
                     >
-                        Xóa chế độ dinh dưỡng <Trash size={16} className="ml-auto" />
+                        Xóa chế độ dinh dưỡng <Trash2 size={16} className="ml-auto" />
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
+                        Xóa CĐDD + GĐPT
+                        <Trash size={16} className="ml-auto" />
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
@@ -220,7 +230,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         <Button variant="outline" onClick={() => setOpenDelete(false)}>
                             Hủy
                         </Button>
-                        <Button variant="destructive" onClick={handleDelete}>
+                        <Button variant="destructive" onClick={handleDeleteGrowthStage}>
                             Xóa
                         </Button>
                     </div>

@@ -25,8 +25,6 @@ import { Button } from '../ui/button';
 import { vi } from 'date-fns/locale';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { formatDate } from '@/utils/functions';
-import { addDays } from 'date-fns';
-import { DateRange } from 'react-day-picker';
 
 export default function StartChickenBatchForm({ closeDialog }: { closeDialog: () => void }) {
     const queryClient = useQueryClient();
@@ -48,10 +46,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
         { gender: 0, quantity: 0 },
     ]);
 
-    const [growDays, setGrowDays] = useState<DateRange | undefined>({
-        from: new Date(),
-        to: addDays(new Date(), 20),
-    });
+    const [growDays, setGrowDays] = useState({ min: 0, max: 0 });
 
     const chickens = chickenTypes?.find((type) => type.subCategoryId === chickenTypeId)?.chickens;
 
@@ -66,8 +61,8 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
             chickenId,
             startDate: dayjs(startDate).format('YYYY-MM-DD'),
             chickenDetailRequests,
-            minGrowDays: dayjs(growDays?.from).format('YYYY-MM-DD'),
-            maxGrowDays: dayjs(growDays?.to).format('YYYY-MM-DD'),
+            minGrowDays: growDays.min,
+            maxGrowDays: growDays.max,
         };
 
         try {
@@ -83,9 +78,9 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
     return (
         <form className="space-y-5" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="space-y-4">
+                <div className="space-y-4 grid grid-cols-2 gap-4">
                     {/* Chicken batch name */}
-                    <div className="*:not-first:mt-2">
+                    <div className="*:not-first:mt-2 col-span-2">
                         <Label htmlFor={`chickenBatchName`}>Tên lứa nuôi</Label>
                         <Input
                             id={`chickenBatchName`}
@@ -116,6 +111,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                                     selected={startDate}
                                     locale={vi}
                                     onSelect={(day) => setStartDate(day ?? new Date())}
+                                    disabled={(date) => date < new Date()}
                                     initialFocus
                                 />
                             </PopoverContent>
@@ -123,7 +119,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                     </div>
 
                     {/* Chicken type */}
-                    <div className="*:not-first:mt-2">
+                    <div className="*:not-first:mt-2 col-span-2">
                         <Label>Loại gà</Label>
                         <Select defaultValue={chickenTypeId} onValueChange={setChickenTypeId}>
                             <SelectTrigger>
@@ -142,7 +138,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                     {/* Growth stage */}
                     {chickenTypeId && (
                         <>
-                            <div className="*:not-first:mt-2">
+                            <div className="*:not-first:mt-2 col-span-2">
                                 <Label>Nhóm giai đoạn phát triển</Label>
                                 <Select>
                                     <SelectTrigger>
@@ -172,7 +168,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <div className="*:not-first:mt-2">
+                            <div className="*:not-first:mt-2 col-span-2">
                                 <Label htmlFor={`chickenBatchName`}>Giống gà</Label>
                                 <Select defaultValue={chickenId} onValueChange={setChickenId}>
                                     <SelectTrigger>
@@ -229,44 +225,25 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                     )}
 
                     <div className="*:not-first:mt-2">
-                        <Label>Ngày nuôi tối thiểu - tối đa</Label>
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    id="growDays"
-                                    variant={'outline'}
-                                    className={cn(
-                                        'w-full justify-start text-left font-normal',
-                                        !growDays && 'text-muted-foreground',
-                                    )}
-                                >
-                                    <CalendarIcon />
-                                    {growDays?.from ? (
-                                        growDays?.to ? (
-                                            <>
-                                                {formatDate(growDays?.from.toISOString())} -{' '}
-                                                {formatDate(growDays?.to.toISOString())}
-                                            </>
-                                        ) : (
-                                            formatDate(growDays?.from.toISOString())
-                                        )
-                                    ) : (
-                                        <span>Chọn ngày</span>
-                                    )}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                                <CalendarComponent
-                                    initialFocus
-                                    mode="range"
-                                    defaultMonth={growDays?.from}
-                                    selected={growDays}
-                                    onSelect={setGrowDays}
-                                    numberOfMonths={2}
-                                    locale={vi}
-                                />
-                            </PopoverContent>
-                        </Popover>
+                        <Label>Ngày nuôi tối thiểu</Label>
+                        <Input
+                            type="number"
+                            min={0}
+                            onChange={(e) =>
+                                setGrowDays({ ...growDays, min: Number(e.target.value) })
+                            }
+                        />
+                    </div>
+
+                    <div className="*:not-first:mt-2">
+                        <Label>Ngày nuôi tối đa</Label>
+                        <Input
+                            type="number"
+                            min={0}
+                            onChange={(e) =>
+                                setGrowDays({ ...growDays, max: Number(e.target.value) })
+                            }
+                        />
                     </div>
 
                     {/* Duration */}

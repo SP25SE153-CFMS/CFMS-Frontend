@@ -28,10 +28,11 @@ import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { CategoryType } from '@/utils/enum/category.enum';
 import { SelectNative } from '../ui/select-native';
-import { getAreaUnit, getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { convertArea } from '@/utils/functions/area-unit.function';
 import { useMemo } from 'react';
+import { Loader2 } from 'lucide-react';
 
 interface BreedingAreaFormProps {
     defaultValues?: Partial<BreedingArea>;
@@ -48,7 +49,7 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
             breedingAreaCode: '',
             breedingAreaName: '',
             area: 0,
-            areaUnitId: '',
+            areaUnitId: getSubCategoryByCategoryType(CategoryType.AREA_UNIT)?.[0]?.subCategoryId,
             imageUrl: '',
             notes: '',
             status: 1,
@@ -107,6 +108,7 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
         form.setValue('breedingAreaName', input);
     };
 
+    // eslint-disable-next-line no-unused-vars
     const remainingArea = useMemo(() => {
         const breedingAreas = queryClient.getQueryData<BreedingArea[]>(['breedingAreas']);
         const currentFarm = farms?.find((farm) => farm.farmId === form.getValues('farmId'));
@@ -206,20 +208,20 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                                                         const value = Number(e.target.value);
                                                         field.onChange(value);
 
-                                                        if (value > remainingArea) {
-                                                            const currentFarm = farms?.find(
-                                                                (farm) =>
-                                                                    farm.farmId ===
-                                                                    form.getValues('farmId'),
-                                                            );
-                                                            if (currentFarm) {
-                                                                form.setError('area', {
-                                                                    message: `Diện tích khu nuôi phải nhỏ hơn ${remainingArea} ${getAreaUnit(currentFarm.areaUnitId)}`,
-                                                                });
-                                                            }
-                                                        } else {
-                                                            form.clearErrors('area');
-                                                        }
+                                                        // if (value > remainingArea) {
+                                                        //     const currentFarm = farms?.find(
+                                                        //         (farm) =>
+                                                        //             farm.farmId ===
+                                                        //             form.getValues('farmId'),
+                                                        //     );
+                                                        //     if (currentFarm) {
+                                                        //         form.setError('area', {
+                                                        //             message: `Diện tích khu nuôi phải nhỏ hơn ${remainingArea} ${getAreaUnit(currentFarm.areaUnitId)}`,
+                                                        //         });
+                                                        //     }
+                                                        // } else {
+                                                        //     form.clearErrors('area');
+                                                        // }
                                                     }}
                                                 />
                                                 <SelectNative
@@ -227,12 +229,7 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                                                     onChange={(e) => {
                                                         form.setValue('areaUnitId', e.target.value);
                                                     }}
-                                                    defaultValue={
-                                                        form.getValues('areaUnitId') ||
-                                                        getSubCategoryByCategoryType(
-                                                            CategoryType.AREA_UNIT,
-                                                        )?.[0]?.subCategoryId
-                                                    }
+                                                    defaultValue={form.getValues('areaUnitId')}
                                                 >
                                                     {getSubCategoryByCategoryType(
                                                         CategoryType.AREA_UNIT,
@@ -337,11 +334,8 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                         Hủy
                     </Button>
                     <Button type="submit" disabled={mutation.isPending}>
-                        {mutation.isPending
-                            ? 'Đang xử lý...'
-                            : defaultValues
-                              ? 'Cập nhật'
-                              : 'Tạo mới'}
+                        {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                        {defaultValues ? 'Cập nhật' : 'Tạo mới'}
                     </Button>
                 </div>
             </form>

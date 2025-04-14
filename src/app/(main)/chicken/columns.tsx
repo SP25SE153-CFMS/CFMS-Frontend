@@ -42,15 +42,15 @@ export const columns: ColumnDef<ChickenResponse>[] = [
     {
         accessorKey: 'chickenName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên gà" />,
-        cell: ({ row }) => {
-            const chickenName = row.getValue('chickenName') as string;
-            return (
-                <ChickenDetailsDialog
-                    trigger={<span className="cursor-pointer">{chickenName}</span>}
-                    chickenDetails={row.original.chickenDetails}
-                />
-            );
-        },
+        // cell: ({ row }) => {
+        //     const chickenName = row.getValue('chickenName') as string;
+        //     return (
+        //         <ChickenDetailsDialog
+        //             trigger={<span className="cursor-pointer">{chickenName}</span>}
+        //             chickenDetails={row.original.chickenDetails}
+        //         />
+        //     );
+        // },
     },
     {
         accessorKey: 'chickenTypeId',

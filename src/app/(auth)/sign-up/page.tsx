@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 import { useMutation } from '@tanstack/react-query';
 import { signUp } from '@/services/auth.service';
 import { setCookie, deleteCookie } from 'cookies-next';
+import { Loader2 } from 'lucide-react';
 
 export default function SignUp() {
     const router = useRouter();
@@ -155,8 +156,12 @@ export default function SignUp() {
 
                             <Button
                                 type="submit"
+                                disabled={mutation.isPending}
                                 className="w-[425px] h-[64px] text-white text-[19px] font-semibold rounded-[13px] bg-primary hover:bg-primary-dark dark:bg-primary/90 dark:hover:bg-primary not-italic leading-[normal]"
                             >
+                                {mutation.isPending && (
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                )}
                                 Đăng ký
                             </Button>
                         </form>

@@ -53,15 +53,20 @@ export const columns: ColumnDef<GrowthStage>[] = [
         accessorKey: 'description',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mô tả" />,
         cell: ({ row }) => (
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger>
-                        <div className="max-w-[200px] truncate">{row.getValue('description')}</div>
-                    </TooltipTrigger>
-                    <TooltipContent>{row.getValue('description')}</TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
+            <div className="max-w-[200px] text-left cursor-default">
+                {row.getValue('description')}
+            </div>
         ),
+        // <TooltipProvider>
+        //     <Tooltip>
+        //         <TooltipTrigger>
+        //             <div className="max-w-[200px] text-left cursor-default">
+        //                 {row.getValue('description')}
+        //             </div>
+        //         </TooltipTrigger>
+        //         <TooltipContent>{row.getValue('description')}</TooltipContent>
+        //     </Tooltip>
+        // </TooltipProvider>
     },
     {
         accessorKey: 'stageCode',

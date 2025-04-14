@@ -20,17 +20,8 @@ import {
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
 import toast from 'react-hot-toast';
-import NutritionPlanForm from '@/components/forms/nutrition-plan-form';
 import { deleteNutritionPlan } from '@/services/nutrition-plan.service';
 import { NutritionPlan } from '@/utils/schemas/nutrition-plan.schema';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-} from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface Props<T> {
@@ -39,14 +30,13 @@ interface Props<T> {
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
     const router = useRouter();
-    const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
     const queryClient = useQueryClient();
 
     const handleDelete = async () => {
-        const nutritionId = (row.original as NutritionPlan).nutritionPlanId;
-        await deleteNutritionPlan(nutritionId).then(() => {
+        const nutritionPlanId = (row.original as NutritionPlan).nutritionPlanId;
+        await deleteNutritionPlan(nutritionPlanId).then(() => {
             toast.success('Đã xóa chế độ dinh dưỡng');
             queryClient.invalidateQueries({ queryKey: ['nutritionPlans'] });
             setOpenDelete(false);
@@ -66,17 +56,19 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <DropdownMenuItem
                         onClick={() => {
                             router.push(
-                                `${config.routes.chickenCoop}?breedingAreaId=${row.getValue('breedingAreaId')}`,
-                            );
-                            sessionStorage.setItem(
-                                'breedingAreaId',
-                                row.getValue('breedingAreaId'),
+                                `${config.routes.nutritionPlan}/${row.getValue('nutritionPlanId')}`,
                             );
                         }}
                     >
                         Xem chi tiết
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
+                    <DropdownMenuItem
+                        onClick={() =>
+                            router.push(
+                                `${config.routes.updateNutritionPlan}/${row.getValue('nutritionPlanId')}`,
+                            )
+                        }
+                    >
                         Cập nhật
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
@@ -87,7 +79,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             </DropdownMenu>
 
             {/* Update Dialog */}
-            <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
+            {/* <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
                 <DialogContent className="max-w-5xl">
                     <DialogHeader>
                         <DialogTitle>Cập nhật chế độ dinh dưỡng</DialogTitle>
@@ -100,7 +92,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         />
                     </ScrollArea>
                 </DialogContent>
-            </Dialog>
+            </Dialog> */}
 
             {/* Delete Confirmation Dialog */}
             <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
