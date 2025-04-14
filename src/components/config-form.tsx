@@ -2,12 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -79,7 +77,7 @@ export function ConfigForm({ defaultValues, closeDialog }: ConfigFormProps) {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="px-1 space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="px-1 space-y-8">
                 <div className="grid grid-cols-2 gap-4">
                     <FormField
                         control={form.control}

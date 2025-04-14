@@ -42,7 +42,6 @@ export const request = <T>(
     body: object = {},
 ): Promise<AxiosResponse<T>> => {
     const accessToken = getCookie(config.cookies.accessToken);
-    // console.log(accessToken);
 
     const url = endpoint.startsWith('http') ? endpoint : env.NEXT_PUBLIC_API_URL + endpoint;
 

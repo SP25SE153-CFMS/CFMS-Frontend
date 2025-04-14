@@ -91,8 +91,6 @@ export function Stepper({ steps, activeStep, visitStep, onStepClick, className }
     };
 
     const handlePrevious = () => {
-        console.log(visibleRange, activeStep);
-
         if (visibleRange.start > 0) {
             // Only move the window if we're not already showing the first step
             // if (activeStep > 2) {

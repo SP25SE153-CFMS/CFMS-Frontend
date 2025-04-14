@@ -6,7 +6,6 @@ import { GrowthStage } from '@/utils/schemas/growth-stage.schema';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { DataTableRowActions } from './data-table-row-actions';
 import { getChickenType } from '@/utils/functions/category.function';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { NutritionPlan } from '@/utils/schemas/nutrition-plan.schema';
 
 export const columns: ColumnDef<GrowthStage>[] = [

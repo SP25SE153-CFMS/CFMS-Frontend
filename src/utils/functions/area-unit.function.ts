@@ -28,8 +28,6 @@ export function convertArea(value: number, fromUnitId: string, toUnitId: string)
         return value;
     }
 
-    console.log(fromUnit, toUnit);
-
     // Convert to square meters first
     const valueInSquareMeters = value * (AREA_UNIT_CONVERSIONS[fromUnit] || 1);
 
