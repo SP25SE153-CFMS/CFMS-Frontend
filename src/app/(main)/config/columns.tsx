@@ -6,7 +6,6 @@ import { SystemConfig } from '@/schemas/config.schema';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import dayjs from 'dayjs';
-import { User } from '@/utils/schemas/user.schema';
 import { DataTableRowActions } from './data-table-row-ations';
 
 export const columns: ColumnDef<SystemConfig>[] = [

@@ -87,6 +87,12 @@ export type StartChickenBatch = {
     stageCode: string;
     startDate: string | Date;
     chickenDetailRequests: ChickenDetailRequest[];
+    minGrowDays: string | Date;
+    maxGrowDays: string | Date;
+};
+
+export type SplitChickenBatch = StartChickenBatch & {
+    parentBatchId: string;
 };
 
 export type FarmEmployeeResponse = FarmEmployee & {

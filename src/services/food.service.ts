@@ -1,4 +1,4 @@
-import { CreateFood, CreateFoodSchema } from './../utils/schemas/food.schema';
+import { CreateFood } from './../utils/schemas/food.schema';
 import { Food } from '@/utils/schemas/food.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';

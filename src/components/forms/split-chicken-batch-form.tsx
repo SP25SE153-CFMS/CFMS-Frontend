@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { AlertCircle, CalendarIcon, Plus, Trash2 } from 'lucide-react';
@@ -10,8 +12,8 @@ import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { getChickenTypes } from '@/services/category.service';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getGrowthStages } from '@/services/growth-stage.service';
-import { startChickenBatch } from '@/services/chicken-batch.service';
-import { ChickenDetailRequest, StartChickenBatch } from '@/utils/types/custom.type';
+import { splitChickenBatch } from '@/services/chicken-batch.service';
+import { ChickenDetailRequest, SplitChickenBatch } from '@/utils/types/custom.type';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
     Select,
@@ -27,10 +29,18 @@ import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { formatDate } from '@/utils/functions';
 import { addDays } from 'date-fns';
 import { DateRange } from 'react-day-picker';
+import { getChickenCoopsByBreedingAreaId } from '@/services/chicken-coop.service';
 
-export default function StartChickenBatchForm({ closeDialog }: { closeDialog: () => void }) {
+export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: () => void }) {
     const queryClient = useQueryClient();
-    const { chickenCoopId }: { chickenCoopId: string } = useParams();
+    const { chickenBatchId }: { chickenBatchId: string } = useParams();
+
+    const { data: chickenCoops } = useQuery({
+        queryKey: ['chickenCoops'],
+        queryFn: () =>
+            getChickenCoopsByBreedingAreaId(sessionStorage.getItem('breedingAreaId') ?? ''),
+    });
+
     const { data: chickenTypes } = useQuery({
         queryKey: ['chickenTypes'],
         queryFn: () => getChickenTypes(),
@@ -42,6 +52,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
     });
 
     const [chickenId, setChickenId] = useState('');
+    const [chickenCoopId, setChickenCoopId] = useState('');
     const [startDate, setStartDate] = useState<Date>(new Date());
     const [chickenTypeId, setChickenTypeId] = useState('');
     const [chickenDetailRequests, setChickenDetailRequests] = useState<ChickenDetailRequest[]>([
@@ -58,7 +69,8 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const formData: StartChickenBatch = {
+        const formData: SplitChickenBatch = {
+            parentBatchId: chickenBatchId,
             chickenCoopId,
             chickenBatchName: (e.target as HTMLFormElement).chickenBatchName.value,
             stageCode:
@@ -71,9 +83,9 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
         };
 
         try {
-            const response = await startChickenBatch(formData);
+            const response = await splitChickenBatch(formData);
             toast.success(response.message);
-            queryClient.invalidateQueries({ queryKey: ['chickenCoop', chickenCoopId] });
+            queryClient.invalidateQueries({ queryKey: ['chickenBatch', chickenBatchId] });
             closeDialog();
         } catch (error: any) {
             toast.error(error?.response?.data?.message || 'Có lỗi xảy ra');
@@ -84,6 +96,26 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
         <form className="space-y-5" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div className="space-y-4">
+                    {/* Chicken coop */}
+                    <div className="*:not-first:mt-2">
+                        <Label>Chuồng tiếp nhận</Label>
+                        <Select defaultValue={chickenCoopId} onValueChange={setChickenCoopId}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Chọn chuồng tiếp nhận" />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-72">
+                                {chickenCoops?.map((coop) => (
+                                    <SelectItem key={coop.chickenCoopId} value={coop.chickenCoopId}>
+                                        {coop.chickenCoopName}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <p className="text-[0.8rem] text-muted-foreground">
+                            Đây là chuồng mà lứa nuôi sẽ được lưu sau khi tách lứa
+                        </p>
+                    </div>
+
                     {/* Chicken batch name */}
                     <div className="*:not-first:mt-2">
                         <Label htmlFor={`chickenBatchName`}>Tên lứa nuôi</Label>

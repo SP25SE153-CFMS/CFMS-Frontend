@@ -9,13 +9,14 @@ import {
     FileText,
     Info,
     InfoIcon,
+    Split,
     Tag,
     TrendingUp,
     Type,
 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import dayjs from 'dayjs';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { chickenBatchStatusLabels, chickenBatchStatusVariant } from '@/utils/enum/status.enum';
@@ -36,8 +37,20 @@ import InfoItem from '@/components/info-item';
 import { Button } from '@/components/ui/button';
 import ChickenDetailsDialog from '@/components/chicken-details-dialog';
 import { GrowthStage } from '@/utils/schemas/growth-stage.schema';
+import {
+    Dialog,
+    DialogDescription,
+    DialogTitle,
+    DialogHeader,
+    DialogContent,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import SplitChickenBatchForm from '@/components/forms/split-chicken-batch-form';
+
 export default function Page() {
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
+
+    const [open, setOpen] = useState(false);
 
     const { data: chickenBatch, isLoading } = useQuery({
         queryKey: ['chickenBatch', chickenBatchId],
@@ -129,6 +142,26 @@ export default function Page() {
                                 icon={<FileText size={16} />}
                             />
                         </div>
+
+                        <CardFooter>
+                            <Dialog open={open} onOpenChange={setOpen}>
+                                <DialogTrigger asChild>
+                                    <Button variant="default" className="w-full gap-2">
+                                        <Split size={16} />
+                                        Tách lứa nuôi
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-4xl">
+                                    <DialogHeader>
+                                        <DialogTitle>Tách lứa nuôi</DialogTitle>
+                                        <DialogDescription>
+                                            Hãy nhập các thông tin dưới đây để tách lứa nuôi
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <SplitChickenBatchForm closeDialog={() => setOpen(false)} />
+                                </DialogContent>
+                            </Dialog>
+                        </CardFooter>
                     </Card>
 
                     {/* Chicken Details */}

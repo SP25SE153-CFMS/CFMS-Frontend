@@ -134,7 +134,7 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
         const totalAreaForWarehouse = 0;
 
         return convertedFarmArea - totalAreaForBreedingAreas - totalAreaForWarehouse;
-    }, [farms, form.watch('farmId'), form.watch('areaUnitId'), queryClient]);
+    }, [farms, form, queryClient]);
 
     return (
         <Form {...form}>
