@@ -17,6 +17,7 @@ import { createShift, updateShift } from '@/services/shift.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TimePicker } from '../ui/time-picker';
+import { Loader2 } from 'lucide-react';
 
 interface ShiftFormProps {
     defaultValues?: Partial<Shift>;
@@ -123,7 +124,8 @@ export default function ShiftForm({ defaultValues, closeDialog }: ShiftFormProps
                     />
                 </div>
 
-                <Button type="submit" className="mx-auto mt-6 w-60">
+                <Button type="submit" className="mx-auto mt-6 w-60" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Gửi
                 </Button>
             </form>

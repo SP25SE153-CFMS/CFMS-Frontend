@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { ChickenBatchStatus, chickenBatchStatusVariant } from '@/utils/enum/status.enum';
 import AutoForm from '../auto-form';
-
+import { Loader2 } from 'lucide-react';
 interface ChickenBatchFormProps {
     defaultValues?: Partial<ChickenBatch>;
     closeDialog: () => void;
@@ -90,7 +90,12 @@ export default function ChickenBatchForm({
                 },
             }}
         >
-            <Button type="submit" className="mx-auto w-60 relative left-1/2 -translate-x-1/2">
+            <Button
+                type="submit"
+                className="mx-auto w-60 relative left-1/2 -translate-x-1/2"
+                disabled={mutation.isPending}
+            >
+                {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 Gửi
             </Button>
         </AutoForm>

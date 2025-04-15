@@ -16,9 +16,9 @@ axiosInstance.interceptors.response.use(
     (error) => {
         // TODO: Handle error here
         // For example, redirect to login page if the access token is expired
-        if (error.response?.status === 401) {
-            window.location.href = config.routes.signIn;
-        }
+        // if (error.response?.status === 401) {
+        //     window.location.href = config.routes.signIn;
+        // }
 
         return Promise.reject(error);
     },

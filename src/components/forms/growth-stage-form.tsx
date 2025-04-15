@@ -24,6 +24,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
 import { Textarea } from '../ui/textarea';
+import { Loader2 } from 'lucide-react';
 
 interface GrowthStageFormProps {
     defaultValues?: Partial<GrowthStage>;
@@ -205,7 +206,8 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                         )}
                     />
                 </div>
-                <Button type="submit" className="mx-auto mt-6 w-60">
+                <Button type="submit" className="mx-auto mt-6 w-60" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Gửi
                 </Button>
             </form>

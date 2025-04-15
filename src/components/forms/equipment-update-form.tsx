@@ -12,7 +12,7 @@ import { SubCategory } from '@/utils/schemas/sub-category.schema';
 import { getSubMaterial, getSubSize, getSubWeight } from '@/services/category.service';
 import { Button } from '../ui/button';
 import { generateCode } from '@/utils/functions/generate-code.function';
-
+import { Loader2 } from 'lucide-react';
 interface UpdateEquipmentProps {
     equipment: Equipment;
     closeDialog: () => void;
@@ -363,7 +363,12 @@ export default function UpdateEquipmentForm({ equipment, closeDialog }: UpdateEq
                     />
                 </div>
 
-                <Button type="submit" className="ml-auto mt-6 w-40 flex">
+                <Button
+                    type="submit"
+                    className="ml-auto mt-6 w-40 flex"
+                    disabled={mutation.isPending}
+                >
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Cập nhật
                 </Button>
             </form>

@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { SubCategory } from '@/utils/schemas/sub-category.schema';
 import { getSubDisease } from '@/services/category.service';
 import { generateCode } from '@/utils/functions/generate-code.function';
+import { Loader2 } from 'lucide-react';
 
 interface UpdateMedicineProps {
     medicine: Medicine;
@@ -246,7 +247,12 @@ export default function UpdateMedicineForm({ medicine, closeModal }: UpdateMedic
                     />
                 </div>
 
-                <Button type="submit" className="ml-auto mt-6 w-40 flex">
+                <Button
+                    type="submit"
+                    className="ml-auto mt-6 w-40 flex"
+                    disabled={mutation.isPending}
+                >
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Cập nhật
                 </Button>
             </form>

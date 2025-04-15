@@ -20,7 +20,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { CategoryStatus, categoryStatusLabels } from '@/utils/enum/status.enum';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
-
+import { Loader2 } from 'lucide-react';
 interface CategoryFormProps {
     defaultValues?: Partial<Category>;
     closeDialog: () => void;
@@ -159,7 +159,10 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
                     )}
                 />
 
-                <Button type="submit">Gửi</Button>
+                <Button type="submit" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                    Gửi
+                </Button>
             </form>
         </Form>
     );

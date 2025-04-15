@@ -11,21 +11,11 @@ import Image from 'next/image';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { getUsers } from '@/services/user.service';
 import { getConfigs } from '@/services/config.service';
-import {
-    Dialog,
-    DialogTitle,
-    DialogDescription,
-    DialogHeader,
-    DialogContent,
-} from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { ConfigForm } from '@/components/config-form';
-import { useState } from 'react';
 
 export default function Page() {
-    const [open, setOpen] = useState(false);
-    const onOpenChange = (val: boolean) => setOpen(val);
-    const openModal = () => setOpen(true);
+    // const [open, setOpen] = useState(false);
+    // const onOpenChange = (val: boolean) => setOpen(val);
+    // const openModal = () => setOpen(true);
 
     const { data: configs, isLoading } = useQuery({
         queryKey: ['configs'],
@@ -87,7 +77,7 @@ export default function Page() {
                     >
                         <span>Tải file</span> <Download size={18} />
                     </Button>
-                    <Button className="space-x-1" onClick={openModal}>
+                    {/* <Button className="space-x-1" onClick={openModal}>
                         <span>Tạo</span> <Plus size={18} />
                     </Button>
                     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -102,7 +92,7 @@ export default function Page() {
                                 <ConfigForm closeDialog={() => setOpen(false)} />
                             </ScrollArea>
                         </DialogContent>
-                    </Dialog>
+                    </Dialog> */}
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">

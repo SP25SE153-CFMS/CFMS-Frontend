@@ -11,6 +11,7 @@ import { updateFood } from '@/services/food.service';
 import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
 import { generateCode } from '@/utils/functions/generate-code.function';
+import { Loader2 } from 'lucide-react';
 
 interface UpdateFoodProps {
     food: Food;
@@ -172,7 +173,12 @@ export default function UpdateFoodForm({ food, closeModal }: UpdateFoodProps) {
                     />
                 </div>
 
-                <Button type="submit" className="ml-auto mt-6 w-40 flex">
+                <Button
+                    type="submit"
+                    className="ml-auto mt-6 w-40 flex"
+                    disabled={mutation.isPending}
+                >
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Cập nhật
                 </Button>
             </form>

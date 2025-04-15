@@ -29,6 +29,7 @@ import { createSupplier, updateSupplier } from '@/services/supplier.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { generateCode } from '@/utils/functions/generate-code.function';
+import { Loader2 } from 'lucide-react';
 
 interface SupplierFormProps {
     defaultValues?: Partial<Supplier>;
@@ -249,7 +250,10 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
                         <Button type="button" variant="outline" onClick={closeDialog}>
                             <X className="mr-2 h-4 w-4" /> Hủy
                         </Button>
-                        <Button type="submit">
+                        <Button type="submit" disabled={mutation.isPending}>
+                            {mutation.isPending && (
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            )}
                             <Save className="mr-2 h-4 w-4" /> Lưu
                         </Button>
                     </CardFooter>

@@ -13,9 +13,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { ConfigSchema, SystemConfig } from '@/schemas/config.schema';
+import { ConfigSchema, CreateConfigSchema, SystemConfig } from '@/schemas/config.schema';
 import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, Loader2 } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
@@ -34,7 +34,7 @@ interface ConfigFormProps {
 export function ConfigForm({ defaultValues, closeDialog }: ConfigFormProps) {
     // Initialize form
     const form = useForm<SystemConfig>({
-        resolver: zodResolver(ConfigSchema),
+        resolver: zodResolver(defaultValues ? ConfigSchema : CreateConfigSchema),
         defaultValues: {
             settingName: '',
             settingValue: 0,
@@ -86,7 +86,11 @@ export function ConfigForm({ defaultValues, closeDialog }: ConfigFormProps) {
                             <FormItem>
                                 <FormLabel>Tên cấu hình</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Nhập tên cấu hình" {...field} />
+                                    <Input
+                                        placeholder="Nhập tên cấu hình"
+                                        {...field}
+                                        disabled={!!defaultValues}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -215,7 +219,8 @@ export function ConfigForm({ defaultValues, closeDialog }: ConfigFormProps) {
                     />
                 </div>
 
-                <Button type="submit" className="float-right">
+                <Button type="submit" className="float-right" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Lưu cấu hình
                 </Button>
             </form>

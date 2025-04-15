@@ -17,6 +17,7 @@ import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 import { generateCode } from '@/utils/functions/generate-code.function';
+import { Loader2 } from 'lucide-react';
 
 interface CreateFoodProps {
     closeModal: () => void;
@@ -316,7 +317,12 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                     </div>
                 </div>
 
-                <Button type="submit" className="ml-auto mt-6 w-40 flex">
+                <Button
+                    type="submit"
+                    className="ml-auto mt-6 w-40 flex"
+                    disabled={mutation.isPending}
+                >
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Tạo
                 </Button>
             </form>

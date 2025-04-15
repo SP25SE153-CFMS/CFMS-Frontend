@@ -27,7 +27,7 @@ import { getSubCategoryByCategoryType } from '@/utils/functions/category.functio
 import { CategoryType } from '@/utils/enum/category.enum';
 import { CommonStatus } from '@/utils/enum/status.enum';
 import { generateCode } from '@/utils/functions/generate-code.function';
-
+import { Loader2 } from 'lucide-react';
 interface ChickenFormProps {
     defaultValues?: Partial<Chicken>;
     closeDialog: () => void;
@@ -266,7 +266,8 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                         )}
                     /> */}
                 </div>
-                <Button type="submit" className="mx-auto mt-6 w-60">
+                <Button type="submit" className="mx-auto mt-6 w-60" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Gửi
                 </Button>
             </form>

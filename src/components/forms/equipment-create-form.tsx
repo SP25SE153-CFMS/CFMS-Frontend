@@ -25,7 +25,7 @@ import { createEquipmentInWare } from '@/services/equipment.service';
 import toast from 'react-hot-toast';
 import { Button } from '../ui/button';
 import { generateCode } from '@/utils/functions/generate-code.function';
-
+import { Loader2 } from 'lucide-react';
 interface CreateEquipmentProps {
     closeDialog: () => void;
 }
@@ -496,7 +496,12 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                     />
                 </div>
 
-                <Button type="submit" className="ml-auto mt-6 w-40 flex">
+                <Button
+                    type="submit"
+                    className="ml-auto mt-6 w-40 flex"
+                    disabled={mutation.isPending}
+                >
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Tạo
                 </Button>
             </form>
