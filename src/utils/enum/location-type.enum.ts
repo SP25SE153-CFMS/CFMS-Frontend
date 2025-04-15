@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export enum LocationType {
     WAREHOUSE = 'WARE',
     CHICKEN_COOP = 'COOP',

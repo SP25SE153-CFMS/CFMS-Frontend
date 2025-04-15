@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
-import { AlertCircle, CalendarIcon, Plus, Trash2 } from 'lucide-react';
+import { AlertCircle, CalendarIcon, Loader2, Plus, Trash2 } from 'lucide-react';
 import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
 
@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { getChickenTypes } from '@/services/category.service';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getGrowthStages } from '@/services/growth-stage.service';
 import { splitChickenBatch } from '@/services/chicken-batch.service';
 import { ChickenDetailRequest, SplitChickenBatch } from '@/utils/types/custom.type';
@@ -63,6 +63,18 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
 
     const chickens = chickenTypes?.find((type) => type.subCategoryId === chickenTypeId)?.chickens;
 
+    const mutation = useMutation({
+        mutationFn: (formData: SplitChickenBatch) => splitChickenBatch(formData),
+        onSuccess: (response) => {
+            toast.success(response.message);
+            queryClient.invalidateQueries({ queryKey: ['chickenBatch', chickenBatchId] });
+            closeDialog();
+        },
+        onError: (error: any) => {
+            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra');
+        },
+    });
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -80,14 +92,7 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
             notes,
         };
 
-        try {
-            const response = await splitChickenBatch(formData);
-            toast.success(response.message);
-            queryClient.invalidateQueries({ queryKey: ['chickenBatch', chickenBatchId] });
-            closeDialog();
-        } catch (error: any) {
-            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra');
-        }
+        mutation.mutate(formData);
     };
 
     return (
@@ -425,7 +430,8 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
             </div>
 
             <div className="flex items-center justify-center">
-                <Button type="submit" className="block w-lg">
+                <Button type="submit" className="block w-lg" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Tách lứa nuôi
                 </Button>
             </div>

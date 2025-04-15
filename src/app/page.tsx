@@ -89,7 +89,7 @@ export default function Home() {
                         Giải pháp quản lý trang trại thông minh
                     </div>
                     <h1 className="leading-[inherit] text-5xl font-bold uppercase bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-primary to-gray-900 dark:from-gray-100 dark:via-primary dark:to-gray-100">
-                        Hệ Thống Quản Lý Trang Trại Gà
+                        Hệ Thống Quản Lý Trang Trại Vịt
                     </h1>
                     <p className="mb-8 mt-4 max-w-xl text-center text-lg dark:text-gray-300">
                         Bằng cách theo dõi sức khỏe của gà,
