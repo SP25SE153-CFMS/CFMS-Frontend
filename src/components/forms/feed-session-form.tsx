@@ -125,6 +125,7 @@ export default function FeedSessionForm({ defaultValues, closeDialog }: FeedSess
                                                 }
                                             }}
                                             initialFocus
+                                            disabled={(date) => date < new Date()}
                                             locale={vi}
                                         />
                                     </PopoverContent>

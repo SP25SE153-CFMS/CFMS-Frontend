@@ -6,7 +6,7 @@ import { Task } from '@/utils/schemas/task.schema';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { taskStatusLabels, taskStatusVariant } from '@/utils/enum/status.enum';
-import { DataTableRowActions } from './data-table-row-ations';
+import { DataTableRowActions } from './data-table-row-actions';
 import { getTaskType } from '@/utils/functions/category.function';
 
 export const columns: ColumnDef<Task>[] = [

@@ -528,6 +528,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                                     selected={field.value}
                                                     onSelect={field.onChange}
                                                     initialFocus
+                                                    disabled={(date) => date < new Date()}
                                                     locale={vi}
                                                 />
                                             </PopoverContent>
@@ -567,6 +568,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                                     selected={field.value}
                                                     onSelect={field.onChange}
                                                     initialFocus
+                                                    disabled={(date) => date < new Date()}
                                                     locale={vi}
                                                 />
                                             </PopoverContent>
@@ -583,6 +585,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                             pagedNavigation
                             numberOfMonths={3}
                             locale={vi}
+                            disabled={(date) => date < new Date()}
                             className="rounded-md border p-2 flex py-6 [&>div]:mx-auto"
                         />
                     </>
@@ -618,6 +621,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                             selected={field.value}
                                             onSelect={field.onChange}
                                             initialFocus
+                                            disabled={(date) => date < new Date()}
                                             locale={vi}
                                         />
                                     </PopoverContent>

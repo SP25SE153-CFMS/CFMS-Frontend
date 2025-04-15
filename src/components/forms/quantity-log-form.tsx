@@ -143,6 +143,7 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
                                             }
                                             onSelect={(date) => field.onChange(date?.toISOString())}
                                             initialFocus
+                                            disabled={(date) => date < new Date()}
                                             locale={vi}
                                         />
                                     </PopoverContent>

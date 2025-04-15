@@ -219,6 +219,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                             }
                                             onSelect={(date) => field.onChange(date?.toISOString())}
                                             initialFocus
+                                            disabled={(date) => date < new Date()}
                                             locale={vi}
                                         />
                                     </PopoverContent>
