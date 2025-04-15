@@ -10,7 +10,7 @@ import {
     DropdownMenuTrigger,
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { AlignRight } from 'lucide-react';
+import { AlignRight, Trash } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface BreedingAreaCardProps {
@@ -87,8 +87,9 @@ export default function BreedingAreaCard({
                                 setOpenDelete(true);
                                 setRow(area);
                             }}
+                            className="text-red-600"
                         >
-                            Xóa
+                            Xóa <Trash size={16} className="ml-auto" />
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

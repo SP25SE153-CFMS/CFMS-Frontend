@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/dialog';
 import BreedingAreaForm from '@/components/forms/breeding-area-form';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { deleteBreedingArea, getBreedingAreasByFarmId } from '@/services/breeding-area.service';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -42,18 +42,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import toast from 'react-hot-toast';
-import {
-    AlertDialog,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
 import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import BreedingAreaCard from './card';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import Link from 'next/link';
+import DeleteConfirmDialog from '@/components/delete-confirm-dialog';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -81,12 +75,21 @@ export default function Page() {
         setOpenUpdate(true);
     };
 
-    const handleDelete = async (breedingAreaId: string) => {
-        await deleteBreedingArea(breedingAreaId).then(() => {
+    const mutation = useMutation({
+        mutationFn: deleteBreedingArea,
+        onSuccess: () => {
             toast.success('Đã xóa khu nuôi');
             refetch();
             setOpenDelete(false);
-        });
+        },
+        onError: (error: any) => {
+            console.error(error);
+            toast.error(error?.response?.data?.message);
+        },
+    });
+
+    const handleDelete = async (breedingAreaId: string) => {
+        mutation.mutate(breedingAreaId);
     };
 
     const [openUpdate, setOpenUpdate] = useState(false);
@@ -358,27 +361,14 @@ export default function Page() {
             </Dialog>
 
             {/* Delete Confirmation Dialog */}
-            <AlertDialog open={openDelete} onOpenChange={(val) => setOpenDelete(val)}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa khu nuôi này?
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <div className="flex justify-end space-x-2">
-                        <Button variant="outline" onClick={() => setOpenDelete(false)}>
-                            Hủy
-                        </Button>
-                        <Button
-                            variant="destructive"
-                            onClick={() => handleDelete(row?.breedingAreaId)}
-                        >
-                            Xóa
-                        </Button>
-                    </div>
-                </AlertDialogContent>
-            </AlertDialog>
+            <DeleteConfirmDialog
+                open={openDelete}
+                setOpen={setOpenDelete}
+                handleDelete={() => handleDelete(row.breedingAreaId)}
+                confirmValue={row.breedingAreaCode}
+                label="Mã khu nuôi"
+                isPending={mutation.isPending}
+            />
         </div>
     );
 }
