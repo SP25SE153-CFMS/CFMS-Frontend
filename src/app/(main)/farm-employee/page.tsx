@@ -33,7 +33,7 @@ export default function Page() {
     const onOpenChange = (val: boolean) => setOpen(val);
 
     const { data: farmEmployees, isLoading } = useQuery({
-        queryKey: ['farm-employees'],
+        queryKey: ['farmEmployees'],
         queryFn: () => getEmployeesByFarmId(getCookie(config.cookies.farmId) ?? ''),
         enabled: !!getCookie(config.cookies.farmId),
     });

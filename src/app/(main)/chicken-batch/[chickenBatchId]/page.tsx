@@ -311,11 +311,9 @@ export default function Page() {
 
             <Stepper
                 steps={chickenBatch?.growthBatches.map((batch) => batch.growthStage.stageName)}
-                activeStep={
-                    chickenBatch?.growthBatches.findIndex(
-                        (batch) => batch.growthStageId === chickenBatch.currentStageId,
-                    ) || 0
-                }
+                activeStep={chickenBatch?.growthBatches.findIndex(
+                    (batch) => batch.growthStageId === chickenBatch.currentStageId,
+                )}
                 visitStep={chickenBatch?.growthBatches.findIndex(
                     (batch) => batch.growthStageId === currentGrowthStage?.growthStageId,
                 )}

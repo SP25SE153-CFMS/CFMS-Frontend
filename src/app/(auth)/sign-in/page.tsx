@@ -24,7 +24,7 @@ export default function Page() {
     const form = useForm<SignInRequest>({
         resolver: zodResolver(SignInRequestSchema),
         defaultValues: {
-            mail: 'dung@gmail.com',
+            mail: 'duongtruong@gmail.com',
             password: '1',
         },
     });

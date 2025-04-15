@@ -7,7 +7,7 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import { Badge } from '@/components/ui/badge';
 import dayjs from 'dayjs';
 import { requestStatusLabels, requestStatusVariant } from '@/utils/enum/status.enum';
-import { DataTableRowActions } from './data-table-row-ations';
+import { DataTableRowActions } from './data-table-row-actions';
 import { User } from '@/utils/schemas/user.schema';
 import { getRequestType } from '@/utils/functions/category.function';
 
