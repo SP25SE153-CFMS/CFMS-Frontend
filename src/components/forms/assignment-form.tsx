@@ -74,7 +74,6 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
     const { data: farmEmployees } = useQuery({
         queryKey: ['farm-employees'],
         queryFn: () => getEmployeesByFarmId(getCookie(config.cookies.farmId) ?? ''),
-        enabled: !!getCookie(config.cookies.farmId),
     });
 
     // Query client

@@ -50,6 +50,6 @@ export const deleteNutritionPlanFromGrowthStage = async (
 ) => {
     const endpoint = PREFIX + '/delete-nutritionplan';
     const body = { growthStageId, nutritionPlanId };
-    const response = await put<Response<string>>(endpoint, body);
+    const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };

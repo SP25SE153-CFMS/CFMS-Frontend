@@ -76,11 +76,7 @@ import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { capitalizeFirstLetter } from '@/utils/functions';
 import dayjs from 'dayjs';
 import { TaskStatus } from '@/utils/enum/status.enum';
-
-const LOCATION_TYPES = [
-    { value: 'COOP', label: 'Chuồng nuôi' },
-    { value: 'WARE', label: 'Nhà kho' },
-];
+import { LOCATION_TYPES } from '@/utils/enum/location-type.enum';
 
 export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
     const router = useRouter();
@@ -132,8 +128,6 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
             ...defaultValues,
         },
     });
-
-    console.log(form.getValues());
 
     const { fields, append, remove } = useFieldArray({
         control: form.control,

@@ -133,14 +133,13 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                         onClick={() => setOpenDeleteNutritionPlan(true)}
-                        className="text-red-600"
                         disabled={!currentNutritionPlanOfGrowthStage}
                     >
-                        Xóa chế độ dinh dưỡng <Trash2 size={16} className="ml-auto" />
+                        Loại bỏ chế độ dinh dưỡng <Trash size={16} className="ml-auto" />
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
-                        Xóa CĐDD + GĐPT
-                        <Trash size={16} className="ml-auto" />
+                        Xóa giai đoạn phát triển
+                        <Trash2 size={16} className="ml-auto" />
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

@@ -1,6 +1,5 @@
 'use client';
 
-import { format } from 'date-fns';
 import { Box, Calendar, Clock, Egg, Home, Info, Package, Users } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -19,15 +18,13 @@ import { getTaskById } from '@/services/task.service';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { taskStatusLabels } from '@/utils/enum/status.enum';
+import { taskStatusLabels, taskStatusVariant } from '@/utils/enum/status.enum';
 import { getShifts } from '@/services/shift.service';
 import { getQuantityUnit } from '@/utils/functions/category.function';
-
-// Mock resource names - in a real app, these would be fetched from an API
-// const resourceNames = {
-//     '680f8752-9ea3-4a0a-917d-9afb2cfdcb30': 'Hộp đựng trứng',
-//     '63f244d1-c260-4bbb-b10a-c6a7761e9aab': 'Găng tay',
-// };
+import { TaskResourceResponse } from '@/utils/types/custom.type';
+import { formatDate } from '@/utils/functions';
+import { getWarehouses } from '@/services/warehouse.service';
+import { Badge } from '@/components/ui/badge';
 
 export default function TaskDetail() {
     const { taskId }: { taskId: string } = useParams();
@@ -37,9 +34,14 @@ export default function TaskDetail() {
         queryFn: () => getTaskById(taskId),
     });
 
-    const { data: shiftNames } = useQuery({
-        queryKey: ['shiftNames'],
+    const { data: shifts } = useQuery({
+        queryKey: ['shifts'],
         queryFn: () => getShifts(),
+    });
+
+    const { data: warehouses } = useQuery({
+        queryKey: ['warehouses'],
+        queryFn: () => getWarehouses(),
     });
 
     if (isLoading) {
@@ -51,7 +53,7 @@ export default function TaskDetail() {
         );
     }
 
-    if (!task || !shiftNames) {
+    if (!task || !shifts) {
         return (
             <div className="w-full h-full flex items-center justify-center">
                 <Card className="px-36 py-8">
@@ -73,8 +75,32 @@ export default function TaskDetail() {
     //     router.push(config.routes.task);
     // };
 
-    const formatDate = (dateString: string) => {
-        return format(new Date(dateString), 'dd/MM/yyyy');
+    // const getChickenCoopName = (coopId: string | undefined) => {
+    //     if (!coopId) return 'Chuồng không xác định';
+
+    //     const chickenCoops: ChickenCoopResponse[] = JSON.parse(
+    //         sessionStorage.getItem('chickenCoops') || '[]',
+    //     );
+
+    //     return chickenCoops.find((coop) => coop.chickenCoopId === coopId)?.chickenCoopName;
+    // };
+
+    // const getWarehouseName = (wareId: string | undefined) => {
+    //     if (!wareId || !warehouses) return 'Kho không xác định';
+
+    //     const warehouse = warehouses.find((ware) => ware.wareId === wareId);
+    //     return warehouse?.warehouseName;
+    // };
+
+    const getResourceName = (taskRes: TaskResourceResponse) => {
+        if (taskRes.resource?.equipment) {
+            return taskRes.resource?.equipment.equipmentName;
+        } else if (taskRes.resource?.food) {
+            return taskRes.resource?.food.foodName;
+        } else if (taskRes.resource?.medicine) {
+            return taskRes.resource?.medicine.medicineName;
+        }
+        return 'Vật phẩm khác';
     };
 
     return (
@@ -82,7 +108,7 @@ export default function TaskDetail() {
             <div className="flex flex-col md:flex-row justify-between items-start gap-6">
                 <div className="w-full md:w-2/3">
                     <Card className="w-full">
-                        <CardHeader className="pb-2">
+                        <CardHeader className="pb-4">
                             <div className="flex justify-between items-start">
                                 <div>
                                     <CardTitle className="text-2xl flex items-center gap-2">
@@ -90,7 +116,9 @@ export default function TaskDetail() {
                                         {task.taskName}
                                     </CardTitle>
                                 </div>
-                                {taskStatusLabels[task.status]}
+                                <Badge variant={taskStatusVariant[task.status]}>
+                                    {taskStatusLabels[task.status]}
+                                </Badge>
                             </div>
                         </CardHeader>
                         <CardContent>
@@ -99,7 +127,7 @@ export default function TaskDetail() {
                                     <h3 className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1">
                                         <Info className="h-4 w-4" /> Mô tả
                                     </h3>
-                                    <p>{task.description}</p>
+                                    <p>{task.description || 'Không có mô tả'}</p>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -113,19 +141,23 @@ export default function TaskDetail() {
                                         <h3 className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1">
                                             <Home className="h-4 w-4" /> Vị trí
                                         </h3>
-                                        <p>Chuồng số 3</p>
+                                        <p>
+                                            {task.taskLocation?.coop?.chickenCoopName ||
+                                                task.taskLocation?.ware?.warehouseName ||
+                                                'Không xác định'}
+                                        </p>
                                     </div>
                                 </div>
 
                                 <Separator />
 
                                 <h3 className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1">
-                                    <Box className="h-4 w-4" /> Tài nguyên
+                                    <Box className="h-4 w-4" /> Vật phẩm
                                 </h3>
                                 <Table>
                                     <TableHeader>
                                         <TableRow>
-                                            <TableHead>Tên tài nguyên</TableHead>
+                                            <TableHead>Tên vật phẩm</TableHead>
                                             <TableHead className="text-right">Số lượng</TableHead>
                                             <TableHead className="text-right">Đơn vị</TableHead>
                                         </TableRow>
@@ -134,20 +166,7 @@ export default function TaskDetail() {
                                         {task.taskResources.map((taskRes) => (
                                             <TableRow key={taskRes.taskResourceId}>
                                                 <TableCell className="font-medium">
-                                                    {taskRes.resource?.resourceType ===
-                                                        'Thực phẩm' && taskRes.resource?.foodName}
-                                                    {taskRes.resource?.resourceType ===
-                                                        'Dược phẩm' &&
-                                                        taskRes.resource?.medicineName}
-                                                    {taskRes.resource?.resourceType ===
-                                                        'Thiết bị' &&
-                                                        taskRes.resource?.equipmentName}
-                                                    {![
-                                                        'Thực phẩm',
-                                                        'Dược phẩm',
-                                                        'Thiết bị',
-                                                    ].includes(taskRes.resource?.resourceType) &&
-                                                        'Tài nguyên khác'}
+                                                    {getResourceName(taskRes)}
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     {taskRes.quantity}
@@ -170,6 +189,7 @@ export default function TaskDetail() {
                                         <TableRow>
                                             <TableHead>Ngày</TableHead>
                                             <TableHead>Ca làm việc</TableHead>
+                                            <TableHead>Thời gian</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -177,9 +197,21 @@ export default function TaskDetail() {
                                             <TableRow key={shift.shiftScheduleId}>
                                                 <TableCell>{formatDate(shift.date)}</TableCell>
                                                 <TableCell>
-                                                    {shiftNames.find(
-                                                        (s) => s.shiftId === shift.shiftId,
-                                                    )?.shiftName || 'Ca không xác định'}
+                                                    {shifts.find((s) => s.shiftId === shift.shiftId)
+                                                        ?.shiftName || 'Ca không xác định'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        shifts.find(
+                                                            (s) => s.shiftId === shift.shiftId,
+                                                        )?.startTime
+                                                    }{' '}
+                                                    -{' '}
+                                                    {
+                                                        shifts.find(
+                                                            (s) => s.shiftId === shift.shiftId,
+                                                        )?.endTime
+                                                    }
                                                 </TableCell>
                                             </TableRow>
                                         ))}

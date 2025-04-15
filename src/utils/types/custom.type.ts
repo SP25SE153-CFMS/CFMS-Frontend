@@ -31,6 +31,7 @@ import { TaskResource } from '../schemas/task-resource.schema';
 import { Warehouse } from '../schemas/warehouse.schema';
 import { CreateInventoryReceipt } from '../schemas/inventory-receipt.schema';
 import { CreateInventoryReceiptDetail } from '../schemas/inventory-receipt-detail.schema';
+import { TaskLocation } from '../schemas/task-location.schema';
 
 export type EntityAudit = {
     isDeleted: boolean;
@@ -133,6 +134,13 @@ export type TaskResourceResponse = TaskResource & {
     resource: ResourceResponse;
 };
 
+export type TaskLocationResponse = TaskLocation & {
+    coopId?: string;
+    coop?: ChickenCoop;
+    wareId?: string;
+    ware?: Warehouse;
+};
+
 export type TaskResponse = Task & {
     assignments: Assignment[];
     startWorkDate: string;
@@ -140,6 +148,7 @@ export type TaskResponse = Task & {
     shiftSchedules: ShiftSchedule[];
     taskResources: TaskResourceResponse[];
     taskType: SubCategory;
+    taskLocation: TaskLocationResponse;
 };
 
 export type ChickenDetailRequest = {
