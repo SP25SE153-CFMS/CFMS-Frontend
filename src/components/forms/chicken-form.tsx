@@ -28,6 +28,7 @@ import { CategoryType } from '@/utils/enum/category.enum';
 import { CommonStatus } from '@/utils/enum/status.enum';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { Loader2 } from 'lucide-react';
+import { WareStockResponse } from '@/utils/types/custom.type';
 interface ChickenFormProps {
     defaultValues?: Partial<Chicken>;
     closeDialog: () => void;
@@ -45,6 +46,10 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
             description: '',
             status: CommonStatus.ACTIVE,
             chickenTypeId: '',
+            unitId: '',
+            packageId: '',
+            packageSize: 0,
+            wareId: sessionStorage.getItem('wareId') || '',
             ...defaultValues,
         },
     });
@@ -70,7 +75,11 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
 
     // Form submit handler
     async function onSubmit(values: Chicken) {
-        mutation.mutate(values);
+        const newValues = {
+            ...values,
+            id: values.chickenId,
+        };
+        mutation.mutate(defaultValues ? newValues : values);
     }
 
     const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -210,7 +219,7 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                                         defaultValue={field.value}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Chọn trạng thái" />
+                                            <SelectValue placeholder="Chọn loại gà" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {getSubCategoryByCategoryType(CategoryType.CHICKEN).map(
@@ -229,6 +238,136 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                                 <FormMessage />
                             </FormItem>
                         )}
+                    />
+
+                    {/* Unit Select */}
+                    <FormField
+                        control={form.control}
+                        name="unitId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Đơn vị</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn đơn vị" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.E_QUANTITY_UNIT,
+                                            ).map((u) => (
+                                                <SelectItem
+                                                    key={u.subCategoryId}
+                                                    value={u.subCategoryId}
+                                                >
+                                                    {u.subCategoryName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Package Select */}
+                    <FormField
+                        control={form.control}
+                        name="packageId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Đơn vị đóng gói</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn đơn vị đóng gói" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.PACKAGE_UNIT,
+                                            ).map((p) => (
+                                                <SelectItem
+                                                    key={p.subCategoryId}
+                                                    value={p.subCategoryId}
+                                                >
+                                                    {p.subCategoryName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Package size */}
+                    <FormField
+                        control={form.control}
+                        name="packageSize"
+                        render={({ field }) => {
+                            return (
+                                <FormItem>
+                                    <FormLabel>Quy cách tính</FormLabel>
+                                    <FormControl>
+                                        <div>
+                                            <Input
+                                                {...field}
+                                                value="0"
+                                                disabled
+                                                className="bg-background"
+                                            />
+                                        </div>
+                                    </FormControl>
+                                </FormItem>
+                            );
+                        }}
+                    />
+
+                    {/* Ware */}
+                    <FormField
+                        control={form.control}
+                        name="wareId"
+                        render={({ field }) => {
+                            const wares = JSON.parse(
+                                sessionStorage.getItem('wares') || '[]',
+                            ) as WareStockResponse[];
+                            const ware = wares.find((ware) => ware.wareId === field.value);
+                            console.log(wares, ware);
+
+                            return (
+                                <FormItem>
+                                    <FormLabel>Kho</FormLabel>
+                                    <FormControl>
+                                        {/* <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                            disabled
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Chọn đơn vị đóng gói" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {wares?.map((ware) => (
+                                                    <SelectItem
+                                                        key={ware.wareId}
+                                                        value={ware.wareId}
+                                                    >
+                                                        {ware.warehouseName}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select> */}
+                                        <Input type="text" value={ware?.warehouseName} disabled />
+                                    </FormControl>
+                                </FormItem>
+                            );
+                        }}
                     />
 
                     {/* Created Date */}

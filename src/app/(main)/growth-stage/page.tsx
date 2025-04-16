@@ -42,7 +42,11 @@ export default function Page() {
 
     const { data: growthStages, isLoading } = useQuery({
         queryKey: ['growthStages'],
-        queryFn: () => getGrowthStages(),
+        queryFn: async () => {
+            const growthStages = await getGrowthStages();
+            sessionStorage.setItem('growthStages', JSON.stringify(growthStages));
+            return growthStages;
+        },
     });
 
     useQuery({

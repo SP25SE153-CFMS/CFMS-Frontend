@@ -42,14 +42,14 @@ export default function BreedingAreaCard({
                 </Badge> */}
                 <Avatar className="w-16 h-16 rounded-sm object-contain">
                     <AvatarImage
-                        src={area.imageUrl ?? '/breeding-area.avif'}
+                        src={area.imageUrl ?? '/breeding-area.png'}
                         alt={area.breedingAreaCode}
                         className="rounded-sm object-contain"
                     />
                     <AvatarFallback className="rounded-sm">{area.breedingAreaCode}</AvatarFallback>
                 </Avatar>
                 {/* <Image
-                    src={area.imageUrl ?? '/breeding-area.avif'}
+                    src={area.imageUrl ?? '/breeding-area.png'}
                     alt={area.breedingAreaCode}
                     className="w-16 h-16 rounded-sm object-contain"
                     width={100}

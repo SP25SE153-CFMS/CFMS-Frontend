@@ -88,7 +88,7 @@ export const columns: ColumnDef<BreedingArea>[] = [
             return (
                 <div className="flex items-center gap-2">
                     <Image
-                        src={row.getValue('imageUrl') ?? '/breeding-area.avif'}
+                        src={row.getValue('imageUrl') ?? '/breeding-area.png'}
                         alt={row.getValue('breedingAreaCode')}
                         className="rounded-sm"
                         width={100}

@@ -36,7 +36,6 @@ import { getChickenType } from '@/utils/functions/category.function';
 import InfoItem from '@/components/info-item';
 import { Button } from '@/components/ui/button';
 import ChickenDetailsDialog from '@/components/chicken-details-dialog';
-import { GrowthStage } from '@/utils/schemas/growth-stage.schema';
 import {
     Dialog,
     DialogDescription,
@@ -46,6 +45,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import SplitChickenBatchForm from '@/components/forms/split-chicken-batch-form';
+import { GrowthStageResponse } from '@/utils/types/custom.type';
 
 export default function Page() {
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
@@ -60,7 +60,7 @@ export default function Page() {
 
     const chicken = chickenBatch?.chicken;
 
-    const [currentGrowthStage, setCurrentGrowthStage] = useState<GrowthStage | null>(
+    const [currentGrowthStage, setCurrentGrowthStage] = useState<GrowthStageResponse | null>(
         chickenBatch?.growthBatches[0]?.growthStage || null,
     );
 

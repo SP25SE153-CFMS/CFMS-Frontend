@@ -42,6 +42,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { getNutritionPlans } from '@/services/nutrition-plan.service';
+import { GrowthStageResponse } from '@/utils/types/custom.type';
 
 interface Props<T> {
     row: Row<T>;
@@ -61,7 +62,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [nutritionPlanId, setNutritionPlanId] = useState<string>('');
 
     const growthStageId = (row.original as GrowthStage).growthStageId;
-    const currentNutritionPlanOfGrowthStage = (row.original as GrowthStage).nutritionPlanId;
+    const currentNutritionPlanOfGrowthStage = (row.original as GrowthStageResponse).nutritionPlanId;
 
     const queryClient = useQueryClient();
 

@@ -3,35 +3,36 @@
 import { DataTable } from '@/components/table/data-table';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
-import { Download } from 'lucide-react';
+import { Download, Plus } from 'lucide-react';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+} from '@/components/ui/dialog';
+import { useState } from 'react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import ChickenForm from '@/components/forms/chicken-form';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { getChickens } from '@/services/chicken.service';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
-import { getUsers } from '@/services/user.service';
-import { getConfigs } from '@/services/config.service';
 
 export default function Page() {
-    // const [open, setOpen] = useState(false);
-    // const onOpenChange = (val: boolean) => setOpen(val);
-    // const openModal = () => setOpen(true);
+    const [open, setOpen] = useState(false);
 
-    const { data: configs, isLoading } = useQuery({
-        queryKey: ['configs'],
-        queryFn: () => getConfigs(),
+    const openModal = () => setOpen(true);
+    const onOpenChange = (val: boolean) => setOpen(val);
+
+    const { data: chickens, isLoading } = useQuery({
+        queryKey: ['chickens'],
+        queryFn: () => getChickens(),
     });
 
-    useQuery({
-        queryKey: ['users'],
-        queryFn: async () => {
-            const users = await getUsers();
-            sessionStorage.setItem('users', JSON.stringify(users));
-            return users;
-        },
-    });
-
-    // Check if configs are loading
+    // Check if chickens is loading
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -40,8 +41,8 @@ export default function Page() {
         );
     }
 
-    // Check if configs data exists
-    if (!configs) {
+    // Check if chickens is not null, undefined
+    if (!chickens) {
         return (
             <div className="w-full h-full flex items-center justify-center">
                 <Card className="px-36 py-8">
@@ -62,41 +63,39 @@ export default function Page() {
         <div>
             <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight">
-                        Danh sách cấu hình hệ thống
-                    </h2>
+                    <h2 className="text-2xl font-bold tracking-tight">Quản lý giống gà</h2>
                     <p className="text-muted-foreground">
-                        Danh sách tất cả các cấu hình trong hệ thống
+                        Danh sách tất cả các giống gà trong trang trại
                     </p>
                 </div>
                 <div className="flex gap-2">
                     <Button
                         variant="outline"
                         className="space-x-1"
-                        onClick={() => downloadCSV(configs, 'configs.csv')}
+                        onClick={() => downloadCSV(chickens, 'chickens.csv')}
                     >
                         <span>Tải file</span> <Download size={18} />
                     </Button>
-                    {/* <Button className="space-x-1" onClick={openModal}>
+                    <Button className="space-x-1" onClick={openModal}>
                         <span>Tạo</span> <Plus size={18} />
                     </Button>
                     <Dialog open={open} onOpenChange={onOpenChange}>
-                        <DialogContent>
+                        <DialogContent className="max-w-2xl">
                             <DialogHeader>
-                                <DialogTitle>Tạo cấu hình mới</DialogTitle>
+                                <DialogTitle>Tạo giống gà mới</DialogTitle>
                                 <DialogDescription>
                                     Hãy nhập các thông tin dưới đây.
                                 </DialogDescription>
                             </DialogHeader>
                             <ScrollArea className="max-h-[600px]">
-                                <ConfigForm closeDialog={() => setOpen(false)} />
+                                <ChickenForm closeDialog={() => setOpen(false)} />
                             </ScrollArea>
                         </DialogContent>
-                    </Dialog> */}
+                    </Dialog>
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={configs} columns={columns} />
+                <DataTable data={chickens} columns={columns} />
             </div>
         </div>
     );

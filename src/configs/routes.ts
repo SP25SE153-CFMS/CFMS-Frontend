@@ -29,6 +29,7 @@ const routes = {
     resetPassword: '/reset-password',
     growthStage: '/growth-stage',
     chicken: '/chicken',
+    breeding: '/warehouse/breeding',
     task: '/task',
     createTask: '/task/create',
     assignment: '/assignment',
