@@ -94,6 +94,9 @@ export default function Ware() {
             case 'breeding':
                 route = config.routes.breeding;
                 break;
+            case 'havest_product':
+                route = config.routes.harvest;
+                break;
         }
         const url = `${route}?w=${wareId}&r=${resourceTypeId}`;
         router.push(url);

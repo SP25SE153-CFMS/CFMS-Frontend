@@ -261,7 +261,7 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                                         </SelectTrigger>
                                         <SelectContent>
                                             {getSubCategoryByCategoryType(
-                                                CategoryType.E_QUANTITY_UNIT,
+                                                CategoryType.C_QUANTITY_UNIT,
                                             ).map((u) => (
                                                 <SelectItem
                                                     key={u.subCategoryId}

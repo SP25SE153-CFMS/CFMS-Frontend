@@ -30,6 +30,7 @@ const routes = {
     growthStage: '/growth-stage',
     chicken: '/chicken',
     breeding: '/warehouse/breeding',
+    harvest: '/warehouse/harvest',
     task: '/task',
     createTask: '/task/create',
     assignment: '/assignment',

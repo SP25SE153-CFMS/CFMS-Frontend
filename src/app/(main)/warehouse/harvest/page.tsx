@@ -39,13 +39,13 @@ export default function Page() {
         setRId(rId);
     }, []);
 
-    const { data: chickens = [], isLoading } = useQuery({
-        queryKey: ['chickens', wId, rId],
+    const { data: harvests = [], isLoading } = useQuery({
+        queryKey: ['harvests', wId, rId],
         queryFn: () => getWareStockByResourceTypeId(wId, rId),
         enabled: !!wId && !!rId,
     });
 
-    // Check if chickens is loading
+    // Check if harvests is loading
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -54,8 +54,8 @@ export default function Page() {
         );
     }
 
-    // Check if chickens is not null, undefined
-    if (!chickens) {
+    // Check if harvests is not null, undefined
+    if (!harvests) {
         return (
             <div className="w-full h-full flex items-center justify-center">
                 <Card className="px-36 py-8">
@@ -92,22 +92,26 @@ export default function Page() {
                 <CardHeader className="pb-6 items-center justify-center">
                     <div className="flex items-center gap-2">
                         {/* <Wheat className="h-5 w-5 text-muted-foreground" /> */}
-                        <CardTitle className="text-2xl font-bold">Quản lý kho con giống</CardTitle>
+                        <CardTitle className="text-2xl font-bold">
+                            Quản lý kho sản phảm thu hoạch
+                        </CardTitle>
                     </div>
                     <CardDescription className="text-sm">
-                        Danh sách tất cả giống gà trong trang trại
+                        Danh sách tất cả sản phảm thu hoạch trong trang trại
                     </CardDescription>
                 </CardHeader>
                 <Separator />
                 <CardContent className="pt-6">
-                    <DataTable data={chickens} columns={columns} />
+                    <DataTable data={harvests} columns={columns} />
                 </CardContent>
             </Card>
 
             <Dialog open={open} onOpenChange={onOpenChange}>
                 <DialogContent className="max-w-2xl">
                     <DialogHeader>
-                        <DialogTitle className="text-xl font-semibold">Tạo con giống</DialogTitle>
+                        <DialogTitle className="text-xl font-semibold">
+                            Tạo sản phảm thu hoạch
+                        </DialogTitle>
                         <DialogDescription>Nhập đầy đủ các thông tin dưới.</DialogDescription>
                     </DialogHeader>
                     <ScrollArea className="max-h-[70vh]">
