@@ -3,7 +3,7 @@
 import { DataTable } from '@/components/table/data-table';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
-import { Download, Plus } from 'lucide-react';
+import { ArrowLeft, Plus } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -17,9 +17,11 @@ import ChickenForm from '@/components/forms/chicken-form';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getChickens } from '@/services/chicken.service';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
-import { downloadCSV } from '@/utils/functions/download-csv.function';
+import Link from 'next/link';
+import config from '@/configs';
+import { Separator } from '@/components/ui/separator';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -60,43 +62,50 @@ export default function Page() {
 
     // Return the page
     return (
-        <div>
-            <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2">
-                <div>
-                    <h2 className="text-2xl font-bold tracking-tight">Quản lý giống gà</h2>
-                    <p className="text-muted-foreground">
-                        Danh sách tất cả các giống gà trong trang trại
-                    </p>
-                </div>
-                <div className="flex gap-2">
-                    <Button
-                        variant="outline"
-                        className="space-x-1"
-                        onClick={() => downloadCSV(chickens, 'chickens.csv')}
-                    >
-                        <span>Tải file</span> <Download size={18} />
+        <div className="container mx-auto py-6 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <Link href={config.routes.ware}>
+                    <Button type="button" variant="outline" className="w-auto">
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Trở về
                     </Button>
-                    <Button className="space-x-1" onClick={openModal}>
-                        <span>Tạo</span> <Plus size={18} />
-                    </Button>
-                    <Dialog open={open} onOpenChange={onOpenChange}>
-                        <DialogContent className="max-w-2xl">
-                            <DialogHeader>
-                                <DialogTitle>Tạo giống gà mới</DialogTitle>
-                                <DialogDescription>
-                                    Hãy nhập các thông tin dưới đây.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <ScrollArea className="max-h-[600px]">
-                                <ChickenForm closeDialog={() => setOpen(false)} />
-                            </ScrollArea>
-                        </DialogContent>
-                    </Dialog>
-                </div>
+                </Link>
+
+                <Button onClick={openModal} className="w-full sm:w-auto">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Tạo mới
+                </Button>
             </div>
-            <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={chickens} columns={columns} />
-            </div>
+
+            <Card className="shadow-sm border-muted">
+                <CardHeader className="pb-6 items-center justify-center">
+                    <div className="flex items-center gap-2">
+                        {/* <Wheat className="h-5 w-5 text-muted-foreground" /> */}
+                        <CardTitle className="text-2xl font-bold">Quản lý kho con giống</CardTitle>
+                    </div>
+                    <CardDescription className="text-sm">
+                        Danh sách tất cả giống gà trong trang trại
+                    </CardDescription>
+                </CardHeader>
+                <Separator />
+                <CardContent className="pt-6">
+                    <DataTable data={chickens} columns={columns} />
+                </CardContent>
+            </Card>
+
+            <Dialog open={open} onOpenChange={onOpenChange}>
+                <DialogContent className="max-w-2xl">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-semibold">Tạo con giống</DialogTitle>
+                        <DialogDescription>Nhập đầy đủ các thông tin dưới.</DialogDescription>
+                    </DialogHeader>
+                    <ScrollArea className="max-h-[70vh]">
+                        <div className="p-1">
+                            <ChickenForm closeDialog={() => setOpen(false)} />
+                        </div>
+                    </ScrollArea>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

@@ -29,12 +29,16 @@ import { CommonStatus } from '@/utils/enum/status.enum';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { Loader2 } from 'lucide-react';
 import { WareStockResponse } from '@/utils/types/custom.type';
+import useQueryParams from '@/hooks/use-query-params';
 interface ChickenFormProps {
     defaultValues?: Partial<Chicken>;
     closeDialog: () => void;
 }
 
 export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormProps) {
+    // Get query params
+    const { w: wareId } = useQueryParams();
+
     // Initialize form
     const form = useForm<Chicken>({
         resolver: zodResolver(defaultValues ? ChickenSchema : CreateChickenSchema),
@@ -49,7 +53,7 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
             unitId: '',
             packageId: '',
             packageSize: 0,
-            wareId: sessionStorage.getItem('wareId') || '',
+            wareId: sessionStorage.getItem('wareId') || wareId,
             ...defaultValues,
         },
     });
@@ -333,12 +337,12 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                     <FormField
                         control={form.control}
                         name="wareId"
-                        render={({ field }) => {
+                        render={() => {
                             const wares = JSON.parse(
                                 sessionStorage.getItem('wares') || '[]',
                             ) as WareStockResponse[];
-                            const ware = wares.find((ware) => ware.wareId === field.value);
-                            console.log(wares, ware);
+                            const wId = sessionStorage.getItem('wareId') || wareId;
+                            const ware = wares.find((ware) => ware.wareId === wId);
 
                             return (
                                 <FormItem>
