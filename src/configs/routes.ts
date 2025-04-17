@@ -42,6 +42,10 @@ const routes = {
     medicine: '/warehouse/medicines',
     config: '/config',
     commonWarehouse: '/warehouse/common',
+    farmOwner: {
+        farmEmployee: '/farm-owner/farm-employee',
+        dashboard: '/farm-owner/dashboard',
+    },
 };
 
 export default routes;
