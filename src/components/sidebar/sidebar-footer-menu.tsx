@@ -40,7 +40,12 @@ export default function SidebarFooterMenu() {
     }
 
     if (!user) {
-        return <h1>Không tìm thấy thông tin người dùng</h1>;
+        return (
+            <Avatar className="size-8 rounded-lg">
+                {/* <AvatarImage src={user.avatar} alt={user.fullName} /> */}
+                <AvatarFallback className="rounded-lg">N/A</AvatarFallback>
+            </Avatar>
+        );
     }
 
     return (

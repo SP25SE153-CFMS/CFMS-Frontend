@@ -40,6 +40,7 @@ import { vi } from 'date-fns/locale';
 import { formatDate } from '@/utils/functions';
 import MultipleSelector from '../ui/multiselect';
 import { useState } from 'react';
+import dayjs from 'dayjs';
 
 interface AssignmentFormProps {
     defaultValues?: Partial<Assignment>;
@@ -100,6 +101,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
     // Form submit handler
     async function onSubmit(values: any) {
         values.assignedToIds = assignedToIds;
+        values.assignedDate = dayjs(values.assignedDate).format('YYYY-MM-DD');
         mutation.mutate(values);
     }
 

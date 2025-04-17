@@ -116,7 +116,12 @@ export default function ProfilePage() {
     }
 
     if (!currentUser) {
-        return <h1>Không tìm thấy thông tin người dùng</h1>;
+        return (
+            <Avatar className="h-24 w-24">
+                {/* <AvatarImage src={currentUser.avatar || ''} alt={currentUser.fullName} /> */}
+                <AvatarFallback className="text-2xl">N/A</AvatarFallback>
+            </Avatar>
+        );
     }
 
     return (

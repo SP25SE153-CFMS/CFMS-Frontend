@@ -1,5 +1,4 @@
 import { ChickenGender } from '../enum/gender.enum';
-import { Assignment } from '../schemas/assignment.schema';
 import { BreedingArea } from '../schemas/breeding-area.schema';
 import { Category } from '../schemas/category.schema';
 import { ChickenBatch } from '../schemas/chicken-batch.schema';
@@ -26,7 +25,6 @@ import { VaccinationLog } from '../schemas/vaccine.schema';
 import { NutritionPlan } from '../schemas/nutrition-plan.schema';
 import { NutritionPlanDetail } from '../schemas/nutrition-plan-detail.schema';
 import { FeedSession } from '../schemas/feed-session.schema';
-import { ShiftSchedule } from '../schemas/shift-schedule.schema';
 import { TaskResource } from '../schemas/task-resource.schema';
 import { Warehouse } from '../schemas/warehouse.schema';
 import { CreateInventoryReceipt } from '../schemas/inventory-receipt.schema';
@@ -135,7 +133,11 @@ export type ResourceResponse = Resource & {
 };
 
 export type TaskResourceResponse = TaskResource & {
-    resource: ResourceResponse;
+    // resource: ResourceResponse;
+    resourceName: string;
+    resourceType: string;
+    specQuantity: string;
+    unitSpecification: string;
 };
 
 export type TaskLocationResponse = TaskLocation & {
@@ -145,11 +147,26 @@ export type TaskLocationResponse = TaskLocation & {
     ware?: Warehouse;
 };
 
+export type AssignmentForTaskResponse = {
+    assignmentId: string;
+    assignedTo: string;
+    assignedDate: string;
+    status: number;
+    note: string;
+};
+
+export type ShiftScheduleResponse = {
+    shiftName: string;
+    workTime: string;
+    startTime: string;
+    endTime: string;
+};
+
 export type TaskResponse = Task & {
-    assignments: Assignment[];
+    assignments: AssignmentForTaskResponse[];
     startWorkDate: string;
     endWorkDate: string;
-    shiftSchedules: ShiftSchedule[];
+    shiftSchedule: ShiftScheduleResponse;
     taskResources: TaskResourceResponse[];
     taskType: SubCategory;
     taskLocation: TaskLocationResponse;
