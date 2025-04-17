@@ -19,14 +19,11 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { taskStatusLabels, taskStatusVariant } from '@/utils/enum/status.enum';
-import { getShifts } from '@/services/shift.service';
 import { formatDate } from '@/utils/functions';
 import { Badge } from '@/components/ui/badge';
 import config from '@/configs';
 import dayjs from 'dayjs';
 import InfoItem from '@/components/info-item';
-// import { getEmployeesByFarmId } from '@/services/farm.service';
-// import { getCookie } from 'cookies-next';
 
 export default function TaskDetail() {
     const { taskId }: { taskId: string } = useParams();
@@ -36,16 +33,6 @@ export default function TaskDetail() {
         queryKey: ['task', taskId],
         queryFn: () => getTaskById(taskId),
     });
-
-    // const { data: shifts } = useQuery({
-    //     queryKey: ['shifts'],
-    //     queryFn: () => getShifts(),
-    // });
-
-    // const { data: farmEmployees } = useQuery({
-    //     queryKey: ['farmEmployees'],
-    //     queryFn: () => getEmployeesByFarmId(getCookie(config.cookies.farmId) as string),
-    // });
 
     if (isLoading) {
         return (
@@ -139,8 +126,8 @@ export default function TaskDetail() {
                                             <Home className="h-4 w-4" /> Vị trí
                                         </h3>
                                         <p className="text-slate-600 dark:text-slate-300">
-                                            {task.taskLocation?.coop?.chickenCoopName ||
-                                                task.taskLocation?.ware?.warehouseName ||
+                                            {task.taskLocation?.coopLocation?.chickenCoopName ||
+                                                task.taskLocation?.wareLocation?.warehouseName ||
                                                 'Không xác định'}
                                         </p>
                                     </div>

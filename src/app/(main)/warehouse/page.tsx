@@ -91,12 +91,14 @@ export default function Ware() {
             case 'Thiết bị':
                 route = config.routes.equipment;
                 break;
-            case 'breeding':
+            case 'Con giống':
                 route = config.routes.breeding;
                 break;
-            case 'havest_product':
+            case 'Kho chứa sản phẩm thu hoạch':
                 route = config.routes.harvest;
                 break;
+            default:
+                route = config.routes.commonWarehouse;
         }
         const url = `${route}?w=${wareId}&r=${resourceTypeId}`;
         router.push(url);

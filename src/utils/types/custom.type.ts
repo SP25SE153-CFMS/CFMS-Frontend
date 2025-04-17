@@ -142,9 +142,9 @@ export type TaskResourceResponse = TaskResource & {
 
 export type TaskLocationResponse = TaskLocation & {
     coopId?: string;
-    coop?: ChickenCoop;
+    coopLocation?: ChickenCoop;
     wareId?: string;
-    ware?: Warehouse;
+    wareLocation?: Warehouse;
 };
 
 export type AssignmentForTaskResponse = {

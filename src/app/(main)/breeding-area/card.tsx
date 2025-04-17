@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { AlignRight, Trash } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { getAreaUnit } from '@/utils/functions/category.function';
 
 interface BreedingAreaCardProps {
     area: BreedingArea;
@@ -35,7 +36,9 @@ export default function BreedingAreaCard({
             <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
                 <div>
                     <h3 className="font-semibold">{area.breedingAreaName}</h3>
-                    <p className="text-sm text-muted-foreground">{area.breedingAreaCode}</p>
+                    <p className="text-sm text-muted-foreground">
+                        {area.breedingAreaCode} ({area.area || 0} {getAreaUnit(area.areaUnitId)})
+                    </p>
                 </div>
                 {/* <Badge variant={breedingAreaStatusVariant[area.status]}>
                     {breedingAreaStatusLabels[area.status]}

@@ -41,6 +41,7 @@ const routes = {
     ware: '/warehouse',
     medicine: '/warehouse/medicines',
     config: '/config',
+    commonWarehouse: '/warehouse/common',
 };
 
 export default routes;

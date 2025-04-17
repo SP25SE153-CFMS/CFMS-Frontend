@@ -233,7 +233,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                         >
                             {day}
                         </span>
-                        <Button
+                        {/* <Button
                             variant="ghost"
                             size="icon"
                             className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -244,7 +244,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                         >
                             <Plus className="h-4 w-4" />
                             <span className="sr-only">Giao việc</span>
-                        </Button>
+                        </Button> */}
                     </div>
                     <div className="space-y-1 overflow-y-auto">
                         {dateEvents.slice(0, 2).map((event) => (

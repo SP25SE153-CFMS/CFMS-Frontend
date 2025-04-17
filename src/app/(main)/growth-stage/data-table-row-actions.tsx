@@ -121,23 +121,26 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     >
                         Xem chi tiết
                     </DropdownMenuItem> */}
-                    <DropdownMenuItem
-                        onClick={() => setOpenCreate(true)}
-                        disabled={!!currentNutritionPlanOfGrowthStage}
-                    >
-                        Thêm chế độ dinh dưỡng
-                    </DropdownMenuItem>
+                    {!!currentNutritionPlanOfGrowthStage && (
+                        <DropdownMenuItem onClick={() => setOpenCreate(true)}>
+                            Thêm chế độ dinh dưỡng
+                        </DropdownMenuItem>
+                    )}
+                    {!currentNutritionPlanOfGrowthStage && (
+                        <DropdownMenuItem onClick={() => setOpenCreate(true)}>
+                            Cập nhật chế độ dinh dưỡng
+                        </DropdownMenuItem>
+                    )}
 
                     <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                         Cập nhật
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                        onClick={() => setOpenDeleteNutritionPlan(true)}
-                        disabled={!currentNutritionPlanOfGrowthStage}
-                    >
-                        Loại bỏ chế độ dinh dưỡng <Trash size={16} className="ml-auto" />
-                    </DropdownMenuItem>
+                    {!currentNutritionPlanOfGrowthStage && (
+                        <DropdownMenuItem onClick={() => setOpenDeleteNutritionPlan(true)}>
+                            Loại bỏ chế độ dinh dưỡng <Trash size={16} className="ml-auto" />
+                        </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
                         Xóa giai đoạn phát triển
                         <Trash2 size={16} className="ml-auto" />

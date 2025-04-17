@@ -30,7 +30,7 @@ import {
 import { createAssignment, updateAssignment } from '@/services/assignment.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getTasks } from '@/services/task.service';
+import { getTasksByFarmId } from '@/services/task.service';
 import { getEmployeesByFarmId } from '@/services/farm.service';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
@@ -41,6 +41,7 @@ import { formatDate } from '@/utils/functions';
 import MultipleSelector from '../ui/multiselect';
 import { useState } from 'react';
 import dayjs from 'dayjs';
+import { LoadingSpinner } from '../ui/loading-spinner';
 
 interface AssignmentFormProps {
     defaultValues?: Partial<Assignment>;
@@ -64,15 +65,17 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
         },
     });
 
-    const { data: tasks } = useQuery({
+    const farmId = getCookie(config.cookies.farmId) ?? '';
+
+    const { data: tasks, isLoading: isTaskLoading } = useQuery({
         queryKey: ['tasks'],
         queryFn: async () => {
-            const tasks = await getTasks();
+            const tasks = await getTasksByFarmId(farmId);
             return tasks.filter((task) => task.status === TaskStatus.PENDING);
         },
     });
 
-    const { data: farmEmployees } = useQuery({
+    const { data: farmEmployees, isLoading: isEmployeesLoading } = useQuery({
         queryKey: ['farmEmployees'],
         queryFn: () => getEmployeesByFarmId(getCookie(config.cookies.farmId) ?? ''),
     });
@@ -108,6 +111,15 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
     function onError(error: any) {
         console.error(error);
         // toast.error(error?.response?.data?.message);
+    }
+
+    if (isTaskLoading || isEmployeesLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-[75vh] gap-4">
+                <LoadingSpinner />
+                <p className="text-muted-foreground animate-pulse">Đang tải dữ liệu...</p>
+            </div>
+        );
     }
 
     return (
@@ -147,11 +159,12 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                     <FormField
                         control={form.control}
                         name="assignedToId"
-                        render={() => (
-                            <FormItem>
-                                <FormLabel>Người được phân công</FormLabel>
-                                <FormControl>
-                                    {/* <Select
+                        render={() => {
+                            return (
+                                <FormItem>
+                                    <FormLabel>Người được phân công</FormLabel>
+                                    <FormControl>
+                                        {/* <Select
                                         onValueChange={field.onChange}
                                         defaultValue={field.value}
                                     >
@@ -169,29 +182,27 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                             ))}
                                         </SelectContent>
                                     </Select> */}
-                                    <MultipleSelector
-                                        commandProps={{
-                                            label: 'Chọn người được phân công',
-                                        }}
-                                        // value={field.value}
-                                        onChange={(value) => {
-                                            setAssignedToIds(value.map((item) => item.value));
-                                        }}
-                                        defaultOptions={farmEmployees?.map((employee) => ({
-                                            value: employee.userId,
-                                            label: employee.user.fullName,
-                                        }))}
-                                        placeholder="Chọn người được phân công"
-                                        hideClearAllButton
-                                        hidePlaceholderWhenSelected
-                                        emptyIndicator={
-                                            <p className="text-center text-sm">Không tìm thấy</p>
-                                        }
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+                                        <MultipleSelector
+                                            commandProps={{
+                                                label: 'Chọn người được phân công',
+                                            }}
+                                            // value={field.value}
+                                            onChange={(value) => {
+                                                setAssignedToIds(value.map((item) => item.value));
+                                            }}
+                                            defaultOptions={farmEmployees?.map((employee) => ({
+                                                value: employee.userId,
+                                                label: employee.user.fullName,
+                                            }))}
+                                            placeholder="Chọn người được phân công"
+                                            hideClearAllButton
+                                            hidePlaceholderWhenSelected
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            );
+                        }}
                     />
 
                     {/* Assigned Date */}
