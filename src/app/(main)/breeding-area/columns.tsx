@@ -4,16 +4,16 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
-import Link from 'next/link';
 import { DataTableRowActions } from './data-table-row-actions';
 import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
-import config from '@/configs';
 import {
     BreedingAreaStatus,
     breedingAreaStatusLabels,
     breedingAreaStatusVariant,
 } from '@/utils/enum/status.enum';
 import { Badge } from '@/components/ui/badge';
+import { getAreaUnit } from '@/utils/functions/category.function';
+import Image from 'next/image';
 
 export const columns: ColumnDef<BreedingArea>[] = [
     {
@@ -46,35 +46,82 @@ export const columns: ColumnDef<BreedingArea>[] = [
         cell: () => null, // Hidden cell
     },
     {
-        accessorKey: 'breedingAreaCode',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Mã khu nuôi" />,
-        cell: ({ row }) => <div className="w-[80px]">{row.getValue('breedingAreaCode')}</div>,
-        enableSorting: false,
-        enableHiding: false,
+        accessorKey: 'breedingAreaCode', // Ensure the data exists in the row
+        header: () => null, // No header
+        cell: () => null, // Hidden cell
     },
     {
-        accessorKey: 'breedingAreaName',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tên khu nuôi" />,
-        cell: ({ row }) => (
-            <Link
-                href={`${config.routes.chickenCoop}?breedingAreaId=${row.getValue('breedingAreaId')}`}
-                onClick={() =>
-                    sessionStorage.setItem('breedingAreaId', row.getValue('breedingAreaId'))
-                }
-            >
-                {row.getValue('breedingAreaName')}
-            </Link>
-        ),
+        accessorKey: 'breedingAreaName', // Ensure the data exists in the row
+        header: () => null, // No header
+        cell: () => null, // Hidden cell
     },
     // {
-    //     accessorKey: 'notes',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Ghi chú" />,
-    //     cell: ({ row }) => <div className="w-[200px] truncate">{row.getValue('notes')}</div>,
+    //     accessorKey: 'breedingAreaCode',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Mã khu nuôi" />,
+    //     cell: ({ row }) => <div className="w-[80px]">{row.getValue('breedingAreaCode')}</div>,
+    //     enableSorting: false,
+    //     enableHiding: false,
     // },
+    // {
+    //     accessorKey: 'breedingAreaName',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Tên khu nuôi" />,
+    //     cell: ({ row }) => (
+    //         <Link
+    //             href={`${config.routes.chickenCoop}?breedingAreaId=${row.getValue('breedingAreaId')}`}
+    //             onClick={() =>
+    //                 sessionStorage.setItem('breedingAreaId', row.getValue('breedingAreaId'))
+    //             }
+    //         >
+    //             {row.getValue('breedingAreaName')}
+    //         </Link>
+    //     ),
+    // },
+    {
+        accessorKey: 'imageUrl', // Ensure the data exists in the row
+        header: () => null, // No header
+        cell: () => null, // Hidden cell
+    },
+    {
+        id: 'breedingArea',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Tên khu nuôi" />,
+        cell: ({ row }) => {
+            return (
+                <div className="flex items-center gap-2">
+                    <Image
+                        src={row.getValue('imageUrl') ?? '/breeding-area.png'}
+                        alt={row.getValue('breedingAreaCode')}
+                        className="rounded-sm"
+                        width={100}
+                        height={100}
+                    />
+                    <div>
+                        <p className="text-sm text-muted-foreground">
+                            {row.getValue('breedingAreaCode')}
+                        </p>
+                        <p>{row.getValue('breedingAreaName')}</p>
+                    </div>
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: 'areaUnitId', // Ensure the data exists in the row
+        header: () => null, // No header
+        cell: () => null, // Hidden cell
+    },
     {
         accessorKey: 'area',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Diện tích" />,
-        cell: ({ row }) => <div className="w-[80px]">{row.getValue('area') ?? 0} m²</div>,
+        cell: ({ row }) => {
+            const area = row.getValue('area') as number;
+            const areaUnitId = row.getValue('areaUnitId') as string;
+            const areaUnit = getAreaUnit(areaUnitId);
+            return (
+                <div>
+                    {area ?? 0} {areaUnit}
+                </div>
+            );
+        },
     },
     {
         accessorKey: 'chickenCoops',
@@ -83,6 +130,13 @@ export const columns: ColumnDef<BreedingArea>[] = [
             const chickenCoops = row.getValue('chickenCoops') as ChickenCoop[];
             return <div className="w-[80px]">{chickenCoops?.length ?? 0}</div>;
         },
+    },
+    {
+        accessorKey: 'notes',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Ghi chú" />,
+        cell: ({ row }) => (
+            <div className="w-[200px] line-clamp-3">{row.getValue('notes') ?? '-'}</div>
+        ),
     },
     {
         accessorKey: 'status',

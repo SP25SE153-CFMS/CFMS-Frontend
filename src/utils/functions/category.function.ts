@@ -72,3 +72,9 @@ export function getQuantityUnit(quantityUnitId: string): string {
     const quantityUnit = categories.find((cat) => cat.subCategoryId === quantityUnitId);
     return quantityUnit?.subCategoryName ?? '';
 }
+
+export function getRequestType(requestTypeId: string): string {
+    const categories = getSubCategoryByCategoryType(CategoryType.REQUEST_TYPE);
+    const requestType = categories.find((cat) => cat.subCategoryId === requestTypeId);
+    return requestType?.subCategoryName ?? '';
+}

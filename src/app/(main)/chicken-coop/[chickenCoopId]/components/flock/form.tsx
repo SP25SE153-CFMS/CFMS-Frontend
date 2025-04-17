@@ -26,6 +26,7 @@ import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { vi } from 'date-fns/locale';
 import { formatDate } from '@/utils/functions';
+import { generateCode } from '@/utils/functions/generate-code.function';
 
 interface AddEquipmentFormProps {
     defaultValues?: Partial<Equipment>;
@@ -75,25 +76,27 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
         console.error(error);
     };
 
+    const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        const existingCodes = new Set(
+            JSON.parse(sessionStorage.getItem('equipments') || '[]').map(
+                (equipment: Equipment) => equipment.equipmentCode,
+            ),
+        );
+
+        let code;
+        do {
+            code = generateCode(input);
+        } while (existingCodes.has(code));
+
+        form.setValue('equipmentCode', code);
+        form.setValue('equipmentName', input);
+    };
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
-                    {/* Mã thiết bị */}
-                    <FormField
-                        control={form.control}
-                        name="equipmentCode"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Mã thiết bị</FormLabel>
-                                <FormControl>
-                                    <Input type="text" placeholder="Nhập mã thiết bị" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
                     {/* Tên thiết bị */}
                     <FormField
                         control={form.control}
@@ -102,7 +105,32 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
                             <FormItem>
                                 <FormLabel>Tên thiết bị</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập tên thiết bị" {...field} />
+                                    <Input
+                                        type="text"
+                                        placeholder="Nhập tên thiết bị"
+                                        {...field}
+                                        onBlur={handleGenerateCode}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Mã thiết bị */}
+                    <FormField
+                        control={form.control}
+                        name="equipmentCode"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Mã thiết bị</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="text"
+                                        readOnly
+                                        placeholder="Nhập mã thiết bị"
+                                        {...field}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

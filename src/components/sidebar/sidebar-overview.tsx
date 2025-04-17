@@ -1,6 +1,6 @@
 'use client';
 
-import { BookCopy, ChevronRight, PanelsTopLeft, Settings } from 'lucide-react';
+import { BookCopy, ChevronRight, PanelsTopLeft, Settings, Settings2 } from 'lucide-react';
 import {
     SidebarGroup,
     SidebarGroupContent,
@@ -103,12 +103,22 @@ export default function SidebarOverview({
                         </SidebarMenuItem>
                     </Collapsible>
 
-                    {/* Settings */}
+                    {/* Farm Settings */}
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
                             <Link href={config.routes.settings}>
                                 <Settings />
                                 <span>Cài đặt trang trại</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+
+                    {/* System Config */}
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <Link href={config.routes.config}>
+                                <Settings2 />
+                                <span>Cấu hình hệ thống</span>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

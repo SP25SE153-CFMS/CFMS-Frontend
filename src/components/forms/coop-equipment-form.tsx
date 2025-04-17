@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -30,6 +30,7 @@ import { getEquipments } from '@/services/equipment.service';
 import { addCoopEquipment, updateCoopEquipment } from '@/services/chicken-coop.service';
 import { vi } from 'date-fns/locale';
 import { formatDate } from '@/utils/functions';
+import { Textarea } from '../ui/textarea';
 
 interface CoopEquipmentFormProps {
     defaultValues?: Partial<CoopEquipment>;
@@ -85,12 +86,9 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
 
     // Form submit handler
     async function onSubmit(values: CoopEquipment) {
-        console.log(values);
-
         values.assignedDate = dayjs(values.assignedDate).format('YYYY-MM-DD');
         values.lastMaintenanceDate = dayjs(values.lastMaintenanceDate).format('YYYY-MM-DD');
         values.nextMaintenanceDate = dayjs(values.nextMaintenanceDate).format('YYYY-MM-DD');
-        console.log(values);
 
         mutation.mutate(values);
     }
@@ -232,6 +230,7 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                                                 );
                                             }}
                                             initialFocus
+                                            disabled={(date) => date < new Date()}
                                             locale={vi}
                                         />
                                     </PopoverContent>
@@ -412,17 +411,18 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                         control={form.control}
                         name="note"
                         render={({ field }) => (
-                            <FormItem>
+                            <FormItem className="col-span-2">
                                 <FormLabel>Ghi chú</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập ghi chú" {...field} />
+                                    <Textarea placeholder="Nhập ghi chú" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
                 </div>
-                <Button type="submit" className="mx-auto mt-6 w-60">
+                <Button type="submit" className="mx-auto mt-6 w-60" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Gửi
                 </Button>
             </form>

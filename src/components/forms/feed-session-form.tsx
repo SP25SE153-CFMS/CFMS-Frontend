@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -125,6 +125,7 @@ export default function FeedSessionForm({ defaultValues, closeDialog }: FeedSess
                                                 }
                                             }}
                                             initialFocus
+                                            disabled={(date) => date < new Date()}
                                             locale={vi}
                                         />
                                     </PopoverContent>
@@ -153,6 +154,12 @@ export default function FeedSessionForm({ defaultValues, closeDialog }: FeedSess
                                     <SelectNative
                                         className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
                                         onChange={(e) => form.setValue('unitId', e.target.value)}
+                                        defaultValue={
+                                            form.getValues('unitId') ||
+                                            getSubCategoryByCategoryType(
+                                                CategoryType.WEIGHT_UNIT,
+                                            )[0]?.subCategoryId
+                                        }
                                     >
                                         {getSubCategoryByCategoryType(
                                             CategoryType.WEIGHT_UNIT,
@@ -226,7 +233,8 @@ export default function FeedSessionForm({ defaultValues, closeDialog }: FeedSess
                     />
                 </div>
 
-                <Button type="submit" className="mx-auto mt-6 w-60">
+                <Button type="submit" className="mx-auto mt-6 w-60" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     {defaultValues ? 'Cập nhật' : 'Thêm'}
                 </Button>
             </form>

@@ -13,7 +13,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useQuery } from '@tanstack/react-query';
 import { getChickenCoopById } from '@/services/chicken-coop.service';
 import { useEffect } from 'react';
-import { useChickenCoopStore } from '@/store/use-chicken-coop';
+import { useChickenCoopStore } from '@/store/chicken-coop.store';
 import { getEquipments } from '@/services/equipment.service';
 
 export default function Page() {

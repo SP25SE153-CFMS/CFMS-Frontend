@@ -23,7 +23,8 @@ import { createGrowthStage, updateGrowthStage } from '@/services/growth-stage.se
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
-import { Textarea } from '../ui/textarea';
+import { Loader2 } from 'lucide-react';
+import { generateCode } from '@/utils/functions/generate-code.function';
 
 interface GrowthStageFormProps {
     defaultValues?: Partial<GrowthStage>;
@@ -68,35 +69,40 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
     });
 
     // Form submit handler
-    async function onSubmit(values: GrowthStage) {
+    function onSubmit(values: GrowthStage) {
         const newValues = { ...values, id: values.growthStageId };
         mutation.mutate(newValues);
     }
 
+    // Form error handler
+    function onError(errors: any) {
+        console.error(errors);
+        toast.error('Có lỗi xảy ra, vui lòng kiểm tra lại thông tin');
+    }
+
+    const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        const existingCodes = new Set(
+            JSON.parse(sessionStorage.getItem('growthStages') || '[]').map(
+                (stage: GrowthStage) => stage.stageCode,
+            ),
+        );
+
+        let code;
+        let index = 1;
+        do {
+            code = generateCode(input, index);
+            index++;
+        } while (existingCodes.has(code));
+
+        form.setValue('stageCode', code);
+        form.setValue('stageName', input);
+    };
+
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
-                    {/* Stage Code */}
-                    {/* <FormField
-                        control={form.control}
-                        name="stageCode"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Mã giai đoạn</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="text"
-                                        placeholder="Nhập mã giai đoạn"
-                                        disabled={defaultValues !== undefined}
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    /> */}
-
                     {/* Stage Name */}
                     <FormField
                         control={form.control}
@@ -108,6 +114,28 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                                     <Input
                                         type="text"
                                         placeholder="Nhập tên giai đoạn"
+                                        disabled={defaultValues !== undefined}
+                                        {...field}
+                                        onBlur={handleGenerateCode}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Stage Code */}
+                    <FormField
+                        control={form.control}
+                        name="stageCode"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Mã giai đoạn</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="text"
+                                        placeholder="Nhập mã giai đoạn"
+                                        disabled={defaultValues !== undefined}
                                         {...field}
                                     />
                                 </FormControl>
@@ -129,7 +157,7 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                                         defaultValue={field.value}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Chọn trạng thái" />
+                                            <SelectValue placeholder="Chọn giống gà" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {getSubCategoryByCategoryType(CategoryType.CHICKEN).map(
@@ -195,17 +223,18 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                         control={form.control}
                         name="description"
                         render={({ field }) => (
-                            <FormItem className="col-span-2">
+                            <FormItem>
                                 <FormLabel>Mô tả</FormLabel>
                                 <FormControl>
-                                    <Textarea placeholder="Nhập mô tả" {...field} />
+                                    <Input type="text" placeholder="Nhập mô tả" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
                 </div>
-                <Button type="submit" className="mx-auto mt-6 w-60">
+                <Button type="submit" className="mx-auto mt-6 w-60" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Gửi
                 </Button>
             </form>

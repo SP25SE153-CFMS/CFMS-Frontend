@@ -17,6 +17,7 @@ import { Vaccine, VaccineSchema } from '@/utils/schemas/vaccine.schema';
 import { createVaccine, updateVaccine } from '@/services/vaccine.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
 
 interface VaccineFormProps {
     defaultValues?: Partial<Vaccine>;
@@ -223,7 +224,8 @@ export default function VaccineForm({ defaultValues, closeDialog }: VaccineFormP
                     />
                 </div>
 
-                <Button type="submit" className="mx-auto w-60">
+                <Button type="submit" className="mx-auto w-60" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Gửi
                 </Button>
             </form>

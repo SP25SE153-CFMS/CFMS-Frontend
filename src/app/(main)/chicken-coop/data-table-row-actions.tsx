@@ -20,19 +20,12 @@ import {
     DialogDescription,
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import {
-    AlertDialog,
-    AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogDescription,
-} from '@/components/ui/alert-dialog';
 import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { deleteChickenCoop } from '@/services/chicken-coop.service';
 import toast from 'react-hot-toast';
 import ChickenCoopForm from '@/components/forms/chicken-coop-form';
-import { useQueryClient } from '@tanstack/react-query';
-import useQueryParams from '@/hooks/use-query-params';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import DeleteConfirmDialog from '@/components/delete-confirm-dialog';
 
 interface Props<T> {
     row: Row<T>;
@@ -44,18 +37,29 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openDelete, setOpenDelete] = useState(false);
 
     const queryClient = useQueryClient();
-    const { breedingAreaId } = useQueryParams();
 
-    const handleDelete = async () => {
-        await deleteChickenCoop((row.original as ChickenCoop).chickenCoopId).then(() => {
-            toast.success('Xóa chuồng nuôi thành công');
+    const chickenCoop = row.original as ChickenCoop;
+
+    const mutation = useMutation({
+        mutationFn: deleteChickenCoop,
+        onSuccess: () => {
+            toast.success('Đã xóa chuồng nuôi');
+            const breedingAreaId = sessionStorage.getItem('breedingAreaId');
             queryClient.invalidateQueries({ queryKey: ['chickenCoops', breedingAreaId] });
             setOpenDelete(false);
-        });
+        },
+        onError: (error: any) => {
+            console.error(error);
+            toast.error(error?.response?.data?.message);
+        },
+    });
+
+    const handleDelete = async () => {
+        mutation.mutate(chickenCoop.chickenCoopId);
     };
 
     const handleClickDetail = () => {
-        router.push(config.routes.chickenCoop + '/' + (row.original as ChickenCoop).chickenCoopId);
+        router.push(config.routes.chickenCoop + '/' + chickenCoop.chickenCoopId);
         // const chickenCoops = row.getAllCells().map((cell) => cell.row.original);
         // sessionStorage.setItem('chickenCoops', JSON.stringify(chickenCoops));
     };
@@ -91,31 +95,21 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <ScrollArea className="max-h-[600px]">
                         <ChickenCoopForm
                             closeDialog={() => setOpenUpdate(false)}
-                            defaultValues={row.original as ChickenCoop}
+                            defaultValues={chickenCoop}
                         />
                     </ScrollArea>
                 </DialogContent>
             </Dialog>
 
             {/* Delete Confirmation Dialog */}
-            <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa chuồng nuôi này?
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <div className="flex justify-end space-x-2">
-                        <Button variant="outline" onClick={() => setOpenDelete(false)}>
-                            Hủy
-                        </Button>
-                        <Button variant="destructive" onClick={handleDelete}>
-                            Xóa
-                        </Button>
-                    </div>
-                </AlertDialogContent>
-            </AlertDialog>
+            <DeleteConfirmDialog
+                open={openDelete}
+                setOpen={setOpenDelete}
+                handleDelete={handleDelete}
+                confirmValue={chickenCoop.chickenCoopCode}
+                label="Mã chuồng nuôi"
+                isPending={mutation.isPending}
+            />
         </>
     );
 }

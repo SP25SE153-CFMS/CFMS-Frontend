@@ -13,7 +13,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
 import { Download, Plus, Search, UserCheck, Users, UserX } from 'lucide-react';
-import FarmEmployeeForm from './form';
+import FarmEmployeeForm from '@/components/forms/farm-employee-form';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { useQuery } from '@tanstack/react-query';
 import { getEmployeesByFarmId } from '@/services/farm.service';
@@ -33,7 +33,7 @@ export default function Page() {
     const onOpenChange = (val: boolean) => setOpen(val);
 
     const { data: farmEmployees, isLoading } = useQuery({
-        queryKey: ['farm-employees'],
+        queryKey: ['farmEmployees'],
         queryFn: () => getEmployeesByFarmId(getCookie(config.cookies.farmId) ?? ''),
         enabled: !!getCookie(config.cookies.farmId),
     });

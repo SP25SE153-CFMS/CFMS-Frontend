@@ -32,13 +32,17 @@ import {
     AlertCircle,
     Apple,
     ArrowRight,
+    Calendar,
+    Clock,
     Info,
     Leaf,
     Plus,
     ReceiptText,
     Salad,
+    StickyNote,
     Tag,
     Trash2,
+    Weight,
 } from 'lucide-react';
 import { useState } from 'react';
 import type { CreateNutritionPlanDetail } from '@/utils/schemas/nutrition-plan-detail.schema';
@@ -48,13 +52,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
+import { CreateFSWithoutNutriPlan } from '@/utils/schemas/feed-session.schema';
+import { TimePicker } from '../ui/time-picker';
+import { useRouter } from 'next/navigation';
+import config from '@/configs';
 
 interface NutritionPlanFormProps {
     defaultValues?: Partial<NutritionPlan>;
-    closeDialog: () => void;
 }
 
-export default function NutritionPlanForm({ defaultValues, closeDialog }: NutritionPlanFormProps) {
+export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormProps) {
+    const router = useRouter();
+
     // Get all foods
     const { data: foods, isLoading: foodsLoading } = useQuery({
         queryKey: ['foods'],
@@ -69,6 +78,19 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
                       foodId: foods?.[0]?.foodId ?? '',
                       foodWeight: 0,
                       unitId: '',
+                  },
+              ],
+    );
+
+    const [feedSessions, setFeedSessions] = useState<CreateFSWithoutNutriPlan[]>(
+        defaultValues?.feedSessions?.length
+            ? defaultValues.feedSessions
+            : [
+                  {
+                      feedingTime: '',
+                      feedAmount: 0,
+                      unitId: '',
+                      note: '',
                   },
               ],
     );
@@ -91,13 +113,14 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
     const mutation = useMutation({
         mutationFn: defaultValues ? updateNutritionPlan : createNutritionPlan,
         onSuccess: () => {
-            closeDialog();
+            // closeDialog?.();
             queryClient.invalidateQueries({ queryKey: ['nutritionPlans'] });
             toast.success(
                 defaultValues
                     ? 'Cập nhật chế độ dinh dưỡng thành công'
                     : 'Tạo chế độ dinh dưỡng thành công',
             );
+            router.push(config.routes.nutritionPlan);
         },
         onError: (error: any) => {
             console.error(error);
@@ -110,6 +133,7 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
         const newValues = {
             ...values,
             nutritionPlanDetails,
+            feedSessions,
         };
         mutation.mutate(newValues);
     }
@@ -145,6 +169,33 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
         setNutriPlanDetails(newNutriPlanDetails);
     };
 
+    const addFeedSession = () => {
+        setFeedSessions([
+            ...feedSessions,
+            {
+                feedingTime: '',
+                feedAmount: 0,
+                unitId: '',
+                note: '',
+            },
+        ]);
+    };
+
+    const removeFeedSession = (index: number) => {
+        const newFeedSessions = feedSessions.filter((_, i) => i !== index);
+        setFeedSessions(newFeedSessions);
+    };
+
+    const updateFeedSession = <K extends keyof CreateFSWithoutNutriPlan>(
+        index: number,
+        field: K,
+        value: CreateFSWithoutNutriPlan[K],
+    ) => {
+        const newFeedSessions = [...feedSessions];
+        newFeedSessions[index][field] = value;
+        setFeedSessions(newFeedSessions);
+    };
+
     if (foodsLoading) {
         return (
             <div className="flex items-center justify-center h-64">
@@ -160,7 +211,7 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
                 onSubmit={form.handleSubmit(onSubmit, onError)}
                 className="space-y-6"
             >
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Card>
                         <CardHeader className="pb-3">
                             <CardTitle className="text-xl font-bold flex items-center">
@@ -222,6 +273,7 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
                         </CardContent>
                     </Card>
 
+                    {/* Nutrition Plan Details */}
                     <Card>
                         <CardHeader className="pb-3">
                             <div className="flex items-center justify-between">
@@ -390,18 +442,219 @@ export default function NutritionPlanForm({ defaultValues, closeDialog }: Nutrit
                                             </div>
 
                                             {/* Remove Button */}
-                                            <div className="flex justify-end mt-4">
-                                                <Button
-                                                    type="button"
-                                                    variant="destructive"
-                                                    size="sm"
-                                                    onClick={() => removeNutriPlanDetail(index)}
-                                                    className="h-8"
-                                                >
-                                                    <Trash2 className="w-4 h-4 mr-1" />
-                                                    Xóa thức ăn
-                                                </Button>
+                                            {nutritionPlanDetails.length > 1 && (
+                                                <div className="flex justify-end mt-4">
+                                                    <Button
+                                                        type="button"
+                                                        variant="destructive"
+                                                        size="sm"
+                                                        onClick={() => removeNutriPlanDetail(index)}
+                                                    >
+                                                        <Trash2 className="w-4 h-4 mr-1" />
+                                                        Xóa thức ăn
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        </CardContent>
+                                    </Card>
+                                ))
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    {/* Feed Sessions */}
+                    <Card className="col-span-2">
+                        <CardHeader className="pb-3">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <CardTitle className="text-xl font-bold flex items-center">
+                                        <Calendar className="mr-2 h-5 w-5 text-primary" />
+                                        Lịch cho ăn
+                                    </CardTitle>
+                                    <CardDescription>
+                                        Thêm các lịch cho ăn vào chế độ dinh dưỡng
+                                    </CardDescription>
+                                </div>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={addFeedSession}
+                                    className="flex items-center gap-1"
+                                >
+                                    <Plus className="w-4 h-4" />
+                                    Thêm
+                                </Button>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            {feedSessions.length === 0 ? (
+                                <Alert>
+                                    <AlertCircle className="h-4 w-4" />
+                                    <AlertTitle>Chưa có lịch cho ăn</AlertTitle>
+                                    <AlertDescription>
+                                        Vui lòng thêm ít nhất một lịch cho ăn vào chế độ dinh dưỡng
+                                    </AlertDescription>
+                                </Alert>
+                            ) : (
+                                feedSessions.map((item, index) => (
+                                    <Card key={index} className="border border-muted">
+                                        <CardContent className="p-4">
+                                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                                <div className="space-y-4">
+                                                    {/* Feeding Time Selection */}
+                                                    <FormField
+                                                        control={form.control}
+                                                        name={`feedSessions.${index}.feedingTime`}
+                                                        render={() => (
+                                                            <FormItem>
+                                                                <FormLabel className="flex items-center">
+                                                                    <Clock className="mr-1 h-4 w-4 text-primary" />
+                                                                    Thời gian cho ăn
+                                                                </FormLabel>
+                                                                <FormControl>
+                                                                    <TimePicker
+                                                                        value={item.feedingTime}
+                                                                        onChange={(value) =>
+                                                                            updateFeedSession(
+                                                                                index,
+                                                                                'feedingTime',
+                                                                                value,
+                                                                            )
+                                                                        }
+                                                                        className="w-full"
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </div>
+
+                                                <div className="space-y-4">
+                                                    {/* Feed Amount Selection */}
+                                                    <FormItem>
+                                                        <FormLabel className="flex items-center">
+                                                            <Weight className="mr-1 h-4 w-4 text-primary" />
+                                                            Lượng cho ăn
+                                                        </FormLabel>
+                                                        <div className="flex rounded-md shadow-sm">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name={`feedSessions.${index}.feedAmount`}
+                                                                render={() => (
+                                                                    <FormControl>
+                                                                        <Input
+                                                                            className="rounded-e-none h-10"
+                                                                            placeholder="Nhập số lượng"
+                                                                            type="number"
+                                                                            min={0}
+                                                                            value={item.feedAmount}
+                                                                            onChange={(e) =>
+                                                                                updateFeedSession(
+                                                                                    index,
+                                                                                    'feedAmount',
+                                                                                    Number(
+                                                                                        e.target
+                                                                                            .value,
+                                                                                    ),
+                                                                                )
+                                                                            }
+                                                                        />
+                                                                    </FormControl>
+                                                                )}
+                                                            />
+                                                            <FormField
+                                                                control={form.control}
+                                                                name={`feedSessions.${index}.unitId`}
+                                                                render={() => (
+                                                                    <FormControl>
+                                                                        <SelectNative
+                                                                            className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
+                                                                            value={item.unitId}
+                                                                            onChange={(e) =>
+                                                                                updateFeedSession(
+                                                                                    index,
+                                                                                    'unitId',
+                                                                                    e.target.value,
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            <option
+                                                                                value=""
+                                                                                disabled
+                                                                                selected
+                                                                                hidden
+                                                                            >
+                                                                                Đơn vị
+                                                                            </option>
+                                                                            {getSubCategoryByCategoryType(
+                                                                                CategoryType.WEIGHT_UNIT,
+                                                                            )?.map((unit) => (
+                                                                                <option
+                                                                                    key={
+                                                                                        unit.subCategoryId
+                                                                                    }
+                                                                                    value={
+                                                                                        unit.subCategoryId
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        unit.subCategoryName
+                                                                                    }
+                                                                                </option>
+                                                                            ))}
+                                                                        </SelectNative>
+                                                                    </FormControl>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                    </FormItem>
+                                                </div>
+
+                                                <div className="space-y-4 col-span-2">
+                                                    {/* Note */}
+                                                    <FormField
+                                                        control={form.control}
+                                                        name={`feedSessions.${index}.note`}
+                                                        render={() => (
+                                                            <FormItem>
+                                                                <FormLabel className="flex items-center">
+                                                                    <StickyNote className="mr-1 h-4 w-4 text-primary" />
+                                                                    Ghi chú
+                                                                </FormLabel>
+                                                                <FormControl>
+                                                                    <Input
+                                                                        value={item.note}
+                                                                        onChange={(e) =>
+                                                                            updateFeedSession(
+                                                                                index,
+                                                                                'note',
+                                                                                e.target.value,
+                                                                            )
+                                                                        }
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </div>
                                             </div>
+
+                                            {/* Remove Button */}
+                                            {feedSessions.length > 1 && (
+                                                <div className="flex justify-end mt-4">
+                                                    <Button
+                                                        type="button"
+                                                        variant="destructive"
+                                                        size="sm"
+                                                        onClick={() => removeFeedSession(index)}
+                                                    >
+                                                        <Trash2 className="w-4 h-4 mr-1" />
+                                                        Xóa lịch cho ăn
+                                                    </Button>
+                                                </div>
+                                            )}
                                         </CardContent>
                                     </Card>
                                 ))

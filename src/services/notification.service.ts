@@ -1,5 +1,5 @@
 import { Notification } from '@/utils/schemas/notification.schema';
-import { get, post, put, remove } from '@/utils/functions/axios.function';
+import { get, post, put } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 import { NotificationResponse } from '@/utils/types/custom.type';
 
@@ -36,13 +36,25 @@ export const createNotification = async (body: Notification) => {
 // };
 
 export const readOneNotification = async (notificationId: string) => {
-    const endpoint = PREFIX;
+    const endpoint = PREFIX + '/read';
     const response = await put<Response<string>>(endpoint, { notificationId });
     return response.data;
 };
 
-export const deleteNotification = async (id: string) => {
-    const endpoint = PREFIX + '/' + id;
-    const response = await remove<Response<string>>(endpoint);
+export const readAllNotifications = async () => {
+    const endpoint = PREFIX + '/readAll';
+    const response = await put<Response<string>>(endpoint);
+    return response.data;
+};
+
+export const clearOneNotification = async (notificationId: string) => {
+    const endpoint = PREFIX + '/clear';
+    const response = await put<Response<string>>(endpoint, { notificationId });
+    return response.data;
+};
+
+export const clearAllNotifications = async () => {
+    const endpoint = PREFIX + '/clearAll';
+    const response = await put<Response<string>>(endpoint);
     return response.data;
 };

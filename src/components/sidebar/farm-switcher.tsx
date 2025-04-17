@@ -17,7 +17,7 @@ import {
     useSidebar,
 } from '@/components/ui/sidebar';
 import { useQuery } from '@tanstack/react-query';
-import { getFarmById, getFarmsForCurrentUser } from '@/services/farm.service';
+import { getFarmsForCurrentUser } from '@/services/farm.service';
 import Image from 'next/image';
 import { Farm } from '@/utils/schemas/farm.schema';
 import Link from 'next/link';
@@ -61,7 +61,6 @@ const FarmSkeleton = () => (
 export function FarmSwitcher() {
     const router = useRouter();
     const { isMobile } = useSidebar();
-    const [activeFarm, setActiveFarm] = useState<Farm | null>(null);
 
     const { data: farms, isLoading } = useQuery({
         queryKey: ['farms'],
@@ -69,24 +68,20 @@ export function FarmSwitcher() {
         staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
-    const { data: farm } = useQuery({
-        queryKey: ['farm'],
-        queryFn: () => getFarmById(getCookie(config.cookies.farmId) ?? ''),
-    });
+    const currentFarm = useMemo(() => {
+        return farms?.find((farm) => farm.farmId === getCookie(config.cookies.farmId));
+    }, [farms]);
+
+    const [activeFarm, setActiveFarm] = useState<Farm | null>(currentFarm ?? null);
 
     useEffect(() => {
-        try {
-            const storedFarm = sessionStorage.getItem('activeFarm');
-            if (storedFarm) {
-                setActiveFarm(JSON.parse(storedFarm));
-            } else if (farm) {
-                setActiveFarm(farm);
-            }
-        } catch (error) {
-            console.error('Error parsing active farm from session storage:', error);
-            sessionStorage.removeItem('activeFarm');
+        const newActiveFarm = farms?.find(
+            (farm) => farm.farmId === getCookie(config.cookies.farmId),
+        );
+        if (newActiveFarm) {
+            setActiveFarm(newActiveFarm);
         }
-    }, [farm]);
+    }, [farms]);
 
     const handleFarmSelect = useCallback(
         (farm: Farm) => {
@@ -108,7 +103,7 @@ export function FarmSwitcher() {
         return (
             <>
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground">
-                    <FarmImage src={activeFarm.imageUrl} alt={activeFarm.farmName} />
+                    <FarmImage src={activeFarm.imageUrl} alt={activeFarm.farmCode} />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">{activeFarm.farmName}</span>
@@ -148,7 +143,7 @@ export function FarmSwitcher() {
                                     className="gap-2 p-2"
                                 >
                                     <div className="flex size-6 items-center justify-center rounded-sm border">
-                                        <FarmImage src={farm.imageUrl} alt={farm.farmName} />
+                                        <FarmImage src={farm.imageUrl} alt={farm.farmCode} />
                                     </div>
                                     {farm.farmName}
                                 </DropdownMenuItem>

@@ -28,6 +28,8 @@ import {
 import { createSupplier, updateSupplier } from '@/services/supplier.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { generateCode } from '@/utils/functions/generate-code.function';
+import { Loader2 } from 'lucide-react';
 
 interface SupplierFormProps {
     defaultValues?: Partial<Supplier>;
@@ -76,6 +78,24 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
         console.error(error);
     };
 
+    const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        const existingCodes = new Set(
+            JSON.parse(sessionStorage.getItem('suppliers') || '[]').map(
+                (supplier: Supplier) => supplier.supplierCode,
+            ),
+        );
+
+        let code;
+        let index = 1;
+        do {
+            code = generateCode(input, index);
+            index++;
+        } while (existingCodes.has(code));
+
+        form.setValue('supplierCode', code);
+        form.setValue('supplierName', input);
+    };
     return (
         <Card className="w-full max-w-2xl mx-auto">
             <CardHeader>
@@ -101,6 +121,7 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
                                                     placeholder="Nhập tên nhà cung cấp"
                                                     className="pl-10"
                                                     {...field}
+                                                    onBlur={handleGenerateCode}
                                                 />
                                             </div>
                                         </FormControl>
@@ -117,7 +138,11 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
                                     <FormItem>
                                         <FormLabel className="text-base">Mã nhà cung cấp</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Nhập mã nhà cung cấp" {...field} />
+                                            <Input
+                                                placeholder="Nhập mã nhà cung cấp"
+                                                readOnly
+                                                {...field}
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -225,7 +250,10 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
                         <Button type="button" variant="outline" onClick={closeDialog}>
                             <X className="mr-2 h-4 w-4" /> Hủy
                         </Button>
-                        <Button type="submit">
+                        <Button type="submit" disabled={mutation.isPending}>
+                            {mutation.isPending && (
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            )}
                             <Save className="mr-2 h-4 w-4" /> Lưu
                         </Button>
                     </CardFooter>

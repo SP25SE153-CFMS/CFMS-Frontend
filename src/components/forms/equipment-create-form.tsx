@@ -6,7 +6,11 @@ import {
     getSubWeight,
 } from '@/services/category.service';
 import { getWareById } from '@/services/warehouse.service';
-import { CreateEquipment, CreateEquipmentSchema } from '@/utils/schemas/equipment.schema';
+import {
+    CreateEquipment,
+    CreateEquipmentSchema,
+    Equipment,
+} from '@/utils/schemas/equipment.schema';
 import { SubCategory } from '@/utils/schemas/sub-category.schema';
 import { Warehouse } from '@/utils/schemas/warehouse.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,7 +24,8 @@ import dayjs from 'dayjs';
 import { createEquipmentInWare } from '@/services/equipment.service';
 import toast from 'react-hot-toast';
 import { Button } from '../ui/button';
-
+import { generateCode } from '@/utils/functions/generate-code.function';
+import { Loader2 } from 'lucide-react';
 interface CreateEquipmentProps {
     closeDialog: () => void;
 }
@@ -127,6 +132,25 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
         console.error(error);
     };
 
+    const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        const existingCodes = new Set(
+            JSON.parse(sessionStorage.getItem('equipments') || '[]').map(
+                (equipment: Equipment) => equipment.equipmentCode,
+            ),
+        );
+
+        let code;
+        let index = 1;
+        do {
+            code = generateCode(input, index);
+            index++;
+        } while (existingCodes.has(code));
+
+        form.setValue('equipmentCode', code);
+        form.setValue('equipmentName', input);
+    };
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
@@ -140,7 +164,11 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                                 <FormLabel>Tên thiết bị</FormLabel>
                                 <FormControl>
                                     <div>
-                                        <Input placeholder="Nhập tên thiết bị..." {...field} />
+                                        <Input
+                                            placeholder="Nhập tên thiết bị..."
+                                            {...field}
+                                            onBlur={handleGenerateCode}
+                                        />
                                     </div>
                                 </FormControl>
                             </FormItem>
@@ -156,7 +184,11 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                                 <FormLabel>Mã thiết bị</FormLabel>
                                 <FormControl>
                                     <div>
-                                        <Input placeholder="Nhập mã thiết bị..." {...field} />
+                                        <Input
+                                            placeholder="Nhập mã thiết bị..."
+                                            readOnly
+                                            {...field}
+                                        />
                                     </div>
                                 </FormControl>
                             </FormItem>
@@ -228,7 +260,7 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                     <FormField
                         control={form.control}
                         name="wareId"
-                        render={({ field }) => {
+                        render={() => {
                             // useEffect(() => {
                             //     field.onChange(wId);
                             // }, [wId, field]);
@@ -464,7 +496,12 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                     />
                 </div>
 
-                <Button type="submit" className="ml-auto mt-6 w-40 flex">
+                <Button
+                    type="submit"
+                    className="ml-auto mt-6 w-40 flex"
+                    disabled={mutation.isPending}
+                >
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Tạo
                 </Button>
             </form>

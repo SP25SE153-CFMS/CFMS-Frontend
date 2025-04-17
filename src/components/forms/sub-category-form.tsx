@@ -30,6 +30,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { addSubCategory, updateSubCategory } from '@/services/category.service';
 import { DataType, dataTypeLabels } from '@/utils/enum';
+import { Loader2 } from 'lucide-react';
 
 interface SubCategoryFormProps {
     defaultValues?: Partial<SubCategory>;
@@ -199,7 +200,8 @@ export default function SubCategoryForm({
                     /> */}
                 </div>
 
-                <Button type="submit" className="mx-auto w-60">
+                <Button type="submit" className="mx-auto w-60" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Gửi
                 </Button>
             </form>

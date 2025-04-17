@@ -6,7 +6,6 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import { QuantityLog } from '@/utils/schemas/quantity-log.schema';
 import { DataTableRowActions } from './data-table-row-actions';
 import dayjs from 'dayjs';
-import Image from 'next/image';
 
 export const columns: ColumnDef<QuantityLog>[] = [
     {
@@ -53,26 +52,26 @@ export const columns: ColumnDef<QuantityLog>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Ghi Chú" />,
         cell: ({ row }) => <div>{row.getValue('notes') || 'Không có ghi chú'}</div>,
     },
-    {
-        accessorKey: 'img',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Hình Ảnh" />,
-        cell: ({ row }) => {
-            const imgUrl = row.getValue('img') as string | undefined;
-            return imgUrl ? (
-                <a href={imgUrl} target="_blank" rel="noopener noreferrer">
-                    <Image
-                        width={40}
-                        height={40}
-                        src={imgUrl}
-                        alt="Hình ảnh"
-                        className="h-10 w-10 object-cover"
-                    />
-                </a>
-            ) : (
-                'Không có hình ảnh'
-            );
-        },
-    },
+    // {
+    //     accessorKey: 'img',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Hình Ảnh" />,
+    //     cell: ({ row }) => {
+    //         const imgUrl = row.getValue('img') as string | undefined;
+    //         return imgUrl ? (
+    //             <Link href={imgUrl} target="_blank" rel="noopener noreferrer">
+    //                 <Image
+    //                     width={40}
+    //                     height={40}
+    //                     src={imgUrl}
+    //                     alt="Hình ảnh"
+    //                     className="h-10 w-10 object-cover"
+    //                 />
+    //             </Link>
+    //         ) : (
+    //             'Không có'
+    //         );
+    //     },
+    // },
     {
         id: 'actions',
         cell: ({ row }) => <DataTableRowActions row={row} />,

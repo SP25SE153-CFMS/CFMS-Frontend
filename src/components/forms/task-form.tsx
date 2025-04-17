@@ -34,7 +34,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -57,7 +56,6 @@ import {
     Type,
     FileText,
     CheckSquare,
-    BarChart3,
     Package,
     ChevronDown,
     Plus,
@@ -78,11 +76,7 @@ import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { capitalizeFirstLetter } from '@/utils/functions';
 import dayjs from 'dayjs';
 import { TaskStatus } from '@/utils/enum/status.enum';
-
-const LOCATION_TYPES = [
-    { value: 'COOP', label: 'Chuồng nuôi' },
-    { value: 'WARE', label: 'Nhà kho' },
-];
+import { LOCATION_TYPES } from '@/utils/enum/location-type.enum';
 
 export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
     const router = useRouter();
@@ -134,8 +128,6 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
             ...defaultValues,
         },
     });
-
-    console.log(form.getValues());
 
     const { fields, append, remove } = useFieldArray({
         control: form.control,
@@ -536,6 +528,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                                     selected={field.value}
                                                     onSelect={field.onChange}
                                                     initialFocus
+                                                    disabled={(date) => date < new Date()}
                                                     locale={vi}
                                                 />
                                             </PopoverContent>
@@ -575,6 +568,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                                     selected={field.value}
                                                     onSelect={field.onChange}
                                                     initialFocus
+                                                    disabled={(date) => date < new Date()}
                                                     locale={vi}
                                                 />
                                             </PopoverContent>
@@ -591,6 +585,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                             pagedNavigation
                             numberOfMonths={3}
                             locale={vi}
+                            disabled={(date) => date < new Date()}
                             className="rounded-md border p-2 flex py-6 [&>div]:mx-auto"
                         />
                     </>
@@ -626,6 +621,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                             selected={field.value}
                                             onSelect={field.onChange}
                                             initialFocus
+                                            disabled={(date) => date < new Date()}
                                             locale={vi}
                                         />
                                     </PopoverContent>

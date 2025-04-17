@@ -42,7 +42,7 @@ export const sidebarItems: NavGroup[] = [
                 icon: Egg,
                 subItems: [
                     { title: 'Danh sách lứa nuôi', path: config.routes.chickenBatch },
-                    { title: 'Danh sách giống gà', path: config.routes.chicken },
+                    // { title: 'Danh sách giống gà', path: config.routes.chicken },
                     { title: 'Giai đoạn phát triển', path: config.routes.growthStage },
                     { title: 'Chế độ dinh dưỡng', path: config.routes.nutritionPlan },
                 ],

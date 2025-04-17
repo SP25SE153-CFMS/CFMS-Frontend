@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Download, Search, ChevronLeft, Plus } from 'lucide-react';
+import { Download, Search, ChevronLeft, Plus, Filter } from 'lucide-react';
 
 import { columns } from './columns';
 
@@ -24,6 +24,13 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { getNutritionPlans } from '@/services/nutrition-plan.service';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -31,10 +38,15 @@ export default function Page() {
     const onOpenChange = (val: boolean) => setOpen(val);
 
     const [searchTerm, setSearchTerm] = useState('');
+    const [stageCodeFilter, setStageCodeFilter] = useState('all');
 
     const { data: growthStages, isLoading } = useQuery({
         queryKey: ['growthStages'],
-        queryFn: () => getGrowthStages(),
+        queryFn: async () => {
+            const growthStages = await getGrowthStages();
+            sessionStorage.setItem('growthStages', JSON.stringify(growthStages));
+            return growthStages;
+        },
     });
 
     useQuery({
@@ -108,13 +120,20 @@ export default function Page() {
         );
     }
 
-    // Filter growth stages based on search term
-    const filteredGrowthStages = growthStages.filter(
-        (stage) =>
+    // Get unique stage names for the filter dropdown
+    const uniqueStages = Array.from(new Set(growthStages.map((stage) => stage.stageCode)));
+
+    // Filter growth stages based on search term and stage filter
+    const filteredGrowthStages = growthStages.filter((stage) => {
+        const matchesSearch =
             searchTerm === '' ||
             stage.stageName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            stage.description?.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
+            stage.description?.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchesStageFilter = stageCodeFilter === 'all' || stage.stageCode === stageCodeFilter;
+
+        return matchesSearch && matchesStageFilter;
+    });
 
     return (
         <div className="space-y-6">
@@ -176,15 +195,35 @@ export default function Page() {
             <Card>
                 <CardHeader className="pb-3">
                     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                        <div className="relative w-full md:w-72">
-                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                type="search"
-                                placeholder="Tìm kiếm giai đoạn phát triển..."
-                                className="pl-8 w-full"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
+                        <div className="flex flex-col gap-4 md:flex-row md:items-center w-full">
+                            <div className="relative w-full md:w-72">
+                                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    type="search"
+                                    placeholder="Tìm kiếm giai đoạn phát triển..."
+                                    className="pl-8 w-full"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+                            <div className="w-full md:w-64">
+                                <Select value={stageCodeFilter} onValueChange={setStageCodeFilter}>
+                                    <SelectTrigger className="w-full">
+                                        <div className="flex items-center">
+                                            <Filter className="mr-2 h-4 w-4" />
+                                            <SelectValue placeholder="Lọc theo giai đoạn" />
+                                        </div>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="all">Tất cả giai đoạn</SelectItem>
+                                        {uniqueStages.map((stageCode) => (
+                                            <SelectItem key={stageCode} value={stageCode}>
+                                                {stageCode}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
                     </div>
                 </CardHeader>

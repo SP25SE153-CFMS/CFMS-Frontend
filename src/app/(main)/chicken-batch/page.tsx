@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import { Download, Plus, ChevronLeft, Search, Filter } from 'lucide-react';
+import { Download, ChevronLeft, Search, Filter } from 'lucide-react';
 
 import { DataTable } from '@/components/table/data-table';
 import { columns } from './columns';
@@ -51,7 +51,6 @@ export default function Page() {
     const [selectedBreedingAreaId, setSelectedBreedingAreaId] = useState('');
     const [selectedChickenCoopId, setSelectedChickenCoopId] = useState('');
 
-    const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
 
     // Fetch all breeding areas
@@ -196,7 +195,7 @@ export default function Page() {
                     <CardContent className="flex flex-col justify-center items-center pt-6 pb-8 gap-6">
                         <div className="relative w-64 h-64">
                             <Image
-                                src="/chicken-coop.avif"
+                                src="/chicken-coop.png"
                                 fill
                                 className="object-contain"
                                 alt="Chọn khu vực"

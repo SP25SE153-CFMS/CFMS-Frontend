@@ -9,13 +9,14 @@ import {
     FileText,
     Info,
     InfoIcon,
+    Split,
     Tag,
     TrendingUp,
     Type,
 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import dayjs from 'dayjs';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { chickenBatchStatusLabels, chickenBatchStatusVariant } from '@/utils/enum/status.enum';
@@ -35,9 +36,21 @@ import { getChickenType } from '@/utils/functions/category.function';
 import InfoItem from '@/components/info-item';
 import { Button } from '@/components/ui/button';
 import ChickenDetailsDialog from '@/components/chicken-details-dialog';
-import { GrowthStage } from '@/utils/schemas/growth-stage.schema';
+import {
+    Dialog,
+    DialogDescription,
+    DialogTitle,
+    DialogHeader,
+    DialogContent,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import SplitChickenBatchForm from '@/components/forms/split-chicken-batch-form';
+import { GrowthStageResponse } from '@/utils/types/custom.type';
+
 export default function Page() {
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
+
+    const [open, setOpen] = useState(false);
 
     const { data: chickenBatch, isLoading } = useQuery({
         queryKey: ['chickenBatch', chickenBatchId],
@@ -47,7 +60,7 @@ export default function Page() {
 
     const chicken = chickenBatch?.chicken;
 
-    const [currentGrowthStage, setCurrentGrowthStage] = useState<GrowthStage | null>(
+    const [currentGrowthStage, setCurrentGrowthStage] = useState<GrowthStageResponse | null>(
         chickenBatch?.growthBatches[0]?.growthStage || null,
     );
 
@@ -129,6 +142,26 @@ export default function Page() {
                                 icon={<FileText size={16} />}
                             />
                         </div>
+
+                        <CardFooter>
+                            <Dialog open={open} onOpenChange={setOpen}>
+                                <DialogTrigger asChild>
+                                    <Button variant="default" className="w-full gap-2">
+                                        <Split size={16} />
+                                        Tách lứa nuôi
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-4xl">
+                                    <DialogHeader>
+                                        <DialogTitle>Tách lứa nuôi</DialogTitle>
+                                        <DialogDescription>
+                                            Hãy nhập các thông tin dưới đây để tách lứa nuôi
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <SplitChickenBatchForm closeDialog={() => setOpen(false)} />
+                                </DialogContent>
+                            </Dialog>
+                        </CardFooter>
                     </Card>
 
                     {/* Chicken Details */}
@@ -143,8 +176,8 @@ export default function Page() {
 
                                 <InfoItem
                                     icon={<Tag className="h-4 w-4" />}
-                                    label="Mã gà"
-                                    value={chicken?.chickenCode || 'Không có mã gà'}
+                                    label="Mã giống gà"
+                                    value={chicken?.chickenCode || 'Không có mã giống gà'}
                                 />
 
                                 <InfoItem
@@ -277,12 +310,10 @@ export default function Page() {
             </div>
 
             <Stepper
-                steps={chickenBatch?.growthBatches
-                    .map((batch) => batch.growthStage.stageName)
-                    .reverse()}
-                activeStep={
-                    chickenBatch?.growthBatches.findIndex((batch) => batch.status === 1) || 0
-                }
+                steps={chickenBatch?.growthBatches.map((batch) => batch.growthStage.stageName)}
+                activeStep={chickenBatch?.growthBatches.findIndex(
+                    (batch) => batch.growthStageId === chickenBatch.currentStageId,
+                )}
                 visitStep={chickenBatch?.growthBatches.findIndex(
                     (batch) => batch.growthStageId === currentGrowthStage?.growthStageId,
                 )}
@@ -293,9 +324,9 @@ export default function Page() {
             />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 my-6">
                 <div>
-                    {currentGrowthStage?.nutritionPlanId && (
-                        <CardNutritionPlan nutritionPlanId={currentGrowthStage?.nutritionPlanId} />
-                    )}
+                    <CardNutritionPlan
+                        nutritionPlanId={currentGrowthStage?.nutritionPlanId ?? ''}
+                    />
                 </div>
                 <div className="col-span-2">
                     <Chart />

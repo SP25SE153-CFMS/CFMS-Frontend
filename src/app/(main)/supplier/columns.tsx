@@ -1,12 +1,7 @@
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-    requestStatusLabels,
-    requestStatusVariant,
-    supplierStatusLabels,
-    supplierStatusVariant,
-} from '@/utils/enum/status.enum';
+import { supplierStatusLabels, supplierStatusVariant } from '@/utils/enum/status.enum';
 import { Supplier } from '@/utils/schemas/supplier.schema';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTableRowActions } from './data-table-row-actions';

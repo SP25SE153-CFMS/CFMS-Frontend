@@ -26,13 +26,19 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
 import { CommonStatus } from '@/utils/enum/status.enum';
-
+import { generateCode } from '@/utils/functions/generate-code.function';
+import { Loader2 } from 'lucide-react';
+import { WareStockResponse } from '@/utils/types/custom.type';
+import useQueryParams from '@/hooks/use-query-params';
 interface ChickenFormProps {
     defaultValues?: Partial<Chicken>;
     closeDialog: () => void;
 }
 
 export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormProps) {
+    // Get query params
+    const { w: wareId } = useQueryParams();
+
     // Initialize form
     const form = useForm<Chicken>({
         resolver: zodResolver(defaultValues ? ChickenSchema : CreateChickenSchema),
@@ -44,6 +50,10 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
             description: '',
             status: CommonStatus.ACTIVE,
             chickenTypeId: '',
+            unitId: '',
+            packageId: '',
+            packageSize: 0,
+            wareId: sessionStorage.getItem('wareId') || wareId,
             ...defaultValues,
         },
     });
@@ -69,37 +79,70 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
 
     // Form submit handler
     async function onSubmit(values: Chicken) {
-        mutation.mutate(values);
+        const newValues = {
+            ...values,
+            id: values.chickenId,
+        };
+        mutation.mutate(defaultValues ? newValues : values);
     }
+
+    const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        const existingCodes = new Set(
+            JSON.parse(sessionStorage.getItem('chickens') || '[]').map(
+                (chicken: Chicken) => chicken.chickenCode,
+            ),
+        );
+
+        let code;
+        let index = 1;
+        do {
+            code = generateCode(input, index);
+            index++;
+        } while (existingCodes.has(code));
+
+        form.setValue('chickenCode', code);
+        form.setValue('chickenName', input);
+    };
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
-                    {/* Chicken Code */}
-                    <FormField
-                        control={form.control}
-                        name="chickenCode"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Mã gà</FormLabel>
-                                <FormControl>
-                                    <Input type="text" placeholder="Nhập mã gà" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
                     {/* Chicken Name */}
                     <FormField
                         control={form.control}
                         name="chickenName"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Tên gà</FormLabel>
+                                <FormLabel>Tên giống gà</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Nhập tên gà" {...field} />
+                                    <Input
+                                        type="text"
+                                        placeholder="Nhập tên giống gà"
+                                        {...field}
+                                        onBlur={handleGenerateCode}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Chicken Code */}
+                    <FormField
+                        control={form.control}
+                        name="chickenCode"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Mã giống gà</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="text"
+                                        placeholder="Nhập mã giống gà"
+                                        readOnly
+                                        {...field}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -180,7 +223,7 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                                         defaultValue={field.value}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Chọn trạng thái" />
+                                            <SelectValue placeholder="Chọn loại gà" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {getSubCategoryByCategoryType(CategoryType.CHICKEN).map(
@@ -199,6 +242,136 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                                 <FormMessage />
                             </FormItem>
                         )}
+                    />
+
+                    {/* Unit Select */}
+                    <FormField
+                        control={form.control}
+                        name="unitId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Đơn vị</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn đơn vị" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.C_QUANTITY_UNIT,
+                                            ).map((u) => (
+                                                <SelectItem
+                                                    key={u.subCategoryId}
+                                                    value={u.subCategoryId}
+                                                >
+                                                    {u.subCategoryName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Package Select */}
+                    <FormField
+                        control={form.control}
+                        name="packageId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Đơn vị đóng gói</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn đơn vị đóng gói" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.PACKAGE_UNIT,
+                                            ).map((p) => (
+                                                <SelectItem
+                                                    key={p.subCategoryId}
+                                                    value={p.subCategoryId}
+                                                >
+                                                    {p.subCategoryName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Package size */}
+                    <FormField
+                        control={form.control}
+                        name="packageSize"
+                        render={({ field }) => {
+                            return (
+                                <FormItem>
+                                    <FormLabel>Quy cách tính</FormLabel>
+                                    <FormControl>
+                                        <div>
+                                            <Input
+                                                {...field}
+                                                value="0"
+                                                disabled
+                                                className="bg-background"
+                                            />
+                                        </div>
+                                    </FormControl>
+                                </FormItem>
+                            );
+                        }}
+                    />
+
+                    {/* Ware */}
+                    <FormField
+                        control={form.control}
+                        name="wareId"
+                        render={() => {
+                            const wares = JSON.parse(
+                                sessionStorage.getItem('wares') || '[]',
+                            ) as WareStockResponse[];
+                            const wId = sessionStorage.getItem('wareId') || wareId;
+                            const ware = wares.find((ware) => ware.wareId === wId);
+
+                            return (
+                                <FormItem>
+                                    <FormLabel>Kho</FormLabel>
+                                    <FormControl>
+                                        {/* <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                            disabled
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Chọn đơn vị đóng gói" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {wares?.map((ware) => (
+                                                    <SelectItem
+                                                        key={ware.wareId}
+                                                        value={ware.wareId}
+                                                    >
+                                                        {ware.warehouseName}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select> */}
+                                        <Input type="text" value={ware?.warehouseName} disabled />
+                                    </FormControl>
+                                </FormItem>
+                            );
+                        }}
                     />
 
                     {/* Created Date */}
@@ -236,7 +409,8 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                         )}
                     /> */}
                 </div>
-                <Button type="submit" className="mx-auto mt-6 w-60">
+                <Button type="submit" className="mx-auto mt-6 w-60" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Gửi
                 </Button>
             </form>

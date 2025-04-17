@@ -28,6 +28,10 @@ import { NutritionPlanDetail } from '../schemas/nutrition-plan-detail.schema';
 import { FeedSession } from '../schemas/feed-session.schema';
 import { ShiftSchedule } from '../schemas/shift-schedule.schema';
 import { TaskResource } from '../schemas/task-resource.schema';
+import { Warehouse } from '../schemas/warehouse.schema';
+import { CreateInventoryReceipt } from '../schemas/inventory-receipt.schema';
+import { CreateInventoryReceiptDetail } from '../schemas/inventory-receipt-detail.schema';
+import { TaskLocation } from '../schemas/task-location.schema';
 
 export type EntityAudit = {
     isDeleted: boolean;
@@ -39,7 +43,6 @@ export type EntityAudit = {
     lastEditedByUser: User | null;
     lastEditedWhen: string | Date | null;
 };
-import { Warehouse } from '../schemas/warehouse.schema';
 
 export type ChickenCoopResponse = ChickenCoop & {
     chickenBatches: ChickenBatch[];
@@ -51,8 +54,12 @@ export type ChickenResponse = Chicken & {
     chickenDetails: ChickenDetail[];
 };
 
+export type GrowthStageResponse = GrowthStage & {
+    nutritionPlanId: string;
+};
+
 export type GrowthBatchResponse = GrowthBatch & {
-    growthStage: GrowthStage;
+    growthStage: GrowthStageResponse;
 };
 
 export type ChickenBatchResponse = ChickenBatch & {
@@ -62,6 +69,7 @@ export type ChickenBatchResponse = ChickenBatch & {
     feedLogs: FeedLog[];
     chicken: ChickenResponse;
     growthBatches: GrowthBatchResponse[];
+    currentStageId: string;
     chickenDetails: ChickenDetail[];
 };
 
@@ -85,6 +93,13 @@ export type StartChickenBatch = {
     stageCode: string;
     startDate: string | Date;
     chickenDetailRequests: ChickenDetailRequest[];
+    minGrowDays: number;
+    maxGrowDays: number;
+};
+
+export type SplitChickenBatch = StartChickenBatch & {
+    parentBatchId: string;
+    notes: string;
 };
 
 export type FarmEmployeeResponse = FarmEmployee & {
@@ -123,6 +138,13 @@ export type TaskResourceResponse = TaskResource & {
     resource: ResourceResponse;
 };
 
+export type TaskLocationResponse = TaskLocation & {
+    coopId?: string;
+    coop?: ChickenCoop;
+    wareId?: string;
+    ware?: Warehouse;
+};
+
 export type TaskResponse = Task & {
     assignments: Assignment[];
     startWorkDate: string;
@@ -130,6 +152,7 @@ export type TaskResponse = Task & {
     shiftSchedules: ShiftSchedule[];
     taskResources: TaskResourceResponse[];
     taskType: SubCategory;
+    taskLocation: TaskLocationResponse;
 };
 
 export type ChickenDetailRequest = {
@@ -152,6 +175,7 @@ export type DashboardResponse = {
     totalChickenDeath: number;
     chickenBatches: ChickenBatchResponse[];
 };
+
 export type WareStockResponse = Warehouse & {
     foods?: Food;
     equipments?: Equipment;
@@ -161,4 +185,15 @@ export type WareStockResponse = Warehouse & {
     resourceTypeName: string;
     resourceId: string;
     disease: string;
+};
+
+export type InventoryReceiptRequest = CreateInventoryReceipt & {
+    requestId: string;
+    receiptDetails: CreateInventoryReceiptDetail[];
+};
+
+export type DashboardChickenBatch = {
+    activeChicken: number;
+    deadthChicken: number;
+    totalChicken: number;
 };

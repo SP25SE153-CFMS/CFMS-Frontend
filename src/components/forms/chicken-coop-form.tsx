@@ -24,8 +24,9 @@ import { Textarea } from '../ui/textarea';
 import { SelectNative } from '../ui/select-native';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
-import useQueryParams from '@/hooks/use-query-params';
 import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from '../ui/select';
+import { generateCode } from '@/utils/functions/generate-code.function';
+import { Loader2 } from 'lucide-react';
 
 interface ChickenCoopFormProps {
     defaultValues?: Partial<ChickenCoop>;
@@ -33,8 +34,6 @@ interface ChickenCoopFormProps {
 }
 
 export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenCoopFormProps) {
-    const { breedingAreaId } = useQueryParams();
-
     // Initialize form
     const form = useForm<ChickenCoop>({
         resolver: zodResolver(defaultValues ? ChickenCoopSchema : CreateChickenCoopSchema),
@@ -44,7 +43,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
             chickenCoopName: '',
             maxQuantity: 0,
             status: 0,
-            breedingAreaId: breedingAreaId || sessionStorage.getItem('breedingAreaId') || '',
+            breedingAreaId: sessionStorage.getItem('breedingAreaId') || '',
             area: 0,
             // currentQuantity: 0,
             description: '',
@@ -69,7 +68,9 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
         mutationFn: defaultValues ? updateChickenCoop : createChickenCoop,
         onSuccess: () => {
             closeDialog();
-            queryClient.invalidateQueries({ queryKey: ['chickenCoops', breedingAreaId] });
+            queryClient.invalidateQueries({
+                queryKey: ['chickenCoops', sessionStorage.getItem('breedingAreaId')],
+            });
             toast.success(
                 defaultValues ? 'Cập nhật chuồng gà thành công' : 'Tạo chuồng gà thành công',
             );
@@ -90,25 +91,63 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
         console.error(error);
     };
 
+    const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        const existingCodes = new Set(
+            JSON.parse(sessionStorage.getItem('chickenCoops') || '[]').map(
+                (chickenCoop: ChickenCoop) => chickenCoop.chickenCoopCode,
+            ),
+        );
+
+        let code;
+        let index = 1;
+        do {
+            code = generateCode(input, index);
+            index++;
+        } while (existingCodes.has(code));
+
+        form.setValue('chickenCoopCode', code);
+        form.setValue('chickenCoopName', input);
+    };
+
+    const handleAreaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Set area
+        const area = Number(e.target.value);
+        form.setValue('area', area);
+
+        // Calculate density
+        // if (area === 0) {
+        //     form.setValue('density', 0);
+        // } else {
+        //     const result = form.getValues('maxQuantity') / area;
+        //     const density = result < 1 ? 1 : Math.round(result);
+        //     form.setValue('density', density);
+        // }
+
+        const result = area * form.getValues('density');
+        const maxQuantity = Math.round(result);
+        form.setValue('maxQuantity', maxQuantity);
+    };
+
+    const handleDensityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Set density
+        const density = Number(e.target.value);
+        form.setValue('density', density);
+
+        // Calculate max quantity
+        if (density === 0) {
+            form.setValue('maxQuantity', 0);
+        } else {
+            const result = form.getValues('area') * density;
+            const maxQuantity = Math.round(result);
+            form.setValue('maxQuantity', maxQuantity);
+        }
+    };
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
-                    {/* Mã chuồng gà */}
-                    <FormField
-                        control={form.control}
-                        name="chickenCoopCode"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Mã chuồng gà</FormLabel>
-                                <FormControl>
-                                    <Input type="text" placeholder="Nhập mã chuồng gà" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
                     {/* Tên chuồng gà */}
                     <FormField
                         control={form.control}
@@ -120,6 +159,27 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                     <Input
                                         type="text"
                                         placeholder="Nhập tên chuồng gà"
+                                        {...field}
+                                        onBlur={handleGenerateCode}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Mã chuồng gà */}
+                    <FormField
+                        control={form.control}
+                        name="chickenCoopCode"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Mã chuồng gà</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="text"
+                                        placeholder="Nhập mã chuồng gà"
+                                        readOnly
                                         {...field}
                                     />
                                 </FormControl>
@@ -140,18 +200,19 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                         type="number"
                                         placeholder="Nhập sức chứa"
                                         min={0}
+                                        disabled
                                         {...field}
-                                        onChange={(e) => {
-                                            field.onChange(e.target.value);
-                                            const maxQuantity = Number(e.target.value);
-                                            if (maxQuantity === 0) {
-                                                form.setValue('density', 0);
-                                            } else {
-                                                const density =
-                                                    maxQuantity / form.getValues('area');
-                                                form.setValue('density', density);
-                                            }
-                                        }}
+                                        // onChange={(e) => {
+                                        //     field.onChange(e.target.value);
+                                        //     const maxQuantity = Number(e.target.value);
+                                        //     if (maxQuantity === 0) {
+                                        //         form.setValue('density', 0);
+                                        //     } else {
+                                        //         const result = maxQuantity / form.getValues('area');
+                                        //         const density = result < 1 ? 1 : Math.round(result);
+                                        //         form.setValue('density', density);
+                                        //     }
+                                        // }}
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -197,14 +258,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                         type="number"
                                         min={0}
                                         {...field}
-                                        onChange={(e) => {
-                                            field.onChange(e.target.value);
-                                            const area = Number(e.target.value);
-                                            form.setValue(
-                                                'density',
-                                                form.getValues('maxQuantity') / area,
-                                            );
-                                        }}
+                                        onChange={handleAreaChange}
                                     />
                                     <SelectNative
                                         className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
@@ -260,8 +314,10 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                         className="rounded-e-none h-10"
                                         placeholder="Nhập số lượng"
                                         type="number"
-                                        disabled
+                                        min={0}
+                                        // disabled
                                         {...field}
+                                        onChange={handleDensityChange}
                                     />
                                     <SelectNative
                                         className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
@@ -364,8 +420,9 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                     />
                 </div>
 
-                <Button type="submit" className="mx-auto mt-6 w-60">
-                    Gửi
+                <Button type="submit" className="mx-auto mt-6 w-60" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                    {defaultValues ? 'Cập nhật' : 'Tạo mới'}
                 </Button>
             </form>
         </Form>

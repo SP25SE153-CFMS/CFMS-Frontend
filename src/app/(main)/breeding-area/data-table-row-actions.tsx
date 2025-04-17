@@ -23,15 +23,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import BreedingAreaForm from '@/components/forms/breeding-area-form';
 import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import { deleteBreedingArea } from '@/services/breeding-area.service';
-import {
-    AlertDialog,
-    AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogDescription,
-} from '@/components/ui/alert-dialog';
 import toast from 'react-hot-toast';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import DeleteConfirmDialog from '@/components/delete-confirm-dialog';
 
 interface Props<T> {
     row: Row<T>;
@@ -44,12 +38,23 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
     const queryClient = useQueryClient();
 
-    const handleDelete = async () => {
-        await deleteBreedingArea((row.original as BreedingArea).breedingAreaId).then(() => {
+    const breedingArea = row.original as BreedingArea;
+
+    const mutation = useMutation({
+        mutationFn: deleteBreedingArea,
+        onSuccess: () => {
             toast.success('Đã xóa khu nuôi');
             queryClient.invalidateQueries({ queryKey: ['breedingAreas'] });
             setOpenDelete(false);
-        });
+        },
+        onError: (error: any) => {
+            console.error(error);
+            toast.error(error?.response?.data?.message);
+        },
+    });
+
+    const handleDelete = async () => {
+        mutation.mutate(breedingArea.breedingAreaId);
     };
 
     return (
@@ -102,24 +107,14 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             </Dialog>
 
             {/* Delete Confirmation Dialog */}
-            <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa khu nuôi này?
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <div className="flex justify-end space-x-2">
-                        <Button variant="outline" onClick={() => setOpenDelete(false)}>
-                            Hủy
-                        </Button>
-                        <Button variant="destructive" onClick={handleDelete}>
-                            Xóa
-                        </Button>
-                    </div>
-                </AlertDialogContent>
-            </AlertDialog>
+            <DeleteConfirmDialog
+                open={openDelete}
+                setOpen={setOpenDelete}
+                handleDelete={handleDelete}
+                confirmValue={breedingArea.breedingAreaCode}
+                label="Mã khu nuôi"
+                isPending={mutation.isPending}
+            />
         </>
     );
 }

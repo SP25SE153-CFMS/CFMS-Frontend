@@ -194,6 +194,31 @@ a {
     }
 }
 
+/* Scrollbar */
+::-webkit-scrollbar {
+    border-radius: 0;
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* Selection */
+/* ::selection {
+    color: var(--white-color);
+    background: hsl(var(--primary));
+    background: hsla(var(--primary), 1);
+} */
+
+/* Custom styles */
 .leaflet-control-container .leaflet-bottom.leaflet-right {
     display: none;
 }

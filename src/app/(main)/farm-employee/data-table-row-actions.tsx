@@ -34,7 +34,7 @@ import { Activity, Calendar, IdCard, Mail, MapPin, Phone, Tag } from 'lucide-rea
 import dayjs from 'dayjs';
 import { Badge } from '@/components/ui/badge';
 import { userStatusLabels, userStatusVariant } from '@/utils/enum/status.enum';
-import FarmEmployeeForm from './form';
+import FarmEmployeeForm from '@/components/forms/farm-employee-form';
 import { FarmEmployeeResponse } from '@/utils/types/custom.type';
 
 interface Props<T> {

@@ -104,7 +104,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa khu nuôi này?
+                            Bạn có chắc chắn muốn xóa danh mục này?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="flex justify-end space-x-2">

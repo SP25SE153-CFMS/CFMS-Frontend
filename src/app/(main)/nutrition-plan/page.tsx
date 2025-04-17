@@ -14,18 +14,10 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { Input } from '@/components/ui/input';
 import { getNutritionPlans } from '@/services/nutrition-plan.service';
-import NutritionPlanForm from '@/components/forms/nutrition-plan-form';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
+import Link from 'next/link';
+import config from '@/configs';
 
 export default function Page() {
-    const [open, setOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
 
     const { data: nutritionPlans, isLoading } = useQuery({
@@ -70,24 +62,12 @@ export default function Page() {
                                 <ChevronLeft className="mr-1 h-4 w-4" />
                                 Quay lại
                             </Button>
-                            <Dialog open={open} onOpenChange={(val) => setOpen(val)}>
-                                <DialogTrigger asChild>
-                                    <Button className="h-9" onClick={() => setOpen(true)}>
-                                        <Plus className="mr-2 h-4 w-4" />
-                                        Tạo chế độ dinh dưỡng
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="max-w-5xl">
-                                    <DialogHeader>
-                                        <DialogTitle>Tạo chế độ dinh dưỡng mới</DialogTitle>
-                                        <DialogDescription>
-                                            Hãy nhập các thông tin dưới đây để tạo giai đoạn phát
-                                            triển mới.
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <NutritionPlanForm closeDialog={() => setOpen(false)} />
-                                </DialogContent>
-                            </Dialog>
+                            <Link href={config.routes.createNutritionPlan}>
+                                <Button className="h-9">
+                                    <Plus className="mr-2 h-4 w-4" />
+                                    Tạo chế độ dinh dưỡng
+                                </Button>
+                            </Link>
                         </div>
                     </CardContent>
                 </Card>
@@ -137,23 +117,12 @@ export default function Page() {
                         <Download className="mr-2 h-4 w-4" />
                         Xuất CSV
                     </Button>
-                    <Dialog open={open} onOpenChange={(val) => setOpen(val)}>
-                        <DialogTrigger asChild>
-                            <Button className="h-9" onClick={() => setOpen(true)}>
-                                <Plus className="mr-2 h-4 w-4" />
-                                Tạo chế độ
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-5xl">
-                            <DialogHeader>
-                                <DialogTitle>Tạo chế độ dinh dưỡng mới</DialogTitle>
-                                <DialogDescription>
-                                    Hãy nhập các thông tin dưới đây để tạo chế độ dinh dưỡng mới.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <NutritionPlanForm closeDialog={() => setOpen(false)} />
-                        </DialogContent>
-                    </Dialog>
+                    <Link href={config.routes.createNutritionPlan}>
+                        <Button className="h-9">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Tạo chế độ
+                        </Button>
+                    </Link>
                 </div>
             </div>
 

@@ -1,7 +1,5 @@
 import config from '@/configs';
-import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
-import { breedingAreaStatusLabels, breedingAreaStatusVariant } from '@/utils/enum/status.enum';
 import { BreedingArea } from '@/utils/schemas/breeding-area.schema';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,7 +10,8 @@ import {
     DropdownMenuTrigger,
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { AlignRight } from 'lucide-react';
+import { AlignRight, Trash } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface BreedingAreaCardProps {
     area: BreedingArea;
@@ -38,9 +37,24 @@ export default function BreedingAreaCard({
                     <h3 className="font-semibold">{area.breedingAreaName}</h3>
                     <p className="text-sm text-muted-foreground">{area.breedingAreaCode}</p>
                 </div>
-                <Badge variant={breedingAreaStatusVariant[area.status]}>
+                {/* <Badge variant={breedingAreaStatusVariant[area.status]}>
                     {breedingAreaStatusLabels[area.status]}
-                </Badge>
+                </Badge> */}
+                <Avatar className="w-16 h-16 rounded-sm object-contain">
+                    <AvatarImage
+                        src={area.imageUrl ?? '/breeding-area.png'}
+                        alt={area.breedingAreaCode}
+                        className="rounded-sm object-contain"
+                    />
+                    <AvatarFallback className="rounded-sm">{area.breedingAreaCode}</AvatarFallback>
+                </Avatar>
+                {/* <Image
+                    src={area.imageUrl ?? '/breeding-area.png'}
+                    alt={area.breedingAreaCode}
+                    className="w-16 h-16 rounded-sm object-contain"
+                    width={100}
+                    height={100}
+                /> */}
             </CardHeader>
             <CardContent className="p-4 pt-2">
                 <p className="text-sm text-muted-foreground line-clamp-2 h-12">
@@ -73,8 +87,9 @@ export default function BreedingAreaCard({
                                 setOpenDelete(true);
                                 setRow(area);
                             }}
+                            className="text-red-600"
                         >
-                            Xóa
+                            Xóa <Trash size={16} className="ml-auto" />
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

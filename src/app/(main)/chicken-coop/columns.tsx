@@ -9,11 +9,7 @@ import {
     chickenCoopStatusLabels,
     chickenCoopStatusVariant,
 } from '@/utils/enum/status.enum';
-import {
-    getChickenType,
-    getPurpose,
-    getSubCategoryByCategoryType,
-} from '@/utils/functions/category.function';
+import { getChickenType, getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
 import Link from 'next/link';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
@@ -65,9 +61,9 @@ export const columns: ColumnDef<ChickenCoop>[] = [
         ),
     },
     {
-        accessorKey: 'capacity',
+        accessorKey: 'maxQuantity',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Sức chứa" />,
-        cell: ({ row }) => <div className="w-[80px]">{row.getValue('capacity') ?? '0'} con</div>,
+        cell: ({ row }) => <div className="w-[80px]">{row.getValue('maxQuantity') ?? '0'} con</div>,
     },
     // {
     //     accessorKey: 'currentQuantity',

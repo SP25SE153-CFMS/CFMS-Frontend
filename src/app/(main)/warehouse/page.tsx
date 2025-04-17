@@ -22,7 +22,11 @@ export default function Ware() {
 
     const { data: wares = [], isLoading } = useQuery<WareStockResponse[]>({
         queryKey: ['wares', farmId],
-        queryFn: () => getWareByFarmId(farmId),
+        queryFn: async () => {
+            const wares = await getWareByFarmId(farmId as string);
+            sessionStorage.setItem('wares', JSON.stringify(wares));
+            return wares;
+        },
     });
 
     if (isLoading) {
@@ -86,6 +90,12 @@ export default function Ware() {
                 break;
             case 'Thiết bị':
                 route = config.routes.equipment;
+                break;
+            case 'breeding':
+                route = config.routes.breeding;
+                break;
+            case 'havest_product':
+                route = config.routes.harvest;
                 break;
         }
         const url = `${route}?w=${wareId}&r=${resourceTypeId}`;

@@ -32,7 +32,11 @@ const FarmMapWithNoSSR = dynamic(() => import('@/components/map/farm-map'), { ss
 export default function Page() {
     const { data: farms, isLoading } = useQuery({
         queryKey: ['farms'],
-        queryFn: () => getFarmsForCurrentUser(),
+        queryFn: async () => {
+            const farms = await getFarmsForCurrentUser();
+            sessionStorage.setItem('farms', JSON.stringify(farms));
+            return farms;
+        },
     });
 
     // Filter states

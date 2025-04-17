@@ -6,7 +6,6 @@ import { GrowthStage } from '@/utils/schemas/growth-stage.schema';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { DataTableRowActions } from './data-table-row-actions';
 import { getChickenType } from '@/utils/functions/category.function';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { NutritionPlan } from '@/utils/schemas/nutrition-plan.schema';
 
 export const columns: ColumnDef<GrowthStage>[] = [
@@ -53,15 +52,20 @@ export const columns: ColumnDef<GrowthStage>[] = [
         accessorKey: 'description',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mô tả" />,
         cell: ({ row }) => (
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger>
-                        <div className="max-w-[200px] truncate">{row.getValue('description')}</div>
-                    </TooltipTrigger>
-                    <TooltipContent>{row.getValue('description')}</TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
+            <div className="max-w-[200px] text-left cursor-default">
+                {row.getValue('description')}
+            </div>
         ),
+        // <TooltipProvider>
+        //     <Tooltip>
+        //         <TooltipTrigger>
+        //             <div className="max-w-[200px] text-left cursor-default">
+        //                 {row.getValue('description')}
+        //             </div>
+        //         </TooltipTrigger>
+        //         <TooltipContent>{row.getValue('description')}</TooltipContent>
+        //     </Tooltip>
+        // </TooltipProvider>
     },
     {
         accessorKey: 'stageCode',

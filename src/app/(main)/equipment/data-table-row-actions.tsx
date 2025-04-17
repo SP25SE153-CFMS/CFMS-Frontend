@@ -26,9 +26,7 @@ import {
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
 import toast from 'react-hot-toast';
-import { deleteEquipment } from '@/services/equipment.service';
 import { Equipment } from '@/utils/schemas/equipment.schema';
-import EquipmentForm from '@/components/forms/equipment-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { WareStockResponse } from '@/utils/types/custom.type';
 import { deleteResource } from '@/services/resource.service';

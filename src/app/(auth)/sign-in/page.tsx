@@ -137,10 +137,8 @@ export default function Page() {
                                 disabled={mutation.isPending}
                                 className="w-[425px] h-[64px] text-white text-[19px] font-semibold rounded-[13px] bg-primary hover:bg-primary-dark dark:bg-primary/90 dark:hover:bg-primary not-italic leading-[normal]"
                             >
-                                {mutation.isPending ? (
+                                {mutation.isPending && (
                                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                ) : (
-                                    ''
                                 )}
                                 Đăng nhập
                             </Button>

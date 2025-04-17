@@ -7,7 +7,6 @@ import { DataTableRowActions } from './data-table-row-actions';
 import { Badge } from '@/components/ui/badge';
 import { commonStatusLabels, commonStatusVariant } from '@/utils/enum/status.enum';
 import { ChickenResponse } from '@/utils/types/custom.type';
-import ChickenDetailsDialog from '@/components/chicken-details-dialog';
 import { getChickenType } from '@/utils/functions/category.function';
 
 export const columns: ColumnDef<ChickenResponse>[] = [
@@ -42,15 +41,15 @@ export const columns: ColumnDef<ChickenResponse>[] = [
     {
         accessorKey: 'chickenName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên gà" />,
-        cell: ({ row }) => {
-            const chickenName = row.getValue('chickenName') as string;
-            return (
-                <ChickenDetailsDialog
-                    trigger={<span className="cursor-pointer">{chickenName}</span>}
-                    chickenDetails={row.original.chickenDetails}
-                />
-            );
-        },
+        // cell: ({ row }) => {
+        //     const chickenName = row.getValue('chickenName') as string;
+        //     return (
+        //         <ChickenDetailsDialog
+        //             trigger={<span className="cursor-pointer">{chickenName}</span>}
+        //             chickenDetails={row.original.chickenDetails}
+        //         />
+        //     );
+        // },
     },
     {
         accessorKey: 'chickenTypeId',

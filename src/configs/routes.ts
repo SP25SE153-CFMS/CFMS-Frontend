@@ -22,11 +22,15 @@ const routes = {
     profile: '/profile',
     chickenBatch: '/chicken-batch',
     nutritionPlan: '/nutrition-plan',
+    createNutritionPlan: '/nutrition-plan/create',
+    updateNutritionPlan: '/nutrition-plan/update',
     forgotPassword: '/forgot-password',
     inputOTP: 'forgot-password/input-OTP',
     resetPassword: '/reset-password',
     growthStage: '/growth-stage',
     chicken: '/chicken',
+    breeding: '/warehouse/breeding',
+    harvest: '/warehouse/harvest',
     task: '/task',
     createTask: '/task/create',
     assignment: '/assignment',
@@ -36,6 +40,7 @@ const routes = {
     resourceSupplier: 'supplier/resource-supplier',
     ware: '/warehouse',
     medicine: '/warehouse/medicines',
+    config: '/config',
 };
 
 export default routes;

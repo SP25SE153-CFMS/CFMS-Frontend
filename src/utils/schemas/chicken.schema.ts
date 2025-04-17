@@ -19,6 +19,12 @@ export const ChickenSchema = z.object({
     // createdDate: z
     //     .string()
     //     .datetime({ message: 'Ngày tạo không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
+
+    // TODO: Reconfirm this code
+    packageId: z.string(),
+    packageSize: z.number(),
+    wareId: z.string(),
+    unitId: z.string(),
 });
 
 export type Chicken = z.infer<typeof ChickenSchema>;

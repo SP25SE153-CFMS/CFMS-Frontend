@@ -1,7 +1,11 @@
 import { ChickenBatch } from '@/utils/schemas/chicken-batch.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
-import { ChickenBatchResponse, StartChickenBatch } from '@/utils/types/custom.type';
+import {
+    ChickenBatchResponse,
+    SplitChickenBatch,
+    StartChickenBatch,
+} from '@/utils/types/custom.type';
 import { QuantityLog } from '@/utils/schemas/quantity-log.schema';
 
 const PREFIX = '/api/ChickenBatch';
@@ -69,5 +73,11 @@ export const startChickenBatch = async (body: StartChickenBatch) => {
 export const endChickenBatch = async (chickenBatchId: string) => {
     const endpoint = PREFIX + '/close-chickenbatch/';
     const response = await put<Response<string>>(endpoint, { chickenBatchId });
+    return response.data;
+};
+
+export const splitChickenBatch = async (body: SplitChickenBatch) => {
+    const endpoint = PREFIX + '/split-chickenbatch/';
+    const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };

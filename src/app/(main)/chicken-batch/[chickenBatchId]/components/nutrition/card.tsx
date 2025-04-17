@@ -39,7 +39,9 @@ export default function CardNutritionPlan({ nutritionPlanId }: CardNutritionPlan
             <Card className="w-full">
                 <CardContent className="pt-6 flex flex-col items-center justify-center min-h-[200px] text-muted-foreground">
                     <Info className="h-12 w-12 mb-4 opacity-50" />
-                    <p className="text-center">Không tìm thấy chế độ dinh dưỡng</p>
+                    <p className="text-center">
+                        Giai đoạn phát triển này chưa có chế độ dinh dưỡng
+                    </p>
                 </CardContent>
             </Card>
         );

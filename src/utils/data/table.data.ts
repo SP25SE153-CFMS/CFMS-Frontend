@@ -1777,9 +1777,10 @@ export const inventoryReceiptDetails: InventoryReceiptDetail[] = [
         resourceId: '220e8400-e29b-41d4-a716-446655440013',
         actualQuantity: 100,
         unitId: '330e8400-e29b-41d4-a716-446655440014',
-        reason: 'Nhập Cám A1 từ nhà cung cấp',
+        // reason: 'Nhập Cám A1 từ nhà cung cấp',
         actualDate: '2024-03-22T14:00:00Z',
         note: 'Kiểm tra chất lượng OK',
+        batchNumber: 0,
     },
     {
         inventoryReceiptDetailId: '120e8400-e29b-41d4-a716-446655440015',
@@ -1787,9 +1788,10 @@ export const inventoryReceiptDetails: InventoryReceiptDetail[] = [
         resourceId: '230e8400-e29b-41d4-a716-446655440016',
         actualQuantity: 50,
         unitId: '340e8400-e29b-41d4-a716-446655440017',
-        reason: 'Nhập kho bổ sung',
+        // reason: 'Nhập kho bổ sung',
         actualDate: '2024-03-22T15:30:00Z',
         note: 'Chưa kiểm tra hết',
+        batchNumber: 0,
     },
     {
         inventoryReceiptDetailId: '130e8400-e29b-41d4-a716-446655440018',
@@ -1797,9 +1799,10 @@ export const inventoryReceiptDetails: InventoryReceiptDetail[] = [
         resourceId: '240e8400-e29b-41d4-a716-446655440019',
         actualQuantity: 200,
         unitId: '350e8400-e29b-41d4-a716-446655440020',
-        reason: 'Xuất kho cho chuồng A1',
+        // reason: 'Xuất kho cho chuồng A1',
         actualDate: '2024-03-21T10:45:00Z',
         note: 'Cần kiểm tra lại số lượng',
+        batchNumber: 0,
     },
 ];
 

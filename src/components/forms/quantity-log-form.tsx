@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -143,6 +143,7 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
                                             }
                                             onSelect={(date) => field.onChange(date?.toISOString())}
                                             initialFocus
+                                            disabled={(date) => date < new Date()}
                                             locale={vi}
                                         />
                                     </PopoverContent>
@@ -213,7 +214,8 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
                         )}
                     />
                 </div>
-                <Button type="submit" className="mx-auto mt-6 w-60">
+                <Button type="submit" className="mx-auto mt-6 w-60" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Gửi
                 </Button>
             </form>

@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { CreateFood, CreateFoodSchema } from '@/utils/schemas/food.schema';
+import { CreateFood, CreateFoodSchema, Food } from '@/utils/schemas/food.schema';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Warehouse } from '@/utils/schemas/warehouse.schema';
 import { getWareById } from '@/services/warehouse.service';
@@ -16,6 +16,8 @@ import { createFood } from '@/services/food.service';
 import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
+import { generateCode } from '@/utils/functions/generate-code.function';
+import { Loader2 } from 'lucide-react';
 
 interface CreateFoodProps {
     closeModal: () => void;
@@ -101,6 +103,23 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
         console.error(error);
     };
 
+    const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        const existingCodes = new Set(
+            JSON.parse(sessionStorage.getItem('foods') || '[]').map((food: Food) => food.foodCode),
+        );
+
+        let code;
+        let index = 1;
+        do {
+            code = generateCode(input, index);
+            index++;
+        } while (existingCodes.has(code));
+
+        form.setValue('foodCode', code);
+        form.setValue('foodName', input);
+    };
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
@@ -114,7 +133,11 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                                 <FormLabel>Tên thức ăn</FormLabel>
                                 <FormControl>
                                     <div>
-                                        <Input placeholder="Nhập tên thức ăn..." {...field} />
+                                        <Input
+                                            placeholder="Nhập tên thức ăn..."
+                                            {...field}
+                                            onBlur={handleGenerateCode}
+                                        />
                                     </div>
                                 </FormControl>
                             </FormItem>
@@ -129,7 +152,11 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                                 <FormLabel>Mã thức ăn</FormLabel>
                                 <FormControl>
                                     <div>
-                                        <Input placeholder="Nhập mã thức ăn..." {...field} />
+                                        <Input
+                                            placeholder="Nhập mã thức ăn..."
+                                            {...field}
+                                            readOnly
+                                        />
                                     </div>
                                 </FormControl>
                             </FormItem>
@@ -183,7 +210,7 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                     <FormField
                         control={form.control}
                         name="wareId"
-                        render={({ field }) => {
+                        render={() => {
                             // useEffect(() => {
                             //     field.onChange(wId);
                             // }, [wId, field]);
@@ -290,7 +317,12 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                     </div>
                 </div>
 
-                <Button type="submit" className="ml-auto mt-6 w-40 flex">
+                <Button
+                    type="submit"
+                    className="ml-auto mt-6 w-40 flex"
+                    disabled={mutation.isPending}
+                >
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Tạo
                 </Button>
             </form>

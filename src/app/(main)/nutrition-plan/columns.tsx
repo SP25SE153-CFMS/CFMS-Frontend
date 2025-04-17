@@ -52,13 +52,33 @@ export const columns: ColumnDef<NutritionPlan>[] = [
     {
         accessorKey: 'description',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mô tả" />,
-        cell: ({ row }) => <div className="w-[300px] truncate">{row.getValue('description')}</div>,
+        // cell: ({ row }) => (
+        //     <div className="max-w-[450px] truncate">{row.getValue('description')}</div>
+        // ),
     },
-    {
-        accessorKey: 'target',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Mục tiêu" />,
-        cell: ({ row }) => <div className="w-[150px]">{row.getValue('target') ?? 'Không có'}</div>,
-    },
+    // {
+    //     accessorKey: 'feedSessions',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Số lịch cho ăn" />,
+    //     cell: ({ row }) => {
+    //         const feedSessions = row.getValue('feedSessions') as FeedSession[];
+    //         return <div>{feedSessions?.length ?? 0}</div>;
+    //     },
+    // },
+    // {
+    //     accessorKey: 'nutritionPlanDetails',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng thức ăn" />,
+    //     cell: ({ row }) => {
+    //         const nutritionPlanDetails = row.getValue(
+    //             'nutritionPlanDetails',
+    //         ) as NutritionPlanDetail[];
+    //         return <div>{nutritionPlanDetails?.length ?? 0}</div>;
+    //     },
+    // },
+    // {
+    //     accessorKey: '',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Mục tiêu" />,
+    //     cell: ({ row }) => <div className="w-[150px]">{row.getValue('target') ?? 'Không có'}</div>,
+    // },
     {
         id: 'actions',
         cell: ({ row }) => <DataTableRowActions row={row} />,

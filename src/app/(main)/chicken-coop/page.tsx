@@ -148,7 +148,7 @@ export default function Page() {
                     <CardContent className="flex flex-col justify-center items-center pt-6 pb-8 gap-6">
                         <div className="relative w-64 h-64">
                             <Image
-                                src="/breeding-area.avif"
+                                src="/breeding-area.png"
                                 fill
                                 className="object-contain"
                                 alt="Chọn khu vực"

@@ -1,11 +1,13 @@
 'use client';
 
+import type React from 'react';
+
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import Image from 'next/image';
-import { BellIcon, InboxIcon } from 'lucide-react';
+import { BellIcon, InboxIcon, Trash2Icon, XIcon, AlertCircleIcon, CheckCheck } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,8 +15,23 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     getNotificationForCurrentUser,
+    readAllNotifications,
     readOneNotification,
+    clearAllNotifications,
+    clearOneNotification,
 } from '@/services/notification.service';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import toast from 'react-hot-toast';
 
 function Dot({ className }: { className?: string }) {
     return (
@@ -43,25 +60,73 @@ export default function Notification() {
     });
 
     const [open, setOpen] = useState(false);
+    // const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [deleteAllDialogOpen, setDeleteAllDialogOpen] = useState(false);
+    // const [notificationToDelete, setNotificationToDelete] = useState<string | null>(null);
 
     // Count unread notifications (note: checking !isRead since true means it has been read)
     const unreadCount = notifications?.filter((n) => !n.isRead).length || 0;
+    const totalCount = notifications?.length || 0;
 
-    // const handleMarkAllAsRead = () => {
-    //     setNotifications(
-    //         notifications?.map((notification) => ({
-    //             ...notification,
-    //             isRead: true,
-    //         })),
-    //     );
-    // };
-
-    const handleNotificationClick = (id: string) => {
-        readOneNotification(id);
-        refetch();
+    const handleMarkAllAsRead = async () => {
+        try {
+            await readAllNotifications();
+            await refetch();
+            // toast.success('Đã đánh dấu tất cả thông báo là đã đọc');
+        } catch (error) {
+            toast.error('Không thể đánh dấu thông báo là đã đọc');
+        }
     };
 
-    // eslint-disable-next-line no-unused-vars
+    const handleNotificationClick = async (id: string) => {
+        try {
+            await readOneNotification(id);
+            await refetch();
+        } catch (error) {
+            toast.error('Không thể đánh dấu thông báo là đã đọc');
+        }
+    };
+
+    // const handleDeleteNotification = async (id: string) => {
+    //     try {
+    //         await clearOneNotification(id);
+    //         await refetch();
+    //         // toast.success('Đã xóa thông báo');
+    //     } catch (error) {
+    //         toast.error('Không thể xóa thông báo');
+    //     }
+    //     setDeleteDialogOpen(false);
+    //     setNotificationToDelete(null);
+    // };
+
+    const handleDeleteAllNotifications = async () => {
+        try {
+            await clearAllNotifications();
+            await refetch();
+            // toast.success('Đã xóa tất cả thông báo');
+        } catch (error) {
+            toast.error('Không thể xóa tất cả thông báo');
+        }
+        setDeleteAllDialogOpen(false);
+    };
+
+    const confirmDeleteNotification = async (id: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        // setNotificationToDelete(id);
+        // setDeleteDialogOpen(true);
+        try {
+            await clearOneNotification(id);
+            await refetch();
+            // toast.success('Đã xóa thông báo');
+        } catch (error) {
+            toast.error('Không thể xóa thông báo');
+        }
+    };
+
+    const confirmDeleteAllNotifications = () => {
+        setDeleteAllDialogOpen(true);
+    };
+
     const formatNotificationTime = (dateString: string) => {
         try {
             const date = new Date(dateString);
@@ -72,108 +137,218 @@ export default function Notification() {
     };
 
     return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                    size="icon"
-                    variant="ghost"
-                    className="relative h-9 w-9 rounded-full"
-                    aria-label={`${unreadCount > 0 ? `${unreadCount} thông báo chưa đọc` : 'Không có thông báo mới'}`}
-                >
-                    <BellIcon className="h-5 w-5" aria-hidden="true" />
-                    {unreadCount > 0 && (
-                        <Badge
-                            className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs"
-                            variant="destructive"
-                        >
-                            {unreadCount > 99 ? '99+' : unreadCount}
-                        </Badge>
-                    )}
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80 p-0" align="end">
-                <div className="flex items-center justify-between border-b px-4 py-3">
-                    <h3 className="font-medium">Thông báo</h3>
-                    {/* {unreadCount > 0 && (
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 gap-1 text-xs font-medium"
-                            onClick={handleMarkAllAsRead}
-                        >
-                            <CheckIcon className="h-3.5 w-3.5" />
-                            Đánh dấu tất cả đã đọc
-                        </Button>
-                    )} */}
-                </div>
-
-                {isLoading ? (
-                    <div className="flex h-[300px] items-center justify-center">
-                        <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
-                    </div>
-                ) : notifications && notifications.length > 0 ? (
-                    <ScrollArea className="h-[300px]">
-                        {notifications.map((notification) => (
-                            <div
-                                key={notification.notificationId}
-                                className={`relative border-b px-4 py-3 transition-colors hover:bg-accent ${!notification.isRead ? 'bg-accent/30' : ''}`}
+        <>
+            <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                    <Button
+                        size="icon"
+                        variant="ghost"
+                        className="relative h-9 w-9 rounded-full"
+                        aria-label={`${unreadCount > 0 ? `${unreadCount} thông báo chưa đọc` : 'Không có thông báo mới'}`}
+                    >
+                        <BellIcon className="h-5 w-5" aria-hidden="true" />
+                        {unreadCount > 0 && (
+                            <Badge
+                                className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs"
+                                variant="destructive"
                             >
-                                <div className="flex gap-3">
-                                    <Image
-                                        className="h-10 w-10 rounded-full object-cover"
-                                        src={
-                                            notification.user.avatar ||
-                                            '/no-data.jpg?height=40&width=40'
-                                        }
-                                        width={40}
-                                        height={40}
-                                        alt={notification.user.fullName}
-                                    />
-                                    <div className="flex-1 space-y-1">
-                                        <button
-                                            className="text-left text-sm after:absolute after:inset-0"
-                                            onClick={() =>
-                                                handleNotificationClick(notification.notificationId)
+                                {unreadCount > 99 ? '99+' : unreadCount}
+                            </Badge>
+                        )}
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-96 p-0 shadow-lg" align="end">
+                    <div className="flex items-center justify-between border-b px-4 py-3">
+                        <div className="flex items-center gap-2">
+                            <h3 className="font-medium">Thông báo</h3>
+                            {totalCount > 0 && (
+                                <Badge variant="default" className="px-2 py-0.5">
+                                    {totalCount}
+                                </Badge>
+                            )}
+                        </div>
+                        <div className="flex gap-2">
+                            {unreadCount > 0 && (
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-8 w-8 p-0"
+                                                onClick={handleMarkAllAsRead}
+                                            >
+                                                <CheckCheck className="h-4 w-4" />
+                                                <span className="sr-only">
+                                                    Đánh dấu tất cả đã đọc
+                                                </span>
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Đánh dấu tất cả đã đọc</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            )}
+                            {totalCount > 0 && (
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                                                onClick={confirmDeleteAllNotifications}
+                                            >
+                                                <Trash2Icon className="h-4 w-4" />
+                                                <span className="sr-only">
+                                                    Xóa tất cả thông báo
+                                                </span>
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Xóa tất cả thông báo</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            )}
+                        </div>
+                    </div>
+
+                    {isLoading ? (
+                        <div className="flex h-[350px] items-center justify-center">
+                            <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                        </div>
+                    ) : notifications && notifications.length > 0 ? (
+                        <ScrollArea className="h-[350px]">
+                            {notifications.map((notification) => (
+                                <div
+                                    key={notification.notificationId}
+                                    className={`group relative border-b px-4 py-3 transition-colors hover:bg-accent ${!notification.isRead ? 'bg-accent/30' : ''}`}
+                                >
+                                    <div className="flex gap-3">
+                                        <Image
+                                            className="h-10 w-10 rounded-full object-cover"
+                                            src={
+                                                notification.user.avatar ||
+                                                '/placeholder.svg?height=40&width=40' ||
+                                                '/placeholder.svg'
+                                            }
+                                            width={40}
+                                            height={40}
+                                            alt={notification.user.fullName}
+                                        />
+                                        <div className="flex-1 space-y-1">
+                                            <button
+                                                className="text-left text-sm after:absolute after:inset-0"
+                                                onClick={() =>
+                                                    handleNotificationClick(
+                                                        notification.notificationId,
+                                                    )
+                                                }
+                                            >
+                                                {/* <span className="font-semibold hover:underline">
+                                                    {notification.user.fullName}
+                                                </span> */}
+                                                <div className="font-semibold hover:underline">
+                                                    {notification.notificationName}
+                                                </div>
+                                                <div className="my-1 text-muted-foreground max-w-64">
+                                                    {notification.content}
+                                                </div>
+                                            </button>
+                                            <div className="text-xs text-muted-foreground">
+                                                {formatNotificationTime(
+                                                    notification?.createdWhen?.toString() ?? '',
+                                                )}
+                                            </div>
+                                        </div>
+                                        {!notification.isRead && (
+                                            <div className="absolute right-12 top-1/2 -translate-y-1/2">
+                                                <Dot className="h-2 w-2 fill-primary" />
+                                            </div>
+                                        )}
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            onClick={(e) =>
+                                                confirmDeleteNotification(
+                                                    notification.notificationId,
+                                                    e,
+                                                )
                                             }
                                         >
-                                            <span className="font-semibold hover:underline">
-                                                {notification.user.fullName}
-                                            </span>{' '}
-                                            <div className="hover:underline">
-                                                {notification.notificationName}
-                                            </div>
-                                            {/* {notification.content}{' '}
-                                            <span className="font-medium hover:underline">
-                                                {notification.notificationName}
-                                            </span> */}
-                                        </button>
-                                        {/* <div className="text-xs text-muted-foreground">
-                                            {formatNotificationTime(
-                                                notification?.createdWhen?.toString() ?? '',
-                                            )}
-                                        </div> */}
+                                            <XIcon className="h-4 w-4 text-muted-foreground hover:text-destructive" />
+                                            <span className="sr-only">Xóa thông báo</span>
+                                        </Button>
                                     </div>
-                                    {!notification.isRead && (
-                                        <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                                            <Dot className="h-2 w-2 fill-primary" />
-                                        </div>
-                                    )}
                                 </div>
+                            ))}
+                        </ScrollArea>
+                    ) : (
+                        <div className="flex h-[250px] flex-col items-center justify-center gap-2 p-4 text-center">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                                <InboxIcon className="h-6 w-6 text-muted-foreground" />
                             </div>
-                        ))}
-                    </ScrollArea>
-                ) : (
-                    <div className="flex h-[200px] flex-col items-center justify-center gap-2 p-4 text-center">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-                            <InboxIcon className="h-6 w-6 text-muted-foreground" />
+                            <h4 className="text-sm font-medium">Không có thông báo</h4>
+                            <p className="text-xs text-muted-foreground">
+                                Bạn sẽ nhận được thông báo khi có hoạt động mới
+                            </p>
                         </div>
-                        <h4 className="text-sm font-medium">Không có thông báo</h4>
-                        <p className="text-xs text-muted-foreground">
-                            Bạn sẽ nhận được thông báo khi có hoạt động mới
-                        </p>
-                    </div>
-                )}
-            </PopoverContent>
-        </Popover>
+                    )}
+                </PopoverContent>
+            </Popover>
+
+            {/* Delete Single Notification Dialog */}
+            {/* <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Xóa thông báo</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Bạn có chắc chắn muốn xóa thông báo này không? Hành động này không thể
+                            hoàn tác.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Hủy</AlertDialogCancel>
+                        <AlertDialogAction
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            onClick={() =>
+                                notificationToDelete &&
+                                handleDeleteNotification(notificationToDelete)
+                            }
+                        >
+                            Xóa
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog> */}
+
+            {/* Delete All Notifications Dialog */}
+            <AlertDialog open={deleteAllDialogOpen} onOpenChange={setDeleteAllDialogOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-2">
+                            <AlertCircleIcon className="h-5 w-5 text-destructive" />
+                            Xóa tất cả thông báo
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Bạn có chắc chắn muốn xóa tất cả thông báo không? Hành động này không
+                            thể hoàn tác.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Hủy</AlertDialogCancel>
+                        <AlertDialogAction
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            onClick={handleDeleteAllNotifications}
+                        >
+                            Xóa tất cả
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
     );
 }

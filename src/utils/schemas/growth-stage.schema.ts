@@ -17,7 +17,7 @@ export const GrowthStageSchema = z.object({
         .nonnegative({ message: 'Tuổi kết thúc phải là số nguyên không âm' }),
     description: z.string().optional(),
     // TODO: Verify if this field is correct
-    nutritionPlanId: z.string().uuid({ message: 'ID kế hoạch dinh dưỡng không hợp lệ' }).optional(),
+    // nutritionPlanId: z.string().uuid({ message: 'ID kế hoạch dinh dưỡng không hợp lệ' }).optional(),
 });
 
 export type GrowthStage = z.infer<typeof GrowthStageSchema>;

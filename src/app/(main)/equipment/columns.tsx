@@ -5,7 +5,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { DataTableRowActions } from './data-table-row-actions';
-import { getLengthUnit, getMaterial, getWeightUnit } from '@/utils/functions/category.function';
 import { WareStockResponse } from '@/utils/types/custom.type';
 
 export const columns: ColumnDef<WareStockResponse>[] = [
