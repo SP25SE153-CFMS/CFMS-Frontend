@@ -83,6 +83,7 @@ export default function Dashboard() {
                             src={farmData.imageUrl || 'no-data.jpg'}
                             alt={farmData.farmName}
                             className="rounded-lg shadow-lg object-cover h-[400px] w-full"
+                            preview
                         />
                     </div>
                 </div>

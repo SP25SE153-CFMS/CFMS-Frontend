@@ -47,9 +47,9 @@ export default function Home() {
 
     return (
         <>
-            <header className="navbar text-navy dark:text-white container relative z-[500] mx-auto flex h-24 items-center justify-between px-4 text-sm font-medium sm:px-6 lg:px-8">
+            <header className="navbar text-navy dark:text-white container relative z-[40] mx-auto flex h-24 items-center justify-between px-4 text-sm font-medium sm:px-6 lg:px-8">
                 <Link
-                    className="relative z-[60] flex items-center gap-4"
+                    className="relative z-[30] flex items-center gap-4"
                     href={configs.routes.home}
                 >
                     <Image src="/assets/logo/logo.png" alt="Logo" width="46" height="46" />
@@ -129,6 +129,7 @@ export default function Home() {
                         width="960"
                         height="520"
                         className="rounded-b-xl block dark:hidden"
+                        preview
                     />
                     <Image
                         src="/preview-dark.png"
@@ -136,6 +137,7 @@ export default function Home() {
                         width="960"
                         height="520"
                         className="rounded-b-xl hidden dark:block"
+                        preview
                     />
                 </div>
 
@@ -169,6 +171,7 @@ export default function Home() {
                                         width={600}
                                         height={400}
                                         className="rounded-xl shadow-xl object-cover dark:hidden"
+                                        preview
                                     />
                                     <Image
                                         src="/preview-dark.png"
@@ -176,6 +179,7 @@ export default function Home() {
                                         width={600}
                                         height={400}
                                         className="rounded-xl shadow-xl object-cover hidden dark:block"
+                                        preview
                                     />
                                     <div className="absolute -bottom-5 -right-5 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 max-w-xs">
                                         <p className="text-sm font-medium text-gray-900 dark:text-gray-200">

@@ -29,6 +29,7 @@ export function FarmCard({ farm }: { farm: Farm }) {
                             width={50}
                             height={50}
                             className="rounded-md object-cover absolute right-0 mt-6"
+                            preview
                         />
                     </div>
                 </CardHeader>

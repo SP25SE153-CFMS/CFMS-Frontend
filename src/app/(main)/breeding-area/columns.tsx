@@ -93,6 +93,7 @@ export const columns: ColumnDef<BreedingArea>[] = [
                         className="rounded-sm"
                         width={100}
                         height={100}
+                        preview
                     />
                     <div>
                         <p className="text-sm text-muted-foreground">
