@@ -33,6 +33,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import toast from 'react-hot-toast';
 import { Avatar, AvatarFallback, AvatarImage } from './avatar';
 import initials from 'initials';
+import { convertToThumbnailUrl } from '@/utils/functions';
 
 function Dot({ className }: { className?: string }) {
     return (
@@ -230,7 +231,9 @@ export default function Notification() {
                                     <div className="flex gap-3">
                                         <Avatar className="h-10 w-10 rounded-full object-cover">
                                             <AvatarImage
-                                                src={notification.user.avatar}
+                                                src={convertToThumbnailUrl(
+                                                    notification.user.avatar || '',
+                                                )}
                                                 alt={notification.user.fullName}
                                                 className="rounded-sm object-contain"
                                             />
@@ -253,7 +256,7 @@ export default function Notification() {
                                                 <div className="font-semibold hover:underline">
                                                     {notification.notificationName}
                                                 </div>
-                                                <div className="my-1 text-muted-foreground max-w-64">
+                                                <div className="my-1 text-muted-foreground max-w-60">
                                                     {notification.content}
                                                 </div>
                                             </button>

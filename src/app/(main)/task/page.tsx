@@ -22,7 +22,6 @@ import {
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { getCookie } from 'cookies-next';
 import TaskCard from './task-card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Calendar } from '@/components/big-calendar';
 import { getShifts } from '@/services/shift.service';
 import { Shift } from '@/utils/schemas/shift.schema';
@@ -221,50 +220,47 @@ export default function Page() {
                     {/* Kanban Board */}
                     {viewMode === 'kanban' && (
                         <div className="flex-1 overflow-auto py-4">
-                            <ScrollArea className="h-screen">
-                                <div className="h-full gap-4 pb-4 overflow-x-auto w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-                                    {columns.map((column) => (
-                                        <div
-                                            key={column.id}
-                                            className={`flex-shrink-0 flex flex-col rounded-md ${column.color}`}
-                                        >
-                                            <div className="p-3 font-medium flex items-center justify-between border-b text-black">
-                                                <h3>{column.title}</h3>
-                                                <Badge variant="outline">
-                                                    {getTasksByStatus(column.id).length}
-                                                </Badge>
-                                            </div>
-                                            <div className="flex-1 overflow-y-auto p-2 space-y-2 min-h-[200px]">
-                                                {getTasksByStatus(column.id).map((task) => (
-                                                    <Link
-                                                        href={`${config.routes.task}/${task.taskId}`}
-                                                        key={task.taskId}
-                                                    >
-                                                        <TaskCard task={task} />
-                                                    </Link>
-                                                ))}
-                                                {getTasksByStatus(column.id).length === 0 && (
-                                                    <div className="flex items-center justify-center h-20 text-sm text-muted-foreground">
-                                                        Không có công việc
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="p-2 border-t">
-                                                <Link href={config.routes.createTask}>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        className="w-full justify-start text-muted-foreground hover:bg-transparent"
-                                                    >
-                                                        <Plus className="h-4 w-4 mr-1" /> Thêm công
-                                                        việc
-                                                    </Button>
-                                                </Link>
-                                            </div>
+                            <div className="h-full gap-4 pb-4 overflow-x-auto w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+                                {columns.map((column) => (
+                                    <div
+                                        key={column.id}
+                                        className={`flex-shrink-0 flex flex-col rounded-md ${column.color}`}
+                                    >
+                                        <div className="p-3 font-medium flex items-center justify-between border-b text-black">
+                                            <h3>{column.title}</h3>
+                                            <Badge variant="outline">
+                                                {getTasksByStatus(column.id).length}
+                                            </Badge>
                                         </div>
-                                    ))}
-                                </div>
-                            </ScrollArea>
+                                        <div className="flex-1 overflow-y-auto p-2 space-y-2 min-h-[200px]">
+                                            {getTasksByStatus(column.id).map((task) => (
+                                                <Link
+                                                    href={`${config.routes.task}/${task.taskId}`}
+                                                    key={task.taskId}
+                                                >
+                                                    <TaskCard task={task} />
+                                                </Link>
+                                            ))}
+                                            {getTasksByStatus(column.id).length === 0 && (
+                                                <div className="flex items-center justify-center h-20 text-sm text-muted-foreground">
+                                                    Không có công việc
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="p-2 border-t">
+                                            <Link href={config.routes.createTask}>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="w-full justify-start text-muted-foreground hover:bg-transparent"
+                                                >
+                                                    <Plus className="h-4 w-4 mr-1" /> Thêm công việc
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
 

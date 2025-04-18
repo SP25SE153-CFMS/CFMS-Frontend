@@ -32,6 +32,7 @@ import toast from 'react-hot-toast';
 import { userStatusLabels } from '@/utils/enum/status.enum';
 import { getCurrentUser } from '@/services/auth.service';
 import { uploadAvatar } from '@/services/user.service';
+import { convertToThumbnailUrl } from '@/utils/functions';
 
 // Define the user profile schema
 const profileSchema = z.object({
@@ -223,7 +224,11 @@ export default function ProfilePage() {
                                     onClick={handleAvatarClick}
                                 >
                                     <AvatarImage
-                                        src={avatarPreview || currentUser.avatar || ''}
+                                        src={
+                                            avatarPreview ||
+                                            convertToThumbnailUrl(currentUser.avatar || '') ||
+                                            ''
+                                        }
                                         alt={currentUser.fullName}
                                     />
                                     <AvatarFallback className="text-2xl">

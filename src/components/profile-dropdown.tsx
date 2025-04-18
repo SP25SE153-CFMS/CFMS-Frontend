@@ -20,6 +20,7 @@ import { LogOut } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getCurrentUser } from '@/services/auth.service';
 import { LoadingSpinner } from './ui/loading-spinner';
+import { convertToThumbnailUrl } from '@/utils/functions';
 
 export function ProfileDropdown() {
     const { data: currentUser, isLoading } = useQuery({
@@ -49,7 +50,10 @@ export function ProfileDropdown() {
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
-                        <AvatarImage src={currentUser.avatar} alt={currentUser.fullName} />
+                        <AvatarImage
+                            src={convertToThumbnailUrl(currentUser.avatar || '')}
+                            alt={currentUser.fullName}
+                        />
                         <AvatarFallback>{initials(currentUser.fullName)}</AvatarFallback>
                     </Avatar>
                 </Button>
@@ -58,7 +62,10 @@ export function ProfileDropdown() {
                 <DropdownMenuLabel className="p-0 font-normal">
                     <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                         <Avatar className="size-8 rounded-lg">
-                            <AvatarImage src={currentUser.avatar} alt={currentUser.fullName} />
+                            <AvatarImage
+                                src={convertToThumbnailUrl(currentUser.avatar || '')}
+                                alt={currentUser.fullName}
+                            />
                             <AvatarFallback className="rounded-lg">
                                 {initials(currentUser.fullName)}
                             </AvatarFallback>
