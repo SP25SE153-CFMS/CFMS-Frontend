@@ -19,7 +19,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getEmployeesByFarmId } from '@/services/farm.service';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Badge } from '@/components/ui/badge';

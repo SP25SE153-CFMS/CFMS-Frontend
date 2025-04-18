@@ -13,7 +13,7 @@ import {
 } from '@/utils/enum/status.enum';
 import { Badge } from '@/components/ui/badge';
 import { getAreaUnit } from '@/utils/functions/category.function';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 
 export const columns: ColumnDef<BreedingArea>[] = [
     {

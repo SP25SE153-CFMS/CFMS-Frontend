@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import Link from 'next/link';
 import configs from '@/configs';
 import { IoChevronForward, IoLockClosedSharp } from 'react-icons/io5';

@@ -17,7 +17,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getTaskById } from '@/services/task.service';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { taskStatusLabels, taskStatusVariant } from '@/utils/enum/status.enum';
 import { formatDate } from '@/utils/functions';
 import { Badge } from '@/components/ui/badge';

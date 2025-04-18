@@ -14,7 +14,7 @@ import {
 import { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { useParams } from 'next/navigation';
 import SubCategoryForm from '@/components/forms/sub-category-form';
 import { downloadCSV } from '@/utils/functions/download-csv.function';

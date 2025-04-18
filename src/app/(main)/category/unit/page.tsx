@@ -5,7 +5,7 @@ import { columns } from '../columns';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { getCategories } from '@/services/category.service';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';

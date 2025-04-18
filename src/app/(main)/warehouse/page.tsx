@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { getCookie } from 'cookies-next';
 import { Info, ArrowRight, Wheat, BriefcaseMedical, Wrench, Warehouse, Plus } from 'lucide-react';
 

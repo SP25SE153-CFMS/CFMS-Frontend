@@ -8,7 +8,7 @@ import useQueryParams from '@/hooks/use-query-params';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { getFarmById } from '@/services/farm.service';
 import Link from 'next/link';
 

@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { columns } from './columns';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { Button } from '@/components/ui/button';
 
 export default function InventoryReceipt() {
@@ -30,7 +30,9 @@ export default function InventoryReceipt() {
                     <div className="flex flex-col justify-center items-center h-[300px] gap-4">
                         <Image src="/no-data.jpg" width={300} height={300} alt="Not found" />
                         <h1 className="text-2xl font-bold">Danh sách không tồn tại</h1>
-                        <Button variant="outline" onClick={() => window.history.back()}>Quay lại</Button>
+                        <Button variant="outline" onClick={() => window.history.back()}>
+                            Quay lại
+                        </Button>
                     </div>
                 </Card>
             </div>

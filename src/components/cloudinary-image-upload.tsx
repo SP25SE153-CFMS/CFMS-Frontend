@@ -8,7 +8,7 @@ import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { env } from '@/env';
 
 type AspectRatio = 'square' | 'portrait' | 'landscape' | 'auto';

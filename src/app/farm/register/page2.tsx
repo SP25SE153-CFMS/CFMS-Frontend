@@ -52,7 +52,7 @@ import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { Scale, scaleLabels } from '@/utils/enum/status.enum';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 
 // Dynamically import the map component with no SSR
 const LocationMapWithNoSSR = dynamic(() => import('@/components/map/location-map'), {

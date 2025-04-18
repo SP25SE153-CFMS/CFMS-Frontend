@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/sidebar';
 import { useQuery } from '@tanstack/react-query';
 import { getFarmsForCurrentUser } from '@/services/farm.service';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { Farm } from '@/utils/schemas/farm.schema';
 import Link from 'next/link';
 import config from '@/configs';

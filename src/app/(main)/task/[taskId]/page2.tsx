@@ -9,7 +9,7 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { getTaskById } from '@/services/task.service';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { Card } from '@/components/ui/card';
 import InfoItem from '@/components/info-item';
 import { assignmentStatusLabels, assignmentStatusVariant } from '@/utils/enum/status.enum';

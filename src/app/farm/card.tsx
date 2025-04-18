@@ -4,7 +4,7 @@ import { scaleLabels } from '@/utils/enum/status.enum';
 import { Farm } from '@/utils/schemas/farm.schema';
 import { setCookie } from 'cookies-next';
 import { Ruler, Scale3d } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { useRouter } from 'next/navigation';
 
 export function FarmCard({ farm }: { farm: Farm }) {
