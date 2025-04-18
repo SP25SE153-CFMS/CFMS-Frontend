@@ -13,6 +13,8 @@ import { assignmentBackground } from '@/utils/enum/status.enum';
 import { Badge } from '../ui/badge';
 import { Event, ShiftEvent } from './type';
 import AssignmentForm from '../forms/assignment-form';
+import Link from 'next/link';
+import config from '@/configs';
 
 type ViewMode = 'month' | 'week';
 
@@ -359,17 +361,30 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
 
                                     {/* Events for this day and shift */}
                                     <div className="mt-6 space-y-1 overflow-y-auto max-h-[150px]">
-                                        {getEventsForDateAndShift(date, shift.id).map((event) => (
-                                            <div
-                                                key={event.id}
-                                                className={cn(
-                                                    'rounded-md px-2 py-1 text-xs font-medium text-white',
-                                                    event.color,
-                                                )}
+                                        {getEventsForDateAndShift(date, shift.id)
+                                            .slice(0, 3)
+                                            .map((event) => (
+                                                <Link
+                                                    href={`${config.routes.task}/${event.id}`}
+                                                    key={event.id}
+                                                    className={cn(
+                                                        'block rounded-md px-2 py-1 text-xs font-medium text-white',
+                                                        event.color,
+                                                    )}
+                                                >
+                                                    {event.title}
+                                                </Link>
+                                            ))}
+                                        {getEventsForDateAndShift(date, shift.id).length > 3 && (
+                                            <Badge
+                                                variant="outline"
+                                                className="block w-fit mt-1 text-[10px] text-slate-400 py-0 px-2"
                                             >
-                                                {event.title}
-                                            </div>
-                                        ))}
+                                                +
+                                                {getEventsForDateAndShift(date, shift.id).length -
+                                                    3}
+                                            </Badge>
+                                        )}
                                     </div>
                                 </div>
                             ))}

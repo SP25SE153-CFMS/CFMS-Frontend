@@ -145,7 +145,7 @@ export default function Page() {
                         Quản lý tất cả các công việc trong trang trại
                     </p>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                     {/* <Button
                         variant="outline"
                         className="h-9"
@@ -170,7 +170,7 @@ export default function Page() {
                         </DialogContent>
                     </Dialog>
                     <Link href={config.routes.createTask}>
-                        <Button size="sm">
+                        <Button className="h-9">
                             <Plus className="mr-2 h-4 w-4" />
                             Tạo công việc
                         </Button>
@@ -191,27 +191,25 @@ export default function Page() {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                        <div className="flex items-center gap-2">
-                            <div className="border rounded-md p-1 flex">
-                                <Button
-                                    variant={viewMode === 'calendar' ? 'default' : 'ghost'}
-                                    size="sm"
-                                    className="h-7 px-2"
-                                    onClick={() => setViewMode('calendar')}
-                                >
-                                    <CalendarRange className="h-4 w-4" />
-                                    <span>Dạng lịch</span>
-                                </Button>
-                                <Button
-                                    variant={viewMode === 'kanban' ? 'default' : 'ghost'}
-                                    size="sm"
-                                    className="h-7 px-2"
-                                    onClick={() => setViewMode('kanban')}
-                                >
-                                    <Columns3 className="h-4 w-4" />
-                                    <span>Dạng cột</span>
-                                </Button>
-                            </div>
+                        <div className="flex items-center gap-1 border rounded-md p-1">
+                            <Button
+                                variant={viewMode === 'calendar' ? 'default' : 'ghost'}
+                                size="sm"
+                                className="h-7 px-4"
+                                onClick={() => setViewMode('calendar')}
+                            >
+                                <CalendarRange className="h-4 w-4" />
+                                <span>Dạng lịch</span>
+                            </Button>
+                            <Button
+                                variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+                                size="sm"
+                                className="h-7 px-4"
+                                onClick={() => setViewMode('kanban')}
+                            >
+                                <Columns3 className="h-4 w-4" />
+                                <span>Dạng cột</span>
+                            </Button>
                         </div>
                     </div>
                 </CardHeader>
@@ -228,7 +226,7 @@ export default function Page() {
                                     >
                                         <div className="p-3 font-medium flex items-center justify-between border-b text-black">
                                             <h3>{column.title}</h3>
-                                            <Badge variant="outline">
+                                            <Badge variant="outline" className="text-black">
                                                 {getTasksByStatus(column.id).length}
                                             </Badge>
                                         </div>
