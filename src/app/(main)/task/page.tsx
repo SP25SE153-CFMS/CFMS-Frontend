@@ -228,8 +228,8 @@ export default function Page() {
                                             key={column.id}
                                             className={`flex-shrink-0 flex flex-col rounded-md ${column.color}`}
                                         >
-                                            <div className="p-3 font-medium flex items-center justify-between border-b">
-                                                <h3 className="text-black">{column.title}</h3>
+                                            <div className="p-3 font-medium flex items-center justify-between border-b text-black">
+                                                <h3>{column.title}</h3>
                                                 <Badge variant="outline">
                                                     {getTasksByStatus(column.id).length}
                                                 </Badge>

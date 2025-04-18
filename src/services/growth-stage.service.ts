@@ -44,6 +44,16 @@ export const addNutritionPlanToGrowthStage = async (
     return response.data;
 };
 
+export const updateNutritionPlanToGrowthStage = async (
+    growthStageId: string,
+    nutritionPlanId: string,
+) => {
+    const endpoint = PREFIX + '/update-nutritionplan';
+    const body = { growthStageId, nutritionPlanId };
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
+};
+
 export const deleteNutritionPlanFromGrowthStage = async (
     growthStageId: string,
     nutritionPlanId: string,

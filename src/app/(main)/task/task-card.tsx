@@ -22,7 +22,7 @@ export default function TaskCard({ task }: { task: TaskResponse }) {
         >
             <div className="flex flex-col gap-2">
                 <div className="flex items-start justify-between">
-                    <span className="text-sm font-medium line-clamp-2 border-b border-transparent hover:border-black">
+                    <span className="text-sm font-medium line-clamp-2 border-b border-transparent text-black">
                         {task.taskName}
                     </span>
                     {/* {task.priority && (

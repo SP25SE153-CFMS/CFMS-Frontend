@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -19,7 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CalendarIcon, Check, Loader2, Mail, MapPin, Phone, User } from 'lucide-react';
+import { CalendarIcon, Check, Loader2, Mail, MapPin, Phone, Upload, User, X } from 'lucide-react';
 import {
     Form,
     FormControl,
@@ -31,6 +31,7 @@ import {
 import toast from 'react-hot-toast';
 import { userStatusLabels } from '@/utils/enum/status.enum';
 import { getCurrentUser } from '@/services/auth.service';
+import { uploadAvatar } from '@/services/user.service';
 
 // Define the user profile schema
 const profileSchema = z.object({
@@ -63,8 +64,11 @@ async function updateUserProfile(data: ProfileFormValues) {
 }
 
 export default function ProfilePage() {
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const queryClient = useQueryClient();
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const { data: currentUser } = useQuery({
         queryKey: ['currentUser'],
@@ -104,6 +108,80 @@ export default function ProfilePage() {
         },
     });
 
+    // Handle avatar click to open file dialog
+    function handleAvatarClick() {
+        fileInputRef.current?.click();
+    }
+
+    // Handle file selection
+    function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            toast.error('Vui lòng chọn một tệp hình ảnh.');
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('Kích thước tệp không được vượt quá 5MB.');
+            return;
+        }
+
+        // Create preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            setAvatarPreview(e.target?.result as string);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Setup mutation for avatar upload
+    const avatarMutation = useMutation({
+        mutationFn: uploadAvatar,
+        onSuccess: () => {
+            // // Update the cache with the new user data including the avatar
+            // queryClient.setQueryData(['currentUser'], (oldData: any) => ({
+            //     ...oldData,
+            //     avatar: data.avatarUrl,
+            // }));
+
+            queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+
+            // Reset the avatar preview
+            setAvatarPreview(null);
+            toast.success('Ảnh đại diện đã được cập nhật.');
+        },
+        onError: (error: any) => {
+            toast.error(
+                error?.response?.data?.message || 'Có lỗi xảy ra khi cập nhật ảnh đại diện.',
+            );
+            setAvatarPreview(null);
+        },
+        onSettled: () => {
+            setIsUploading(false);
+        },
+    });
+
+    // Upload avatar
+    function uploadAvatarFile() {
+        const file = fileInputRef.current?.files?.[0];
+        if (!file) return;
+
+        setIsUploading(true);
+        avatarMutation.mutate(file);
+    }
+
+    // Cancel avatar upload
+    function cancelAvatarUpload() {
+        setAvatarPreview(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    }
+
     // Handle form submission
     function onSubmit(data: ProfileFormValues) {
         mutation.mutate(data);
@@ -139,18 +217,61 @@ export default function ProfilePage() {
                     {/* Left column - User card */}
                     <Card className="md:col-span-1">
                         <CardHeader className="flex flex-col items-center text-center">
-                            <Avatar className="h-24 w-24">
-                                <AvatarImage
-                                    src={currentUser.avatar || ''}
-                                    alt={currentUser.fullName}
+                            <div className="relative">
+                                <Avatar
+                                    className="h-24 w-24 cursor-pointer border-2 border-primary/20 transition-all hover:border-primary/50"
+                                    onClick={handleAvatarClick}
+                                >
+                                    <AvatarImage
+                                        src={avatarPreview || currentUser.avatar || ''}
+                                        alt={currentUser.fullName}
+                                    />
+                                    <AvatarFallback className="text-2xl">
+                                        {currentUser.fullName
+                                            .split(' ')
+                                            .map((n) => n[0])
+                                            .join('')}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <div className="absolute -bottom-1 -right-1 rounded-full bg-background p-1 shadow-sm">
+                                    <div className="rounded-full bg-primary p-1">
+                                        <Upload className="h-3 w-3 text-primary-foreground" />
+                                    </div>
+                                </div>
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
                                 />
-                                <AvatarFallback className="text-2xl">
-                                    {currentUser.fullName
-                                        .split(' ')
-                                        .map((n) => n[0])
-                                        .join('')}
-                                </AvatarFallback>
-                            </Avatar>
+                            </div>
+
+                            {avatarPreview && (
+                                <div className="mt-4 flex gap-2">
+                                    <Button
+                                        size="sm"
+                                        onClick={uploadAvatarFile}
+                                        disabled={isUploading}
+                                    >
+                                        {isUploading ? (
+                                            <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                                        ) : (
+                                            <Check className="mr-2 h-3 w-3" />
+                                        )}
+                                        Lưu
+                                    </Button>
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={cancelAvatarUpload}
+                                        disabled={isUploading}
+                                    >
+                                        <X className="mr-2 h-3 w-3" />
+                                        Hủy
+                                    </Button>
+                                </div>
+                            )}
                             <CardTitle className="mt-4">{currentUser.fullName}</CardTitle>
                             <CardDescription>
                                 {roleMap[currentUser.systemRole as keyof typeof roleMap]}
