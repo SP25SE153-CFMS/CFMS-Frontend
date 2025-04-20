@@ -18,11 +18,24 @@ import {
     CheckCircle2,
     Wheat,
     BriefcaseMedical,
+    ArrowLeft,
+    Plus,
 } from 'lucide-react';
 import { getResourceSuppliersById } from '@/services/supplier.service';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ResourceResponse } from '@/utils/types/custom.type';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import config from '@/configs';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import AddResourceSupplier from '@/components/forms/add-resource-supplier.form';
 
 // Function để kiểm tra loại resource
 const isFood = (resource: any) => resource.foodCode && resource.foodName;
@@ -42,6 +55,13 @@ const getResourceBadgeColor = (type: string) => {
 };
 
 export default function ResourceSuppliers() {
+    const router = useRouter();
+    const [open, setOpen] = useState(false);
+
+    const openModal = () => setOpen(true);
+    const closeModal = () => setOpen(false);
+    const onOpenChange = (val: boolean) => setOpen(val);
+
     const { supplierId }: { supplierId: string } = useParams();
     const { data: resources = [], isLoading } = useQuery<ResourceResponse[]>({
         queryKey: ['resources', supplierId],
@@ -49,7 +69,7 @@ export default function ResourceSuppliers() {
         enabled: !!supplierId,
     });
 
-    // console.log('Data: ', resources);
+    // console.log('supplierId: ', supplierId);
 
     if (isLoading) {
         return (
@@ -81,10 +101,24 @@ export default function ResourceSuppliers() {
 
     return (
         <div className="max-w-screen-lg mx-auto w-full h-full flex flex-col">
-            <div className="flex justify-center items-center mb-4 px-1">
-                <h3 className="font-bold pl-3 text-2xl relative inline-block">
+            <div className="flex items-center sm:flex-row sm:items-center sm:justify-between gap-4 my-6">
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => router.push(config.routes.supplier)}
+                    className="rounded-full h-10 w-10"
+                >
+                    <ArrowLeft className="h-4 w-4" />
+                </Button>
+
+                <h3 className="justify-center items-center px-1 font-bold pl-3 text-2xl relative inline-block">
                     Thông tin các mặt hàng
                 </h3>
+
+                <Button onClick={openModal} className="w-full sm:w-auto">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Tạo mới
+                </Button>
             </div>
 
             <Tabs defaultValue="all" className="w-full flex-1 flex flex-col">
@@ -155,6 +189,20 @@ export default function ResourceSuppliers() {
                     )}
                 </div>
             </Tabs>
+
+            <Dialog open={open} onOpenChange={onOpenChange}>
+                <DialogContent className="max-w-4xl">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-semibold">Tạo hàng hóa</DialogTitle>
+                        <DialogDescription>Nhập đầy đủ các thông tin dưới.</DialogDescription>
+                    </DialogHeader>
+                    <ScrollArea className="max-h-[70vh]">
+                        <div className="p-1">
+                            <AddResourceSupplier closeModal={closeModal} supplierId={supplierId} />
+                        </div>
+                    </ScrollArea>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

@@ -288,9 +288,10 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
                                     <FormControl>
                                         <div>
                                             <Input
+                                                type="number"
+                                                min={0}
+                                                placeholder="0"
                                                 {...field}
-                                                value="0"
-                                                disabled
                                                 className="bg-background"
                                             />
                                         </div>
