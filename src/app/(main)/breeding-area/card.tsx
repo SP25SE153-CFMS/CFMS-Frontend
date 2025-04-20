@@ -67,7 +67,8 @@ export default function BreedingAreaCard({
             </CardContent>
             <CardFooter className="p-4 pt-0 flex justify-between">
                 <Link
-                    href={`${config.routes.chickenCoop}?breedingAreaId=${area.breedingAreaId}`}
+                    // href={`${config.routes.chickenCoop}?breedingAreaId=${area.breedingAreaId}`}
+                    href={config.routes.chickenCoop}
                     onClick={() => sessionStorage.setItem('breedingAreaId', area.breedingAreaId)}
                 >
                     <Button variant="outline" size="sm">

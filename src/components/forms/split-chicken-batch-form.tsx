@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { AlertCircle, CalendarIcon, Loader2, Plus, Trash2 } from 'lucide-react';
 import dayjs from 'dayjs';
@@ -13,7 +13,11 @@ import { getChickenTypes } from '@/services/category.service';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getGrowthStages } from '@/services/growth-stage.service';
 import { splitChickenBatch } from '@/services/chicken-batch.service';
-import { ChickenDetailRequest, SplitChickenBatch } from '@/utils/types/custom.type';
+import {
+    ChickenCoopResponse,
+    ChickenDetailRequest,
+    SplitChickenBatch,
+} from '@/utils/types/custom.type';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
     Select,
@@ -50,7 +54,7 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
         queryFn: () => getGrowthStages(),
     });
 
-    const [chickenId, setChickenId] = useState('');
+    // const [chickenId, setChickenId] = useState('');
     const [chickenCoopId, setChickenCoopId] = useState('');
     const [startDate, setStartDate] = useState<Date>(new Date());
     const [chickenTypeId, setChickenTypeId] = useState('');
@@ -58,10 +62,19 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
     const [chickenDetailRequests, setChickenDetailRequests] = useState<ChickenDetailRequest[]>([
         { gender: 0, quantity: 0 },
     ]);
-
     const [growDays, setGrowDays] = useState({ min: 0, max: 0 });
 
-    const chickens = chickenTypes?.find((type) => type.subCategoryId === chickenTypeId)?.chickens;
+    useEffect(() => {
+        const currentCoop: ChickenCoopResponse = JSON.parse(
+            sessionStorage.getItem('currentCoop') || '{}',
+        );
+        const chickenTypeId = currentCoop?.purposeId;
+        if (chickenTypeId) {
+            setChickenTypeId(chickenTypeId);
+        }
+    }, []);
+
+    // const chickens = chickenTypes?.find((type) => type.subCategoryId === chickenTypeId)?.chickens;
 
     const mutation = useMutation({
         mutationFn: (formData: SplitChickenBatch) => splitChickenBatch(formData),
@@ -84,7 +97,7 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
             chickenBatchName: (e.target as HTMLFormElement).chickenBatchName.value,
             stageCode:
                 growthStages?.find((stage) => stage.chickenType === chickenTypeId)?.stageCode ?? '',
-            chickenId,
+            // chickenId,
             startDate: dayjs(startDate).format('YYYY-MM-DD'),
             chickenDetailRequests,
             minGrowDays: growDays.min,
@@ -141,7 +154,11 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                     {/* Chicken type */}
                     <div className="*:not-first:mt-2 col-span-2">
                         <Label>Loại gà</Label>
-                        <Select defaultValue={chickenTypeId} onValueChange={setChickenTypeId}>
+                        <Select
+                            defaultValue={chickenTypeId}
+                            onValueChange={setChickenTypeId}
+                            disabled={!!chickenTypeId}
+                        >
                             <SelectTrigger>
                                 <SelectValue placeholder="Chọn loại gà" />
                             </SelectTrigger>
@@ -188,7 +205,7 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <div className="*:not-first:mt-2 col-span-2">
+                            {/*<div className="*:not-first:mt-2 col-span-2">
                                 <Label htmlFor={`chickenBatchName`}>Giống gà</Label>
                                 <Select defaultValue={chickenId} onValueChange={setChickenId}>
                                     <SelectTrigger>
@@ -205,7 +222,7 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                {/* <DropdownMenu>
+                                 <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="outline" className="w-full">
                                         Chọn giống gà
@@ -239,8 +256,8 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                                         ))}
                                     </DropdownMenuGroup>
                                 </DropdownMenuContent>
-                            </DropdownMenu> */}
-                            </div>
+                            </DropdownMenu> 
+                            </div>*/}
                         </>
                     )}
 

@@ -265,7 +265,7 @@ export default function Page() {
             {/* Column View */}
             {viewMode === 'column' && (
                 <div className="flex-1 overflow-auto py-4">
-                    <div className="h-full gap-4 pb-4 overflow-x-auto w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="h-full gap-8 pb-4 overflow-x-auto w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                         {columns.map((column) => (
                             <div
                                 key={column.id}

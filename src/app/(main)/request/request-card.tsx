@@ -27,7 +27,7 @@ export default function RequestCard({ request }: { request: RequestResponse }) {
     return (
         <Card
             key={request.requestId}
-            className="overflow-hidden hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] border-muted/80 group mb-2"
+            className="overflow-hidden hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] border-muted/80 group mb-4"
         >
             <CardHeader className="pb-2 bg-muted/20">
                 <div className="flex justify-between items-start">

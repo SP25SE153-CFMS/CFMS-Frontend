@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import {
     ArrowLeft,
     FileText,
@@ -39,7 +39,7 @@ import { approveRequest, getRequestById } from '@/services/request.service';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getWareStockByResourceId } from '@/services/warehouse.service';
 import { RequestResponse, ResourceResponse } from '@/utils/types/custom.type';
-import { formatDate } from '@/utils/functions';
+import { convertToThumbnailUrl, formatDate } from '@/utils/functions';
 import { DATE_TIME_FORMAT } from '@/utils/constants/date.constant';
 import toast from 'react-hot-toast';
 import { RequestStatus } from '@/utils/enum/status.enum';
@@ -484,7 +484,7 @@ export default function RequestDetailPage() {
                                                             }}
                                                         >
                                                             <Image
-                                                                src={url || '/placeholder.svg'}
+                                                                src={convertToThumbnailUrl(url)}
                                                                 alt={`Hình ảnh ${index + 1}`}
                                                                 fill
                                                                 className="object-cover"
@@ -494,7 +494,7 @@ export default function RequestDetailPage() {
                                                     <DialogContent className="max-w-4xl p-0 overflow-hidden">
                                                         <div className="relative w-full h-[80vh]">
                                                             <Image
-                                                                src={url || '/placeholder.svg'}
+                                                                src={convertToThumbnailUrl(url)}
                                                                 alt={`Hình ảnh ${index + 1}`}
                                                                 fill
                                                                 className="object-contain"

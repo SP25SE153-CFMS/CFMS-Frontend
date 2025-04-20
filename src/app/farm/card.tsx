@@ -16,7 +16,7 @@ export function FarmCard({ farm }: { farm: Farm }) {
             onClick={() => {
                 sessionStorage.setItem('activeFarm', JSON.stringify(farm));
                 setCookie(config.cookies.farmId, farm.farmId);
-                router.push(`${config.routes.dashboard}?farmCode=${farm.farmCode}`);
+                router.push(`${config.routes.welcome}?farmCode=${farm.farmCode}`);
             }}
         >
             <Card className="hover:shadow-lg transition-shadow duration-300 mb-4">

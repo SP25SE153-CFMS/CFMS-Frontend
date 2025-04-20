@@ -70,7 +70,8 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <DropdownMenuItem
                         onClick={() => {
                             router.push(
-                                `${config.routes.chickenCoop}?breedingAreaId=${row.getValue('breedingAreaId')}`,
+                                // `${config.routes.chickenCoop}?breedingAreaId=${row.getValue('breedingAreaId')}`,
+                                config.routes.chickenCoop,
                             );
                             sessionStorage.setItem(
                                 'breedingAreaId',

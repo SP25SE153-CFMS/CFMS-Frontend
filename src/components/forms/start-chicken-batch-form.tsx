@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { AlertCircle, CalendarIcon, Plus, Trash2 } from 'lucide-react';
 import dayjs from 'dayjs';
@@ -11,7 +11,11 @@ import { getChickenTypes } from '@/services/category.service';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getGrowthStages } from '@/services/growth-stage.service';
 import { startChickenBatch } from '@/services/chicken-batch.service';
-import { ChickenDetailRequest, StartChickenBatch } from '@/utils/types/custom.type';
+import {
+    ChickenCoopResponse,
+    ChickenDetailRequest,
+    StartChickenBatch,
+} from '@/utils/types/custom.type';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
     Select,
@@ -45,6 +49,16 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
     const [chickenDetailRequests, setChickenDetailRequests] = useState<ChickenDetailRequest[]>([
         { gender: 0, quantity: 0 },
     ]);
+
+    useEffect(() => {
+        const currentCoop: ChickenCoopResponse = JSON.parse(
+            sessionStorage.getItem('currentCoop') || '{}',
+        );
+        const chickenTypeId = currentCoop?.purposeId;
+        if (chickenTypeId) {
+            setChickenTypeId(chickenTypeId);
+        }
+    }, []);
 
     const [growDays, setGrowDays] = useState({ min: 0, max: 0 });
 
@@ -121,7 +135,11 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                     {/* Chicken type */}
                     <div className="*:not-first:mt-2 col-span-2">
                         <Label>Loại gà</Label>
-                        <Select defaultValue={chickenTypeId} onValueChange={setChickenTypeId}>
+                        <Select
+                            defaultValue={chickenTypeId}
+                            onValueChange={setChickenTypeId}
+                            // disabled={!!chickenTypeId}
+                        >
                             <SelectTrigger>
                                 <SelectValue placeholder="Chọn loại gà" />
                             </SelectTrigger>

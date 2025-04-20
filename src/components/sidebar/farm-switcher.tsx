@@ -16,7 +16,7 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from '@/components/ui/sidebar';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getFarmsForCurrentUser } from '@/services/farm.service';
 import Image from '@/components/fallback-image';
 import { Farm } from '@/utils/schemas/farm.schema';
@@ -83,13 +83,16 @@ export function FarmSwitcher() {
         }
     }, [farms]);
 
+    const queryClient = useQueryClient();
+
     const handleFarmSelect = useCallback(
         (farm: Farm) => {
             setActiveFarm(farm);
             try {
                 sessionStorage.setItem('activeFarm', JSON.stringify(farm));
                 setCookie(config.cookies.farmId, farm.farmId);
-                router.push(`${config.routes.dashboard}?farmCode=${farm.farmCode}`);
+                router.push(`${config.routes.welcome}?farmCode=${farm.farmCode}`);
+                queryClient.invalidateQueries();
             } catch (error) {
                 console.error('Error setting active farm:', error);
             }

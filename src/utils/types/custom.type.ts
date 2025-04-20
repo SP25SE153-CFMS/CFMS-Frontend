@@ -101,7 +101,7 @@ export type StartChickenBatch = {
     maxGrowDays: number;
 };
 
-export type SplitChickenBatch = StartChickenBatch & {
+export type SplitChickenBatch = Omit<StartChickenBatch, 'chickenId'> & {
     parentBatchId: string;
     notes: string;
 };

@@ -61,7 +61,7 @@ export default function SidebarOverview({
                     {/* Dashboard */}
                     {/* <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href={config.routes.dashboard}>
+                            <Link href={config.routes.welcome}>
                                 <PanelsTopLeft />
                                 <span>Trang chủ</span>
                             </Link>
