@@ -161,7 +161,7 @@ export default function Page() {
                                 Giao việc
                             </Button>
                         </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
+                        <DialogContent className="max-w-4xl">
                             <DialogHeader>
                                 <DialogTitle>Giao công việc mới</DialogTitle>
                             </DialogHeader>

@@ -273,6 +273,12 @@ export default function RequestDetailPage() {
         }
     }
 
+    const handleCreateInventoryReceipt = () => {
+        // TODO: Handle creating inventory receipt logic here
+        // This could involve navigating to another page or opening a modal
+        toast('Chức năng này đang được triển khai');
+    };
+
     return (
         <div className="container max-w-5xl mx-auto py-8 px-4 animate-in fade-in duration-300">
             {/* Header with back button and status */}
@@ -896,14 +902,20 @@ export default function RequestDetailPage() {
                         <CardContent className="pt-6">
                             <div className="space-y-3">
                                 {/* <Button className="w-full justify-start" variant="outline">
-                                    <FileText className="h-4 w-4 mr-2" />
-                                    Xuất phiếu PDF
-                                </Button>
-
-                                <Button className="w-full justify-start" variant="outline">
                                     <Package className="h-4 w-4 mr-2" />
                                     Xem lịch sử phiếu
                                 </Button> */}
+
+                                {requestDetail.status === 1 && (
+                                    <Button
+                                        className="w-full justify-start"
+                                        variant="outline"
+                                        onClick={handleCreateInventoryReceipt}
+                                    >
+                                        <FileText className="h-4 w-4 mr-2" />
+                                        Tạo phiếu nhập/xuất
+                                    </Button>
+                                )}
 
                                 {requestDetail.status === 0 && (
                                     <>

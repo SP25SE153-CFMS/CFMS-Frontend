@@ -1,18 +1,15 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { UserIcon, Calendar, Filter, Plus, Search } from 'lucide-react';
+import { Filter, Search, Table, Columns3 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import Image from '@/components/fallback-image';
 import { getRequests } from '@/services/request.service';
-import Link from 'next/link';
-import config from '@/configs';
 import { getUsers } from '@/services/user.service';
 import { Badge } from '@/components/ui/badge';
-import { requestStatusBadge, requestStatusLabels } from '@/utils/enum/status.enum';
-import { formatDate } from '@/utils/functions';
+import { RequestStatus, requestStatusBadge, requestStatusLabels } from '@/utils/enum/status.enum';
 import type { User } from '@/utils/schemas/user.schema';
 import { useMemo, useState } from 'react';
 import {
@@ -24,13 +21,18 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { RequestResponse } from '@/utils/types/custom.type';
-import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
+import { mapEnumToValues } from '@/utils/functions/enum.function';
+import { DataTable } from '@/components/table/data-table';
+import { columns as tableColumns } from './columns';
+import RequestCard from './request-card';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
 
 export default function Page() {
     // State for filtering
     const [selectedRequestType, setSelectedRequestType] = useState<string>('all');
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [viewMode, setViewMode] = useState<'column' | 'table'>('column');
 
     const { data: requests, isLoading } = useQuery({
         queryKey: ['requests'],
@@ -137,6 +139,20 @@ export default function Page() {
         );
     }
 
+    // Define the columns for the Kanban board
+    const columns = mapEnumToValues(RequestStatus).map((status) => ({
+        id: Number(status),
+        title: requestStatusLabels[status],
+        color: requestStatusBadge[status],
+    }));
+
+    const getRequestsByStatus = (status: number) => {
+        if (status === 0) {
+            return filteredRequests.filter((request) => request.status === 0 || !request.status);
+        }
+        return filteredRequests.filter((request) => request.status === Number(status));
+    };
+
     // Return the page
     return (
         <div className="container mx-auto px-4 py-6">
@@ -160,51 +176,77 @@ export default function Page() {
             </div>
 
             {/* Search and Filter section */}
-            <div className="mb-8 space-y-4 bg-muted/30 p-4 rounded-lg border">
-                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                    <div className="flex items-center gap-2">
-                        <Filter size={18} className="text-primary" />
-                        <span className="font-medium">Lọc theo loại phiếu:</span>
-                    </div>
+            <div className="mb-6 space-y-4 bg-muted/30 p-4 rounded-lg border">
+                <div className="flex justify-between items-center">
+                    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                        <div className="flex items-center gap-2">
+                            <Filter size={18} className="text-primary" />
+                            <span className="font-medium">Lọc theo loại phiếu:</span>
+                        </div>
 
-                    {/* Tabs for larger screens */}
-                    <div className="hidden md:block">
-                        <Tabs
-                            value={selectedRequestType}
-                            onValueChange={setSelectedRequestType}
-                            className="w-full"
-                        >
-                            <TabsList className="bg-background">
-                                {requestTypes?.map((type) => (
-                                    <TabsTrigger key={type.id} value={type.id}>
-                                        {type.label}
-                                    </TabsTrigger>
-                                ))}
-                            </TabsList>
-                        </Tabs>
-                    </div>
+                        {/* Tabs for larger screens */}
+                        <div className="hidden md:block">
+                            <Tabs
+                                value={selectedRequestType}
+                                onValueChange={setSelectedRequestType}
+                                className="w-full"
+                            >
+                                <TabsList className="bg-background">
+                                    {requestTypes?.map((type) => (
+                                        <TabsTrigger key={type.id} value={type.id}>
+                                            {type.label}
+                                        </TabsTrigger>
+                                    ))}
+                                </TabsList>
+                            </Tabs>
+                        </div>
 
-                    {/* Dropdown for mobile */}
-                    <div className="md:hidden w-full sm:w-auto">
-                        <Select value={selectedRequestType} onValueChange={setSelectedRequestType}>
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Chọn loại phiếu" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {requestTypes?.map((type) => (
-                                    <SelectItem key={type.id} value={type.id}>
-                                        {type.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        {/* Dropdown for mobile */}
+                        <div className="md:hidden w-full sm:w-auto">
+                            <Select
+                                value={selectedRequestType}
+                                onValueChange={setSelectedRequestType}
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Chọn loại phiếu" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {requestTypes?.map((type) => (
+                                        <SelectItem key={type.id} value={type.id}>
+                                            {type.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
                     </div>
 
                     {/* Filter count */}
-                    <div className="ml-auto">
+                    {/* <div className="ml-auto">
                         <Badge variant="outline" className="bg-primary/10">
                             {filteredRequests?.length || 0} phiếu
                         </Badge>
+                    </div> */}
+
+                    <div className="flex items-center gap-1 border rounded-md p-1">
+                        <Button
+                            variant={viewMode === 'column' ? 'default' : 'ghost'}
+                            size="sm"
+                            className="h-7 px-4"
+                            onClick={() => setViewMode('column')}
+                        >
+                            <Columns3 className="h-4 w-4" />
+                            <span>Dạng cột</span>
+                        </Button>
+                        <Button
+                            variant={viewMode === 'table' ? 'default' : 'ghost'}
+                            size="sm"
+                            className="h-7 px-4"
+                            onClick={() => setViewMode('table')}
+                        >
+                            <Table className="h-4 w-4" />
+                            <span>Dạng bảng</span>
+                        </Button>
                     </div>
                 </div>
 
@@ -220,107 +262,54 @@ export default function Page() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredRequests?.map((request) => {
-                    const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
-                    const createdBy = users.find((user) => user.userId === request.createdByUserId);
-                    const approvedBy = users.find((user) => user.userId === request.approvedById);
-                    const requestType = getRequestType(request);
+            {/* Column View */}
+            {viewMode === 'column' && (
+                <div className="flex-1 overflow-auto py-4">
+                    <div className="h-full gap-4 pb-4 overflow-x-auto w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                        {columns.map((column) => (
+                            <div
+                                key={column.id}
+                                className={`flex-shrink-0 flex flex-col rounded-md ${column.color}`}
+                            >
+                                <div className="p-3 font-medium flex items-center justify-between border-b text-black">
+                                    <h3>{column.title}</h3>
+                                    <Badge variant="outline" className="text-black">
+                                        {getRequestsByStatus(column.id).length}
+                                    </Badge>
+                                </div>
+                                <div className="flex-1 overflow-y-auto p-2 space-y-2 min-h-[200px]">
+                                    <ScrollArea className="max-h-screen space-x-2 py-2">
+                                        {getRequestsByStatus(column.id).map((request) => (
+                                            <RequestCard
+                                                request={request}
+                                                key={request.requestId}
+                                            />
+                                        ))}
+                                    </ScrollArea>
+                                    {getRequestsByStatus(column.id).length === 0 && (
+                                        <div className="flex items-center justify-center h-20 text-sm text-muted-foreground">
+                                            Không có phiếu yêu cầu
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
-                    return (
-                        <Card
-                            key={request.requestId}
-                            className="overflow-hidden hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] border-muted/80 group"
-                        >
-                            <CardHeader className="pb-2 bg-muted/20">
-                                <div className="flex justify-between items-start">
-                                    <Badge
-                                        className={cn(
-                                            requestStatusBadge[request.status],
-                                            'hover:bg-inherit text-xs font-medium px-3 py-1',
-                                        )}
-                                    >
-                                        {requestStatusLabels[request.status] || 'Chưa xác định'}
-                                    </Badge>
-                                    <Badge variant="outline" className="bg-background/80">
-                                        {requestType}
-                                    </Badge>
-                                </div>
-                            </CardHeader>
-                            <CardContent className="pt-4 pb-2">
-                                <div className="space-y-3 text-sm">
-                                    <div className="flex items-center gap-2">
-                                        <div className="bg-primary/10 p-1.5 rounded-full">
-                                            <Calendar size={14} className="text-primary" />
-                                        </div>
-                                        <span className="flex flex-col">
-                                            <span className="text-muted-foreground text-xs">
-                                                Ngày tạo:
-                                            </span>
-                                            <span className="font-medium">
-                                                {formatDate(request.createdWhen) ||
-                                                    'Không có thông tin'}
-                                            </span>
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <div className="bg-primary/10 p-1.5 rounded-full">
-                                            <UserIcon size={14} className="text-primary" />
-                                        </div>
-                                        <span className="flex flex-col">
-                                            <span className="text-muted-foreground text-xs">
-                                                Người tạo:
-                                            </span>
-                                            <span className="font-medium">
-                                                {createdBy?.fullName || 'Không có thông tin'}
-                                            </span>
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <div className="bg-primary/10 p-1.5 rounded-full">
-                                            <Calendar size={14} className="text-primary" />
-                                        </div>
-                                        <span className="flex flex-col">
-                                            <span className="text-muted-foreground text-xs">
-                                                Ngày duyệt:
-                                            </span>
-                                            <span className="font-medium">
-                                                {formatDate(request.approvedAt) || 'Chưa duyệt'}
-                                            </span>
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <div className="bg-primary/10 p-1.5 rounded-full">
-                                            <UserIcon size={14} className="text-primary" />
-                                        </div>
-                                        <span className="flex flex-col">
-                                            <span className="text-muted-foreground text-xs">
-                                                Người duyệt:
-                                            </span>
-                                            <span className="font-medium">
-                                                {approvedBy?.fullName || 'Chưa duyệt'}
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </CardContent>
-                            <CardFooter className="pt-4">
-                                <Link
-                                    href={`${config.routes.request}/${request.requestId}`}
-                                    className="w-full"
-                                >
-                                    <Button
-                                        variant="outline"
-                                        className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-                                    >
-                                        Xem chi tiết
-                                    </Button>
-                                </Link>
-                            </CardFooter>
-                        </Card>
-                    );
+            {/* Table View */}
+            {viewMode === 'table' && (
+                <div className="py-6">
+                    <DataTable columns={tableColumns} data={filteredRequests} />
+                </div>
+            )}
+
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredRequests?.map((request) => {
+                    return <RequestCard request={request} key={request.requestId} />;
                 })}
-            </div>
+            </div> */}
 
             {filteredRequests?.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-10 bg-muted/20 rounded-lg border border-dashed p-8 mt-4">
@@ -353,12 +342,12 @@ export default function Page() {
                                 Xem tất cả
                             </Button>
                         )}
-                        <Link href={config.routes.createRequest || '#'}>
+                        {/* <Link href={config.routes.createRequest || '#'}>
                             <Button>
                                 <Plus size={16} className="mr-1" />
                                 Tạo phiếu yêu cầu
                             </Button>
-                        </Link>
+                        </Link> */}
                     </div>
                 </div>
             )}

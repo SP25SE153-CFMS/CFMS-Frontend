@@ -541,7 +541,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
 
             {/* Add Event Dialog */}
             <Dialog open={isAddEventOpen} onOpenChange={setIsAddEventOpen}>
-                <DialogContent className="sm:max-w-[425px]">
+                <DialogContent className="max-w-4xl">
                     <DialogHeader>
                         <DialogTitle>Giao công việc mới</DialogTitle>
                     </DialogHeader>
