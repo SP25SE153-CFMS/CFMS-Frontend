@@ -2,9 +2,19 @@
 
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { getCookie } from 'cookies-next';
-import { Info, ArrowRight, Wheat, BriefcaseMedical, Wrench, Warehouse } from 'lucide-react';
+import {
+    Info,
+    ArrowRight,
+    Wheat,
+    BriefcaseMedical,
+    Wrench,
+    Warehouse,
+    Plus,
+    Origami,
+    Apple,
+} from 'lucide-react';
 
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -15,8 +25,22 @@ import { wareStatusLabels, wareStatusVariant } from '@/utils/enum/status.enum';
 import { getWareByFarmId } from '@/services/warehouse.service';
 import type { WareStockResponse } from '@/utils/types/custom.type';
 import config from '@/configs';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import WarehouseForm from '@/components/forms/warehouse-form';
+import { useState } from 'react';
 
 export default function Ware() {
+    const [open, setOpen] = useState(false);
+    const openModal = () => setOpen(true);
+    const onOpenChange = (val: boolean) => setOpen(val);
+
     const router = useRouter();
     const farmId = getCookie(config.cookies.farmId) ?? '';
 
@@ -56,14 +80,32 @@ export default function Ware() {
                                 Không tìm thấy dữ liệu kho trong trang trại này
                             </p>
                         </div>
-                        <Button
-                            variant="default"
-                            onClick={() => window.history.back()}
-                            className="px-6"
-                        >
-                            <ArrowRight className="mr-2 h-4 w-4 rotate-180" />
-                            Quay lại
-                        </Button>
+                        <div className="flex items-center gap-4">
+                            <Button
+                                variant="outline"
+                                onClick={() => window.history.back()}
+                                className="px-6"
+                            >
+                                <ArrowRight className="mr-2 h-4 w-4 rotate-180" />
+                                Quay lại
+                            </Button>
+                            <Button className="space-x-1" onClick={openModal}>
+                                <span>Tạo kho</span> <Plus size={18} />
+                            </Button>
+                            <Dialog open={open} onOpenChange={onOpenChange}>
+                                <DialogContent className="max-w-2xl">
+                                    <DialogHeader>
+                                        <DialogTitle>Tạo kho mới</DialogTitle>
+                                        <DialogDescription>
+                                            Hãy nhập các thông tin dưới đây.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <ScrollArea className="max-h-[600px]">
+                                        <WarehouseForm closeDialog={() => setOpen(false)} />
+                                    </ScrollArea>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
                     </CardContent>
                 </Card>
             </div>
@@ -91,12 +133,14 @@ export default function Ware() {
             case 'Thiết bị':
                 route = config.routes.equipment;
                 break;
-            case 'breeding':
+            case 'Con giống':
                 route = config.routes.breeding;
                 break;
-            case 'havest_product':
+            case 'Sản phẩm thu hoạch':
                 route = config.routes.harvest;
                 break;
+            default:
+                route = config.routes.commonWarehouse;
         }
         const url = `${route}?w=${wareId}&r=${resourceTypeId}`;
         router.push(url);
@@ -105,11 +149,15 @@ export default function Ware() {
     const getResourceIcon = (resourceTypeName: string) => {
         switch (resourceTypeName) {
             case 'Thực phẩm':
-                return <Wheat className="w-5 h-5 text-green-600" />;
+                return <Apple className="w-5 h-5 text-green-600" />;
             case 'Dược phẩm':
                 return <BriefcaseMedical className="w-5 h-5 text-blue-600" />;
             case 'Thiết bị':
                 return <Wrench className="w-5 h-5 text-amber-600" />;
+            case 'Con giống':
+                return <Origami className="w-5 h-5 text-red-600" />;
+            case 'Sản phẩm thu hoạch':
+                return <Wheat className="w-5 h-5 text-green-600" />;
             default:
                 return <Warehouse className="w-5 h-5 text-slate-600" />;
         }
@@ -117,9 +165,26 @@ export default function Ware() {
 
     return (
         <div className="container mx-auto py-6 space-y-6">
-            <div className="flex items-center gap-3 mb-2">
-                <Warehouse className="h-6 w-6 text-muted-foreground" />
-                <h1 className="text-2xl font-bold tracking-tight">Danh sách kho</h1>
+            <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3 mb-2">
+                    <Warehouse className="h-6 w-6 text-muted-foreground" />
+                    <h1 className="text-2xl font-bold tracking-tight">Danh sách kho</h1>
+                </div>
+
+                <Button className="space-x-1" onClick={openModal}>
+                    <span>Tạo kho</span> <Plus size={18} />
+                </Button>
+                <Dialog open={open} onOpenChange={onOpenChange}>
+                    <DialogContent className="max-w-2xl">
+                        <DialogHeader>
+                            <DialogTitle>Tạo kho mới</DialogTitle>
+                            <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
+                        </DialogHeader>
+                        <ScrollArea className="max-h-[600px]">
+                            <WarehouseForm closeDialog={() => setOpen(false)} />
+                        </ScrollArea>
+                    </DialogContent>
+                </Dialog>
             </div>
             <Separator className="mb-6" />
 

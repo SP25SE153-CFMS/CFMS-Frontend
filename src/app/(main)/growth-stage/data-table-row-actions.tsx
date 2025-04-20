@@ -22,6 +22,7 @@ import {
     addNutritionPlanToGrowthStage,
     deleteGrowthStage,
     deleteNutritionPlanFromGrowthStage,
+    updateNutritionPlanToGrowthStage,
 } from '@/services/growth-stage.service';
 import { GrowthStage } from '@/utils/schemas/growth-stage.schema';
 import GrowthStageForm from '@/components/forms/growth-stage-form';
@@ -49,7 +50,7 @@ interface Props<T> {
 }
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
-    const [openCreate, setOpenCreate] = useState(false);
+    const [openNutriPlanForm, setOpenNutriPlanForm] = useState(false);
     const [openDeleteNutritionPlan, setOpenDeleteNutritionPlan] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
@@ -89,16 +90,30 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
         });
     };
 
-    const addNutritionPlan = async (e: React.FormEvent<HTMLFormElement>) => {
+    const upsertNutritionPlan = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        // Check if nutritionPlanId is valid
         if (!nutritionPlanId) {
             toast.error('Không tìm thấy chế độ dinh dưỡng');
             return;
         }
+
+        // Update nutrition plan
+        if (currentNutritionPlanOfGrowthStage) {
+            await updateNutritionPlanToGrowthStage(growthStageId, nutritionPlanId).then(() => {
+                toast.success('Đã cập nhật chế độ dinh dưỡng');
+                queryClient.invalidateQueries({ queryKey: ['growthStages'] });
+                setOpenNutriPlanForm(false);
+            });
+            return;
+        }
+
+        // Add nutrition plan
         await addNutritionPlanToGrowthStage(growthStageId, nutritionPlanId).then(() => {
             toast.success('Đã thêm chế độ dinh dưỡng');
             queryClient.invalidateQueries({ queryKey: ['growthStages'] });
-            setOpenCreate(false);
+            setOpenNutriPlanForm(false);
         });
     };
 
@@ -121,23 +136,26 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     >
                         Xem chi tiết
                     </DropdownMenuItem> */}
-                    <DropdownMenuItem
-                        onClick={() => setOpenCreate(true)}
-                        disabled={!!currentNutritionPlanOfGrowthStage}
-                    >
-                        Thêm chế độ dinh dưỡng
-                    </DropdownMenuItem>
+                    {!currentNutritionPlanOfGrowthStage && (
+                        <DropdownMenuItem onClick={() => setOpenNutriPlanForm(true)}>
+                            Thêm chế độ dinh dưỡng
+                        </DropdownMenuItem>
+                    )}
+                    {!!currentNutritionPlanOfGrowthStage && (
+                        <DropdownMenuItem onClick={() => setOpenNutriPlanForm(true)}>
+                            Cập nhật chế độ dinh dưỡng
+                        </DropdownMenuItem>
+                    )}
 
                     <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                         Cập nhật
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                        onClick={() => setOpenDeleteNutritionPlan(true)}
-                        disabled={!currentNutritionPlanOfGrowthStage}
-                    >
-                        Loại bỏ chế độ dinh dưỡng <Trash size={16} className="ml-auto" />
-                    </DropdownMenuItem>
+                    {!!currentNutritionPlanOfGrowthStage && (
+                        <DropdownMenuItem onClick={() => setOpenDeleteNutritionPlan(true)}>
+                            Loại bỏ chế độ dinh dưỡng <Trash size={16} className="ml-auto" />
+                        </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
                         Xóa giai đoạn phát triển
                         <Trash2 size={16} className="ml-auto" />
@@ -145,16 +163,22 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Add Nutrition Plan Dialog */}
-            <Dialog open={openCreate} onOpenChange={(val) => setOpenCreate(val)}>
+            {/* Add/Update Nutrition Plan Dialog */}
+            <Dialog open={openNutriPlanForm} onOpenChange={(val) => setOpenNutriPlanForm(val)}>
                 <DialogContent className="max-w-md">
                     <DialogHeader>
-                        <DialogTitle>Thêm chế độ dinh dưỡng</DialogTitle>
+                        <DialogTitle>
+                            {currentNutritionPlanOfGrowthStage ? 'Cập nhật' : 'Thêm'} chế độ dinh
+                            dưỡng
+                        </DialogTitle>
                         <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                     </DialogHeader>
-                    <form onSubmit={addNutritionPlan} className="flex flex-col">
+                    <form onSubmit={upsertNutritionPlan} className="flex flex-col">
                         <div className="grid grid-cols-1 gap-6 px-1 w-full">
-                            <Select onValueChange={(value) => setNutritionPlanId(value)}>
+                            <Select
+                                onValueChange={(value) => setNutritionPlanId(value)}
+                                defaultValue={currentNutritionPlanOfGrowthStage}
+                            >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Chọn chế độ dinh dưỡng" />
                                 </SelectTrigger>

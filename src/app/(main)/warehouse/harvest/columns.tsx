@@ -32,44 +32,17 @@ export const columns: ColumnDef<WareStockResponse>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: 'chickenCode',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Mã gà" />,
+        accessorKey: 'harvestProductCode',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Mã sản phẩm" />,
     },
     {
-        accessorKey: 'chickenName',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tên gà" />,
-        // cell: ({ row }) => {
-        //     const chickenName = row.getValue('chickenName') as string;
-        //     return (
-        //         <ChickenDetailsDialog
-        //             trigger={<span className="cursor-pointer">{chickenName}</span>}
-        //             chickenDetails={row.original.chickenDetails}
-        //         />
-        //     );
-        // },
+        accessorKey: 'harvestProductName',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Tên sản phẩm" />,
     },
     {
-        accessorKey: 'chickenTypeName',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại gà" />,
-        // cell: ({ row }) => {
-        //     const chickenTypeId = row.getValue('chickenTypeId') as string;
-        //     return <span>{getChickenType(chickenTypeId)}</span>;
-        // },
+        accessorKey: 'harvestProductTypeName',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại sản phẩm" />,
     },
-    // {
-    //     accessorKey: 'totalQuantity',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Tổng số lượng" />,
-    // },
-    // {
-    //     accessorKey: 'status',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
-    //     cell: ({ row }) => {
-    //         const status = row.getValue('status') as number;
-    //         return (
-    //             <Badge variant={commonStatusVariant[status]}>{commonStatusLabels[status]}</Badge>
-    //         );
-    //     },
-    // },
     {
         accessorKey: 'description',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mô tả" />,
@@ -80,7 +53,7 @@ export const columns: ColumnDef<WareStockResponse>[] = [
     },
     {
         accessorKey: 'supplierName',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Nhà cung cáp" />,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Nhà cung cấp" />,
     },
     {
         accessorKey: 'unitSpecification',

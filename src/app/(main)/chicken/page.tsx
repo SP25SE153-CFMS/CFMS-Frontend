@@ -18,7 +18,7 @@ import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getChickens } from '@/services/chicken.service';
 import { Card } from '@/components/ui/card';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 
 export default function Page() {

@@ -13,6 +13,8 @@ import { assignmentBackground } from '@/utils/enum/status.enum';
 import { Badge } from '../ui/badge';
 import { Event, ShiftEvent } from './type';
 import AssignmentForm from '../forms/assignment-form';
+import Link from 'next/link';
+import config from '@/configs';
 
 type ViewMode = 'month' | 'week';
 
@@ -233,7 +235,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                         >
                             {day}
                         </span>
-                        <Button
+                        {/* <Button
                             variant="ghost"
                             size="icon"
                             className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -244,7 +246,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                         >
                             <Plus className="h-4 w-4" />
                             <span className="sr-only">Giao việc</span>
-                        </Button>
+                        </Button> */}
                     </div>
                     <div className="space-y-1 overflow-y-auto">
                         {dateEvents.slice(0, 2).map((event) => (
@@ -359,17 +361,30 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
 
                                     {/* Events for this day and shift */}
                                     <div className="mt-6 space-y-1 overflow-y-auto max-h-[150px]">
-                                        {getEventsForDateAndShift(date, shift.id).map((event) => (
-                                            <div
-                                                key={event.id}
-                                                className={cn(
-                                                    'rounded-md px-2 py-1 text-xs font-medium text-white',
-                                                    event.color,
-                                                )}
+                                        {getEventsForDateAndShift(date, shift.id)
+                                            .slice(0, 3)
+                                            .map((event) => (
+                                                <Link
+                                                    href={`${config.routes.task}/${event.id}`}
+                                                    key={event.id}
+                                                    className={cn(
+                                                        'block rounded-md px-2 py-1 text-xs font-medium text-white',
+                                                        event.color,
+                                                    )}
+                                                >
+                                                    {event.title}
+                                                </Link>
+                                            ))}
+                                        {getEventsForDateAndShift(date, shift.id).length > 3 && (
+                                            <Badge
+                                                variant="outline"
+                                                className="block w-fit mt-1 text-[10px] text-slate-400 py-0 px-2"
                                             >
-                                                {event.title}
-                                            </div>
-                                        ))}
+                                                +
+                                                {getEventsForDateAndShift(date, shift.id).length -
+                                                    3}
+                                            </Badge>
+                                        )}
                                     </div>
                                 </div>
                             ))}
@@ -526,7 +541,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
 
             {/* Add Event Dialog */}
             <Dialog open={isAddEventOpen} onOpenChange={setIsAddEventOpen}>
-                <DialogContent className="sm:max-w-[425px]">
+                <DialogContent className="max-w-4xl">
                     <DialogHeader>
                         <DialogTitle>Giao công việc mới</DialogTitle>
                     </DialogHeader>

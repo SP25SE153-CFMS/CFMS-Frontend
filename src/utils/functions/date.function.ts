@@ -16,8 +16,8 @@ export function weekDayFormat(value: number) {
     return days[value];
 }
 
-export function formatDate(dateStr: string, format = DATE_FORMAT) {
-    if (!dateStr) return '-';
+export function formatDate(dateStr: string | any, format = DATE_FORMAT) {
+    if (!dateStr) return '';
 
     const date = new Date(dateStr);
     const formattedDate = dayjs(date).format(format);

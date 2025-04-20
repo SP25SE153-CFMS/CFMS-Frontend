@@ -2,7 +2,7 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
-import { SystemConfig } from '@/schemas/config.schema';
+import { SystemConfig } from '@/utils/schemas/config.schema';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import dayjs from 'dayjs';

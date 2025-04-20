@@ -18,6 +18,8 @@ import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TimePicker } from '../ui/time-picker';
 import { Loader2 } from 'lucide-react';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
 
 interface ShiftFormProps {
     defaultValues?: Partial<Shift>;
@@ -33,6 +35,7 @@ export default function ShiftForm({ defaultValues, closeDialog }: ShiftFormProps
             shiftName: '',
             startTime: '',
             endTime: '',
+            farmId: getCookie(config.cookies.farmId) || '',
             ...defaultValues,
         },
     });

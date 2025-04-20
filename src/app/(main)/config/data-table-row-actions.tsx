@@ -27,7 +27,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { deleteConfig } from '@/services/config.service';
 import { toast } from 'react-hot-toast';
 import { ConfigForm } from '@/components/config-form';
-import { SystemConfig } from '@/schemas/config.schema';
+import { SystemConfig } from '@/utils/schemas/config.schema';
 interface Props {
     row: Row<SystemConfig>;
 }

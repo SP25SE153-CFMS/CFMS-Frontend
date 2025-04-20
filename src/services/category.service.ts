@@ -4,6 +4,8 @@ import { Response } from '@/utils/types';
 import { SubCategory } from '@/utils/schemas/sub-category.schema';
 import { CategoryResponse, ChickenTypeResponse } from '@/utils/types/custom.type';
 import { CategoryType } from '@/utils/enum/category.enum';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
 
 const PREFIX = '/api/Category';
 
@@ -63,6 +65,13 @@ export const getChickenTypes = async () => {
 
 export const getSubByType = async (categoryType: CategoryType) => {
     const endpoint = PREFIX + '/sub-by-type/' + categoryType;
+    const response = await get<Response<SubCategory[]>>(endpoint);
+    return response.data.data;
+};
+
+export const getSubByTypeAndFarm = async (categoryType: CategoryType) => {
+    const farmId = getCookie(config.cookies.farmId);
+    const endpoint = PREFIX + '/sub-by-type-and-farm/' + categoryType + '/' + farmId;
     const response = await get<Response<SubCategory[]>>(endpoint);
     return response.data.data;
 };

@@ -14,7 +14,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Tractor, Plus, Search, Filter, X } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import config from '@/configs';

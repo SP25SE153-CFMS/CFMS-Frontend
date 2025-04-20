@@ -80,7 +80,7 @@ export default function ResourceSuppliers() {
     );
 
     return (
-        <div className="w-full h-full flex flex-col">
+        <div className="max-w-screen-lg mx-auto w-full h-full flex flex-col">
             <div className="flex justify-center items-center mb-4 px-1">
                 <h3 className="font-bold pl-3 text-2xl relative inline-block">
                     Thông tin các mặt hàng
@@ -88,7 +88,18 @@ export default function ResourceSuppliers() {
             </div>
 
             <Tabs defaultValue="all" className="w-full flex-1 flex flex-col">
-                <TabsList className="mb-4 w-full grid grid-cols-5 h-auto p-1">
+                <TabsList
+                    className={`mb-4 w-full grid ${
+                        // Calculate grid columns based on visible tabs
+                        `grid-cols-${
+                            1 + // All tab
+                            (foodResources.length > 0 ? 1 : 0) +
+                            (medicineResources.length > 0 ? 1 : 0) +
+                            (equipmentResources.length > 0 ? 1 : 0) +
+                            (otherResources.length > 0 ? 1 : 0)
+                        }`
+                    } h-auto p-1`}
+                >
                     <TabsTrigger value="all" className="text-sm py-2">
                         Tất cả ({resources.length})
                     </TabsTrigger>
@@ -149,7 +160,6 @@ export default function ResourceSuppliers() {
 }
 
 function ResourceList({ resources }: { resources: ResourceResponse[] }) {
-
     return (
         <ScrollArea className="h-[calc(100vh-200px)] w-full pr-2">
             <div className="space-y-6 pb-6">

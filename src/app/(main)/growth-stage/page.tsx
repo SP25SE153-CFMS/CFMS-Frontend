@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { Download, Search, ChevronLeft, Plus, Filter } from 'lucide-react';
 
 import { columns } from './columns';

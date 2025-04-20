@@ -68,8 +68,7 @@ import { getSubCategoryByCategoryType } from '@/utils/functions/category.functio
 import { ResourceResponse } from '@/utils/types/custom.type';
 import { getShifts } from '@/services/shift.service';
 import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
-import { getWarehouses } from '@/services/warehouse.service';
-import { getResources } from '@/services/resource.service';
+import { getWareByFarmId, getWarestockResourceByFarm } from '@/services/warehouse.service';
 import config from '@/configs';
 import { createTask } from '@/services/task.service';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
@@ -91,18 +90,34 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
 
     const { data: breedingAreas } = useQuery({
         queryKey: ['breeding-areas'],
-        queryFn: () => getBreedingAreasByFarmId(getCookie('farmId') || ''),
+        queryFn: () => getBreedingAreasByFarmId(getCookie(config.cookies.farmId) || ''),
     });
 
     const { data: warehouses } = useQuery({
         queryKey: ['warehouses'],
-        queryFn: () => getWarehouses(),
+        queryFn: () => getWareByFarmId(getCookie(config.cookies.farmId) || ''),
     });
 
+    const RESOURCE_TYPE_NAME = 'all';
     const { data: resources } = useQuery({
         queryKey: ['resources'],
-        queryFn: () => getResources(),
+        queryFn: () => getWarestockResourceByFarm(RESOURCE_TYPE_NAME),
     });
+
+    const resourceOptions = resources?.map((resource) => ({
+        value:
+            resource.equipmentId ||
+            resource.medicineId ||
+            resource.foodId ||
+            resource.harvestProductId ||
+            resource.chickenId,
+        label:
+            resource.equipmentName ||
+            resource.medicineName ||
+            resource.foodName ||
+            resource.harvestProductName ||
+            resource.chickenName,
+    }));
 
     const form = useForm<CreateTask>({
         resolver: zodResolver(CreateTaskSchema),
@@ -239,6 +254,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
         [breedingAreas],
     );
 
+    // eslint-disable-next-line no-unused-vars
     const getResourceName = useCallback((resource?: ResourceResponse) => {
         if (!resource) return '';
         if (resource.equipment) return resource.equipment.equipmentName;
@@ -870,7 +886,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                     key={resource.id}
                                     className="grid grid-cols-1 md:grid-cols-12 gap-3 items-start border rounded-md p-3"
                                 >
-                                    <div className="md:col-span-5">
+                                    <div className="md:col-span-8">
                                         <FormField
                                             control={form.control}
                                             name={`taskResources.${index}.resourceId`}
@@ -889,12 +905,13 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                                             </SelectTrigger>
                                                         </FormControl>
                                                         <SelectContent>
-                                                            {resources?.map((res) => (
+                                                            {resourceOptions?.map((res) => (
                                                                 <SelectItem
-                                                                    key={res.resourceId}
-                                                                    value={res.resourceId}
+                                                                    key={res.value}
+                                                                    value={res.value}
                                                                 >
-                                                                    {getResourceName(res)}
+                                                                    {/* {getResourceName(res)} */}
+                                                                    {res.label}
                                                                 </SelectItem>
                                                             ))}
                                                         </SelectContent>
@@ -905,7 +922,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                         />
                                     </div>
 
-                                    <div className="md:col-span-5">
+                                    <div className="md:col-span-3">
                                         <FormField
                                             control={form.control}
                                             name={`taskResources.${index}.quantity`}
@@ -927,7 +944,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                     </div>
 
                                     {fields.length > 0 && (
-                                        <div className="md:col-span-2 flex justify-end items-end h-full pb-1">
+                                        <div className="flex justify-end items-end h-full pb-1">
                                             <Button
                                                 type="button"
                                                 variant="ghost"
@@ -946,7 +963,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                 </div>
             </div>
         ),
-        [fields, append, form.control, resources, getResourceName, remove],
+        [fields, append, form.control, resourceOptions, remove],
     );
 
     return (

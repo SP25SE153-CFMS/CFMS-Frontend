@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
-import Image from 'next/image';
 import { BellIcon, InboxIcon, Trash2Icon, XIcon, AlertCircleIcon, CheckCheck } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
@@ -32,6 +31,9 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import toast from 'react-hot-toast';
+import { Avatar, AvatarFallback, AvatarImage } from './avatar';
+import initials from 'initials';
+import { convertToThumbnailUrl } from '@/utils/functions';
 
 function Dot({ className }: { className?: string }) {
     return (
@@ -227,17 +229,18 @@ export default function Notification() {
                                     className={`group relative border-b px-4 py-3 transition-colors hover:bg-accent ${!notification.isRead ? 'bg-accent/30' : ''}`}
                                 >
                                     <div className="flex gap-3">
-                                        <Image
-                                            className="h-10 w-10 rounded-full object-cover"
-                                            src={
-                                                notification.user.avatar ||
-                                                '/placeholder.svg?height=40&width=40' ||
-                                                '/placeholder.svg'
-                                            }
-                                            width={40}
-                                            height={40}
-                                            alt={notification.user.fullName}
-                                        />
+                                        <Avatar className="h-10 w-10 rounded-full object-cover">
+                                            <AvatarImage
+                                                src={convertToThumbnailUrl(
+                                                    notification.user.avatar || '',
+                                                )}
+                                                alt={notification.user.fullName}
+                                                className="rounded-sm object-contain"
+                                            />
+                                            <AvatarFallback className="rounded-sm">
+                                                {initials(notification.user.fullName)}
+                                            </AvatarFallback>
+                                        </Avatar>
                                         <div className="flex-1 space-y-1">
                                             <button
                                                 className="text-left text-sm after:absolute after:inset-0"
@@ -253,7 +256,7 @@ export default function Notification() {
                                                 <div className="font-semibold hover:underline">
                                                     {notification.notificationName}
                                                 </div>
-                                                <div className="my-1 text-muted-foreground max-w-64">
+                                                <div className="my-1 text-muted-foreground max-w-60">
                                                     {notification.content}
                                                 </div>
                                             </button>

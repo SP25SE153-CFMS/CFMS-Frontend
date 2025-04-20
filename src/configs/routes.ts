@@ -2,7 +2,8 @@ const routes = {
     home: '/',
     signIn: '/sign-in',
     signUp: '/sign-up',
-    dashboard: '/dashboard',
+    // dashboard: '/dashboard',
+    welcome: '/welcome',
     farm: '/farm',
     farmRegister: '/farm/register',
     breadingArea: '/breeding-area',
@@ -41,6 +42,11 @@ const routes = {
     ware: '/warehouse',
     medicine: '/warehouse/medicines',
     config: '/config',
+    commonWarehouse: '/warehouse/common',
+    farmOwner: {
+        farmEmployee: '/farm-owner/farm-employee',
+        dashboard: '/farm-owner/dashboard',
+    },
 };
 
 export default routes;

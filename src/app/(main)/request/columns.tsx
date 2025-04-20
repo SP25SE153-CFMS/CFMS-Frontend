@@ -84,8 +84,8 @@ export const columns: ColumnDef<Request>[] = [
         accessorKey: 'approvedAt',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày duyệt" />,
         cell: ({ row }) => {
-            const date = new Date(row.getValue('approvedAt'));
-            return <div>{dayjs(date).format('DD/MM/YYYY')}</div>;
+            const approvedAt = row.getValue('approvedAt') as string;
+            return <div>{approvedAt ? dayjs(approvedAt).format('DD/MM/YYYY') : 'Chưa duyệt'}</div>;
         },
     },
     {

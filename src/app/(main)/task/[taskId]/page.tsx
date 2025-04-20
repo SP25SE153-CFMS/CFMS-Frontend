@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Calendar, Clock, Egg, Home, Info, Users } from 'lucide-react';
+import { Box, Calendar, Clock, Egg, Home, Info, Type, Users } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -17,16 +17,15 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getTaskById } from '@/services/task.service';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { taskStatusLabels, taskStatusVariant } from '@/utils/enum/status.enum';
-import { getShifts } from '@/services/shift.service';
-import { getQuantityUnit } from '@/utils/functions/category.function';
-import type { TaskResourceResponse } from '@/utils/types/custom.type';
 import { formatDate } from '@/utils/functions';
 import { Badge } from '@/components/ui/badge';
 import config from '@/configs';
-import { getEmployeesByFarmId } from '@/services/farm.service';
-import { getCookie } from 'cookies-next';
+import dayjs from 'dayjs';
+import InfoItem from '@/components/info-item';
+import { useCallback } from 'react';
+import { TaskLocationResponse } from '@/utils/types/custom.type';
 
 export default function TaskDetail() {
     const { taskId }: { taskId: string } = useParams();
@@ -37,15 +36,14 @@ export default function TaskDetail() {
         queryFn: () => getTaskById(taskId),
     });
 
-    const { data: shifts } = useQuery({
-        queryKey: ['shifts'],
-        queryFn: () => getShifts(),
-    });
-
-    const { data: farmEmployees } = useQuery({
-        queryKey: ['farmEmployees'],
-        queryFn: () => getEmployeesByFarmId(getCookie(config.cookies.farmId) as string),
-    });
+    const getLocation = useCallback((taskLocation: TaskLocationResponse) => {
+        if (taskLocation?.location) {
+            return taskLocation.location?.chickenCoopName;
+        } else if (taskLocation?.locationNavigation) {
+            return taskLocation.locationNavigation?.warehouseName;
+        }
+        return 'N/A';
+    }, []);
 
     if (isLoading) {
         return (
@@ -56,7 +54,7 @@ export default function TaskDetail() {
         );
     }
 
-    if (!task || !shifts) {
+    if (!task) {
         return (
             <div className="w-full h-full flex items-center justify-center">
                 <Card className="px-36 py-8 dark:bg-slate-800">
@@ -74,16 +72,16 @@ export default function TaskDetail() {
         );
     }
 
-    const getResourceName = (taskRes: TaskResourceResponse) => {
-        if (taskRes.resource?.equipment) {
-            return taskRes.resource?.equipment.equipmentName;
-        } else if (taskRes.resource?.food) {
-            return taskRes.resource?.food.foodName;
-        } else if (taskRes.resource?.medicine) {
-            return taskRes.resource?.medicine.medicineName;
-        }
-        return 'Vật phẩm khác';
-    };
+    // const getResourceName = (taskRes: TaskResourceResponse) => {
+    //     if (taskRes.resource?.equipment) {
+    //         return taskRes.resource?.equipment.equipmentName;
+    //     } else if (taskRes.resource?.food) {
+    //         return taskRes.resource?.food.foodName;
+    //     } else if (taskRes.resource?.medicine) {
+    //         return taskRes.resource?.medicine.medicineName;
+    //     }
+    //     return 'Vật phẩm khác';
+    // };
 
     return (
         <div className="container mx-auto py-6">
@@ -117,7 +115,15 @@ export default function TaskDetail() {
                                     </p>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div className="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-lg">
+                                        <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200 mb-2 flex items-center gap-1">
+                                            <Type className="h-4 w-4" /> Loại công việc
+                                        </h3>
+                                        <p className="text-slate-600 dark:text-slate-300">
+                                            {task.taskType?.description || 'Không xác định'}
+                                        </p>
+                                    </div>
                                     <div className="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-lg">
                                         <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200 mb-2 flex items-center gap-1">
                                             <Calendar className="h-4 w-4" /> Ngày bắt đầu
@@ -131,9 +137,7 @@ export default function TaskDetail() {
                                             <Home className="h-4 w-4" /> Vị trí
                                         </h3>
                                         <p className="text-slate-600 dark:text-slate-300">
-                                            {task.taskLocation?.coop?.chickenCoopName ||
-                                                task.taskLocation?.ware?.warehouseName ||
-                                                'Không xác định'}
+                                            {getLocation(task.taskLocation)}
                                         </p>
                                     </div>
                                 </div>
@@ -153,6 +157,9 @@ export default function TaskDetail() {
                                                         <TableHead className="dark:text-slate-200">
                                                             Tên vật phẩm
                                                         </TableHead>
+                                                        <TableHead className="dark:text-slate-200">
+                                                            Loại vật phẩm
+                                                        </TableHead>
                                                         <TableHead className="text-right dark:text-slate-200">
                                                             Số lượng
                                                         </TableHead>
@@ -168,14 +175,17 @@ export default function TaskDetail() {
                                                             className="hover:bg-slate-50 dark:hover:bg-slate-700 "
                                                         >
                                                             <TableCell className="font-medium dark:text-slate-300">
-                                                                {getResourceName(taskRes)}
+                                                                {/* {getResourceName(taskRes)} */}
+                                                                {taskRes.resourceName}
+                                                            </TableCell>
+                                                            <TableCell className="font-medium dark:text-slate-300">
+                                                                {taskRes.resourceType}
                                                             </TableCell>
                                                             <TableCell className="text-right dark:text-slate-300">
-                                                                {taskRes.quantity}
+                                                                {taskRes.specQuantity}
                                                             </TableCell>
                                                             <TableCell className="text-right dark:text-slate-300">
-                                                                {getQuantityUnit(taskRes.unitId) ||
-                                                                    'đơn vị'}
+                                                                {taskRes.unitSpecification}
                                                             </TableCell>
                                                         </TableRow>
                                                     ))}
@@ -195,14 +205,14 @@ export default function TaskDetail() {
                                     )}
                                 </div>
 
-                                <Separator className="dark:bg-slate-700" />
+                                {/*<Separator className="dark:bg-slate-700" />
 
                                 <div>
                                     <h3 className="text-lg font-medium mb-3 flex items-center gap-2 dark:text-white">
                                         <Clock className="h-5 w-5 text-primary" /> Lịch trình
                                     </h3>
 
-                                    {task.shiftSchedules && task.shiftSchedules.length > 0 ? (
+                                     {task.shiftSchedule && task.shiftSchedule.length > 0 ? (
                                         <div className="bg-white dark:bg-slate-800 rounded-lg border  overflow-hidden">
                                             <Table>
                                                 <TableHeader className="bg-slate-50 dark:bg-slate-700/50">
@@ -265,8 +275,8 @@ export default function TaskDetail() {
                                                 Công việc này chưa được lên lịch
                                             </p>
                                         </div>
-                                    )}
-                                </div>
+                                    )} 
+                                </div>*/}
                             </div>
                         </CardContent>
                         <CardFooter className="flex justify-between border-t mt-4 pt-4">
@@ -297,13 +307,16 @@ export default function TaskDetail() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="pt-4">
-                            {task.assignments && task.assignments.length > 0 ? (
-                                <div className="bg-white dark:bg-slate-800 rounded-lg border  overflow-hidden">
+                            {task.assignments && task.assignments.length ? (
+                                <div className="bg-white dark:bg-slate-800 rounded-lg border overflow-hidden">
                                     <Table>
                                         <TableHeader className="bg-slate-50 dark:bg-slate-700/50">
                                             <TableRow>
                                                 <TableHead className="dark:text-slate-200">
                                                     Nhân viên
+                                                </TableHead>
+                                                <TableHead className="dark:text-slate-200">
+                                                    Ngày giao
                                                 </TableHead>
                                                 <TableHead className="dark:text-slate-200">
                                                     Ghi chú
@@ -317,11 +330,19 @@ export default function TaskDetail() {
                                                     className="hover:bg-slate-50 dark:hover:bg-slate-700 "
                                                 >
                                                     <TableCell className="dark:text-slate-300">
-                                                        {farmEmployees?.find(
+                                                        {/* {farmEmployees?.find(
                                                             (e) =>
                                                                 e.userId ===
                                                                 assignment.assignedToId,
-                                                        )?.user?.fullName ?? 'N/A'}
+                                                        )?.user?.fullName ?? 'N/A'} */}
+                                                        {assignment.assignedTo}
+                                                    </TableCell>
+                                                    <TableCell className="dark:text-slate-300">
+                                                        {assignment.assignedDate
+                                                            ? dayjs(assignment.assignedDate).format(
+                                                                  'DD/MM/YYYY',
+                                                              )
+                                                            : '-'}
                                                     </TableCell>
                                                     <TableCell className="dark:text-slate-300">
                                                         {assignment.note ?? 'Không có'}
@@ -330,6 +351,65 @@ export default function TaskDetail() {
                                             ))}
                                         </TableBody>
                                     </Table>
+                                </div>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center py-8 text-center bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                                    <Users className="h-12 w-12 text-slate-400 dark:text-slate-500 mb-2" />
+                                    <p className="text-slate-500 dark:text-slate-300 font-medium">
+                                        Chưa có nhân viên
+                                    </p>
+                                    <p className="text-slate-400 dark:text-slate-400 text-sm mt-1">
+                                        Chưa có nhân viên nào được phân công
+                                    </p>
+                                </div>
+                            )}
+                        </CardContent>
+                        {/* <CardFooter className="border-t">
+                            <Button
+                                variant="outline"
+                                className="w-full dark:border-slate-600 dark:text-slate-200"
+                            >
+                                <Users className="h-4 w-4 mr-2" /> Phân công nhân viên
+                            </Button>
+                        </CardFooter> */}
+                    </Card>
+
+                    <Card className="w-full shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <CardHeader className="border-b ">
+                            <CardTitle className="text-lg flex items-center gap-2 dark:text-white">
+                                <Clock className="h-5 w-5 text-primary" /> Ca làm việc
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="pt-4">
+                            {task.shiftSchedule ? (
+                                <div className="bg-white dark:bg-slate-800 rounded-lg overflow-hidden">
+                                    <InfoItem
+                                        label="Ca"
+                                        value={task.shiftSchedule.shiftName}
+                                        icon={<Calendar size={16} />}
+                                    />
+
+                                    <InfoItem
+                                        label="Ngày làm việc"
+                                        value={
+                                            task.shiftSchedule.workTime
+                                                ? dayjs(task.shiftSchedule.workTime).format(
+                                                      'DD/MM/YYYY',
+                                                  )
+                                                : '-'
+                                        }
+                                        icon={<Calendar size={16} />}
+                                    />
+
+                                    <InfoItem
+                                        label="Thời gian"
+                                        value={
+                                            task.shiftSchedule.startTime +
+                                            ' - ' +
+                                            task.shiftSchedule.endTime
+                                        }
+                                        icon={<Clock size={16} />}
+                                    />
                                 </div>
                             ) : (
                                 <div className="flex flex-col items-center justify-center py-8 text-center bg-slate-50 dark:bg-slate-700/50 rounded-lg">

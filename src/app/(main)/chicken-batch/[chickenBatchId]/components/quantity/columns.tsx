@@ -6,6 +6,7 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import { QuantityLog } from '@/utils/schemas/quantity-log.schema';
 import { DataTableRowActions } from './data-table-row-actions';
 import dayjs from 'dayjs';
+import { quantityLogStatusLabels } from '@/utils/enum/status.enum';
 
 export const columns: ColumnDef<QuantityLog>[] = [
     {
@@ -35,7 +36,7 @@ export const columns: ColumnDef<QuantityLog>[] = [
     {
         accessorKey: 'logDate',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày Nhật Ký" />,
-        cell: ({ row }) => <div>{dayjs(row.getValue('logDate')).format('DD/MM/YYYY HH:mm')}</div>,
+        cell: ({ row }) => <div>{dayjs(row.getValue('logDate')).format('DD/MM/YYYY')}</div>,
     },
     {
         accessorKey: 'quantity',
@@ -45,7 +46,10 @@ export const columns: ColumnDef<QuantityLog>[] = [
     {
         accessorKey: 'logType',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Loại Nhật Ký" />,
-        cell: ({ row }) => <div>{row.getValue('logType')}</div>,
+        cell: ({ row }) => {
+            const logType = row.getValue('logType') as number;
+            return <div>{quantityLogStatusLabels[logType]}</div>;
+        },
     },
     {
         accessorKey: 'notes',
