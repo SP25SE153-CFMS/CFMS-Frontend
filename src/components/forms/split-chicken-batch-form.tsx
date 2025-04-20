@@ -157,7 +157,9 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                         <Select
                             defaultValue={chickenTypeId}
                             onValueChange={setChickenTypeId}
-                            disabled={!!chickenTypeId}
+                            disabled={chickenTypes?.some(
+                                (type) => type.subCategoryId === chickenTypeId,
+                            )}
                         >
                             <SelectTrigger>
                                 <SelectValue placeholder="Chọn loại gà" />

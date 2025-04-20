@@ -58,7 +58,8 @@ export const getCategoryByType = async (type: CategoryType) => {
 };
 
 export const getChickenTypes = async () => {
-    const endpoint = PREFIX + '/get-chickentypes';
+    const farmId = getCookie(config.cookies.farmId);
+    const endpoint = `${PREFIX}/Farm/${farmId}/get-chickentypes`;
     const response = await get<Response<ChickenTypeResponse[]>>(endpoint);
     return response.data.data;
 };

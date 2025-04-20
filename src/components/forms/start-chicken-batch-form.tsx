@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { AlertCircle, CalendarIcon, Plus, Trash2 } from 'lucide-react';
+import { AlertCircle, CalendarIcon, Loader2, Plus, Trash2 } from 'lucide-react';
 import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
 
@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { getChickenTypes } from '@/services/category.service';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getGrowthStages } from '@/services/growth-stage.service';
 import { startChickenBatch } from '@/services/chicken-batch.service';
 import {
@@ -29,6 +29,8 @@ import { Button } from '../ui/button';
 import { vi } from 'date-fns/locale';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { formatDate } from '@/utils/functions';
+import Link from 'next/link';
+import config from '@/configs';
 
 export default function StartChickenBatchForm({ closeDialog }: { closeDialog: () => void }) {
     const queryClient = useQueryClient();
@@ -49,6 +51,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
     const [chickenDetailRequests, setChickenDetailRequests] = useState<ChickenDetailRequest[]>([
         { gender: 0, quantity: 0 },
     ]);
+    const [growDays, setGrowDays] = useState({ min: 0, max: 0 });
 
     useEffect(() => {
         const currentCoop: ChickenCoopResponse = JSON.parse(
@@ -60,9 +63,19 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
         }
     }, []);
 
-    const [growDays, setGrowDays] = useState({ min: 0, max: 0 });
-
     const chickens = chickenTypes?.find((type) => type.subCategoryId === chickenTypeId)?.chickens;
+
+    const mutation = useMutation({
+        mutationFn: startChickenBatch,
+        onSuccess: () => {
+            toast.success('Bắt đầu lứa nuôi thành công');
+            queryClient.invalidateQueries({ queryKey: ['chickenCoop', chickenCoopId] });
+            closeDialog();
+        },
+        onError: (error: any) => {
+            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra');
+        },
+    });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -79,14 +92,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
             maxGrowDays: growDays.max,
         };
 
-        try {
-            const response = await startChickenBatch(formData);
-            toast.success(response.message);
-            queryClient.invalidateQueries({ queryKey: ['chickenCoop', chickenCoopId] });
-            closeDialog();
-        } catch (error: any) {
-            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra');
-        }
+        mutation.mutate(formData);
     };
 
     return (
@@ -102,7 +108,6 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                             required
                         />
                     </div>
-
                     {/* Start date */}
                     <div className="*:not-first:mt-2 grid gap-2">
                         <Label>Ngày bắt đầu của lứa nuôi</Label>
@@ -135,7 +140,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                     {/* Chicken type */}
                     <div className="*:not-first:mt-2 col-span-2">
                         <Label>Loại gà</Label>
-                        <Select
+                        {/* <Select
                             defaultValue={chickenTypeId}
                             onValueChange={setChickenTypeId}
                             // disabled={!!chickenTypeId}
@@ -150,7 +155,14 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                                     </SelectItem>
                                 ))}
                             </SelectContent>
-                        </Select>
+                        </Select> */}
+                        <Input
+                            disabled
+                            value={
+                                chickenTypes?.find((type) => type.subCategoryId === chickenTypeId)
+                                    ?.subCategoryName
+                            }
+                        />
                     </div>
 
                     {/* Growth stage */}
@@ -183,9 +195,21 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                                                     {stage.stageCode}
                                                 </SelectItem>
                                             ))}
+                                        {growthStages?.filter(
+                                            (stage) => stage.chickenType === chickenTypeId,
+                                        )?.length === 0 && (
+                                            <Link
+                                                href={config.routes.growthStage}
+                                                className="text-sm font-medium flex items-center p-2"
+                                            >
+                                                <Plus className="w-4 h-4 mr-2" />
+                                                Nhấn vào đây để tạo giai đoạn phát triển
+                                            </Link>
+                                        )}
                                     </SelectContent>
                                 </Select>
                             </div>
+
                             <div className="*:not-first:mt-2 col-span-2">
                                 <Label htmlFor={`chickenBatchName`}>Giống gà</Label>
                                 <Select defaultValue={chickenId} onValueChange={setChickenId}>
@@ -398,7 +422,8 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
             </div>
 
             <div className="flex items-center justify-center">
-                <Button type="submit" className="block w-lg">
+                <Button type="submit" className="block w-lg" disabled={mutation.isPending}>
+                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Bắt đầu
                 </Button>
             </div>
