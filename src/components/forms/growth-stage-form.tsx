@@ -25,6 +25,8 @@ import { getSubCategoryByCategoryType } from '@/utils/functions/category.functio
 import { CategoryType } from '@/utils/enum/category.enum';
 import { Loader2 } from 'lucide-react';
 import { generateCode } from '@/utils/functions/generate-code.function';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
 
 interface GrowthStageFormProps {
     defaultValues?: Partial<GrowthStage>;
@@ -43,6 +45,7 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
             minAgeWeek: 0,
             maxAgeWeek: 0,
             description: '',
+            farmId: getCookie(config.cookies.farmId) || '',
             ...defaultValues,
         },
     });
