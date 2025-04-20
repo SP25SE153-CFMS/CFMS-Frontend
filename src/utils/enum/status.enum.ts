@@ -333,3 +333,18 @@ export const wareStatusVariant: Record<string, any> = {
     [WareStatus.INACTIVE]: 'destructive',
     [WareStatus.ACTIVE]: 'default',
 };
+
+// Quantity Log
+export enum QuantityLogStatus {
+    DEAD,
+    SPLIT,
+    IMPORT,
+    EXPORT,
+}
+
+export const quantityLogStatusLabels: Record<string, string> = {
+    [QuantityLogStatus.DEAD]: 'Chết',
+    [QuantityLogStatus.SPLIT]: 'Tách đàn',
+    [QuantityLogStatus.IMPORT]: 'Nhập thêm',
+    [QuantityLogStatus.EXPORT]: 'Xuất chuồng',
+};

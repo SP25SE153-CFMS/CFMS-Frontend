@@ -27,6 +27,7 @@ import { Loader2 } from 'lucide-react';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
+import { useState } from 'react';
 
 interface GrowthStageFormProps {
     defaultValues?: Partial<GrowthStage>;
@@ -83,6 +84,7 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
         toast.error('Có lỗi xảy ra, vui lòng kiểm tra lại thông tin');
     }
 
+    // eslint-disable-next-line no-unused-vars
     const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
         const input = e.target.value;
         const existingCodes = new Set(
@@ -102,6 +104,12 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
         form.setValue('stageName', input);
     };
 
+    const [growthStages, setGrowthStages] = useState<GrowthStage[]>(
+        JSON.parse(sessionStorage.getItem('growthStages') || '[]'),
+    );
+    const [newStageCode, setNewStageCode] = useState('');
+    const [isAdding, setIsAdding] = useState(false);
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
@@ -119,7 +127,7 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                                         placeholder="Nhập tên giai đoạn"
                                         disabled={defaultValues !== undefined}
                                         {...field}
-                                        onBlur={handleGenerateCode}
+                                        // onBlur={handleGenerateCode}
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -131,20 +139,94 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                     <FormField
                         control={form.control}
                         name="stageCode"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Mã giai đoạn</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="text"
-                                        placeholder="Nhập mã giai đoạn"
-                                        disabled={defaultValues !== undefined}
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+                        render={({ field }) => {
+                            const handleAddStage = () => {
+                                if (newStageCode.trim()) {
+                                    const newStage = {
+                                        growthStageId: `new-${Date.now()}`, // Generate a unique ID
+                                        stageCode: newStageCode,
+                                        stageName: '',
+                                        chickenType: '',
+                                        minAgeWeek: 0,
+                                        maxAgeWeek: 0,
+                                        farmId: '',
+                                        description: '',
+                                    };
+                                    const updatedStages = [...growthStages, newStage];
+                                    setGrowthStages(updatedStages);
+                                    sessionStorage.setItem(
+                                        'growthStages',
+                                        JSON.stringify(updatedStages),
+                                    );
+                                    setNewStageCode('');
+                                    setIsAdding(false);
+                                    field.onChange(newStage.growthStageId); // Set the new value
+                                }
+                            };
+
+                            return (
+                                <FormItem>
+                                    <FormLabel>Mã giai đoạn</FormLabel>
+                                    <FormControl>
+                                        <Select
+                                            onValueChange={(value) => {
+                                                if (value === 'add-new') {
+                                                    setIsAdding(true);
+                                                } else {
+                                                    field.onChange(value);
+                                                }
+                                            }}
+                                            defaultValue={field.value}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Chọn mã giai đoạn" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {growthStages?.map((stage) => (
+                                                    <SelectItem
+                                                        key={stage.growthStageId}
+                                                        value={stage.growthStageId}
+                                                    >
+                                                        {stage.stageCode}
+                                                    </SelectItem>
+                                                ))}
+                                                <SelectItem value="add-new">
+                                                    + Thêm mã giai đoạn mới
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                    {isAdding && (
+                                        <div className="mt-2">
+                                            <input
+                                                type="text"
+                                                value={newStageCode}
+                                                onChange={(e) => setNewStageCode(e.target.value)}
+                                                placeholder="Nhập mã giai đoạn mới"
+                                                className="border rounded px-2 py-1 w-full"
+                                            />
+                                            <div className="flex justify-end mt-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={handleAddStage}
+                                                    className="bg-blue-500 text-white px-4 py-1 rounded mr-2"
+                                                >
+                                                    Thêm
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setIsAdding(false)}
+                                                    className="bg-gray-300 px-4 py-1 rounded"
+                                                >
+                                                    Hủy
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                    <FormMessage />
+                                </FormItem>
+                            );
+                        }}
                     />
 
                     {/* Chicken Type */}
