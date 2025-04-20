@@ -4,11 +4,13 @@ import { Response } from '@/utils/types';
 import { NutritionPlanResponse } from '@/utils/types/custom.type';
 import { CreateFeedSession, FeedSession } from '@/utils/schemas/feed-session.schema';
 import { NutritionPlanDetail } from '@/utils/schemas/nutrition-plan-detail.schema';
-
+import config from '@/configs';
+import { getCookie } from 'cookies-next';
 const PREFIX = '/api/NutritionPlan';
 
 export const getNutritionPlans = async () => {
-    const endpoint = PREFIX;
+    const farmId = getCookie(config.cookies.farmId);
+    const endpoint = PREFIX + '/Farm/' + farmId;
     const response = await get<Response<NutritionPlanResponse[]>>(endpoint);
     return response.data.data;
 };

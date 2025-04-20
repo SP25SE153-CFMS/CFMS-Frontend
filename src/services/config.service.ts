@@ -1,4 +1,4 @@
-import { SystemConfig } from '@/schemas/config.schema';
+import { SystemConfig } from '@/utils/schemas/config.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 

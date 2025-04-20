@@ -1,6 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import type React from 'react';
+
+import { useState, useEffect, useCallback, memo, useRef } from 'react';
 import NextImage, { type ImageProps } from 'next/image';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { ZoomIn, ZoomOut, X, RotateCw, Download, Maximize2, Minimize2 } from 'lucide-react';
@@ -15,7 +17,39 @@ interface FallbackImageProps extends ImageProps {
     previewTitle?: string;
 }
 
-export default function Image({
+// Memoized control button to prevent re-renders
+const ControlButton = memo(
+    ({
+        icon: Icon,
+        onClick,
+        tooltip,
+    }: {
+        icon: React.ElementType;
+        onClick: () => void;
+        tooltip: string;
+    }) => (
+        <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={onClick}
+                        className="h-9 w-9 rounded-full text-gray-200 hover:text-white hover:bg-gray-800"
+                    >
+                        <Icon size={18} />
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                    <p>{tooltip}</p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
+    ),
+);
+ControlButton.displayName = 'ControlButton';
+
+function Image({
     src,
     fallbackSrc = '/placeholder.svg',
     alt,
@@ -30,8 +64,9 @@ export default function Image({
     const [rotation, setRotation] = useState(0);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const dialogContentRef = useRef<HTMLDivElement>(null);
 
-    // Reset states when preview is opened
+    // Reset states when preview is opened - memoized to prevent recreation on every render
     useEffect(() => {
         if (isPreviewOpen) {
             setScale(1);
@@ -40,28 +75,29 @@ export default function Image({
         }
     }, [isPreviewOpen]);
 
-    const handleZoomIn = () => {
+    // Memoized handlers to prevent recreation on every render
+    const handleZoomIn = useCallback(() => {
         setScale((prevScale) => Math.min(prevScale + 0.25, 3));
-    };
+    }, []);
 
-    const handleZoomOut = () => {
+    const handleZoomOut = useCallback(() => {
         setScale((prevScale) => Math.max(prevScale - 0.25, 0.5));
-    };
+    }, []);
 
-    const handleRotate = () => {
+    const handleRotate = useCallback(() => {
         setRotation((prevRotation) => (prevRotation + 90) % 360);
-    };
+    }, []);
 
-    const handleDownload = () => {
+    const handleDownload = useCallback(() => {
         const link = document.createElement('a');
         link.href = imgSrc as string;
         link.download = alt || 'image';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-    };
+    }, [imgSrc, alt]);
 
-    const toggleFullscreen = () => {
+    const toggleFullscreen = useCallback(() => {
         if (!document.fullscreenElement) {
             document.documentElement
                 .requestFullscreen()
@@ -83,7 +119,27 @@ export default function Image({
                     });
             }
         }
-    };
+    }, []);
+
+    const closePreview = useCallback(() => {
+        setIsPreviewOpen(false);
+        if (isFullscreen && document.exitFullscreen) {
+            document.exitFullscreen().catch((err) => {
+                console.error(`Error exiting fullscreen: ${err.message}`);
+            });
+        }
+    }, [isFullscreen]);
+
+    // Handle click outside to close preview
+    const handleDialogContentClick = useCallback(
+        (e: React.MouseEvent<HTMLDivElement>) => {
+            // Check if the click is directly on the DialogContent (background) and not on its children
+            if (e.target === e.currentTarget) {
+                closePreview();
+            }
+        },
+        [closePreview],
+    );
 
     // Listen for fullscreen change events
     useEffect(() => {
@@ -120,7 +176,7 @@ export default function Image({
                     if (isFullscreen) {
                         document.exitFullscreen();
                     } else {
-                        setIsPreviewOpen(false);
+                        closePreview();
                     }
                     break;
             }
@@ -130,7 +186,44 @@ export default function Image({
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [isPreviewOpen, isFullscreen]);
+    }, [
+        isPreviewOpen,
+        isFullscreen,
+        handleZoomIn,
+        handleZoomOut,
+        handleRotate,
+        toggleFullscreen,
+        closePreview,
+    ]);
+
+    // Memoized image click handler
+    const handleImageClick = useCallback(() => {
+        if (preview) {
+            setIsPreviewOpen(true);
+        }
+    }, [preview]);
+
+    // Memoized image keydown handler
+    const handleImageKeyDown = useCallback(
+        (e: React.KeyboardEvent) => {
+            if (preview && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                setIsPreviewOpen(true);
+            }
+        },
+        [preview],
+    );
+
+    // Memoized image load handler
+    const handleImageLoad = useCallback(() => {
+        setIsLoading(false);
+    }, []);
+
+    // Memoized image error handler
+    const handleImageError = useCallback(() => {
+        setImgSrc(fallbackSrc);
+        setError(true);
+    }, [fallbackSrc]);
 
     return (
         <>
@@ -138,30 +231,17 @@ export default function Image({
                 className={cn(
                     preview && 'cursor-zoom-in relative inline-block overflow-hidden group',
                 )}
-                onClick={preview ? () => setIsPreviewOpen(true) : undefined}
+                onClick={handleImageClick}
                 role={preview ? 'button' : undefined}
                 tabIndex={preview ? 0 : undefined}
-                onKeyDown={
-                    preview
-                        ? (e) => {
-                              if (e.key === 'Enter' || e.key === ' ') {
-                                  e.preventDefault();
-                                  setIsPreviewOpen(true);
-                              }
-                          }
-                        : undefined
-                }
+                onKeyDown={preview ? handleImageKeyDown : undefined}
                 aria-label={preview ? `View ${alt} in preview mode` : undefined}
             >
                 <NextImage
                     {...props}
                     src={imgSrc || '/placeholder.svg'}
                     alt={alt}
-                    onError={() => {
-                        setImgSrc(fallbackSrc);
-                        setError(true);
-                    }}
-                    // className={`${props.className || ''} ${error ? 'fallback-image-loaded' : ''}`}
+                    onError={handleImageError}
                     className={cn(
                         props.className,
                         'transition-all duration-300 ease-in-out',
@@ -180,21 +260,24 @@ export default function Image({
 
             {preview && (
                 <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-                    <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 overflow-hidden border-0 bg-transparent shadow-none">
+                    <DialogContent
+                        ref={dialogContentRef}
+                        onClick={handleDialogContentClick}
+                        className="max-w-[95vw] max-h-[95vh] p-0 overflow-hidden border-0 bg-transparent shadow-none"
+                    >
                         <div className="w-full h-full flex flex-col">
                             {/* Header with title and close button */}
-                            {/* <div className="flex justify-between items-center p-4 absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-black/80 to-transparent"> */}
-                            <div className="flex justify-between items-center p-4 absolute top-0 left-0 right-0 z-10">
+                            <div
+                                className="flex justify-between items-center p-4 absolute top-0 left-0 right-0 z-10"
+                                onClick={() => setIsPreviewOpen(false)}
+                            >
                                 {previewTitle && (
                                     <h3 className="text-white font-medium text-lg truncate max-w-[50%]">
                                         {previewTitle}
                                     </h3>
                                 )}
                                 <button
-                                    onClick={() => {
-                                        setIsPreviewOpen(false);
-                                        setIsFullscreen(false);
-                                    }}
+                                    onClick={closePreview}
                                     className="ml-auto p-2 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors"
                                     aria-label="Close preview"
                                 >
@@ -203,7 +286,10 @@ export default function Image({
                             </div>
 
                             {/* Main image container */}
-                            <div className="flex items-center justify-center w-full h-full overflow-auto p-8 pt-16 pb-20">
+                            <div
+                                className="flex items-center justify-center w-full h-full overflow-auto p-8 pt-16 pb-20"
+                                onClick={() => setIsPreviewOpen(false)}
+                            >
                                 {isLoading && (
                                     <Skeleton className="w-[80%] h-[80%] bg-gray-800/50" />
                                 )}
@@ -222,10 +308,8 @@ export default function Image({
                                         width={props.width ? Number(props.width) * 2 : 1200}
                                         height={props.height ? Number(props.height) * 2 : 800}
                                         className="max-h-[80vh] w-auto object-contain"
-                                        onError={() => {
-                                            setImgSrc(fallbackSrc);
-                                        }}
-                                        onLoad={() => setIsLoading(false)}
+                                        onError={handleImageError}
+                                        onLoad={handleImageLoad}
                                         priority
                                     />
                                 </div>
@@ -235,109 +319,45 @@ export default function Image({
                             <div className="absolute bottom-0 left-0 right-0 z-10">
                                 <div className="flex justify-center">
                                     <div className="bg-black/60 backdrop-blur-md rounded-full p-1 flex items-center gap-1 border border-gray-700">
-                                        <TooltipProvider>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        onClick={handleZoomOut}
-                                                        className="h-9 w-9 rounded-full text-gray-200 hover:text-white hover:bg-gray-800"
-                                                    >
-                                                        <ZoomOut size={18} />
-                                                    </Button>
-                                                </TooltipTrigger>
-                                                <TooltipContent side="top">
-                                                    <p>Zoom Out (−)</p>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </TooltipProvider>
+                                        <ControlButton
+                                            icon={ZoomOut}
+                                            onClick={handleZoomOut}
+                                            tooltip="Zoom Out (−)"
+                                        />
 
                                         <div className="px-2 text-white/90 text-sm font-medium min-w-[60px] text-center">
                                             {Math.round(scale * 100)}%
                                         </div>
 
-                                        <TooltipProvider>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        onClick={handleZoomIn}
-                                                        className="h-9 w-9 rounded-full text-gray-200 hover:text-white hover:bg-gray-800"
-                                                    >
-                                                        <ZoomIn size={18} />
-                                                    </Button>
-                                                </TooltipTrigger>
-                                                <TooltipContent side="top">
-                                                    <p>Zoom In (+)</p>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </TooltipProvider>
+                                        <ControlButton
+                                            icon={ZoomIn}
+                                            onClick={handleZoomIn}
+                                            tooltip="Zoom In (+)"
+                                        />
 
                                         <div className="w-px h-6 bg-gray-700 mx-1"></div>
 
-                                        <TooltipProvider>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        onClick={handleRotate}
-                                                        className="h-9 w-9 rounded-full text-gray-200 hover:text-white hover:bg-gray-800"
-                                                    >
-                                                        <RotateCw size={18} />
-                                                    </Button>
-                                                </TooltipTrigger>
-                                                <TooltipContent side="top">
-                                                    <p>Rotate (R)</p>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </TooltipProvider>
+                                        <ControlButton
+                                            icon={RotateCw}
+                                            onClick={handleRotate}
+                                            tooltip="Rotate (R)"
+                                        />
 
-                                        <TooltipProvider>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        onClick={handleDownload}
-                                                        className="h-9 w-9 rounded-full text-gray-200 hover:text-white hover:bg-gray-800"
-                                                    >
-                                                        <Download size={18} />
-                                                    </Button>
-                                                </TooltipTrigger>
-                                                <TooltipContent side="top">
-                                                    <p>Download</p>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </TooltipProvider>
+                                        <ControlButton
+                                            icon={Download}
+                                            onClick={handleDownload}
+                                            tooltip="Download"
+                                        />
 
-                                        <TooltipProvider>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        onClick={toggleFullscreen}
-                                                        className="h-9 w-9 rounded-full text-gray-200 hover:text-white hover:bg-gray-800"
-                                                    >
-                                                        {isFullscreen ? (
-                                                            <Minimize2 size={18} />
-                                                        ) : (
-                                                            <Maximize2 size={18} />
-                                                        )}
-                                                    </Button>
-                                                </TooltipTrigger>
-                                                <TooltipContent side="top">
-                                                    <p>
-                                                        {isFullscreen
-                                                            ? 'Exit Fullscreen (F)'
-                                                            : 'Fullscreen (F)'}
-                                                    </p>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </TooltipProvider>
+                                        <ControlButton
+                                            icon={isFullscreen ? Minimize2 : Maximize2}
+                                            onClick={toggleFullscreen}
+                                            tooltip={
+                                                isFullscreen
+                                                    ? 'Exit Fullscreen (F)'
+                                                    : 'Fullscreen (F)'
+                                            }
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -348,3 +368,5 @@ export default function Image({
         </>
     );
 }
+
+export default memo(Image);

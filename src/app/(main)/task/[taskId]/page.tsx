@@ -24,6 +24,8 @@ import { Badge } from '@/components/ui/badge';
 import config from '@/configs';
 import dayjs from 'dayjs';
 import InfoItem from '@/components/info-item';
+import { useCallback } from 'react';
+import { TaskLocationResponse } from '@/utils/types/custom.type';
 
 export default function TaskDetail() {
     const { taskId }: { taskId: string } = useParams();
@@ -33,6 +35,15 @@ export default function TaskDetail() {
         queryKey: ['task', taskId],
         queryFn: () => getTaskById(taskId),
     });
+
+    const getLocation = useCallback((taskLocation: TaskLocationResponse) => {
+        if (taskLocation?.location) {
+            return taskLocation.location?.chickenCoopName;
+        } else if (taskLocation?.locationNavigation) {
+            return taskLocation.locationNavigation?.warehouseName;
+        }
+        return 'N/A';
+    }, []);
 
     if (isLoading) {
         return (
@@ -126,9 +137,7 @@ export default function TaskDetail() {
                                             <Home className="h-4 w-4" /> Vị trí
                                         </h3>
                                         <p className="text-slate-600 dark:text-slate-300">
-                                            {task.taskLocation?.coopLocation?.chickenCoopName ||
-                                                task.taskLocation?.wareLocation?.warehouseName ||
-                                                'Không xác định'}
+                                            {getLocation(task.taskLocation)}
                                         </p>
                                     </div>
                                 </div>

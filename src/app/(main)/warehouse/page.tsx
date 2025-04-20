@@ -4,7 +4,17 @@ import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Image from '@/components/fallback-image';
 import { getCookie } from 'cookies-next';
-import { Info, ArrowRight, Wheat, BriefcaseMedical, Wrench, Warehouse, Plus } from 'lucide-react';
+import {
+    Info,
+    ArrowRight,
+    Wheat,
+    BriefcaseMedical,
+    Wrench,
+    Warehouse,
+    Plus,
+    Origami,
+    Apple,
+} from 'lucide-react';
 
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -139,11 +149,15 @@ export default function Ware() {
     const getResourceIcon = (resourceTypeName: string) => {
         switch (resourceTypeName) {
             case 'Thực phẩm':
-                return <Wheat className="w-5 h-5 text-green-600" />;
+                return <Apple className="w-5 h-5 text-green-600" />;
             case 'Dược phẩm':
                 return <BriefcaseMedical className="w-5 h-5 text-blue-600" />;
             case 'Thiết bị':
                 return <Wrench className="w-5 h-5 text-amber-600" />;
+            case 'Con giống':
+                return <Origami className="w-5 h-5 text-red-600" />;
+            case 'Sản phẩm thu hoạch':
+                return <Wheat className="w-5 h-5 text-green-600" />;
             default:
                 return <Warehouse className="w-5 h-5 text-slate-600" />;
         }

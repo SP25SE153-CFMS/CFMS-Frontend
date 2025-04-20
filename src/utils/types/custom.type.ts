@@ -30,6 +30,12 @@ import { Warehouse } from '../schemas/warehouse.schema';
 import { CreateInventoryReceipt } from '../schemas/inventory-receipt.schema';
 import { CreateInventoryReceiptDetail } from '../schemas/inventory-receipt-detail.schema';
 import { TaskLocation } from '../schemas/task-location.schema';
+import { HarvestProduct } from '../schemas/harvest-product.schema';
+import { Request } from '../schemas/request.schema';
+import { TaskRequest } from '../schemas/task-request.schema';
+import { InventoryRequest } from '../schemas/inventory-request.schema';
+import { InventoryRequestDetail } from '../schemas/inventory-request-detail.schema';
+import { Farm } from '../schemas/farm.schema';
 
 export type EntityAudit = {
     isDeleted: boolean;
@@ -108,6 +114,9 @@ export type ResourceResponse = Resource & {
     equipment?: Equipment;
     medicine?: Medicine;
     food?: Food;
+    harvestProduct?: HarvestProduct;
+    chicken?: Chicken;
+    breeding?: Chicken;
     resourceType: string;
     unitSpecification: string;
     description: string;
@@ -116,20 +125,29 @@ export type ResourceResponse = Resource & {
     expiryDate: string;
     purchaseDate: string;
     disease: string;
+    // Food
     foodCode: string;
     foodName: string;
     note: string;
+    // Medicine
     medicineCode: string;
     medicineName: string;
     usage: string;
     dosageForm: string;
     storageCondition: string;
+    // Equipment
     equipmentCode: string;
     equipmentName: string;
     material: string;
     warranty: number;
     size: number;
     weight: number;
+    // HarvestProduct
+    harvestProductCode: string;
+    harvestProductName: string;
+    // Chicken
+    chickenCode: string;
+    chickenName: string;
 };
 
 export type TaskResourceResponse = TaskResource & {
@@ -142,9 +160,9 @@ export type TaskResourceResponse = TaskResource & {
 
 export type TaskLocationResponse = TaskLocation & {
     coopId?: string;
-    coopLocation?: ChickenCoop;
+    location?: ChickenCoop;
     wareId?: string;
-    wareLocation?: Warehouse;
+    locationNavigation?: Warehouse;
 };
 
 export type AssignmentForTaskResponse = {
@@ -193,16 +211,22 @@ export type DashboardResponse = {
     chickenBatches: ChickenBatchResponse[];
 };
 
-export type WareStockResponse = Warehouse & {
-    foods?: Food;
-    equipments?: Equipment;
-    medicine?: Medicine;
-    specQuantity: string;
-    unitSpecification: string;
-    resourceTypeName: string;
-    resourceId: string;
-    disease: string;
-};
+export type WareStockResponse = Warehouse &
+    Food &
+    Equipment &
+    Medicine &
+    HarvestProduct & {
+        foods?: Food;
+        equipments?: Equipment;
+        medicine?: Medicine;
+        specQuantity: string;
+        unitSpecification: string;
+        resourceTypeName: string;
+        resourceId: string;
+        disease: string;
+    };
+
+export type WarestockResourceByType = Food & Equipment & Medicine & HarvestProduct & Chicken;
 
 export type InventoryReceiptRequest = CreateInventoryReceipt & {
     requestId: string;
@@ -214,3 +238,26 @@ export type DashboardChickenBatch = {
     deadthChicken: number;
     totalChicken: number;
 };
+
+export type InventoryRequestDetailResponse = InventoryRequestDetail & {
+    unit: {
+        name: string;
+    };
+    resource: ResourceResponse;
+};
+
+export type WarehouseResponse = Warehouse & {
+    farm: Farm;
+};
+
+export type InventoryRequestResponse = InventoryRequest & {
+    inventoryRequestDetails: InventoryRequestDetailResponse[];
+    wareFrom: WarehouseResponse;
+    wareTo: WarehouseResponse;
+};
+
+export type RequestResponse = EntityAudit &
+    Request & {
+        taskRequests: TaskRequest[];
+        inventoryRequests: InventoryRequestResponse[];
+    };

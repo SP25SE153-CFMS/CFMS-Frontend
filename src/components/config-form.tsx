@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { ConfigSchema, CreateConfigSchema, SystemConfig } from '@/schemas/config.schema';
+import { ConfigSchema, CreateConfigSchema, SystemConfig } from '@/utils/schemas/config.schema';
 import { format } from 'date-fns';
 import { CalendarIcon, Loader2 } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';

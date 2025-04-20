@@ -11,8 +11,8 @@ import {
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { AlignRight, Trash } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getAreaUnit } from '@/utils/functions/category.function';
+import Image from '@/components/fallback-image';
 
 interface BreedingAreaCardProps {
     area: BreedingArea;
@@ -43,14 +43,15 @@ export default function BreedingAreaCard({
                 {/* <Badge variant={breedingAreaStatusVariant[area.status]}>
                     {breedingAreaStatusLabels[area.status]}
                 </Badge> */}
-                <Avatar className="w-16 h-16 rounded-sm object-contain">
-                    <AvatarImage
-                        src={area.imageUrl ?? '/breeding-area.png'}
-                        alt={area.breedingAreaCode}
-                        className="rounded-sm object-contain"
-                    />
-                    <AvatarFallback className="rounded-sm">{area.breedingAreaCode}</AvatarFallback>
-                </Avatar>
+                <Image
+                    src={area.imageUrl ?? '/breeding-area.png'}
+                    alt={area.breedingAreaCode}
+                    width={16}
+                    height={16}
+                    className="w-16 h-16 rounded-sm object-contain"
+                    preview
+                />
+
                 {/* <Image
                     src={area.imageUrl ?? '/breeding-area.png'}
                     alt={area.breedingAreaCode}

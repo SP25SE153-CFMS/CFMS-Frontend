@@ -69,10 +69,10 @@ export const sidebarItems: NavGroup[] = [
                     // { title: 'Danh sách trang thiết bị', path: config.routes.equipment },
                     { title: 'Danh sách nhà cung cấp', path: config.routes.supplier },
                     { title: 'Danh sách phiếu yêu cầu', path: config.routes.request },
-                    {
-                        title: 'DS phiếu nhập/xuất kho',
-                        path: config.routes.inventoryReceipt,
-                    },
+                    // {
+                    //     title: 'DS phiếu nhập/xuất kho',
+                    //     path: config.routes.inventoryReceipt,
+                    // },
                 ],
             },
         ],

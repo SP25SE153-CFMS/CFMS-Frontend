@@ -271,7 +271,7 @@ export function CloudinaryImageUpload({
                             <div className="relative">
                                 <div
                                     className={cn(
-                                        'relative overflow-hidden rounded-md',
+                                        'relative overflow-hidden rounded-md flex',
                                         ASPECT_RATIO_CLASSES[aspectRatio],
                                     )}
                                 >

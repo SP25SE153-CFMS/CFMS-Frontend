@@ -47,7 +47,6 @@ import {
 import { useState } from 'react';
 import type { CreateNutritionPlanDetail } from '@/utils/schemas/nutrition-plan-detail.schema';
 import { SelectNative } from '@/components/ui/select-native';
-import { getFoods } from '@/services/food.service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
@@ -56,6 +55,7 @@ import { CreateFSWithoutNutriPlan } from '@/utils/schemas/feed-session.schema';
 import { TimePicker } from '../ui/time-picker';
 import { useRouter } from 'next/navigation';
 import config from '@/configs';
+import { getWarestockResourceByFarm } from '@/services/warehouse.service';
 
 interface NutritionPlanFormProps {
     defaultValues?: Partial<NutritionPlan>;
@@ -65,9 +65,14 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
     const router = useRouter();
 
     // Get all foods
+    // const { data: foods, isLoading: foodsLoading } = useQuery({
+    //     queryKey: ['foods'],
+    //     queryFn: () => getFoods(),
+    // });
+    const RESOURCE_TYPE_NAME = 'food';
     const { data: foods, isLoading: foodsLoading } = useQuery({
         queryKey: ['foods'],
-        queryFn: () => getFoods(),
+        queryFn: () => getWarestockResourceByFarm(RESOURCE_TYPE_NAME),
     });
 
     const [nutritionPlanDetails, setNutriPlanDetails] = useState<CreateNutritionPlanDetail[]>(
@@ -344,7 +349,8 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
                                                                                         food.foodId
                                                                                     }
                                                                                     value={
-                                                                                        food.foodId
+                                                                                        food.foodId ??
+                                                                                        ''
                                                                                     }
                                                                                 >
                                                                                     {food.foodName}

@@ -6,6 +6,7 @@ export const ShiftSchema = z.object({
     startTime: z.string(),
     // .datetime({ message: 'Thời gian bắt đầu không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
     endTime: z.string(),
+    farmId: z.string().uuid({ message: 'ID trang trại không hợp lệ, phải là UUID' }),
     // .datetime({
     //     message: 'Thời gian kết thúc không hợp lệ, phải là định dạng ngày giờ hợp lệ',
     // }),

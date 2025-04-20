@@ -133,20 +133,26 @@ export const flockStatusVariant: Record<string, any> = {
 // Request status
 export enum RequestStatus {
     PENDING,
-    REJECTED,
     APPROVED,
+    REJECTED,
 }
 
 export const requestStatusLabels: Record<string, string> = {
     [RequestStatus.PENDING]: 'Đang chờ duyệt',
-    [RequestStatus.REJECTED]: 'Từ chối',
     [RequestStatus.APPROVED]: 'Đã duyệt',
+    [RequestStatus.REJECTED]: 'Từ chối',
 };
 
 export const requestStatusVariant: Record<string, any> = {
     [RequestStatus.PENDING]: 'outline',
-    [RequestStatus.REJECTED]: 'destructive',
     [RequestStatus.APPROVED]: 'default',
+    [RequestStatus.REJECTED]: 'destructive',
+};
+
+export const requestStatusBadge: Record<string, any> = {
+    [RequestStatus.PENDING]: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+    [RequestStatus.APPROVED]: 'bg-green-50 text-green-700 border-green-200',
+    [RequestStatus.REJECTED]: 'bg-red-50 text-red-700 border-red-200',
 };
 
 // Chicken batch status
@@ -323,7 +329,7 @@ export const wareStatusLabels: Record<string, string> = {
     [WareStatus.ACTIVE]: 'Hoạt động',
 };
 
-export const wareStatusVariant: Record<string,any> = {
+export const wareStatusVariant: Record<string, any> = {
     [WareStatus.INACTIVE]: 'destructive',
     [WareStatus.ACTIVE]: 'default',
-}
+};
