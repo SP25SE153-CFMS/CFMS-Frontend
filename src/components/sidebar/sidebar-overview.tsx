@@ -1,6 +1,6 @@
 'use client';
 
-import { BookCopy, ChevronRight, PanelsTopLeft, Settings, Settings2 } from 'lucide-react';
+import { BookCopy, ChevronRight, Settings, Settings2 } from 'lucide-react';
 import {
     SidebarGroup,
     SidebarGroupContent,
@@ -59,14 +59,14 @@ export default function SidebarOverview({
             <SidebarGroupContent>
                 <SidebarMenu>
                     {/* Dashboard */}
-                    <SidebarMenuItem>
+                    {/* <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href={config.routes.dashboard}>
+                            <Link href={config.routes.welcome}>
                                 <PanelsTopLeft />
                                 <span>Trang chủ</span>
                             </Link>
                         </SidebarMenuButton>
-                    </SidebarMenuItem>
+                    </SidebarMenuItem> */}
 
                     {/* Common Category */}
                     <Collapsible className="group/collapsible">

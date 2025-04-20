@@ -1,6 +1,6 @@
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { currentUser } from '@/utils/data/mock.data';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 
 export function HeaderLogo() {
     return (

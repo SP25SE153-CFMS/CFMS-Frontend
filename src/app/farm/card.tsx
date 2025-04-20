@@ -4,7 +4,7 @@ import { scaleLabels } from '@/utils/enum/status.enum';
 import { Farm } from '@/utils/schemas/farm.schema';
 import { setCookie } from 'cookies-next';
 import { Ruler, Scale3d } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { useRouter } from 'next/navigation';
 
 export function FarmCard({ farm }: { farm: Farm }) {
@@ -16,7 +16,7 @@ export function FarmCard({ farm }: { farm: Farm }) {
             onClick={() => {
                 sessionStorage.setItem('activeFarm', JSON.stringify(farm));
                 setCookie(config.cookies.farmId, farm.farmId);
-                router.push(`${config.routes.dashboard}?farmCode=${farm.farmCode}`);
+                router.push(`${config.routes.welcome}?farmCode=${farm.farmCode}`);
             }}
         >
             <Card className="hover:shadow-lg transition-shadow duration-300 mb-4">
@@ -29,6 +29,7 @@ export function FarmCard({ farm }: { farm: Farm }) {
                             width={50}
                             height={50}
                             className="rounded-md object-cover absolute right-0 mt-6"
+                            preview
                         />
                     </div>
                 </CardHeader>

@@ -1,10 +1,8 @@
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { Checkbox } from '@/components/ui/checkbox';
-import { capitalizeFirstLetter } from '@/utils/functions';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import { DataTableRowActions } from './data-table-row-actions';
-import { Food } from '@/utils/schemas/food.schema';
 import { WareStockResponse } from '@/utils/types/custom.type';
 
 export const columns: ColumnDef<WareStockResponse>[] = [

@@ -13,13 +13,6 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
@@ -31,6 +24,8 @@ import { useParams } from 'next/navigation';
 import { addQuantityLog } from '@/services/chicken-batch.service';
 import { formatDate } from '@/utils/functions';
 import { vi } from 'date-fns/locale';
+import { QuantityLogStatus } from '@/utils/enum/status.enum';
+import dayjs from 'dayjs';
 
 interface QuantityLogFormProps {
     defaultValues?: Partial<QuantityLog>;
@@ -45,10 +40,10 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
         resolver: zodResolver(CreateQuantityLogSchema),
         defaultValues: {
             chickenBatchId,
-            logDate: new Date().toISOString(),
+            logDate: '',
             notes: '',
             quantity: 0,
-            logType: 1,
+            logType: QuantityLogStatus.EXPORT,
             ...defaultValues,
         },
     });
@@ -62,12 +57,8 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
         mutationFn: addQuantityLog,
         onSuccess: () => {
             closeDialog();
-            queryClient.invalidateQueries({ queryKey: ['quantityLogs'] });
-            toast.success(
-                defaultValues
-                    ? 'Cập nhật nhật ký số lượng thành công'
-                    : 'Tạo nhật ký số lượng thành công',
-            );
+            queryClient.invalidateQueries({ queryKey: ['chickenBatch', chickenBatchId] });
+            toast.success('Xử lý thành công');
         },
         onError: (error: any) => {
             console.error(error);
@@ -77,13 +68,14 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
 
     // Form submit handler
     async function onSubmit(values: QuantityLog) {
+        values.logDate = dayjs(values.logDate).format('YYYY-MM-DD');
         mutation.mutate(values);
     }
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
+                <div className="grid grid-cols-1 gap-6 px-1">
                     {/* Chicken Batch ID */}
                     {/* <FormField
                         control={form.control}
@@ -189,7 +181,7 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
                     />
 
                     {/* Log Type */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="logType"
                         render={({ field }) => (
@@ -212,7 +204,7 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
                 </div>
                 <Button type="submit" className="mx-auto mt-6 w-60" disabled={mutation.isPending}>
                     {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}

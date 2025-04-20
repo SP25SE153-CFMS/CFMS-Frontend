@@ -6,6 +6,7 @@ import {
     ClipboardList,
     Database,
     Egg,
+    ExternalLink,
     FileText,
     Info,
     InfoIcon,
@@ -46,11 +47,13 @@ import {
 } from '@/components/ui/dialog';
 import SplitChickenBatchForm from '@/components/forms/split-chicken-batch-form';
 import { GrowthStageResponse } from '@/utils/types/custom.type';
+import QuantityLogForm from '@/components/forms/quantity-log-form';
 
 export default function Page() {
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
 
-    const [open, setOpen] = useState(false);
+    const [openSplit, setOpenSplit] = useState(false);
+    const [openExport, setOpenExport] = useState(false);
 
     const { data: chickenBatch, isLoading } = useQuery({
         queryKey: ['chickenBatch', chickenBatchId],
@@ -143,8 +146,25 @@ export default function Page() {
                             />
                         </div>
 
-                        <CardFooter>
-                            <Dialog open={open} onOpenChange={setOpen}>
+                        <CardFooter className="flex flex-col gap-2">
+                            <Dialog open={openExport} onOpenChange={setOpenExport}>
+                                <DialogTrigger asChild>
+                                    <Button variant="outline" className="w-full gap-2">
+                                        <ExternalLink size={16} />
+                                        Xuất chuồng
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-lg">
+                                    <DialogHeader>
+                                        <DialogTitle>Xuất chuồng</DialogTitle>
+                                        <DialogDescription>
+                                            Hãy nhập các thông tin dưới đây để xuất chuồng
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <QuantityLogForm closeDialog={() => setOpenExport(false)} />
+                                </DialogContent>
+                            </Dialog>
+                            <Dialog open={openSplit} onOpenChange={setOpenSplit}>
                                 <DialogTrigger asChild>
                                     <Button variant="default" className="w-full gap-2">
                                         <Split size={16} />
@@ -158,7 +178,9 @@ export default function Page() {
                                             Hãy nhập các thông tin dưới đây để tách lứa nuôi
                                         </DialogDescription>
                                     </DialogHeader>
-                                    <SplitChickenBatchForm closeDialog={() => setOpen(false)} />
+                                    <SplitChickenBatchForm
+                                        closeDialog={() => setOpenSplit(false)}
+                                    />
                                 </DialogContent>
                             </Dialog>
                         </CardFooter>

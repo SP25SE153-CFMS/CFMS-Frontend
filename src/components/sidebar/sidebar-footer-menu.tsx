@@ -26,12 +26,13 @@ import { signOutUser } from '@/utils/functions/sign-out.function';
 import { useQuery } from '@tanstack/react-query';
 import { getCurrentUser } from '@/services/auth.service';
 import { LoadingSpinner } from '../ui/loading-spinner';
+import { convertToThumbnailUrl } from '@/utils/functions';
 
 export default function SidebarFooterMenu() {
     const { isMobile } = useSidebar();
 
     const { data: user, isLoading } = useQuery({
-        queryKey: ['user'],
+        queryKey: ['currentUser'],
         queryFn: () => getCurrentUser(),
     });
 
@@ -40,7 +41,12 @@ export default function SidebarFooterMenu() {
     }
 
     if (!user) {
-        return <h1>Không tìm thấy thông tin người dùng</h1>;
+        return (
+            <Avatar className="size-8 rounded-lg">
+                {/* <AvatarImage src={user.avatar} alt={user.fullName} /> */}
+                <AvatarFallback className="rounded-lg">N/A</AvatarFallback>
+            </Avatar>
+        );
     }
 
     return (
@@ -53,7 +59,10 @@ export default function SidebarFooterMenu() {
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         >
                             <Avatar className="size-8 rounded-lg">
-                                <AvatarImage src={user.avatar} alt={user.fullName} />
+                                <AvatarImage
+                                    src={convertToThumbnailUrl(user.avatar || '')}
+                                    alt={user.fullName}
+                                />
                                 <AvatarFallback className="rounded-lg">
                                     {initials(user.fullName)}
                                 </AvatarFallback>

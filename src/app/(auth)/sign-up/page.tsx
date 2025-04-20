@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import config from '@/configs';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import Link from 'next/link';
 import { FieldErrors, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';

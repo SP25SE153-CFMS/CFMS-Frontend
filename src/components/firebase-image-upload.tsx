@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { useDropzone } from 'react-dropzone';
 import { UploadCloud, X } from 'lucide-react';
 

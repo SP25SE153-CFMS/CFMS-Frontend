@@ -1,11 +1,20 @@
 import { Assignment } from '@/utils/schemas/assignment.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
 
 const PREFIX = '/api/Assignment';
 
 export const getAssignments = async () => {
     const endpoint = PREFIX;
+    const response = await get<Response<Assignment[]>>(endpoint);
+    return response.data.data;
+};
+
+export const getAssignmentsByFarm = async () => {
+    const farmId = getCookie(config.cookies.farmId);
+    const endpoint = PREFIX + '/Farm/' + farmId;
     const response = await get<Response<Assignment[]>>(endpoint);
     return response.data.data;
 };

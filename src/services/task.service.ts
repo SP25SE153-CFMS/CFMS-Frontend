@@ -10,6 +10,12 @@ export const getTasks = async () => {
     return response.data.data;
 };
 
+export const getTasksByFarmId = async (farmId: string) => {
+    const endpoint = PREFIX + '/byFarmId/' + farmId;
+    const response = await get<Response<TaskResponse[]>>(endpoint);
+    return response.data.data;
+};
+
 export const getTaskById = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
     const response = await get<Response<TaskResponse>>(endpoint);

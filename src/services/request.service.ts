@@ -1,19 +1,23 @@
 import { Request } from '@/utils/schemas/request.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
-import { InventoryReceiptRequest } from '@/utils/types/custom.type';
+import { InventoryReceiptRequest, RequestResponse } from '@/utils/types/custom.type';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
+import { RequestStatus } from '@/utils/enum/status.enum';
 
 const PREFIX = '/api/Request';
 
 export const getRequests = async () => {
-    const endpoint = PREFIX;
-    const response = await get<Response<Request[]>>(endpoint);
+    const farmId = getCookie(config.cookies.farmId);
+    const endpoint = `${PREFIX}/Farm/${farmId}`;
+    const response = await get<Response<RequestResponse[]>>(endpoint);
     return response.data.data;
 };
 
 export const getRequestById = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
-    const response = await get<Response<Request>>(endpoint);
+    const response = await get<Response<RequestResponse>>(endpoint);
     return response.data.data;
 };
 
@@ -32,6 +36,13 @@ export const updateRequest = async (body: Request) => {
 export const deleteRequest = async (id: string) => {
     const endpoint = PREFIX + '/' + id;
     const response = await remove<Response<string>>(endpoint);
+    return response.data;
+};
+
+export const approveRequest = async (requestId: string, isApprove: RequestStatus) => {
+    const endpoint = PREFIX + '/approve';
+    const body = { requestId, isApprove };
+    const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };
 

@@ -16,7 +16,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { getUsers } from '@/services/user.service';
 import EmployeeForm from '@/components/forms/employee-form';

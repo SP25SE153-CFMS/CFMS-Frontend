@@ -1,11 +1,20 @@
 import { GrowthStage } from '@/utils/schemas/growth-stage.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
 
 const PREFIX = '/api/GrowthStage';
 
+// export const getGrowthStages = async () => {
+//     const endpoint = PREFIX;
+//     const response = await get<Response<GrowthStage[]>>(endpoint);
+//     return response.data.data;
+// };
+
 export const getGrowthStages = async () => {
-    const endpoint = PREFIX;
+    const farmId = getCookie(config.cookies.farmId);
+    const endpoint = `${PREFIX}/${farmId}/get-growthstage`;
     const response = await get<Response<GrowthStage[]>>(endpoint);
     return response.data.data;
 };
@@ -39,6 +48,16 @@ export const addNutritionPlanToGrowthStage = async (
     nutritionPlanId: string,
 ) => {
     const endpoint = PREFIX + '/add-nutritionplan';
+    const body = { growthStageId, nutritionPlanId };
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const updateNutritionPlanToGrowthStage = async (
+    growthStageId: string,
+    nutritionPlanId: string,
+) => {
+    const endpoint = PREFIX + '/update-nutritionplan';
     const body = { growthStageId, nutritionPlanId };
     const response = await post<Response<string>>(endpoint, body);
     return response.data;

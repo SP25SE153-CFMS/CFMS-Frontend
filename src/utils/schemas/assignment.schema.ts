@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { AssignmentStatus } from '../enum/status.enum';
 
 export const AssignmentSchema = z.object({
     assignmentId: z.string().uuid({ message: 'ID phân công không hợp lệ, phải là UUID' }),
@@ -18,7 +17,7 @@ export const AssignmentSchema = z.object({
 
     // taskScheduleId: z.string().uuid({ message: 'ID lịch công việc không hợp lệ, phải là UUID' }),
 
-    status: z.nativeEnum(AssignmentStatus, { message: 'Trạng thái không hợp lệ' }),
+    // status: z.nativeEnum(AssignmentStatus, { message: 'Trạng thái không hợp lệ' }),
 
     note: z.string().trim().optional(),
 });

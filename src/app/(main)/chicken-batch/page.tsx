@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { Download, ChevronLeft, Search, Filter } from 'lucide-react';
 
 import { DataTable } from '@/components/table/data-table';

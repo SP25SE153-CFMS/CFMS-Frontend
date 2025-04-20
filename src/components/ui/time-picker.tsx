@@ -19,7 +19,7 @@ const generateTimeOptions = (interval: number) => {
         for (let m = 0; m < 60; m += interval) {
             const hour = h.toString().padStart(2, '0');
             const minute = m.toString().padStart(2, '0');
-            times.push(`${hour}:${minute}`);
+            times.push(`${hour}:${minute}:00`);
         }
     }
     return times;

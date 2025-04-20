@@ -15,10 +15,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import SupplierForm from '@/components/forms/supplier-form';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import {  getSuppliersByFarmId } from '@/services/supplier.service';
+import { getSuppliersByFarmId } from '@/services/supplier.service';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 
@@ -29,13 +29,12 @@ export default function Supplier() {
     const { data: suppliers = [], isLoading } = useQuery({
         queryKey: ['suppliers', farmId],
         queryFn: () => getSuppliersByFarmId(farmId),
-        enabled: !!farmId
+        enabled: !!farmId,
     });
 
     const open = () => setOpenDialog(true);
     const closeDialog = () => setOpenDialog(false);
     const onOpenChange = (val: boolean) => setOpenDialog(val);
-
 
     if (isLoading) {
         return (

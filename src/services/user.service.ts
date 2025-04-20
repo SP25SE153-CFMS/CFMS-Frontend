@@ -33,3 +33,15 @@ export const deleteUser = async (id: string) => {
     const response = await remove<Response<string>>(endpoint);
     return response.data;
 };
+
+export const uploadAvatar = async (file: File) => {
+    const endpoint = PREFIX + '/upload-image';
+    const formData = new FormData();
+    formData.append('File', file);
+    const response = await post<Response<string>>(endpoint, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+    return response.data;
+};

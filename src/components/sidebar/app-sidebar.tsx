@@ -17,7 +17,13 @@ import SidebarOverview from './sidebar-overview';
 import { getCategories } from '@/services/category.service';
 import { useQuery } from '@tanstack/react-query';
 import { FarmSwitcher } from './farm-switcher';
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+import SidebarFarmOwnerOverview from './sidebar-farm-owner-overview';
+
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+    isFarmOwner?: boolean;
+}
+
+export function AppSidebar({ isFarmOwner = false, ...props }: AppSidebarProps) {
     const { data: categories, isLoading } = useQuery({
         queryKey: ['categories'],
         queryFn: async () => {
@@ -32,10 +38,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarHeader>
                 <FarmSwitcher />
             </SidebarHeader>
-            <SidebarContent>
-                <SidebarNavigation sidebarItems={sidebarItems} />
-                <SidebarOverview categories={categories} isLoading={isLoading} />
-            </SidebarContent>
+            {isFarmOwner && (
+                <SidebarContent>
+                    <SidebarFarmOwnerOverview />
+                </SidebarContent>
+            )}
+            {!isFarmOwner && (
+                <SidebarContent>
+                    <SidebarNavigation sidebarItems={sidebarItems} />
+                    <SidebarOverview categories={categories} isLoading={isLoading} />
+                </SidebarContent>
+            )}
             <SidebarFooter>
                 <SidebarFooterMenu />
             </SidebarFooter>

@@ -61,7 +61,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const handleClickDetail = () => {
         router.push(config.routes.chickenCoop + '/' + chickenCoop.chickenCoopId);
         // const chickenCoops = row.getAllCells().map((cell) => cell.row.original);
-        // sessionStorage.setItem('chickenCoops', JSON.stringify(chickenCoops));
+        sessionStorage.setItem('currentCoop', JSON.stringify(chickenCoop));
     };
 
     return (

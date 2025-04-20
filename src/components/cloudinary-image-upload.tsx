@@ -8,7 +8,7 @@ import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import { env } from '@/env';
 
 type AspectRatio = 'square' | 'portrait' | 'landscape' | 'auto';
@@ -55,74 +55,74 @@ export function CloudinaryImageUpload({
     const [error, setError] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const uploadToCloudinary = useCallback(async () => {
-        if (!file || !cloudName) return;
+    // const uploadToCloudinary = useCallback(async () => {
+    //     if (!file || !cloudName) return;
 
-        setUploading(true);
-        setUploadProgress(0);
-        setError(null);
+    //     setUploading(true);
+    //     setUploadProgress(0);
+    //     setError(null);
 
-        const formData = new FormData();
-        formData.append('file', file.file);
-        formData.append('upload_preset', uploadPreset);
+    //     const formData = new FormData();
+    //     formData.append('file', file.file);
+    //     formData.append('upload_preset', uploadPreset);
 
-        let progressInterval;
+    //     let progressInterval;
 
-        try {
-            // Simulate progress
-            progressInterval = setInterval(() => {
-                setUploadProgress((prev) => Math.min(prev + 10, 90));
-            }, 300);
+    //     try {
+    //         // Simulate progress
+    //         progressInterval = setInterval(() => {
+    //             setUploadProgress((prev) => Math.min(prev + 10, 90));
+    //         }, 300);
 
-            // Using axios instead of fetch
-            const response = await axios.post(
-                `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                    // Optional: Add real progress tracking
-                    onUploadProgress: (progressEvent) => {
-                        if (progressEvent.total) {
-                            const percentCompleted = Math.round(
-                                (progressEvent.loaded * 100) / progressEvent.total,
-                            );
-                            setUploadProgress(Math.min(percentCompleted, 90));
-                        }
-                    },
-                },
-            );
+    //         // Using axios instead of fetch
+    //         const response = await axios.post(
+    //             `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+    //             formData,
+    //             {
+    //                 headers: {
+    //                     'Content-Type': 'multipart/form-data',
+    //                 },
+    //                 // Optional: Add real progress tracking
+    //                 onUploadProgress: (progressEvent) => {
+    //                     if (progressEvent.total) {
+    //                         const percentCompleted = Math.round(
+    //                             (progressEvent.loaded * 100) / progressEvent.total,
+    //                         );
+    //                         setUploadProgress(Math.min(percentCompleted, 90));
+    //                     }
+    //                 },
+    //             },
+    //         );
 
-            // Axios automatically throws for non-2xx responses, so we don't need to check response.ok
-            // Axios also automatically parses JSON, so we can access data directly
-            const data = response.data;
-            setUploadProgress(100);
+    //         // Axios automatically throws for non-2xx responses, so we don't need to check response.ok
+    //         // Axios also automatically parses JSON, so we can access data directly
+    //         const data = response.data;
+    //         setUploadProgress(100);
 
-            // Update the file with its Cloudinary URL
-            setFile((prev) => (prev ? { ...prev, url: data.secure_url } : null));
+    //         // Update the file with its Cloudinary URL
+    //         setFile((prev) => (prev ? { ...prev, url: data.secure_url } : null));
 
-            // Call the callback with the URL
-            onUploadComplete?.(data.secure_url);
-        } catch (error) {
-            console.error('Upload error:', error);
-            // Handle axios error
-            if (axios.isAxiosError(error)) {
-                setError(
-                    error.response?.data?.error?.message ||
-                        error.message ||
-                        'Upload failed. Please try again.',
-                );
-            } else {
-                setError(
-                    error instanceof Error ? error.message : 'Upload failed. Please try again.',
-                );
-            }
-        } finally {
-            clearInterval(progressInterval);
-            setUploading(false);
-        }
-    }, [file, cloudName, uploadPreset, onUploadComplete]);
+    //         // Call the callback with the URL
+    //         onUploadComplete?.(data.secure_url);
+    //     } catch (error) {
+    //         console.error('Upload error:', error);
+    //         // Handle axios error
+    //         if (axios.isAxiosError(error)) {
+    //             setError(
+    //                 error.response?.data?.error?.message ||
+    //                     error.message ||
+    //                     'Upload failed. Please try again.',
+    //             );
+    //         } else {
+    //             setError(
+    //                 error instanceof Error ? error.message : 'Upload failed. Please try again.',
+    //             );
+    //         }
+    //     } finally {
+    //         clearInterval(progressInterval);
+    //         setUploading(false);
+    //     }
+    // }, [file, cloudName, uploadPreset, onUploadComplete]);
 
     // const setUploadImage = useImageUploadStore((state) => state.setUploadImage);
     // // Register the function when component mounts
@@ -228,7 +228,7 @@ export function CloudinaryImageUpload({
                 setUploading(false);
             }
         },
-        [file?.preview, maxSizeMB, uploadToCloudinary],
+        [cloudName, file?.preview, maxSizeMB, onUploadComplete, uploadPreset],
     );
 
     const removeFile = useCallback(() => {
@@ -271,7 +271,7 @@ export function CloudinaryImageUpload({
                             <div className="relative">
                                 <div
                                     className={cn(
-                                        'relative overflow-hidden rounded-md',
+                                        'relative overflow-hidden rounded-md flex',
                                         ASPECT_RATIO_CLASSES[aspectRatio],
                                     )}
                                 >
@@ -282,6 +282,7 @@ export function CloudinaryImageUpload({
                                         className="h-full w-full object-contain"
                                         sizes="(max-width: 768px) 100vw, 300px"
                                         priority
+                                        preview
                                     />
                                 </div>
                                 <Button

@@ -3,7 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
-import Image from 'next/image';
+import Image from '@/components/fallback-image';
 import dayjs from 'dayjs';
 import { Badge } from '@/components/ui/badge';
 import { User } from '@/utils/schemas/user.schema';
@@ -63,6 +63,7 @@ export const columns: ColumnDef<User>[] = [
                             width={40}
                             height={40}
                             className="rounded-full"
+                            preview
                         />
                     ) : (
                         '-'
