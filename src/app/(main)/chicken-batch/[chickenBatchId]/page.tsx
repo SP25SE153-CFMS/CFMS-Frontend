@@ -1,6 +1,7 @@
 'use client';
 
 import {
+    AlertCircle,
     BarChart3,
     Calendar,
     ClipboardList,
@@ -11,6 +12,7 @@ import {
     Info,
     InfoIcon,
     Split,
+    Sprout,
     Tag,
     TrendingUp,
     Type,
@@ -30,7 +32,7 @@ import CardNutritionPlan from './components/nutrition/card';
 import CardHealthLog from './components/health/card';
 import CardQuantityLog from './components/quantity/card';
 import CardFeedLog from './components/feed/card';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Stepper } from '@/components/ui/stepper';
 import { Chart } from './chart';
 import { getChickenType } from '@/utils/functions/category.function';
@@ -48,6 +50,8 @@ import {
 import SplitChickenBatchForm from '@/components/forms/split-chicken-batch-form';
 import { GrowthStageResponse } from '@/utils/types/custom.type';
 import QuantityLogForm from '@/components/forms/quantity-log-form';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { calculateDuration } from '@/utils/functions';
 
 export default function Page() {
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
@@ -69,6 +73,12 @@ export default function Page() {
 
     useEffect(() => {
         setCurrentGrowthStage(chickenBatch?.growthBatches[0]?.growthStage || null);
+    }, [chickenBatch]);
+
+    const isReadyToExport = useMemo(() => {
+        if (!chickenBatch) return false;
+        const duration = calculateDuration(chickenBatch.startDate, null);
+        return duration >= chickenBatch?.minGrowDays;
     }, [chickenBatch]);
 
     if (isLoading) {
@@ -144,6 +154,18 @@ export default function Page() {
                             />
 
                             <InfoItem
+                                label="Số ngày nuôi tối thiểu"
+                                value={`${chickenBatch?.minGrowDays} ngày`}
+                                icon={<Sprout size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Số ngày nuôi tối đa"
+                                value={`${chickenBatch?.maxGrowDays} ngày`}
+                                icon={<Sprout size={16} />}
+                            />
+
+                            <InfoItem
                                 label="Ghi chú"
                                 value={chickenBatch?.note || 'Không có ghi chú'}
                                 icon={<FileText size={16} />}
@@ -151,23 +173,25 @@ export default function Page() {
                         </div>
 
                         <CardFooter className="flex flex-col gap-2">
-                            <Dialog open={openExport} onOpenChange={setOpenExport}>
-                                <DialogTrigger asChild>
-                                    <Button variant="outline" className="w-full gap-2">
-                                        <ExternalLink size={16} />
-                                        Xuất chuồng
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="max-w-lg">
-                                    <DialogHeader>
-                                        <DialogTitle>Xuất chuồng</DialogTitle>
-                                        <DialogDescription>
-                                            Hãy nhập các thông tin dưới đây để xuất chuồng
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <QuantityLogForm closeDialog={() => setOpenExport(false)} />
-                                </DialogContent>
-                            </Dialog>
+                            {isReadyToExport && (
+                                <Dialog open={openExport} onOpenChange={setOpenExport}>
+                                    <DialogTrigger asChild>
+                                        <Button variant="outline" className="w-full gap-2">
+                                            <ExternalLink size={16} />
+                                            Xuất chuồng
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="max-w-lg">
+                                        <DialogHeader>
+                                            <DialogTitle>Xuất chuồng</DialogTitle>
+                                            <DialogDescription>
+                                                Hãy nhập các thông tin dưới đây để xuất chuồng
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        <QuantityLogForm closeDialog={() => setOpenExport(false)} />
+                                    </DialogContent>
+                                </Dialog>
+                            )}
                             <Dialog open={openSplit} onOpenChange={setOpenSplit}>
                                 <DialogTrigger asChild>
                                     <Button variant="default" className="w-full gap-2">
@@ -279,6 +303,17 @@ export default function Page() {
                     </Card>
                 </div>
                 <div className="col-span-2">
+                    {isReadyToExport && (
+                        <Alert variant="default" className="border-blue-500/50 text-blue-600 mb-4">
+                            <AlertCircle className="h-4 w-4 text-blue-600" color="blue" />
+                            <AlertTitle className="font-bold">Thông báo xuất chuồng</AlertTitle>
+                            <AlertDescription>
+                                Ngày nuôi đã đạt đến số ngày nuôi tối thiếu. Bạn có thể xuất chuồng
+                                nếu muốn.
+                            </AlertDescription>
+                        </Alert>
+                    )}
+
                     {/* Technical Indicators */}
                     <Card>
                         <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4">

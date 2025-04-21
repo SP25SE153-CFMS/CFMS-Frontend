@@ -1,12 +1,5 @@
 import { cn } from '@/lib/utils';
-import dayjs from 'dayjs';
-
-// Calculate the duration in days between start date and now
-export const calculateDuration = (startDate: Date, endDate: Date | null) => {
-    const start = dayjs(startDate);
-    const end = endDate ? dayjs(endDate) : dayjs();
-    return end.diff(start, 'day');
-};
+import { calculateDuration } from '@/utils/functions';
 
 // Progress bar component for batch duration
 export default function BatchProgress({

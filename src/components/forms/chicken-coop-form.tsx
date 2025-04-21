@@ -188,38 +188,6 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                         )}
                     />
 
-                    {/* Sức chứa */}
-                    <FormField
-                        control={form.control}
-                        name="maxQuantity"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Sức chứa</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="number"
-                                        placeholder="Nhập sức chứa"
-                                        min={0}
-                                        disabled
-                                        {...field}
-                                        // onChange={(e) => {
-                                        //     field.onChange(e.target.value);
-                                        //     const maxQuantity = Number(e.target.value);
-                                        //     if (maxQuantity === 0) {
-                                        //         form.setValue('density', 0);
-                                        //     } else {
-                                        //         const result = maxQuantity / form.getValues('area');
-                                        //         const density = result < 1 ? 1 : Math.round(result);
-                                        //         form.setValue('density', density);
-                                        //     }
-                                        // }}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
                     {/* Trạng thái */}
                     {/* <FormField
                         control={form.control}
@@ -336,6 +304,38 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                         ))}
                                     </SelectNative>
                                 </div>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Sức chứa */}
+                    <FormField
+                        control={form.control}
+                        name="maxQuantity"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Sức chứa</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="number"
+                                        placeholder="Nhập sức chứa"
+                                        min={0}
+                                        disabled
+                                        {...field}
+                                        // onChange={(e) => {
+                                        //     field.onChange(e.target.value);
+                                        //     const maxQuantity = Number(e.target.value);
+                                        //     if (maxQuantity === 0) {
+                                        //         form.setValue('density', 0);
+                                        //     } else {
+                                        //         const result = maxQuantity / form.getValues('area');
+                                        //         const density = result < 1 ? 1 : Math.round(result);
+                                        //         form.setValue('density', density);
+                                        //     }
+                                        // }}
+                                    />
+                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}

@@ -12,7 +12,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
-import { Download, Plus, Search, UserCheck, Users, UserX } from 'lucide-react';
+import { Download, Plus, Search, UserCheck, UserRoundPlusIcon, Users, UserX } from 'lucide-react';
 import FarmEmployeeForm from '@/components/forms/farm-employee-form';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { useQuery } from '@tanstack/react-query';
@@ -177,8 +177,14 @@ export default function Page() {
                 <Dialog open={open} onOpenChange={onOpenChange}>
                     <DialogContent className="sm:max-w-[500px]">
                         <DialogHeader>
-                            <DialogTitle>Thêm nhân công mới</DialogTitle>
-                            <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
+                            <DialogTitle className="flex items-center gap-2">
+                                <UserRoundPlusIcon size={20} />
+                                Thêm nhân công mới
+                            </DialogTitle>
+                            <DialogDescription>
+                                Thêm nhân công vào trang trại bằng cách gửi thông báo đến cho người
+                                được thêm.
+                            </DialogDescription>
                         </DialogHeader>
                         <ScrollArea className="max-h-[600px]">
                             <FarmEmployeeForm closeDialog={() => setOpen(false)} />

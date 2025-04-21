@@ -77,9 +77,9 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
     // const chickens = chickenTypes?.find((type) => type.subCategoryId === chickenTypeId)?.chickens;
 
     const mutation = useMutation({
-        mutationFn: (formData: SplitChickenBatch) => splitChickenBatch(formData),
-        onSuccess: (response) => {
-            toast.success(response.message);
+        mutationFn: splitChickenBatch,
+        onSuccess: () => {
+            toast.success('Tách lứa nuôi thành công');
             queryClient.invalidateQueries({ queryKey: ['chickenBatch', chickenBatchId] });
             closeDialog();
         },
@@ -93,13 +93,13 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
 
         const formData: SplitChickenBatch = {
             parentBatchId: chickenBatchId,
-            chickenCoopId,
             chickenBatchName: (e.target as HTMLFormElement).chickenBatchName.value,
+            chickenCoopId,
+            chickenDetailRequests,
             stageCode:
                 growthStages?.find((stage) => stage.chickenType === chickenTypeId)?.stageCode ?? '',
             // chickenId,
             startDate: dayjs(startDate).format('YYYY-MM-DD'),
-            chickenDetailRequests,
             minGrowDays: growDays.min,
             maxGrowDays: growDays.max,
             notes,
@@ -161,7 +161,7 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                                 (type) => type.subCategoryId === chickenTypeId,
                             )}
                         >
-                            <SelectTrigger>
+                            {/* <SelectTrigger>
                                 <SelectValue placeholder="Chọn loại gà" />
                             </SelectTrigger>
                             <SelectContent className="max-h-72">
@@ -170,7 +170,15 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                                         {type.subCategoryName}
                                     </SelectItem>
                                 ))}
-                            </SelectContent>
+                            </SelectContent> */}
+                            <Input
+                                disabled
+                                value={
+                                    chickenTypes?.find(
+                                        (type) => type.subCategoryId === chickenTypeId,
+                                    )?.subCategoryName
+                                }
+                            />
                         </Select>
                     </div>
 

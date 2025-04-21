@@ -1,11 +1,20 @@
 import { Shift } from '@/utils/schemas/shift.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
 
 const PREFIX = '/api/Shift';
 
+// export const getShifts = async () => {
+//     const endpoint = PREFIX;
+//     const response = await get<Response<Shift[]>>(endpoint);
+//     return response.data.data;
+// };
+
 export const getShifts = async () => {
-    const endpoint = PREFIX;
+    const farmId = getCookie(config.cookies.farmId);
+    const endpoint = `${PREFIX}/byFarmId/${farmId}`;
     const response = await get<Response<Shift[]>>(endpoint);
     return response.data.data;
 };

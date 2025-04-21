@@ -24,15 +24,20 @@ import { useParams } from 'next/navigation';
 import { addQuantityLog } from '@/services/chicken-batch.service';
 import { formatDate } from '@/utils/functions';
 import { vi } from 'date-fns/locale';
-import { QuantityLogStatus } from '@/utils/enum/status.enum';
+import { QuantityLogStatus, quantityLogStatusLabels } from '@/utils/enum/status.enum';
 import dayjs from 'dayjs';
 
 interface QuantityLogFormProps {
     defaultValues?: Partial<QuantityLog>;
     closeDialog: () => void;
+    status?: QuantityLogStatus;
 }
 
-export default function QuantityLogForm({ defaultValues, closeDialog }: QuantityLogFormProps) {
+export default function QuantityLogForm({
+    defaultValues,
+    closeDialog,
+    status = QuantityLogStatus.EXPORT,
+}: QuantityLogFormProps) {
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
 
     // Initialize form
@@ -40,10 +45,10 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
         resolver: zodResolver(CreateQuantityLogSchema),
         defaultValues: {
             chickenBatchId,
-            logDate: '',
+            logDate: new Date().toISOString(),
             notes: '',
             quantity: 0,
-            logType: QuantityLogStatus.EXPORT,
+            logType: status,
             ...defaultValues,
         },
     });
@@ -114,7 +119,9 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
                         name="logDate"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Ngày nhật ký</FormLabel>
+                                <FormLabel>
+                                    Ngày {quantityLogStatusLabels[status]?.toLowerCase()}
+                                </FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
                                         <FormControl>

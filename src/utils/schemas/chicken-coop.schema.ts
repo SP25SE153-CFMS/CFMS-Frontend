@@ -19,7 +19,7 @@ export const ChickenCoopSchema = z.object({
     maxQuantity: z.coerce.number().min(0).int({ message: 'Sức chứa phải là số nguyên' }),
     status: z.nativeEnum(ChickenCoopStatus, { message: 'Trạng thái không hợp lệ' }),
 
-    breedingAreaId: z.string().uuid({ message: 'ID khu vực chăn nuôi không hợp lệ, phải là UUID' }),
+    breedingAreaId: z.string().uuid({ message: 'Khu nuôi không hợp lệ' }),
     area: z.coerce.number().positive({ message: 'Diện tích phải là số dương' }),
 
     currentQuantity: z.coerce

@@ -4,7 +4,7 @@ import type React from 'react';
 
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { AlignRight, Calendar, Info, Timer, TrendingUp } from 'lucide-react';
+import { AlignRight, Calendar, Info, SquareX, Timer, TrendingUp } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -46,12 +46,11 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import InfoItem from '@/components/info-item';
-import { calculateDuration } from './batch-progress';
-
 import { endChickenBatch } from '@/services/chicken-batch.service';
 import toast from 'react-hot-toast';
 import StartChickenBatchForm from '@/components/forms/start-chicken-batch-form';
 import { useQueryClient } from '@tanstack/react-query';
+import { calculateDuration } from '@/utils/functions';
 
 const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[] }) => {
     const [open, setOpen] = useState(false);
@@ -176,7 +175,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
 
                         <InfoItem
                             label="Thời gian nuôi"
-                            value={`${duration > 0 ? `${duration} ngày` : 'Chưa bắt đầu'}`}
+                            value={`${duration >= 0 ? `${duration} ngày` : 'Chưa bắt đầu'}`}
                             icon={<Timer size={16} />}
                         />
                     </CardContent>
@@ -184,11 +183,14 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                     <CardFooter className="flex flex-col gap-2">
                         <Link
                             href={`${config.routes.chickenBatch}/${currentChickenBatch?.chickenBatchId}`}
-                            className={cn(buttonVariants({ variant: 'outline' }), 'w-full group')}
+                            className={cn(
+                                buttonVariants({ variant: 'outline' }),
+                                'w-full group flex items-center',
+                            )}
                         >
                             <Info
                                 size={16}
-                                className="mr-2 group-hover:text-primary transition-colors"
+                                className="group-hover:text-primary transition-colors"
                             />
                             <span>Xem chi tiết</span>
                         </Link>
@@ -196,7 +198,14 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                         {currentChickenBatch?.status === ChickenBatchStatus.ACTIVE && (
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                    <Button variant="destructive" className="w-full">
+                                    <Button
+                                        variant="destructive"
+                                        className="w-full flex items-center"
+                                    >
+                                        <SquareX
+                                            size={16}
+                                            className="group-hover:text-primary transition-colors"
+                                        />
                                         Kết thúc lứa nuôi
                                     </Button>
                                 </AlertDialogTrigger>

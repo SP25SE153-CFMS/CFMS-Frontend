@@ -15,11 +15,12 @@ import {
     AlignRight,
     Baseline,
     Code,
+    Container,
     LandPlot,
     ScanEye,
+    Sigma,
     Tag,
     TrendingUp,
-    Users,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -90,13 +91,14 @@ const ChickenCoopDetails = () => {
                 <InfoItem
                     label="Số lượng hiện tại"
                     value={`${chickenCoop?.currentQuantity ?? 0} con`}
-                    icon={<Users size={16} />}
+                    icon={<Container size={16} />}
                 />
 
                 <InfoItem
                     label="Sức chứa"
-                    value={`${chickenCoop?.maxQuantity ?? 0} con`}
-                    icon={<Users size={16} />}
+                    // value={`${Number(chickenCoop?.area) * Number(chickenCoop?.density)} con`}
+                    value={`${Number(chickenCoop?.maxQuantity)} con`}
+                    icon={<Sigma size={16} />}
                 />
 
                 <InfoItem

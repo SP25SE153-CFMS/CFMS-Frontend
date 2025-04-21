@@ -56,6 +56,7 @@ import { TimePicker } from '../ui/time-picker';
 import { useRouter } from 'next/navigation';
 import config from '@/configs';
 import { getWarestockResourceByFarm } from '@/services/warehouse.service';
+import { getCookie } from 'cookies-next';
 
 interface NutritionPlanFormProps {
     defaultValues?: Partial<NutritionPlan>;
@@ -138,7 +139,7 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
             ...values,
             nutritionPlanDetails,
             feedSessions,
-            farmId: config.cookies.farmId ?? '',
+            farmId: getCookie(config.cookies.farmId) ?? '',
         };
         mutation.mutate(newValues);
     }

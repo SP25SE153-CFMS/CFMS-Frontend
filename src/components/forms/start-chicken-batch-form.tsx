@@ -35,6 +35,7 @@ import config from '@/configs';
 export default function StartChickenBatchForm({ closeDialog }: { closeDialog: () => void }) {
     const queryClient = useQueryClient();
     const { chickenCoopId }: { chickenCoopId: string } = useParams();
+
     const { data: chickenTypes } = useQuery({
         queryKey: ['chickenTypes'],
         queryFn: () => getChickenTypes(),

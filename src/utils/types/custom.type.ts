@@ -75,6 +75,8 @@ export type ChickenBatchResponse = ChickenBatch & {
     growthBatches: GrowthBatchResponse[];
     currentStageId: string;
     chickenDetails: ChickenDetail[];
+    minGrowDays: number;
+    maxGrowDays: number;
 };
 
 export type CategoryResponse = Category & {
