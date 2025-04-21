@@ -1,7 +1,17 @@
+import ChickenCoopForm from '@/components/forms/chicken-coop-form';
 import InfoItem from '@/components/info-item';
 import PopoverWithOverlay from '@/components/popover-with-overlay';
 import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Card, CardFooter } from '@/components/ui/card';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import config from '@/configs';
@@ -17,14 +27,17 @@ import {
     Code,
     Container,
     LandPlot,
+    PencilLine,
     ScanEye,
     Sigma,
     Tag,
     TrendingUp,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const ChickenCoopDetails = () => {
+    const [open, setOpen] = useState(false);
     const { chickenCoop, setChickenCoop } = useChickenCoopStore();
     const router = useRouter();
     const chickenCoops: ChickenCoop[] = JSON.parse(sessionStorage.getItem('chickenCoops') ?? '[]');
@@ -47,7 +60,7 @@ const ChickenCoopDetails = () => {
 
     return (
         <Card>
-            <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4">
+            <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4 sm:pb-0">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="font-bold pl-3 text-lg relative before:content-[''] before:absolute before:top-[3px] before:left-0 before:w-[4px] before:h-full before:bg-primary inline-block">
                         Thông tin chi tiết
@@ -136,6 +149,30 @@ const ChickenCoopDetails = () => {
                     icon={<TrendingUp size={16} />}
                 />
             </div>
+            <CardFooter className="pb-4">
+                <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant="outline" className="w-full">
+                            <PencilLine />
+                            Cập nhật
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl">
+                        <DialogHeader>
+                            <DialogTitle>Cập nhật chuồng nuôi</DialogTitle>
+                            <DialogDescription>
+                                Hãy nhập các thông tin dưới đây để cập nhật chuồng nuôi
+                            </DialogDescription>
+                        </DialogHeader>
+                        {chickenCoop && (
+                            <ChickenCoopForm
+                                closeDialog={() => setOpen(false)}
+                                defaultValues={chickenCoop}
+                            />
+                        )}
+                    </DialogContent>
+                </Dialog>
+            </CardFooter>
         </Card>
     );
 };

@@ -235,6 +235,8 @@ export type WarestockResourceByType = Food &
     Chicken & {
         specQuantity: string;
         unitSpecification: string;
+        supplierName: string;
+        resourceId: string;
     };
 
 export type InventoryReceiptRequest = CreateInventoryReceipt & {

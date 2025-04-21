@@ -112,11 +112,12 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
         );
         return filteredResources?.map((resource) => ({
             value:
-                resource.equipmentId ||
-                resource.medicineId ||
-                resource.foodId ||
-                resource.harvestProductId ||
-                resource.chickenId,
+                // resource.equipmentId ||
+                // resource.medicineId ||
+                // resource.foodId ||
+                // resource.harvestProductId ||
+                // resource.chickenId,
+                resource.resourceId,
             label:
                 resource.equipmentName ||
                 resource.medicineName ||
