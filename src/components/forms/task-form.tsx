@@ -105,22 +105,28 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
         queryFn: () => getWarestockResourceByFarm(RESOURCE_TYPE_NAME),
     });
 
-    const resourceOptions = resources?.map((resource) => ({
-        value:
-            resource.equipmentId ||
-            resource.medicineId ||
-            resource.foodId ||
-            resource.harvestProductId ||
-            resource.chickenId,
-        label:
-            resource.equipmentName ||
-            resource.medicineName ||
-            resource.foodName ||
-            resource.harvestProductName ||
-            resource.chickenName,
-        specQuantity: resource.specQuantity,
-        unitSpecification: resource.unitSpecification,
-    }));
+    const resourceOptions = useMemo(() => {
+        if (!resources) return [];
+        const filteredResources = resources.filter(
+            (resource) => Number(resource.specQuantity?.split(' ')?.[0]) > 0,
+        );
+        return filteredResources?.map((resource) => ({
+            value:
+                resource.equipmentId ||
+                resource.medicineId ||
+                resource.foodId ||
+                resource.harvestProductId ||
+                resource.chickenId,
+            label:
+                resource.equipmentName ||
+                resource.medicineName ||
+                resource.foodName ||
+                resource.harvestProductName ||
+                resource.chickenName,
+            specQuantity: resource.specQuantity,
+            unitSpecification: resource.unitSpecification,
+        }));
+    }, [resources]);
 
     const form = useForm<CreateTask>({
         resolver: zodResolver(CreateTaskSchema),

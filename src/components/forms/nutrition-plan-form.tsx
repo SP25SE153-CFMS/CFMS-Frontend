@@ -118,7 +118,6 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
     const mutation = useMutation({
         mutationFn: defaultValues ? updateNutritionPlan : createNutritionPlan,
         onSuccess: () => {
-            // closeDialog?.();
             queryClient.invalidateQueries({ queryKey: ['nutritionPlans'] });
             toast.success(
                 defaultValues
@@ -139,6 +138,7 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
             ...values,
             nutritionPlanDetails,
             feedSessions,
+            farmId: config.cookies.farmId ?? '',
         };
         mutation.mutate(newValues);
     }
