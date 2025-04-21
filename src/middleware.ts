@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-// const FARM_ROUTE = '/farm';
-// const FARM_REGISTER_ROUTE = '/farm/register';
+const FARM_ROUTE = '/farm';
+const FARM_REGISTER_ROUTE = '/farm/register';
+const PROFILE_ROUTE = '/profile';
 // const DASHBOARD_ROUTE = '/dashboard';
 const SIGN_IN_ROUTE = '/sign-in';
 const SIGN_UP_ROUTE = '/sign-up';
@@ -14,7 +15,7 @@ export function middleware(request: NextRequest) {
 
     // Get cookies directly from the request object
     const accessToken = request.cookies.get('accessToken')?.value;
-    // const farmId = request.cookies.get('farmId')?.value;
+    const farmId = request.cookies.get('farmId')?.value;
 
     // Skip middleware for static files and public assets
     // This check helps ensure we don't interfere with static assets
@@ -43,17 +44,18 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL(SIGN_IN_ROUTE, request.url));
     }
 
-    // // If user has an access token but no farm ID and is not on the farm selection page,
-    // // redirect to farm selection page
-    // if (
-    //     accessToken &&
-    //     !farmId &&
-    //     pathname !== FARM_ROUTE &&
-    //     pathname !== FARM_REGISTER_ROUTE &&
-    //     pathname !== SIGN_IN_ROUTE
-    // ) {
-    //     return NextResponse.redirect(new URL(FARM_ROUTE, request.url));
-    // }
+    // If user has an access token but no farm ID and is not on the farm selection page,
+    // redirect to farm selection page
+    if (
+        accessToken &&
+        !farmId &&
+        pathname !== FARM_ROUTE &&
+        pathname !== FARM_REGISTER_ROUTE &&
+        pathname !== SIGN_IN_ROUTE &&
+        pathname !== PROFILE_ROUTE
+    ) {
+        return NextResponse.redirect(new URL(FARM_ROUTE, request.url));
+    }
 
     // If user is on the farm selection page and has a farm ID, redirect to the dashboard
     // if (pathname === FARM_ROUTE && farmId) {

@@ -75,13 +75,17 @@ export function FarmSwitcher() {
     const [activeFarm, setActiveFarm] = useState<Farm | null>(currentFarm ?? null);
 
     useEffect(() => {
+        if (!activeFarm) {
+            router.push(config.routes.farm);
+            return;
+        }
         const newActiveFarm = farms?.find(
             (farm) => farm.farmId === getCookie(config.cookies.farmId),
         );
         if (newActiveFarm) {
             setActiveFarm(newActiveFarm);
         }
-    }, [farms]);
+    }, [activeFarm, farms, router]);
 
     const queryClient = useQueryClient();
 

@@ -237,12 +237,12 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
     async function onSubmit(values: any) {
         setIsSubmitting(true);
         try {
-            console.log('Submitting form data:', values);
             values.startWorkDate = isFrequencyAssigned
                 ? calculateWorkDates().map((d) => dayjs(d).format('YYYY-MM-DD'))
                 : [dayjs(values.startWorkDate).format('YYYY-MM-DD')];
             values.endWorkDate = dayjs(values.endWorkDate).format('YYYY-MM-DD');
             values.isHavest = values.isHavest ? 1 : 0;
+            values.farmId = getCookie(config.cookies.farmId) ?? '';
             await createTask(values);
             router.push(config.routes.task);
             router.refresh();
