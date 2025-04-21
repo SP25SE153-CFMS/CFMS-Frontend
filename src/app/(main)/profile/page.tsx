@@ -104,8 +104,8 @@ export default function ProfilePage() {
             setIsEditing(false);
             toast.success('Thông tin cá nhân đã được cập nhật.');
         },
-        onError: (error: Error) => {
-            toast.error(error.message || 'Có lỗi xảy ra khi cập nhật thông tin.');
+        onError: (error: any) => {
+            toast.error(error?.response?.data?.message);
         },
     });
 

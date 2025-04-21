@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
-import { addDays, format } from 'date-fns';
+import { addDays } from 'date-fns';
 import { vi } from 'date-fns/locale';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -72,10 +72,11 @@ import { getWareByFarmId, getWarestockResourceByFarm } from '@/services/warehous
 import config from '@/configs';
 import { createTask } from '@/services/task.service';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
-import { capitalizeFirstLetter } from '@/utils/functions';
+import { formatDate } from '@/utils/functions';
 import dayjs from 'dayjs';
 import { TaskStatus } from '@/utils/enum/status.enum';
 import { LOCATION_TYPES } from '@/utils/enum/location-type.enum';
+import toast from 'react-hot-toast';
 
 export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
     const router = useRouter();
@@ -149,14 +150,6 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
         name: 'taskResources',
     });
 
-    const formatDate = (date: Date) => {
-        if (date) {
-            const translatedDate = format(date, 'PPP', { locale: vi });
-            return capitalizeFirstLetter(translatedDate);
-        }
-        return 'Chọn ngày';
-    };
-
     const calculateWorkDates = useCallback(() => {
         const startDate = form.getValues('startWorkDate');
         const endDate = form.getValues('endWorkDate');
@@ -219,6 +212,19 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
         setSelectedDates(dates);
     }, [calculateWorkDates]);
 
+    // const mutation = useMutation({
+    //     mutationFn: (values: CreateTask) => createTask(values),
+    //     onSuccess: () => {
+    //         toast.success('Tạo công việc thành công');
+    //         router.push(config.routes.task);
+    //         router.refresh();
+    //     },
+    //     onError: (error: any) => {
+    //         console.error('Không thể tạo công việc:', error);
+    //         toast.error(error?.response?.data?.message);
+    //     },
+    // })
+
     async function onSubmit(values: any) {
         setIsSubmitting(true);
         try {
@@ -231,8 +237,9 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
             await createTask(values);
             router.push(config.routes.task);
             router.refresh();
-        } catch (error) {
+        } catch (error: any) {
             console.error('Không thể tạo công việc:', error);
+            toast.error(error?.response?.data?.message);
         } finally {
             setIsSubmitting(false);
         }
@@ -347,7 +354,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                     )}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                         control={form.control}
                         name="isHavest"
@@ -369,7 +376,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                         )}
                     />
 
-                    {/* <FormField
+                    <FormField
                         control={form.control}
                         name="status"
                         render={({ field }) => (
@@ -407,8 +414,8 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                 <FormMessage />
                             </FormItem>
                         )}
-                    /> */}
-                </div>
+                    />
+                </div> */}
             </div>
         ),
         [form.control],

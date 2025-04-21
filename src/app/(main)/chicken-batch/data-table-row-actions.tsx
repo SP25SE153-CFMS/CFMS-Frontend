@@ -53,18 +53,21 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             const chickenCoopId = sessionStorage.getItem('chickenCoopId');
             queryClient.invalidateQueries({ queryKey: ['chickenBatches', chickenCoopId] });
             toast.success('Kết thúc lứa nuôi thành công');
-        } catch (error) {
-            toast.error('Kết thúc lứa nuôi thất bại');
+        } catch (error: any) {
+            toast.error(error?.response?.data?.message);
         }
     };
 
     const handleDelete = async () => {
-        await deleteChickenBatch(chickenBatchId).then(() => {
+        try {
+            await deleteChickenBatch(chickenBatchId);
             toast.success('Xóa lứa nuôi thành công');
             const chickenCoopId = sessionStorage.getItem('chickenCoopId');
             queryClient.invalidateQueries({ queryKey: ['chickenBatches', chickenCoopId] });
             setOpenDelete(false);
-        });
+        } catch (error: any) {
+            toast.error(error?.response?.data?.message);
+        }
     };
 
     return (

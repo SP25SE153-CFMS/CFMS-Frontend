@@ -43,8 +43,8 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
             await deleteTask(task.taskId);
             toast.success('Xóa thành công');
             router.refresh();
-        } catch (error) {
-            toast.error('Lỗi khi xóa công việc');
+        } catch (error: any) {
+            toast.error(error?.response?.data?.message);
         } finally {
             setLoading(false);
             setOpenDelete(false);

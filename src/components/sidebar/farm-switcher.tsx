@@ -97,7 +97,7 @@ export function FarmSwitcher() {
                 console.error('Error setting active farm:', error);
             }
         },
-        [router],
+        [queryClient, router],
     );
 
     const renderActiveFarm = useMemo(() => {
