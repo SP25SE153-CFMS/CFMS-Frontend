@@ -260,7 +260,7 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                                 <FormControl>
                                     <Input
                                         type="number"
-                                        min={0}
+                                        min={1}
                                         placeholder="Nhập tuổi kết thúc (tuần)"
                                         {...field}
                                     />
