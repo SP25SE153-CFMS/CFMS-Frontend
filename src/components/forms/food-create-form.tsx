@@ -17,7 +17,12 @@ import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 import { generateCode } from '@/utils/functions/generate-code.function';
-import { Loader2 } from 'lucide-react';
+import { CalendarIcon, Loader2 } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { formatDate } from '@/utils/functions';
+import { Calendar } from '../ui/calendar';
+import { vi } from 'date-fns/locale';
+import { cn } from '@/lib/utils';
 
 interface CreateFoodProps {
     closeModal: () => void;
@@ -170,7 +175,36 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                             <FormItem>
                                 <FormLabel>Ngày sản xuất</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="DD-MM-YYYY" {...field} />
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <FormControl>
+                                                <Button
+                                                    variant={'outline'}
+                                                    className={cn(
+                                                        'w-full pl-3 text-left font-normal',
+                                                        !field.value && 'text-muted-foreground',
+                                                    )}
+                                                >
+                                                    {formatDate(field.value)}
+                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                </Button>
+                                            </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                            <Calendar
+                                                mode="single"
+                                                selected={
+                                                    field.value ? new Date(field.value) : undefined
+                                                }
+                                                onSelect={(date) => {
+                                                    field.onChange(date ? date.toISOString() : '');
+                                                }}
+                                                initialFocus
+                                                disabled={(date) => date < new Date()}
+                                                locale={vi}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
                                 </FormControl>
                             </FormItem>
                         )}
@@ -184,7 +218,36 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                             <FormItem>
                                 <FormLabel>Hạn sử dụng</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="DD-MM-YYYY" {...field} />
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <FormControl>
+                                                <Button
+                                                    variant={'outline'}
+                                                    className={cn(
+                                                        'w-full pl-3 text-left font-normal',
+                                                        !field.value && 'text-muted-foreground',
+                                                    )}
+                                                >
+                                                    {formatDate(field.value)}
+                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                </Button>
+                                            </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                            <Calendar
+                                                mode="single"
+                                                selected={
+                                                    field.value ? new Date(field.value) : undefined
+                                                }
+                                                onSelect={(date) => {
+                                                    field.onChange(date ? date.toISOString() : '');
+                                                }}
+                                                initialFocus
+                                                disabled={(date) => date < new Date()}
+                                                locale={vi}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
                                 </FormControl>
                             </FormItem>
                         )}

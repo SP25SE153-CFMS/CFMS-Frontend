@@ -28,7 +28,6 @@ import { generateCode } from '@/utils/functions/generate-code.function';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { useState } from 'react';
-import MultipleSelector from '../ui/multiselect';
 
 interface GrowthStageFormProps {
     defaultValues?: Partial<GrowthStage>;
@@ -122,7 +121,6 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                                     <Input
                                         type="text"
                                         placeholder="Nhập tên giai đoạn"
-                                        disabled={defaultValues !== undefined}
                                         {...field}
                                         // onBlur={handleGenerateCode}
                                     />
@@ -153,6 +151,7 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                                         <Select
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
+                                            disabled={!!defaultValues}
                                         >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Chọn mã giai đoạn" />
@@ -160,8 +159,8 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                                             <SelectContent>
                                                 {uniqueGrowthStages?.map((stage) => (
                                                     <SelectItem
-                                                        key={stage.growthStageId}
-                                                        value={stage.growthStageId}
+                                                        key={stage.stageCode}
+                                                        value={stage.stageCode}
                                                     >
                                                         {stage.stageCode}
                                                     </SelectItem>

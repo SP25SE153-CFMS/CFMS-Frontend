@@ -87,6 +87,10 @@ export default function Page() {
         );
     }
 
+    const sortedGrowthBatches = chickenBatch?.growthBatches.sort(
+        (a, b) => a.growthStage.minAgeWeek - b.growthStage.minAgeWeek,
+    );
+
     return (
         <div>
             <div className="flex justify-between">
@@ -332,16 +336,14 @@ export default function Page() {
             </div>
 
             <Stepper
-                steps={chickenBatch?.growthBatches.map((batch) => batch.growthStage.stageName)}
-                activeStep={chickenBatch?.growthBatches.findIndex(
+                steps={sortedGrowthBatches.map((batch) => batch.growthStage.stageName)}
+                activeStep={sortedGrowthBatches.findIndex(
                     (batch) => batch.growthStageId === chickenBatch.currentStageId,
                 )}
-                visitStep={chickenBatch?.growthBatches.findIndex(
+                visitStep={sortedGrowthBatches.findIndex(
                     (batch) => batch.growthStageId === currentGrowthStage?.growthStageId,
                 )}
-                onStepClick={(step) =>
-                    setCurrentGrowthStage(chickenBatch?.growthBatches[step].growthStage)
-                }
+                onStepClick={(step) => setCurrentGrowthStage(sortedGrowthBatches[step].growthStage)}
                 className="mb-4 max-w-3xl mx-auto"
             />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 my-6">

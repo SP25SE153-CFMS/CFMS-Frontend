@@ -118,6 +118,8 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
             resource.foodName ||
             resource.harvestProductName ||
             resource.chickenName,
+        specQuantity: resource.specQuantity,
+        unitSpecification: resource.unitSpecification,
     }));
 
     const form = useForm<CreateTask>({
@@ -918,7 +920,17 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                                                     value={res.value}
                                                                 >
                                                                     {/* {getResourceName(res)} */}
-                                                                    {res.label}
+                                                                    <strong>{res.label}</strong>
+                                                                    <div className="text-sm text-muted-foreground mt-1">
+                                                                        <p>
+                                                                            Tồn kho:{' '}
+                                                                            {res.specQuantity}
+                                                                        </p>
+                                                                        <p>
+                                                                            Quy cách:{' '}
+                                                                            {res.unitSpecification}
+                                                                        </p>
+                                                                    </div>
                                                                 </SelectItem>
                                                             ))}
                                                         </SelectContent>

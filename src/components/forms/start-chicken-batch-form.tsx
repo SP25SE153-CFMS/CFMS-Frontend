@@ -422,7 +422,11 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
             </div>
 
             <div className="flex items-center justify-center">
-                <Button type="submit" className="block w-lg" disabled={mutation.isPending}>
+                <Button
+                    type="submit"
+                    className="flex items-center w-xl"
+                    disabled={mutation.isPending}
+                >
                     {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Bắt đầu
                 </Button>
