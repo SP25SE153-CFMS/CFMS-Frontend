@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Calendar, Clock, Egg, Home, Info, Type, Users } from 'lucide-react';
+import { Box, Calendar, Clock, Crown, Egg, Home, Info, Type, Users } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -26,6 +26,7 @@ import dayjs from 'dayjs';
 import InfoItem from '@/components/info-item';
 import { useCallback } from 'react';
 import { TaskLocationResponse } from '@/utils/types/custom.type';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export default function TaskDetail() {
     const { taskId }: { taskId: string } = useParams();
@@ -164,7 +165,7 @@ export default function TaskDetail() {
                                                             Số lượng
                                                         </TableHead>
                                                         <TableHead className="text-right dark:text-slate-200">
-                                                            Đơn vị
+                                                            Quy cách
                                                         </TableHead>
                                                     </TableRow>
                                                 </TableHeader>
@@ -327,15 +328,24 @@ export default function TaskDetail() {
                                             {task.assignments.map((assignment, index) => (
                                                 <TableRow
                                                     key={index}
-                                                    className="hover:bg-slate-50 dark:hover:bg-slate-700 "
+                                                    className="hover:bg-slate-50 dark:hover:bg-slate-700"
                                                 >
                                                     <TableCell className="dark:text-slate-300">
-                                                        {/* {farmEmployees?.find(
-                                                            (e) =>
-                                                                e.userId ===
-                                                                assignment.assignedToId,
-                                                        )?.user?.fullName ?? 'N/A'} */}
-                                                        {assignment.assignedTo}
+                                                        <div className="flex items-center gap-1.5">
+                                                            {assignment.assignedTo}
+                                                            {assignment.status === 0 && (
+                                                                <TooltipProvider>
+                                                                    <Tooltip>
+                                                                        <TooltipTrigger asChild>
+                                                                            <Crown className="h-4 w-4 text-amber-500" />
+                                                                        </TooltipTrigger>
+                                                                        <TooltipContent>
+                                                                            <p>Đội trưởng</p>
+                                                                        </TooltipContent>
+                                                                    </Tooltip>
+                                                                </TooltipProvider>
+                                                            )}
+                                                        </div>
                                                     </TableCell>
                                                     <TableCell className="dark:text-slate-300">
                                                         {assignment.assignedDate
