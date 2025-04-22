@@ -74,7 +74,7 @@ export default function FarmMap({ farms }: FarmMapProps) {
         <MapContainer
             center={defaultCenter}
             zoom={4}
-            style={{ height: '100%', width: '100%' }}
+            style={{ height: '100%', width: '100%', zIndex: 0 }}
             scrollWheelZoom={true}
         >
             <TileLayer

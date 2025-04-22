@@ -30,7 +30,7 @@ const Step = ({ title, index, active, visit, completed, isLastStep, onClick }: S
             )}
             onClick={() => onClick(index)}
         >
-            <div className="px-4 font-medium">{title}</div>
+            <div className="px-4 font-medium text-[16px] leading-none truncate">{title}</div>
             {!isLastStep && (
                 <div className={cn('absolute -right-5 top-0 h-full w-10 overflow-hidden z-10')}>
                     <div

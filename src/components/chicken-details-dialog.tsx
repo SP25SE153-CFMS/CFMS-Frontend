@@ -23,7 +23,7 @@ export default function ChickenDetailsDialog({
     return (
         <Dialog>
             <DialogTrigger asChild>{trigger}</DialogTrigger>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="max-w-lg">
                 <DialogHeader>
                     <DialogTitle className="flex items-center">
                         <Info className="h-4 w-4 mr-2 text-primary" />

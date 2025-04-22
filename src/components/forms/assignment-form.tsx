@@ -116,10 +116,11 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
     useEffect(() => {
         const teamLeaderCount = assignedMembers.filter((member) => member.status === 0).length;
 
-        if (assignedMembers.length > 0 && teamLeaderCount === 0) {
-            setTeamLeaderError('Vui lòng chỉ định một Đội trưởng cho nhóm');
-            setIsFormValid(false);
-        } else if (teamLeaderCount > 1) {
+        // if (assignedMembers.length > 0 && teamLeaderCount === 0) {
+        //     setTeamLeaderError('Vui lòng chỉ định một Đội trưởng cho nhóm');
+        //     setIsFormValid(false);
+        // } else
+        if (teamLeaderCount > 1) {
             setTeamLeaderError('Chỉ được phép có một Đội trưởng trong nhóm');
             setIsFormValid(false);
         } else {

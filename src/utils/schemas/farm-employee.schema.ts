@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { FarmEmployeeStatus } from '../enum/status.enum';
+import { UserStatus } from '../enum/status.enum';
 
 export const FarmEmployeeSchema = z.object({
     farmEmployeeId: z
@@ -14,7 +14,8 @@ export const FarmEmployeeSchema = z.object({
         .string()
         .datetime({ message: 'Ngày kết thúc không hợp lệ, phải là định dạng ngày giờ hợp lệ' })
         .nullable(),
-    status: z.nativeEnum(FarmEmployeeStatus, { message: 'Trạng thái không hợp lệ' }),
+    // status: z.nativeEnum(FarmEmployeeStatus, { message: 'Trạng thái không hợp lệ' }),
+    status: z.nativeEnum(UserStatus, { message: 'Trạng thái không hợp lệ' }),
     farmRole: z.coerce.number().int({ message: 'Vai trò trang trại phải là số nguyên' }),
 });
 

@@ -1,8 +1,8 @@
 import { Farm } from '@/utils/schemas/farm.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
-import { CreateFarmEmployee, FarmEmployee } from '@/utils/schemas/farm-employee.schema';
-import { FarmEmployeeResponse } from '@/utils/types/custom.type';
+import { CreateFarmEmployee } from '@/utils/schemas/farm-employee.schema';
+import { FarmEmployeeResponse, FarmResponse } from '@/utils/types/custom.type';
 
 const PREFIX = '/api/Farm';
 
@@ -14,7 +14,7 @@ export const getFarms = async () => {
 
 export const getFarmsForCurrentUser = async () => {
     const endpoint = PREFIX + '/currentUser';
-    const response = await get<Response<Farm[]>>(endpoint);
+    const response = await get<Response<FarmResponse[]>>(endpoint);
     return response.data.data;
 };
 
@@ -54,14 +54,14 @@ export const addEmployeeToFarm = async (body: CreateFarmEmployee) => {
     return response.data;
 };
 
-export const updateEmployeeInFarm = async (body: FarmEmployee) => {
+export const updateEmployeeInFarm = async (body: any) => {
     const endpoint = PREFIX + '/' + '/update-employee';
     const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };
 
 export const deleteEmployeeInFarm = async (farmEmployeeId: string) => {
-    const endpoint = PREFIX + '/' + '/delete-employee/';
-    const response = await put<Response<string>>(endpoint, { farmEmployeeId });
+    const endpoint = PREFIX + '/delete-employee';
+    const response = await remove<Response<string>>(endpoint, { farmEmployeeId });
     return response.data;
 };

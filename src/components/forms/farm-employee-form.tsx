@@ -39,6 +39,9 @@ import { formatDate } from '@/utils/functions';
 import { vi } from 'date-fns/locale';
 import { useState } from 'react';
 import { FarmRole } from '@/utils/enum';
+import { UserStatus, userStatusLabels, userStatusVariant } from '@/utils/enum/status.enum';
+import { mapEnumToValues } from '@/utils/functions/enum.function';
+import { Badge } from '../ui/badge';
 
 interface AddEmployeeFormProps {
     defaultValues?: Partial<FarmEmployee>;
@@ -107,6 +110,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
 
     // Form submit handler
     async function onSubmit(values: FarmEmployee) {
+        values.status = Number(values.status);
         mutation.mutate(values);
     }
 
@@ -124,7 +128,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                                 <FormControl>
                                     {/* <Select
                                         onValueChange={field.onChange}
-                                        defaultValue={field.value}
+                                        defaultValue={String(field.value)}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Chọn trang trại" />
@@ -157,50 +161,67 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                             <FormItem>
                                 <FormLabel>Nhân viên</FormLabel>
                                 <FormControl>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                        disabled={!!defaultValues}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Chọn nhân viên" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <div className="p-2">
-                                                <Input
-                                                    placeholder="Tìm kiếm theo email, SĐT, CCCD"
-                                                    value={searchQuery}
-                                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                                    className="mb-2"
-                                                />
-                                            </div>
-                                            {filteredUsers?.length === 0 && (
-                                                <SelectItem value="not-found">
-                                                    Không tìm thấy kết quả
-                                                </SelectItem>
-                                            )}
-                                            {filteredUsers?.map((user) => (
-                                                <SelectItem key={user.userId} value={user.userId}>
-                                                    {user.fullName} (
-                                                    {user.mail.toLowerCase() ===
-                                                    searchQuery.toLowerCase()
-                                                        ? user.mail
-                                                        : user.phoneNumber &&
-                                                            user.phoneNumber
-                                                                .split(' ')
-                                                                .splice(1)
-                                                                .join('') ===
-                                                                searchQuery.replace(/\s/g, '')
-                                                          ? user.phoneNumber
-                                                          : user.cccd?.toLowerCase() ===
-                                                              searchQuery.toLowerCase()
-                                                            ? user.cccd
-                                                            : ''}
-                                                    )
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    {defaultValues ? (
+                                        <Input
+                                            type="text"
+                                            disabled
+                                            {...field}
+                                            value={
+                                                users?.find((user) => user.userId === field.value)
+                                                    ?.fullName ?? ''
+                                            }
+                                        />
+                                    ) : (
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={String(field.value)}
+                                            disabled={!!defaultValues}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Chọn nhân viên" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <div className="p-2">
+                                                    <Input
+                                                        placeholder="Tìm kiếm theo email, SĐT, CCCD"
+                                                        value={searchQuery}
+                                                        onChange={(e) =>
+                                                            setSearchQuery(e.target.value)
+                                                        }
+                                                        className="mb-2"
+                                                    />
+                                                </div>
+                                                {filteredUsers?.length === 0 && (
+                                                    <SelectItem value="not-found">
+                                                        Không tìm thấy kết quả
+                                                    </SelectItem>
+                                                )}
+                                                {filteredUsers?.map((user) => (
+                                                    <SelectItem
+                                                        key={user.userId}
+                                                        value={user.userId}
+                                                    >
+                                                        {user.fullName} (
+                                                        {user.mail.toLowerCase() ===
+                                                        searchQuery.toLowerCase()
+                                                            ? user.mail
+                                                            : user.phoneNumber &&
+                                                                user.phoneNumber
+                                                                    .split(' ')
+                                                                    .splice(1)
+                                                                    .join('') ===
+                                                                    searchQuery.replace(/\s/g, '')
+                                                              ? user.phoneNumber
+                                                              : user.cccd?.toLowerCase() ===
+                                                                  searchQuery.toLowerCase()
+                                                                ? user.cccd
+                                                                : ''}
+                                                        )
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    )}
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -322,32 +343,35 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                     /> */}
 
                     {/* Trạng thái  */}
-                    {/* <FormField
+                    <FormField
                         control={form.control}
                         name="status"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Trạng thái</FormLabel>
+                                <FormLabel>Tình trạng nhân viên</FormLabel>
                                 <FormControl>
                                     <Select
                                         onValueChange={field.onChange}
-                                        defaultValue={field.value}
+                                        defaultValue={String(field.value)}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Chọn trạng thái" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="active">Đang hoạt động</SelectItem>
-                                            <SelectItem value="inactive">
-                                                Ngừng hoạt động
-                                            </SelectItem>
+                                            {mapEnumToValues(UserStatus).map((status) => (
+                                                <SelectItem value={status} key={Number(status)}>
+                                                    <Badge variant={userStatusVariant[status]}>
+                                                        {userStatusLabels[status]}
+                                                    </Badge>
+                                                </SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
-                    /> */}
+                    />
                 </div>
 
                 <Button type="submit" className="mx-auto mt-6 w-60" disabled={mutation.isPending}>

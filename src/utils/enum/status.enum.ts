@@ -55,22 +55,22 @@ export const chickenCoopStatusVariant: Record<string, any> = {
 export enum UserStatus {
     INACTIVE,
     ACTIVE,
-    BANNED,
     FIRED,
+    DELETED,
 }
 
 export const userStatusLabels: Record<string, string> = {
-    [UserStatus.INACTIVE]: 'Không hoạt động',
+    [UserStatus.INACTIVE]: 'Đình chỉ',
     [UserStatus.ACTIVE]: 'Đang làm việc',
-    [UserStatus.BANNED]: 'Bị cấm',
-    [UserStatus.FIRED]: 'Nghỉ việc',
+    [UserStatus.FIRED]: 'Sa thải',
+    [UserStatus.DELETED]: 'Bị xóa',
 };
 
 export const userStatusVariant: Record<string, any> = {
-    [UserStatus.INACTIVE]: 'muted',
+    [UserStatus.INACTIVE]: 'outline',
     [UserStatus.ACTIVE]: 'default',
-    [UserStatus.BANNED]: 'warning',
-    [UserStatus.FIRED]: 'destructive',
+    [UserStatus.FIRED]: 'muted',
+    [UserStatus.DELETED]: 'destructive',
 };
 
 // Farm employee status

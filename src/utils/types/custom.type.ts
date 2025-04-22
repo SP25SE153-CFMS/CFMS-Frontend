@@ -272,3 +272,7 @@ export type RequestResponse = EntityAudit &
         taskRequests: TaskRequest[];
         inventoryRequests: InventoryRequestResponse[];
     };
+
+export type FarmResponse = Farm & {
+    farmRole: number;
+};

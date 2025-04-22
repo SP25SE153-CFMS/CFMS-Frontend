@@ -13,7 +13,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Tractor, Plus, Search, Filter, X } from 'lucide-react';
+import { Tractor, Plus, Search, Filter, X, KeyRound, TractorIcon } from 'lucide-react';
 import Image from '@/components/fallback-image';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
@@ -25,6 +25,7 @@ import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { scaleLabels } from '@/utils/enum/status.enum';
 import { FarmCard } from './card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 // Dynamically import the map component with no SSR
 const FarmMapWithNoSSR = dynamic(() => import('@/components/map/farm-map'), { ssr: false });
@@ -38,6 +39,9 @@ export default function Page() {
             return farms;
         },
     });
+
+    // Farm code for employee to join
+    const [farmCode, setFarmCode] = useState('');
 
     // Filter states
     const [searchTerm, setSearchTerm] = useState('');
@@ -96,6 +100,14 @@ export default function Page() {
         return count;
     }, [searchTerm, selectedScale, areaRange, maxArea]);
 
+    const handleJoinFarm = async () => {
+        if (!farmCode) {
+            alert('Vui lòng nhập mã code trang trại');
+            return;
+        }
+        // Call API to join farm with the given code
+    };
+
     // Check if farms is loading
     if (isLoading) {
         return (
@@ -145,6 +157,20 @@ export default function Page() {
                         <Tractor className="mr-2" />
                         Danh sách Trang trại
                     </h1>
+                    <div className="flex gap-3">
+                        <Input
+                            placeholder="Nhập mã code trang trại"
+                            value={farmCode}
+                            onChange={(e) => setFarmCode(e.target.value)}
+                            className="border-primary/20 focus-visible:ring-primary/50"
+                        />
+                        <Button
+                            onClick={handleJoinFarm}
+                            className="bg-primary hover:opacity-80 text-white"
+                        >
+                            Tham gia
+                        </Button>
+                    </div>
                     <div className="flex space-x-2">
                         <Button
                             variant="outline"
@@ -162,6 +188,7 @@ export default function Page() {
                                 </Badge>
                             )}
                         </Button>
+
                         <Link href={config.routes.farmRegister}>
                             <Button>
                                 <span>Thêm trang trại</span> <Plus size={18} className="ml-2" />
@@ -255,34 +282,90 @@ export default function Page() {
                 </div>
 
                 {/* Farm cards */}
-                <ScrollArea>
-                    {filteredFarms.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-8">
-                            <p className="text-muted-foreground mb-4">
-                                Không tìm thấy trang trại phù hợp với bộ lọc
-                            </p>
-                            <Button variant="outline" onClick={resetFilters}>
-                                Xóa bộ lọc
-                            </Button>
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-3 h-full">
-                            <div className="md:col-span-2 h-full">
-                                <FarmMapWithNoSSR farms={filteredFarms} />
+                {farms.length > 0 && (
+                    <ScrollArea>
+                        {filteredFarms.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center py-8">
+                                <p className="text-muted-foreground mb-4">
+                                    Không tìm thấy trang trại phù hợp với bộ lọc
+                                </p>
+                                <Button variant="outline" onClick={resetFilters}>
+                                    Xóa bộ lọc
+                                </Button>
                             </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-3 h-full">
+                                <div className="md:col-span-2 h-full">
+                                    <FarmMapWithNoSSR farms={filteredFarms} />
+                                </div>
 
-                            <ScrollArea className="h-[30rem]">
-                                <div className="px-4 overflow-auto h-full border-l border-red-500">
-                                    <div className="space-y-2">
-                                        {filteredFarms.map((farm) => (
-                                            <FarmCard farm={farm} key={farm.farmId} />
-                                        ))}
+                                <ScrollArea className="h-[30rem]">
+                                    <div className="px-4 overflow-auto h-full border-l border-red-500">
+                                        <div className="space-y-2">
+                                            {filteredFarms.map((farm) => (
+                                                <FarmCard farm={farm} key={farm.farmId} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                </ScrollArea>
+                            </div>
+                        )}
+                    </ScrollArea>
+                )}
+
+                {farms.length === 0 && (
+                    <div className="w-full max-w-3xl mx-auto p-4">
+                        <Card className="border-2 border-primary/10 bg-primary/5 shadow-md">
+                            <CardContent className="pt-6">
+                                <Alert className="bg-white border-primary/20">
+                                    <TractorIcon className="h-5 w-5 text-primary/600" />
+                                    <AlertTitle className="text-primary/80 text-lg font-medium mb-2">
+                                        Không có trang trại
+                                    </AlertTitle>
+                                    <AlertDescription className="text-primary/70 space-y-2">
+                                        <p className="font-medium">
+                                            Danh sách trang trại đang rỗng
+                                        </p>
+                                        <div className="pl-2 border-l-2 border-primary/20 space-y-2">
+                                            <p>
+                                                • Hãy tạo trang trại ngay để bắt đầu quản lý trang
+                                                trại của bạn
+                                            </p>
+                                            <p>
+                                                • Hoặc bạn có thể nhập mã code để yêu cầu tham gia
+                                                làm nhân viên của trang trại
+                                            </p>
+                                        </div>
+                                    </AlertDescription>
+                                </Alert>
+
+                                <div className="mt-6 space-y-4">
+                                    <div className="flex items-center gap-2">
+                                        <KeyRound className="h-5 w-5 text-primary/60" />
+                                        <h3 className="text-primary/80 font-medium">
+                                            Nhập mã tham gia trang trại
+                                        </h3>
+                                    </div>
+
+                                    <div className="flex gap-3">
+                                        <Input
+                                            placeholder="Nhập mã code trang trại"
+                                            value={farmCode}
+                                            onChange={(e) => setFarmCode(e.target.value)}
+                                            className="border-primary/20 focus-visible:ring-primary/50"
+                                        />
+                                        <Button
+                                            onClick={handleJoinFarm}
+                                            className="bg-primary/60 hover:bg-primary/70 text-white"
+                                        >
+                                            Tham gia
+                                        </Button>
                                     </div>
                                 </div>
-                            </ScrollArea>
-                        </div>
-                    )}
-                </ScrollArea>
+                            </CardContent>
+                        </Card>
+                    </div>
+                )}
             </div>
         </div>
     );

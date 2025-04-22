@@ -157,19 +157,6 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                                                 <SelectValue placeholder="Chọn mã giai đoạn" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {uniqueGrowthStages?.map((stage) => (
-                                                    <SelectItem
-                                                        key={stage.stageCode}
-                                                        value={stage.stageCode}
-                                                    >
-                                                        {stage.stageCode}
-                                                    </SelectItem>
-                                                ))}
-                                                {newStageCode && (
-                                                    <SelectItem value={newStageCode}>
-                                                        {newStageCode}
-                                                    </SelectItem>
-                                                )}
                                                 <Input
                                                     defaultValue={newStageCode}
                                                     placeholder="Gõ vào đây để thêm mã giai đoạn mới"
@@ -186,6 +173,19 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                                                     }}
                                                     className="text-sm"
                                                 />
+                                                {uniqueGrowthStages?.map((stage) => (
+                                                    <SelectItem
+                                                        key={stage.stageCode}
+                                                        value={stage.stageCode}
+                                                    >
+                                                        {stage.stageCode}
+                                                    </SelectItem>
+                                                ))}
+                                                {newStageCode && (
+                                                    <SelectItem value={newStageCode}>
+                                                        {newStageCode}
+                                                    </SelectItem>
+                                                )}
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
