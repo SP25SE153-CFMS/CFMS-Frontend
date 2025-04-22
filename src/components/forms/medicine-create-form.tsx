@@ -292,6 +292,9 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
                                                 min={0}
                                                 placeholder="0"
                                                 {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(Number(e.target.value))
+                                                }
                                                 className="bg-background"
                                             />
                                         </div>

@@ -296,6 +296,9 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                                                 min={0}
                                                 placeholder="0"
                                                 {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(Number(e.target.value))
+                                                }
                                                 className="bg-background"
                                             />
                                         </div>
@@ -350,6 +353,9 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                                                 min={0}
                                                 placeholder="0"
                                                 {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(Number(e.target.value))
+                                                }
                                                 className="bg-background"
                                             />
                                         </div>
@@ -404,6 +410,9 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                                                 min={0}
                                                 placeholder="0"
                                                 {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(Number(e.target.value))
+                                                }
                                                 className="bg-background"
                                             />
                                         </div>
@@ -490,6 +499,9 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                                                 min={0}
                                                 placeholder="0"
                                                 {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(Number(e.target.value))
+                                                }
                                                 className="bg-background"
                                             />
                                         </div>
