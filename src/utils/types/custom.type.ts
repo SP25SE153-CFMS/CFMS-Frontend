@@ -226,7 +226,11 @@ export type WareStockResponse = Warehouse &
         disease: string;
     };
 
-export type WarestockResourceByType = Food & Equipment & Medicine & HarvestProduct & Chicken;
+export type WarestockResourceByType = Food &
+    Equipment &
+    Medicine &
+    HarvestProduct &
+    Chicken & { resourceId: string };
 
 export type InventoryReceiptRequest = CreateInventoryReceipt & {
     requestId: string;

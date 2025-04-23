@@ -20,6 +20,7 @@ import {
     BriefcaseMedical,
     ArrowLeft,
     Plus,
+    Egg,
 } from 'lucide-react';
 import { getResourceSuppliersById } from '@/services/supplier.service';
 import { useParams, useRouter } from 'next/navigation';
@@ -48,9 +49,11 @@ const getResourceBadgeColor = (type: string) => {
         case 'Dược phẩm':
             return 'bg-blue-100 text-blue-800 hover:bg-blue-200';
         case 'Thiết bị':
+            return 'bg-amber-100 text-gray-800 hover:bg-amber-200';
+        case 'Giống gà':
             return 'bg-amber-100 text-amber-800 hover:bg-amber-200';
         default:
-            return 'bg-gray-100 text-gray-800 hover:bg-gray-200';
+            return 'bg-gray-100 text-teal-800 hover:bg-gray-200';
     }
 };
 
@@ -92,11 +95,13 @@ export default function ResourceSuppliers() {
     const foodResources = resources.filter((r) => r.resourceType === 'Thực phẩm');
     const medicineResources = resources.filter((r) => r.resourceType === 'Dược phẩm');
     const equipmentResources = resources.filter((r) => r.resourceType === 'Thiết bị');
+    const breedingResources = resources.filter((r) => r.resourceType === 'Giống gà');
     const otherResources = resources.filter(
         (r) =>
             r.resourceType !== 'Thực phẩm' &&
             r.resourceType !== 'Dược phẩm' &&
-            r.resourceType !== 'Thiết bị',
+            r.resourceType !== 'Thiết bị' &&
+            r.resourceType !== 'Giống gà',
     );
 
     return (
@@ -130,6 +135,7 @@ export default function ResourceSuppliers() {
                             (foodResources.length > 0 ? 1 : 0) +
                             (medicineResources.length > 0 ? 1 : 0) +
                             (equipmentResources.length > 0 ? 1 : 0) +
+                            (breedingResources.length > 0 ? 1 : 0) +
                             (otherResources.length > 0 ? 1 : 0)
                         }`
                     } h-auto p-1`}
@@ -150,6 +156,11 @@ export default function ResourceSuppliers() {
                     {equipmentResources.length > 0 && (
                         <TabsTrigger value="equipment" className="text-sm py-2">
                             Thiết bị ({equipmentResources.length})
+                        </TabsTrigger>
+                    )}
+                    {breedingResources.length > 0 && (
+                        <TabsTrigger value="breeding" className="text-sm py-2">
+                            Giống gà ({breedingResources.length})
                         </TabsTrigger>
                     )}
                     {otherResources.length > 0 && (
@@ -179,6 +190,12 @@ export default function ResourceSuppliers() {
                     {equipmentResources.length > 0 && (
                         <TabsContent value="equipment" className="mt-0 flex-1 h-full">
                             <ResourceList resources={equipmentResources} />
+                        </TabsContent>
+                    )}
+
+                    {breedingResources.length > 0 && (
+                        <TabsContent value="breeding" className="mt-0 flex-1 h-full">
+                            <ResourceList resources={breedingResources} />
                         </TabsContent>
                     )}
 
@@ -228,7 +245,10 @@ function ResourceList({ resources }: { resources: ResourceResponse[] }) {
                                             <BriefcaseMedical className="w-5 h-5 text-blue-600" />
                                         )}
                                         {resource.resourceType === 'Thiết bị' && (
-                                            <Wrench className="w-5 h-5 text-amber-600" />
+                                            <Wrench className="w-5 h-5 text-gray-600" />
+                                        )}
+                                        {resource.resourceType === 'Giống gà' && (
+                                            <Egg className="w-5 h-5 text-amber-600" />
                                         )}
                                         <span className="font-medium text-base">
                                             {resource.resourceType === 'Thực phẩm' &&
@@ -237,9 +257,14 @@ function ResourceList({ resources }: { resources: ResourceResponse[] }) {
                                                 resource.medicineName}
                                             {resource.resourceType === 'Thiết bị' &&
                                                 resource.equipmentName}
-                                            {!['Thực phẩm', 'Dược phẩm', 'Thiết bị'].includes(
-                                                resource.resourceType,
-                                            ) && 'Tài nguyên khác'}
+                                            {resource.resourceType === 'Giống gà' &&
+                                                resource.chickenName}
+                                            {![
+                                                'Thực phẩm',
+                                                'Dược phẩm',
+                                                'Thiết bị',
+                                                'Giống gà',
+                                            ].includes(resource.resourceType) && 'Tài nguyên khác'}
                                         </span>
                                     </div>
 
@@ -377,6 +402,80 @@ function ResourceList({ resources }: { resources: ResourceResponse[] }) {
                                                                 : 'Không có'}
                                                         </span>
                                                     </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {resource.resourceType === 'Giống gà' && (
+                                            <div className="bg-orange-50 rounded-lg p-4">
+                                                <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-orange-700">
+                                                    <Egg className="w-4 h-4" />
+                                                    Thông tin giống gà
+                                                </h4>
+                                                <div className="space-y-3">
+                                                    {/* Mã giống */}
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-sm font-medium min-w-28">
+                                                            Mã giống:
+                                                        </span>
+                                                        <span className="text-sm">
+                                                            {resource.chickenCode || 'Không có'}
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Tên giống */}
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-sm font-medium min-w-28">
+                                                            Tên giống:
+                                                        </span>
+                                                        <span className="text-sm">
+                                                            {resource.chickenName || 'Không có'}
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Loại gà */}
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-sm font-medium min-w-28">
+                                                            Loại gà:
+                                                        </span>
+                                                        <span className="text-sm">
+                                                            {resource.breeding?.chickenName ||
+                                                                'Không có'}
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Quy cách */}
+                                                    {/* <div className="flex items-center gap-2">
+                                                        <span className="text-sm font-medium min-w-28">
+                                                            Quy cách:
+                                                        </span>
+                                                        <span className="text-sm">
+                                                            {resource. || 'Không có'}
+                                                        </span>
+                                                    </div> */}
+
+                                                    {/* Đơn vị */}
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-sm font-medium min-w-28">
+                                                            Đơn vị:
+                                                        </span>
+                                                        <span className="text-sm">
+                                                            {resource.unitSpecification ||
+                                                                'Không có'}
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Mô tả */}
+                                                    {resource.description && (
+                                                        <div className="flex items-start gap-2">
+                                                            <span className="text-sm font-medium min-w-28">
+                                                                Mô tả:
+                                                            </span>
+                                                            <span className="text-sm">
+                                                                {resource.description}
+                                                            </span>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                         )}
