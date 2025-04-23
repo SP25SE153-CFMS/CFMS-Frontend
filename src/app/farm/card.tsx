@@ -40,10 +40,14 @@ export function FarmCard({ farm }: { farm: FarmResponse }) {
         // If employee that should use mobile app, show dialog instead of navigating
         if (role === FarmRole.STAFF) {
             setShowMobileDialog(true);
-        } else {
-            // Normal navigation for other roles
-            sessionStorage.setItem('activeFarm', JSON.stringify(farm));
-            setCookie(config.cookies.farmId, farm.farmId);
+            return;
+        }
+
+        sessionStorage.setItem('activeFarm', JSON.stringify(farm));
+        setCookie(config.cookies.farmId, farm.farmId);
+        if (role === FarmRole.OWNER) {
+            router.push(`${config.routes.farmOwner.dashboard}?farmCode=${farm.farmCode}`);
+        } else if (role === FarmRole.MANAGER) {
             router.push(`${config.routes.welcome}?farmCode=${farm.farmCode}`);
         }
     };

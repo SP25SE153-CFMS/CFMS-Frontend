@@ -6,7 +6,15 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
-import { BellIcon, InboxIcon, Trash2Icon, XIcon, AlertCircleIcon, CheckCheck } from 'lucide-react';
+import {
+    BellIcon,
+    InboxIcon,
+    Trash2Icon,
+    XIcon,
+    AlertCircleIcon,
+    CheckCheck,
+    RotateCw,
+} from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,9 +23,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     getNotificationForCurrentUser,
     readAllNotifications,
-    readOneNotification,
     clearAllNotifications,
     clearOneNotification,
+    readOneNotification,
 } from '@/services/notification.service';
 import {
     AlertDialog,
@@ -34,6 +42,18 @@ import toast from 'react-hot-toast';
 import { Avatar, AvatarFallback, AvatarImage } from './avatar';
 import initials from 'initials';
 import { convertToThumbnailUrl } from '@/utils/functions';
+import { NotificationTypeEnum } from '@/utils/enum/notification-type.enum';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { NotificationResponse } from '@/utils/types/custom.type';
+import { useSignalR } from '@/hooks';
+import { acceptInvitation, rejectInvitation } from '@/services/farm.service';
 
 function Dot({ className }: { className?: string }) {
     return (
@@ -60,11 +80,28 @@ export default function Notification() {
         queryKey: ['notifications'],
         queryFn: () => getNotificationForCurrentUser(),
     });
+    // const [notifications, setNotifications] = useState<NotificationResponse[]>();
+
+    const { notifications: noties } = useSignalR('/noti');
+    // console.log(noties, connected);
+
+    // useEffect(() => {
+    //     setNotifications(
+    //         notis?.map((noti) => ({
+    //             ...noti,
+    //             notificationType: 'INVITATION',
+    //         })),
+    //     );
+    // }, [notis]);
 
     const [open, setOpen] = useState(false);
-    // const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deleteAllDialogOpen, setDeleteAllDialogOpen] = useState(false);
-    // const [notificationToDelete, setNotificationToDelete] = useState<string | null>(null);
+    const [farmCodeDialogOpen, setFarmCodeDialogOpen] = useState(false);
+    const [currentNotification, setCurrentNotification] = useState<NotificationResponse | null>(
+        null,
+    );
+    // const [farmCode, setFarmCode] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Count unread notifications (note: checking !isRead since true means it has been read)
     const unreadCount = notifications?.filter((n) => !n.isRead).length || 0;
@@ -76,16 +113,70 @@ export default function Notification() {
             await refetch();
             // toast.success('Đã đánh dấu tất cả thông báo là đã đọc');
         } catch (error) {
-            toast.error('Không thể đánh dấu thông báo là đã đọc');
+            console.error(error);
+            // toast.error(error?.response?.data?.message);
         }
     };
 
-    const handleNotificationClick = async (id: string) => {
+    const handleNotificationClick = async (noti: NotificationResponse) => {
         try {
-            await readOneNotification(id);
+            if (noti.notificationType === NotificationTypeEnum.ENROLL_FARM) {
+                // Open the farm code dialog
+                setCurrentNotification(noti);
+                setFarmCodeDialogOpen(true);
+            } else if (noti.notificationType === NotificationTypeEnum.INVITE_FARM) {
+                // // Open the farm code dialog
+                // setCurrentNotification(noti);
+                // setFarmCodeDialogOpen(true);
+            }
+
+            await readOneNotification(noti.notificationId);
             await refetch();
         } catch (error) {
-            toast.error('Không thể đánh dấu thông báo là đã đọc');
+            console.error(error);
+        }
+    };
+
+    const handleAccept = async () => {
+        if (!currentNotification) return;
+
+        setIsSubmitting(true);
+        try {
+            const response = await acceptInvitation(currentNotification.notificationId);
+            toast.success(response.message);
+            setFarmCodeDialogOpen(false);
+
+            // Redirect to appropriate page if needed
+            // if (currentNotification.metadata && typeof currentNotification.metadata === 'object') {
+            //     if (
+            //         'farmId' in currentNotification.metadata &&
+            //         typeof currentNotification.metadata.farmId === 'string'
+            //     ) {
+            //         router.push(`/farms/${currentNotification.metadata.farmId}`);
+            //     }
+            // }
+        } catch (error: any) {
+            console.error(error);
+            toast.error(error?.response?.data?.message);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleReject = async () => {
+        if (!currentNotification) return;
+
+        setIsSubmitting(true);
+        try {
+            // Here you would call your API to reject the invitation/enrollment
+            const response = await rejectInvitation(currentNotification.notificationId);
+            toast.success(response.message);
+            setFarmCodeDialogOpen(false);
+        } catch (error: any) {
+            console.error(error);
+            toast.error(error?.response?.data?.message);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -170,6 +261,24 @@ export default function Notification() {
                             )}
                         </div>
                         <div className="flex gap-2">
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-8 w-8 p-0"
+                                            onClick={() => refetch()}
+                                        >
+                                            <RotateCw className="h-4 w-4" />
+                                            <span className="sr-only">Lấy thông báo mới nhất</span>
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Lấy thông báo mới nhất</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                             {unreadCount > 0 && (
                                 <TooltipProvider>
                                     <Tooltip>
@@ -245,9 +354,7 @@ export default function Notification() {
                                             <button
                                                 className="text-left text-sm after:absolute after:inset-0"
                                                 onClick={() =>
-                                                    handleNotificationClick(
-                                                        notification.notificationId,
-                                                    )
+                                                    handleNotificationClick(notification)
                                                 }
                                             >
                                                 {/* <span className="font-semibold hover:underline">
@@ -303,30 +410,41 @@ export default function Notification() {
                 </PopoverContent>
             </Popover>
 
-            {/* Delete Single Notification Dialog */}
-            {/* <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Xóa thông báo</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa thông báo này không? Hành động này không thể
-                            hoàn tác.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Hủy</AlertDialogCancel>
-                        <AlertDialogAction
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            onClick={() =>
-                                notificationToDelete &&
-                                handleDeleteNotification(notificationToDelete)
-                            }
+            {/* Farm Code Dialog for ENROLLMENT or INVITATION */}
+            <Dialog open={farmCodeDialogOpen} onOpenChange={setFarmCodeDialogOpen}>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>
+                            {(currentNotification && currentNotification?.notificationName) ||
+                                'Tham gia trang trại'}
+                        </DialogTitle>
+                        <DialogDescription>
+                            {currentNotification?.content ||
+                                'Vui lòng nhập mã trang trại để xác nhận tham gia.'}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="sm:justify-between">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleReject}
+                            disabled={isSubmitting}
                         >
-                            Xóa
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog> */}
+                            Từ chối
+                        </Button>
+                        <Button type="button" onClick={handleAccept} disabled={isSubmitting}>
+                            {isSubmitting ? (
+                                <>
+                                    <span className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-background border-t-transparent"></span>
+                                    Đang xử lý...
+                                </>
+                            ) : (
+                                'Chấp nhận'
+                            )}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
             {/* Delete All Notifications Dialog */}
             <AlertDialog open={deleteAllDialogOpen} onOpenChange={setDeleteAllDialogOpen}>

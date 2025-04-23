@@ -13,7 +13,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
 import { Download, Plus, Search, UserCheck, Users, UserX } from 'lucide-react';
-import FarmEmployeeForm from '@/components/forms/farm-employee-form';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { useQuery } from '@tanstack/react-query';
 import { getEmployeesByFarmId } from '@/services/farm.service';
@@ -24,6 +23,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import InvitationForm from '@/components/forms/invitation-form';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -181,7 +181,7 @@ export default function Page() {
                             <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                         </DialogHeader>
                         <ScrollArea className="max-h-[600px]">
-                            <FarmEmployeeForm closeDialog={() => setOpen(false)} />
+                            <InvitationForm closeDialog={() => setOpen(false)} />
                         </ScrollArea>
                     </DialogContent>
                 </Dialog>

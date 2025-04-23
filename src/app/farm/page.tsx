@@ -18,14 +18,15 @@ import Image from '@/components/fallback-image';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import config from '@/configs';
-import { useQuery } from '@tanstack/react-query';
-import { getFarmsForCurrentUser } from '@/services/farm.service';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { enrollToFarm, getFarmsForCurrentUser } from '@/services/farm.service';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { scaleLabels } from '@/utils/enum/status.enum';
 import { FarmCard } from './card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import toast from 'react-hot-toast';
 
 // Dynamically import the map component with no SSR
 const FarmMapWithNoSSR = dynamic(() => import('@/components/map/farm-map'), { ssr: false });
@@ -100,12 +101,26 @@ export default function Page() {
         return count;
     }, [searchTerm, selectedScale, areaRange, maxArea]);
 
+    const enrollMutation = useMutation({
+        mutationFn: enrollToFarm,
+        onSuccess: (response) => {
+            toast.success(response.message);
+            // Optionally, you can refresh the farm list or redirect the user
+            // window.location.reload();
+        },
+        onError: (error: any) => {
+            console.error(error);
+            toast.error(error?.response?.data?.message);
+        },
+    });
+
     const handleJoinFarm = async () => {
         if (!farmCode) {
-            alert('Vui lòng nhập mã code trang trại');
+            toast.error('Vui lòng nhập mã code trang trại');
             return;
         }
-        // Call API to join farm with the given code
+        await enrollMutation.mutateAsync(farmCode);
+        setFarmCode('');
     };
 
     // Check if farms is loading

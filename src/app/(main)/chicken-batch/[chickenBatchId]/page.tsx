@@ -27,7 +27,6 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import CardVaccinationLog from './components/vaccine/card';
 import { getChickenBatchById } from '@/services/chicken-batch.service';
 import { useQuery } from '@tanstack/react-query';
-import { chickenBatchIndicators } from '@/utils/data/table.data';
 import CardNutritionPlan from './components/nutrition/card';
 import CardHealthLog from './components/health/card';
 import CardQuantityLog from './components/quantity/card';
@@ -100,6 +99,17 @@ export default function Page() {
     const sortedGrowthBatches = chickenBatch?.growthBatches.sort(
         (a, b) => a.growthStage.minAgeWeek - b.growthStage.minAgeWeek,
     );
+
+    const chickenBatchIndicators = [
+        { id: 1, name: 'GÀ CHẾT', value: chickenBatch.deadthChicken + ' con' },
+        { id: 2, name: 'GÀ SỐNG', value: chickenBatch.aliveChicken + ' con' },
+        { id: 3, name: 'TỔNG ĐÀN', value: chickenBatch.totalChicken + ' con' },
+        {
+            id: 4,
+            name: 'BIẾN ĐỘNG',
+            value: chickenBatch.quantityLogs.reduce((acc, curr) => acc + curr.quantity, 0) + ' con',
+        },
+    ];
 
     return (
         <div>

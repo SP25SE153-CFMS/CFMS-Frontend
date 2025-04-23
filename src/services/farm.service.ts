@@ -2,7 +2,13 @@ import { Farm } from '@/utils/schemas/farm.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 import { CreateFarmEmployee } from '@/utils/schemas/farm-employee.schema';
-import { FarmEmployeeResponse, FarmResponse } from '@/utils/types/custom.type';
+import {
+    FarmEmployeeResponse,
+    FarmResponse,
+    InviteEnrollDecisionRequest,
+    InviteEnrollRequest,
+} from '@/utils/types/custom.type';
+import { FarmRole } from '@/utils/enum';
 
 const PREFIX = '/api/Farm';
 
@@ -63,5 +69,43 @@ export const updateEmployeeInFarm = async (body: any) => {
 export const deleteEmployeeInFarm = async (farmEmployeeId: string) => {
     const endpoint = PREFIX + '/delete-employee';
     const response = await remove<Response<string>>(endpoint, { farmEmployeeId });
+    return response.data;
+};
+
+export const inviteOrEnrollToFarm = async (body: InviteEnrollRequest) => {
+    const endpoint = PREFIX + '/invite-enroll';
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const enrollToFarm = async (farmCode: string) => {
+    const endpoint = PREFIX + '/invite-enroll';
+    const body: InviteEnrollRequest = {
+        farmCode,
+        methodAccess: 'enroll',
+        farmRole: FarmRole.STAFF,
+        employeesInvitation: [],
+    };
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const rejectInvitation = async (notificationId: string) => {
+    const endpoint = PREFIX + '/invite-enroll-decision';
+    const body: InviteEnrollDecisionRequest = {
+        notificationId,
+        decision: 0,
+    };
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const acceptInvitation = async (notificationId: string) => {
+    const endpoint = PREFIX + '/invite-enroll-decision';
+    const body: InviteEnrollDecisionRequest = {
+        notificationId,
+        decision: 1,
+    };
+    const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };

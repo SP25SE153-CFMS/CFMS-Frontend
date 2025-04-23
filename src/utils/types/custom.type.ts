@@ -66,18 +66,19 @@ export type GrowthBatchResponse = GrowthBatch & {
     growthStage: GrowthStageResponse;
 };
 
-export type ChickenBatchResponse = ChickenBatch & {
-    vaccineLogs: VaccinationLog[];
-    healthLogs: HealthLog[];
-    quantityLogs: QuantityLog[];
-    feedLogs: FeedLog[];
-    chicken: ChickenResponse;
-    growthBatches: GrowthBatchResponse[];
-    currentStageId: string;
-    chickenDetails: ChickenDetail[];
-    minGrowDays: number;
-    maxGrowDays: number;
-};
+export type ChickenBatchResponse = ChickenBatch &
+    DashboardChickenBatch & {
+        vaccineLogs: VaccinationLog[];
+        healthLogs: HealthLog[];
+        quantityLogs: QuantityLog[];
+        feedLogs: FeedLog[];
+        chicken: ChickenResponse;
+        growthBatches: GrowthBatchResponse[];
+        currentStageId: string;
+        chickenDetails: ChickenDetail[];
+        minGrowDays: number;
+        maxGrowDays: number;
+    };
 
 export type CategoryResponse = Category & {
     subCategories: SubCategory[];
@@ -245,7 +246,7 @@ export type InventoryReceiptRequest = CreateInventoryReceipt & {
 };
 
 export type DashboardChickenBatch = {
-    activeChicken: number;
+    aliveChicken: number;
     deadthChicken: number;
     totalChicken: number;
 };
@@ -275,4 +276,20 @@ export type RequestResponse = EntityAudit &
 
 export type FarmResponse = Farm & {
     farmRole: number;
+};
+
+type EmployeeInvitation = {
+    userId: string;
+};
+
+export type InviteEnrollRequest = {
+    farmCode: string;
+    methodAccess: string;
+    farmRole: number;
+    employeesInvitation: EmployeeInvitation[];
+};
+
+export type InviteEnrollDecisionRequest = {
+    notificationId: string;
+    decision: number;
 };

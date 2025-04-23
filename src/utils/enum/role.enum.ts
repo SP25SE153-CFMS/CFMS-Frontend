@@ -9,7 +9,7 @@ export enum Role {
 }
 
 export enum FarmRole {
-    UNKNOWN,
+    // UNKNOWN,
     ADMIN,
     STAFF,
     MANAGER,
@@ -17,7 +17,7 @@ export enum FarmRole {
 }
 
 export const farmRoleLabels: Record<string, string> = {
-    [FarmRole.UNKNOWN]: 'Không xác định',
+    // [FarmRole.UNKNOWN]: 'Không xác định',
     [FarmRole.ADMIN]: 'Quản trị viên',
     [FarmRole.STAFF]: 'Nhân viên',
     [FarmRole.MANAGER]: 'Quản lý',

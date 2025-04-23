@@ -192,7 +192,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
                                                     />
                                                 </div>
                                                 {filteredUsers?.length === 0 && (
-                                                    <SelectItem value="not-found">
+                                                    <SelectItem value="not-found" disabled>
                                                         Không tìm thấy kết quả
                                                     </SelectItem>
                                                 )}
