@@ -15,7 +15,9 @@ export default function useSignalR(hubUrl: string) {
 
     useEffect(() => {
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl(env.NEXT_PUBLIC_API_URL + hubUrl)
+            .withUrl(env.NEXT_PUBLIC_API_URL + hubUrl, {
+                withCredentials: true,
+            })
             .withAutomaticReconnect()
             .build();
 
