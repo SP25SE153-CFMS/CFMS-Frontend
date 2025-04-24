@@ -404,7 +404,7 @@ export default function Page() {
                             Hãy nhập các thông tin dưới đây để tạo chuồng nuôi mới.
                         </DialogDescription>
                     </DialogHeader>
-                    <ScrollArea className="max-h-[70vh]">
+                    <ScrollArea className="max-h-[82vh]">
                         <ChickenCoopForm closeDialog={() => setOpen(false)} />
                     </ScrollArea>
                 </DialogContent>

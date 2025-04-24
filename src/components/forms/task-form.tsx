@@ -138,7 +138,8 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
             isHavest: false,
             status: TaskStatus.PENDING,
             frequency: 0,
-            timeUnitId: '',
+            timeUnitId:
+                getSubCategoryByCategoryType(CategoryType.TIME_UNIT)?.[0]?.subCategoryId || '',
             startWorkDate: new Date(),
             endWorkDate: new Date(),
             shiftIds: [],

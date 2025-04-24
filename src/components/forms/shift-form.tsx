@@ -20,6 +20,7 @@ import { TimePicker } from '../ui/time-picker';
 import { Loader2 } from 'lucide-react';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
+import { onError } from '@/utils/functions/form.function';
 
 interface ShiftFormProps {
     defaultValues?: Partial<Shift>;
@@ -63,11 +64,6 @@ export default function ShiftForm({ defaultValues, closeDialog }: ShiftFormProps
     async function onSubmit(values: Shift) {
         mutation.mutate(values);
     }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
 
     return (
         <Form {...form}>

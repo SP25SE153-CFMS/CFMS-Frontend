@@ -101,13 +101,13 @@ export default function Page() {
     );
 
     const chickenBatchIndicators = [
-        { id: 1, name: 'GÀ CHẾT', value: chickenBatch.deadthChicken + ' con' },
-        { id: 2, name: 'GÀ SỐNG', value: chickenBatch.aliveChicken + ' con' },
-        { id: 3, name: 'TỔNG ĐÀN', value: chickenBatch.totalChicken + ' con' },
+        { id: 1, name: 'GÀ CHẾT', value: `${chickenBatch.deadthChicken ?? 0} con` },
+        { id: 2, name: 'GÀ SỐNG', value: `${chickenBatch.aliveChicken ?? 0} con` },
+        { id: 3, name: 'TỔNG ĐÀN', value: `${chickenBatch.totalChicken ?? 0} con` },
         {
             id: 4,
             name: 'BIẾN ĐỘNG',
-            value: chickenBatch.quantityLogs.reduce((acc, curr) => acc + curr.quantity, 0) + ' con',
+            value: `${chickenBatch.quantityLogs?.reduce((acc, curr) => acc + curr.quantity, 0) ?? 0} con`,
         },
     ];
 

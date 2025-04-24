@@ -23,7 +23,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { inviteOrEnrollToFarm } from '@/services/farm.service';
 import { InviteEnrollRequest } from '@/utils/types/custom.type';
-import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { FarmRole, farmRoleLabels } from '@/utils/enum';
 import { getUsers } from '@/services/user.service';
 import { LoadingSpinner } from '../ui/loading-spinner';
@@ -33,9 +32,14 @@ import { Badge } from '../ui/badge';
 interface InvitationFormProps {
     defaultValues?: Partial<InviteEnrollRequest>;
     closeDialog: () => void;
+    isCurrentRoleFarmOwner?: boolean;
 }
 
-export default function InvitationForm({ defaultValues, closeDialog }: InvitationFormProps) {
+export default function InvitationForm({
+    defaultValues,
+    closeDialog,
+    isCurrentRoleFarmOwner,
+}: InvitationFormProps) {
     const form = useForm({
         defaultValues: {
             farmCode: '',
@@ -166,11 +170,20 @@ export default function InvitationForm({ defaultValues, closeDialog }: Invitatio
                                             <SelectValue placeholder="Chọn vai trò" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {mapEnumToValues(FarmRole).map((role) => (
-                                                <SelectItem key={role} value={role}>
-                                                    {farmRoleLabels[role]}
+                                            {isCurrentRoleFarmOwner && (
+                                                <SelectItem
+                                                    key={FarmRole.MANAGER}
+                                                    value={FarmRole.MANAGER.toString()}
+                                                >
+                                                    {farmRoleLabels[FarmRole.MANAGER]}
                                                 </SelectItem>
-                                            ))}
+                                            )}
+                                            <SelectItem
+                                                key={FarmRole.STAFF}
+                                                value={FarmRole.STAFF.toString()}
+                                            >
+                                                {farmRoleLabels[FarmRole.STAFF]}
+                                            </SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </FormControl>

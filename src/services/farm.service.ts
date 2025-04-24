@@ -14,7 +14,7 @@ const PREFIX = '/api/Farm';
 
 export const getFarms = async () => {
     const endpoint = PREFIX;
-    const response = await get<Response<Farm[]>>(endpoint);
+    const response = await get<Response<FarmResponse[]>>(endpoint);
     return response.data.data;
 };
 

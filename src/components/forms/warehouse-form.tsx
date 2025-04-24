@@ -27,6 +27,7 @@ import { CategoryType } from '@/utils/enum/category.enum';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
+import { onError } from '@/utils/functions/form.function';
 
 interface WarehouseFormProps {
     defaultValues?: Partial<Warehouse>;
@@ -76,11 +77,6 @@ export default function WarehouseForm({ defaultValues, closeDialog }: WarehouseF
     async function onSubmit(values: Warehouse) {
         mutation.mutate(values);
     }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
 
     return (
         <Form {...form}>

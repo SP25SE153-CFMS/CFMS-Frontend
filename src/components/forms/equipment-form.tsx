@@ -27,6 +27,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { formatDate } from '@/utils/functions';
 import { vi } from 'date-fns/locale';
 import { generateCode } from '@/utils/functions/generate-code.function';
+import { onError } from '@/utils/functions/form.function';
 
 interface EquipmentFormProps {
     defaultValues?: Partial<Equipment>;
@@ -70,11 +71,6 @@ export default function EquipmentForm({ defaultValues, closeDialog }: EquipmentF
     async function onSubmit(values: Equipment) {
         mutation.mutate(values);
     }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
 
     const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
         const input = e.target.value;

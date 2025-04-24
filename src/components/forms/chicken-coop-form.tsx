@@ -31,7 +31,6 @@ import { Cog, Home, Loader2, RefreshCw, Ruler, SquareMenu } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { ScrollArea } from '../ui/scroll-area';
 
 interface ChickenCoopFormProps {
     defaultValues?: Partial<ChickenCoop>;
@@ -51,7 +50,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
             breedingAreaId: sessionStorage.getItem('breedingAreaId') || '',
             area: 0,
             description: '',
-            purposeId: getSubCategoryByCategoryType(CategoryType.PURPOSE)?.[0].subCategoryId,
+            purposeId: getSubCategoryByCategoryType(CategoryType.PURPOSE)?.[0]?.subCategoryId,
             density: 0,
             densityUnitId: getSubCategoryByCategoryType(CategoryType.DENSITY_UNIT)?.find(
                 (cate) => cate.subCategoryName === 'con/m²',
@@ -171,294 +170,290 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
     };
 
     return (
-        <ScrollArea className="max-h-[82vh]">
-            <Form {...form}>
-                <form
-                    onSubmit={form.handleSubmit(onSubmit, onError)}
-                    className="flex flex-col space-y-6"
-                >
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="flex items-center mb-4">
-                                <Home className="mr-2 h-5 w-5 text-primary" />
-                                <h3 className="text-lg font-medium">Thông tin cơ bản</h3>
-                            </div>
-                            <Separator className="mb-5" />
+        <Form {...form}>
+            <form
+                onSubmit={form.handleSubmit(onSubmit, onError)}
+                className="flex flex-col space-y-6"
+            >
+                <Card>
+                    <CardContent className="pt-6">
+                        <div className="flex items-center mb-4">
+                            <Home className="mr-2 h-5 w-5 text-primary" />
+                            <h3 className="text-lg font-medium">Thông tin cơ bản</h3>
+                        </div>
+                        <Separator className="mb-5" />
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {/* Tên chuồng gà */}
-                                <FormField
-                                    control={form.control}
-                                    name="chickenCoopName"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Tên chuồng gà</FormLabel>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Tên chuồng gà */}
+                            <FormField
+                                control={form.control}
+                                name="chickenCoopName"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Tên chuồng gà</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                placeholder="Nhập tên chuồng gà"
+                                                {...field}
+                                                onBlur={
+                                                    defaultValues
+                                                        ? undefined // Do not generate code if editing
+                                                        : handleGenerateCode // Generate code if creating
+                                                }
+                                                className="h-10"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Mã chuồng gà */}
+                            <FormField
+                                control={form.control}
+                                name="chickenCoopCode"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Mã chuồng gà</FormLabel>
+                                        <div className="flex gap-2">
                                             <FormControl>
                                                 <Input
                                                     type="text"
-                                                    placeholder="Nhập tên chuồng gà"
+                                                    placeholder="Mã chuồng gà"
+                                                    readOnly
                                                     {...field}
-                                                    onBlur={handleGenerateCode}
-                                                    className="h-10"
+                                                    className="h-10 bg-muted/50"
                                                 />
                                             </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                {/* Mã chuồng gà */}
-                                <FormField
-                                    control={form.control}
-                                    name="chickenCoopCode"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Mã chuồng gà</FormLabel>
-                                            <div className="flex gap-2">
-                                                <FormControl>
-                                                    <Input
-                                                        type="text"
-                                                        placeholder="Mã chuồng gà"
-                                                        readOnly
-                                                        {...field}
-                                                        className="h-10 bg-muted/50"
-                                                    />
-                                                </FormControl>
-                                                <TooltipProvider>
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <Button
-                                                                type="button"
-                                                                variant="outline"
-                                                                size="icon"
-                                                                onClick={regenerateCode}
-                                                                className="h-10 w-10 flex-shrink-0"
-                                                            >
-                                                                <RefreshCw className="h-4 w-4" />
-                                                            </Button>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>
-                                                            <p>Tạo mã mới</p>
-                                                        </TooltipContent>
-                                                    </Tooltip>
-                                                </TooltipProvider>
-                                            </div>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                {/* Loại gà */}
-                                <FormField
-                                    control={form.control}
-                                    name="purposeId"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Loại gà</FormLabel>
-                                            <FormControl>
-                                                <Select
-                                                    onValueChange={field.onChange}
-                                                    defaultValue={field.value}
-                                                >
-                                                    <FormControl>
-                                                        <SelectTrigger className="h-10">
-                                                            <SelectValue placeholder="Chọn loại gà" />
-                                                        </SelectTrigger>
-                                                    </FormControl>
-                                                    <SelectContent>
-                                                        {getSubCategoryByCategoryType(
-                                                            CategoryType.CHICKEN,
-                                                        )?.map((chicken) => (
-                                                            <SelectItem
-                                                                key={chicken.subCategoryId}
-                                                                value={chicken.subCategoryId}
-                                                            >
-                                                                {chicken.subCategoryName}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                {/* Mô tả */}
-                                <FormField
-                                    control={form.control}
-                                    name="description"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Mô tả</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="Nhập mô tả về chuồng gà"
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="flex items-center mb-4">
-                                <Ruler className="mr-2 h-5 w-5 text-primary" />
-                                <h3 className="text-lg font-medium">Kích thước và sức chứa</h3>
-                            </div>
-                            <Separator className="mb-5" />
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {/* Diện tích */}
-                                <FormField
-                                    control={form.control}
-                                    name="area"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className="flex items-center">
-                                                Diện tích
-                                            </FormLabel>
-                                            <div className="flex rounded-md shadow-sm">
-                                                <Input
-                                                    className="rounded-e-none h-10"
-                                                    placeholder="Nhập diện tích"
-                                                    type="number"
-                                                    min={0}
-                                                    {...field}
-                                                    onChange={handleAreaChange}
-                                                />
-                                                <SelectNative
-                                                    className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
-                                                    disabled
-                                                    value={form.getValues('areaUnitId')}
-                                                >
-                                                    {getSubCategoryByCategoryType(
-                                                        CategoryType.AREA_UNIT,
-                                                    )?.map((unit) => (
-                                                        <option
-                                                            key={unit.subCategoryId}
-                                                            value={unit.subCategoryId}
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button
+                                                            type="button"
+                                                            variant="outline"
+                                                            size="icon"
+                                                            onClick={regenerateCode}
+                                                            className="h-10 w-10 flex-shrink-0"
                                                         >
-                                                            {unit.subCategoryName}
-                                                        </option>
-                                                    ))}
-                                                </SelectNative>
-                                            </div>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                                            <RefreshCw className="h-4 w-4" />
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Tạo mã mới</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                                {/* Mật độ */}
-                                <FormField
-                                    control={form.control}
-                                    name="density"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className="flex items-center">
-                                                Mật độ
-                                            </FormLabel>
-                                            <div className="flex rounded-md shadow-sm">
-                                                <Input
-                                                    className="rounded-e-none h-10"
-                                                    placeholder="Nhập mật độ"
-                                                    type="number"
-                                                    min={0}
-                                                    {...field}
-                                                    onChange={handleDensityChange}
-                                                />
-                                                <SelectNative
-                                                    className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
-                                                    disabled
-                                                    value={form.getValues('densityUnitId')}
-                                                >
-                                                    {getSubCategoryByCategoryType(
-                                                        CategoryType.DENSITY_UNIT,
-                                                    )?.map((unit) => (
-                                                        <option
-                                                            key={unit.subCategoryId}
-                                                            value={unit.subCategoryId}
-                                                        >
-                                                            {unit.subCategoryName}
-                                                        </option>
-                                                    ))}
-                                                </SelectNative>
-                                            </div>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                {/* Sức chứa */}
-                                <FormField
-                                    control={form.control}
-                                    name="maxQuantity"
-                                    render={({ field }) => (
-                                        <FormItem className="md:col-span-2">
-                                            <div className="flex items-center justify-between">
-                                                <FormLabel>Sức chứa tối đa</FormLabel>
-                                                <div className="text-xs text-muted-foreground">
-                                                    Tự động tính từ diện tích và mật độ
-                                                </div>
-                                            </div>
-                                            <div className="relative">
-                                                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                                    <SquareMenu className="h-4 w-4 text-muted-foreground" />
-                                                </div>
+                            {/* Loại gà */}
+                            <FormField
+                                control={form.control}
+                                name="purposeId"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Loại gà</FormLabel>
+                                        <FormControl>
+                                            <Select
+                                                onValueChange={field.onChange}
+                                                defaultValue={field.value}
+                                            >
                                                 <FormControl>
-                                                    <Input
-                                                        type="number"
-                                                        placeholder="Sức chứa tối đa"
-                                                        min={0}
-                                                        disabled
-                                                        className="h-10 pl-10 bg-muted/50 font-medium"
-                                                        {...field}
-                                                    />
+                                                    <SelectTrigger className="h-10">
+                                                        <SelectValue placeholder="Chọn loại gà" />
+                                                    </SelectTrigger>
                                                 </FormControl>
-                                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                                    <span className="text-sm text-muted-foreground">
-                                                        con gà
-                                                    </span>
-                                                </div>
+                                                <SelectContent>
+                                                    {getSubCategoryByCategoryType(
+                                                        CategoryType.CHICKEN,
+                                                    )?.map((chicken) => (
+                                                        <SelectItem
+                                                            key={chicken.subCategoryId}
+                                                            value={chicken.subCategoryId}
+                                                        >
+                                                            {chicken.subCategoryName}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Mô tả */}
+                            <FormField
+                                control={form.control}
+                                name="description"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Mô tả</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Nhập mô tả về chuồng gà"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardContent className="pt-6">
+                        <div className="flex items-center mb-4">
+                            <Ruler className="mr-2 h-5 w-5 text-primary" />
+                            <h3 className="text-lg font-medium">Kích thước và sức chứa</h3>
+                        </div>
+                        <Separator className="mb-5" />
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Diện tích */}
+                            <FormField
+                                control={form.control}
+                                name="area"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="flex items-center">
+                                            Diện tích
+                                        </FormLabel>
+                                        <div className="flex rounded-md shadow-sm">
+                                            <Input
+                                                className="rounded-e-none h-10"
+                                                placeholder="Nhập diện tích"
+                                                type="number"
+                                                min={0}
+                                                {...field}
+                                                onChange={handleAreaChange}
+                                            />
+                                            <SelectNative
+                                                className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
+                                                disabled
+                                                value={form.getValues('areaUnitId')}
+                                            >
+                                                {getSubCategoryByCategoryType(
+                                                    CategoryType.AREA_UNIT,
+                                                )?.map((unit) => (
+                                                    <option
+                                                        key={unit.subCategoryId}
+                                                        value={unit.subCategoryId}
+                                                    >
+                                                        {unit.subCategoryName}
+                                                    </option>
+                                                ))}
+                                            </SelectNative>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Mật độ */}
+                            <FormField
+                                control={form.control}
+                                name="density"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="flex items-center">Mật độ</FormLabel>
+                                        <div className="flex rounded-md shadow-sm">
+                                            <Input
+                                                className="rounded-e-none h-10"
+                                                placeholder="Nhập mật độ"
+                                                type="number"
+                                                min={0}
+                                                {...field}
+                                                onChange={handleDensityChange}
+                                            />
+                                            <SelectNative
+                                                className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"
+                                                disabled
+                                                value={form.getValues('densityUnitId')}
+                                            >
+                                                {getSubCategoryByCategoryType(
+                                                    CategoryType.DENSITY_UNIT,
+                                                )?.map((unit) => (
+                                                    <option
+                                                        key={unit.subCategoryId}
+                                                        value={unit.subCategoryId}
+                                                    >
+                                                        {unit.subCategoryName}
+                                                    </option>
+                                                ))}
+                                            </SelectNative>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Sức chứa */}
+                            <FormField
+                                control={form.control}
+                                name="maxQuantity"
+                                render={({ field }) => (
+                                    <FormItem className="md:col-span-2">
+                                        <div className="flex items-center justify-between">
+                                            <FormLabel>Sức chứa tối đa</FormLabel>
+                                            <div className="text-xs text-muted-foreground">
+                                                Tự động tính từ diện tích và mật độ
                                             </div>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
+                                        </div>
+                                        <div className="relative">
+                                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                <SquareMenu className="h-4 w-4 text-muted-foreground" />
+                                            </div>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    placeholder="Sức chứa tối đa"
+                                                    min={0}
+                                                    disabled
+                                                    className="h-10 pl-10 bg-muted/50 font-medium"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                <span className="text-sm text-muted-foreground">
+                                                    con gà
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
 
-                            <div className="mt-4 p-3 bg-muted/30 rounded-md border border-dashed flex items-center">
-                                <Cog className="h-5 w-5 text-muted-foreground mr-2 flex-shrink-0" />
-                                <p className="text-sm text-muted-foreground">
-                                    Công thức tính:{' '}
-                                    <span className="font-medium">
-                                        Sức chứa = Diện tích × Mật độ
-                                    </span>
-                                </p>
-                            </div>
-                        </CardContent>
-                    </Card>
+                        <div className="mt-4 p-3 bg-muted/30 rounded-md border border-dashed flex items-center">
+                            <Cog className="h-5 w-5 text-muted-foreground mr-2 flex-shrink-0" />
+                            <p className="text-sm text-muted-foreground">
+                                Công thức tính:{' '}
+                                <span className="font-medium">Sức chứa = Diện tích × Mật độ</span>
+                            </p>
+                        </div>
+                    </CardContent>
+                </Card>
 
-                    <div className="flex justify-center pt-2">
-                        <Button
-                            type="submit"
-                            size="lg"
-                            className="min-w-[200px]"
-                            disabled={mutation.isPending}
-                        >
-                            {mutation.isPending && (
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            )}
-                            {defaultValues ? 'Cập nhật chuồng gà' : 'Tạo chuồng gà mới'}
-                        </Button>
-                    </div>
-                </form>
-            </Form>
-        </ScrollArea>
+                <div className="flex justify-center pt-2">
+                    <Button
+                        type="submit"
+                        size="lg"
+                        className="min-w-[200px]"
+                        disabled={mutation.isPending}
+                    >
+                        {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                        {defaultValues ? 'Cập nhật chuồng gà' : 'Tạo chuồng gà mới'}
+                    </Button>
+                </div>
+            </form>
+        </Form>
     );
 }

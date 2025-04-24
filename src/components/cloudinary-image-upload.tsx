@@ -251,8 +251,8 @@ export function CloudinaryImageUpload({
         <div className={cn('space-y-2', className)} {...props}>
             <div
                 className={cn(
-                    'relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors border-muted-foreground/50 hover:border-primary/75',
-                    disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
+                    'relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors border-muted-foreground/50',
+                    disabled && 'cursor-not-allowed opacity-60',
                     error && 'border-destructive/50 bg-destructive/5 hover:border-destructive',
                 )}
             >
@@ -334,7 +334,7 @@ export function CloudinaryImageUpload({
                 ) : (
                     <div
                         onClick={triggerFileInput}
-                        className="flex flex-col items-center justify-center gap-1 text-center"
+                        className="flex flex-col items-center justify-center gap-1 text-center cursor-pointer"
                     >
                         <UploadCloud className="h-10 w-10 text-muted-foreground" />
                         <div className="flex flex-col space-y-1">

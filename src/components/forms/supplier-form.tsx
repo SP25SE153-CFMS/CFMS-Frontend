@@ -30,6 +30,7 @@ import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { Loader2 } from 'lucide-react';
+import { onError } from '@/utils/functions/form.function';
 
 interface SupplierFormProps {
     defaultValues?: Partial<Supplier>;
@@ -72,11 +73,6 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
         console.log('Dữ liệu gửi lên API:', values);
         mutation.mutate(values);
     }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
 
     const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
         const input = e.target.value;

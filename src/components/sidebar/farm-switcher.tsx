@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
-import { ChevronsUpDown, Plus } from 'lucide-react';
+import { ChevronsUpDown, Map, Plus } from 'lucide-react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -26,6 +26,8 @@ import { ScrollArea } from '../ui/scroll-area';
 import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { Skeleton } from '../ui/skeleton';
+import { FarmResponse } from '@/utils/types/custom.type';
+import { FarmRole, farmRoleLabels } from '@/utils/enum';
 
 const FARM_IMAGE_SIZE = 24;
 const DEFAULT_IMAGE = '/no-data.jpg';
@@ -90,13 +92,17 @@ export function FarmSwitcher() {
     const queryClient = useQueryClient();
 
     const handleFarmSelect = useCallback(
-        (farm: Farm) => {
+        (farm: FarmResponse) => {
             setActiveFarm(farm);
             try {
                 sessionStorage.setItem('activeFarm', JSON.stringify(farm));
                 setCookie(config.cookies.farmId, farm.farmId);
-                router.push(`${config.routes.welcome}?farmCode=${farm.farmCode}`);
                 queryClient.invalidateQueries();
+                if (farm.farmRole === FarmRole.OWNER) {
+                    router.push(`${config.routes.farmOwner.dashboard}?farmCode=${farm.farmCode}`);
+                } else if (farm.farmRole === FarmRole.MANAGER) {
+                    router.push(`${config.routes.welcome}?farmCode=${farm.farmCode}`);
+                }
             } catch (error) {
                 console.error('Error setting active farm:', error);
             }
@@ -149,14 +155,30 @@ export function FarmSwitcher() {
                                     onClick={() => handleFarmSelect(farm)}
                                     className="gap-2 p-2"
                                 >
-                                    <div className="flex size-6 items-center justify-center rounded-sm border">
+                                    <div className="flex size-8 items-center justify-center rounded-sm border">
                                         <FarmImage src={farm.imageUrl} alt={farm.farmCode} />
                                     </div>
-                                    {farm.farmName}
+                                    <div className="gap-1">
+                                        <p className="font-semibold text-sm">{farm.farmName}</p>
+                                        <p className="text-xs text-muted-foreground">
+                                            Vai trò: {farmRoleLabels[farm.farmRole]}
+                                        </p>
+                                    </div>
                                 </DropdownMenuItem>
                             ))}
                         </ScrollArea>
                         <DropdownMenuSeparator />
+                        <DropdownMenuItem className="gap-2 p-2">
+                            <div className="flex size-6 items-center justify-center rounded-md border bg-background">
+                                <Map className="size-4" />
+                            </div>
+                            <Link
+                                href={config.routes.farm}
+                                className="font-medium text-muted-foreground"
+                            >
+                                Xem bản đồ
+                            </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem className="gap-2 p-2">
                             <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                                 <Plus className="size-4" />

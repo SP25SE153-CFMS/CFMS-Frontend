@@ -161,7 +161,11 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                                                 <Input
                                                     placeholder="Nhập tên khu nuôi"
                                                     {...field}
-                                                    onBlur={handleGenerateCode}
+                                                    onBlur={
+                                                        defaultValues
+                                                            ? undefined // Don't generate code if editing
+                                                            : handleGenerateCode // Generate code if creating
+                                                    }
                                                 />
                                             </FormControl>
                                             <FormMessage />

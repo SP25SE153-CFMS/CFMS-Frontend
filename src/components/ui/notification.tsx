@@ -3,7 +3,7 @@
 import type React from 'react';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
     BellIcon,
     InboxIcon,
@@ -50,7 +50,6 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { NotificationResponse } from '@/utils/types/custom.type';
-import { useSignalR } from '@/hooks';
 import { acceptInvitation, rejectInvitation } from '@/services/farm.service';
 
 function Dot({ className }: { className?: string }) {
@@ -80,8 +79,8 @@ export default function Notification() {
     });
     // const [notifications, setNotifications] = useState<NotificationResponse[]>();
 
-    const { notifications: noties, connected } = useSignalR('/noti');
-    console.log(noties, connected);
+    // const { notifications: noties, connected } = useSignalR('/noti');
+    // console.log(noties, connected);
 
     // useEffect(() => {
     //     setNotifications(
@@ -105,6 +104,8 @@ export default function Notification() {
     const unreadCount = notifications?.filter((n) => !n.isRead).length || 0;
     const totalCount = notifications?.length || 0;
 
+    const queryClient = useQueryClient();
+
     const handleMarkAllAsRead = async () => {
         try {
             await readAllNotifications();
@@ -125,6 +126,7 @@ export default function Notification() {
                 // Open the farm code dialog
                 setCurrentNotification(noti);
                 setFarmCodeDialogOpen(true);
+                queryClient.invalidateQueries({ queryKey: ['farms'] });
             }
 
             await readOneNotification(noti.notificationId);

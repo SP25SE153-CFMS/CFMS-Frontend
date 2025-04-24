@@ -17,6 +17,7 @@ import { formatDate } from '@/utils/functions';
 import { Calendar } from '../ui/calendar';
 import { vi } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
+import { onError } from '@/utils/functions/form.function';
 
 interface UpdateFoodProps {
     food: Food;
@@ -63,10 +64,6 @@ export default function UpdateFoodForm({ food, closeModal }: UpdateFoodProps) {
         };
 
         await mutation.mutateAsync(formattedData);
-    };
-
-    const onError = (error: any) => {
-        console.error(error);
     };
 
     const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {

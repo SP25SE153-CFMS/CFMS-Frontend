@@ -23,6 +23,7 @@ import { CreateFlockSchema, Flock, FlockSchema } from '@/utils/schemas/flock.sch
 import { createFlock, updateFlock } from '@/services/flock.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { onError } from '@/utils/functions/form.function';
 
 interface FlockFormProps {
     defaultValues?: Partial<Flock>;
@@ -73,11 +74,6 @@ export default function FlockForm({ defaultValues, closeDialog }: FlockFormProps
     async function onSubmit(values: Flock) {
         mutation.mutate(values);
     }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
 
     return (
         <Form {...form}>

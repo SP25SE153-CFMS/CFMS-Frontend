@@ -64,6 +64,7 @@ import { generateCode } from '@/utils/functions/generate-code.function';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
+import { onError } from '@/utils/functions/form.function';
 
 // Dynamically import the map component with no SSR
 const LocationMapWithNoSSR = dynamic(() => import('../map/location-map'), { ssr: false });
@@ -122,13 +123,6 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
     const onSubmit = async (values: FarmType) => {
         mutation.mutate(values);
     };
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-        toast.error('Đã xảy ra lỗi');
-    };
-
     // Handle location selection from map
     const handleLocationSelect = async (lat: number, lng: number) => {
         form.setValue('latitude', lat);
@@ -215,10 +209,9 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
                                         </FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Mã sẽ được tạo tự động"
+                                                placeholder="Mã trang trại"
                                                 className="bg-muted/50"
                                                 {...field}
-                                                readOnly
                                             />
                                         </FormControl>
                                         <FormMessage />

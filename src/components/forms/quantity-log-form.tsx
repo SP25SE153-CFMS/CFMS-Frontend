@@ -26,6 +26,7 @@ import { formatDate } from '@/utils/functions';
 import { vi } from 'date-fns/locale';
 import { QuantityLogStatus, quantityLogStatusLabels } from '@/utils/enum/status.enum';
 import dayjs from 'dayjs';
+import { onError } from '@/utils/functions/form.function';
 
 interface QuantityLogFormProps {
     defaultValues?: Partial<QuantityLog>;
@@ -79,7 +80,7 @@ export default function QuantityLogForm({
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
                 <div className="grid grid-cols-1 gap-6 px-1">
                     {/* Chicken Batch ID */}
                     {/* <FormField

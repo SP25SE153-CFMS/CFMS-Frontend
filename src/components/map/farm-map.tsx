@@ -43,6 +43,16 @@ export default function FarmMap({ farms }: FarmMapProps) {
     useEffect(() => {
         fixLeafletIcon();
         setIsMounted(true);
+
+        // Cleanup to prevent "already initialized" error
+        return () => {
+            const mapContainers = document.getElementsByClassName('leaflet-container');
+            if (mapContainers.length > 0) {
+                for (const container of Array.from(mapContainers)) {
+                    container.remove();
+                }
+            }
+        };
     }, []);
 
     // Default center

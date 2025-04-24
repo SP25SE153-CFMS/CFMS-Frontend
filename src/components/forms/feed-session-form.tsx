@@ -32,6 +32,7 @@ import { CategoryType } from '@/utils/enum/category.enum';
 import { SelectNative } from '../ui/select-native';
 import { addFeedSession, updateFeedSession } from '@/services/nutrition-plan.service';
 import { formatDate } from '@/utils/functions';
+import { onError } from '@/utils/functions/form.function';
 interface FeedSessionFormProps {
     defaultValues?: Partial<FeedSession>;
     closeDialog: () => void;
@@ -78,11 +79,6 @@ export default function FeedSessionForm({ defaultValues, closeDialog }: FeedSess
         values.feedingTime = dayjs(values.feedingTime).format('YYYY-MM-DD');
         mutation.mutate(values);
     }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
 
     return (
         <Form {...form}>

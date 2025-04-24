@@ -33,6 +33,7 @@ import { userStatusLabels } from '@/utils/enum/status.enum';
 import { getCurrentUser } from '@/services/auth.service';
 import { uploadAvatar } from '@/services/user.service';
 import { convertToThumbnailUrl } from '@/utils/functions';
+import { onError } from '@/utils/functions/form.function';
 
 // Define the user profile schema
 const profileSchema = z.object({
@@ -336,7 +337,7 @@ export default function ProfilePage() {
                                     {isEditing ? (
                                         <Form {...form}>
                                             <form
-                                                onSubmit={form.handleSubmit(onSubmit)}
+                                                onSubmit={form.handleSubmit(onSubmit, onError)}
                                                 className="space-y-4"
                                             >
                                                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

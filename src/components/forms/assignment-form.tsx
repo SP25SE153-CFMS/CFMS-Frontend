@@ -44,6 +44,8 @@ import dayjs from 'dayjs';
 import { LoadingSpinner } from '../ui/loading-spinner';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { onError } from '@/utils/functions/form.function';
+import { useParams } from 'next/navigation';
 
 interface AssignmentFormProps {
     defaultValues?: Partial<Assignment>;
@@ -58,12 +60,13 @@ interface AssignedMember {
 }
 
 export default function AssignmentForm({ defaultValues, closeDialog }: AssignmentFormProps) {
+    const { taskId }: { taskId: string } = useParams();
     // Initialize form
     const form = useForm<Assignment>({
         resolver: zodResolver(defaultValues ? AssignmentSchema : CreateAssignmentSchema),
         defaultValues: {
             assignmentId: '',
-            taskId: '',
+            taskId: taskId || '',
             assignedToId: '',
             assignedDate: new Date().toISOString(),
             // status: AssignmentStatus.ASSIGNED,
@@ -154,10 +157,6 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
         };
 
         mutation.mutate(formattedValues);
-    }
-
-    function onError(error: any) {
-        console.error(error);
     }
 
     // Handle adding a member to the assigned list

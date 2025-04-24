@@ -57,6 +57,7 @@ import { useRouter } from 'next/navigation';
 import config from '@/configs';
 import { getWarestockResourceByFarm } from '@/services/warehouse.service';
 import { getCookie } from 'cookies-next';
+import { onError } from '@/utils/functions/form.function';
 
 interface NutritionPlanFormProps {
     defaultValues?: Partial<NutritionPlan>;
@@ -143,11 +144,6 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
         };
         mutation.mutate(newValues);
     }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
 
     const addNutriPlanDetail = () => {
         setNutriPlanDetails([

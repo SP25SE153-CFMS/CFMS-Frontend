@@ -13,6 +13,7 @@ import { SubCategory } from '@/utils/schemas/sub-category.schema';
 import { getSubDisease } from '@/services/category.service';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { Loader2 } from 'lucide-react';
+import { onError } from '@/utils/functions/form.function';
 
 interface UpdateMedicineProps {
     medicine: Medicine;
@@ -60,10 +61,6 @@ export default function UpdateMedicineForm({ medicine, closeModal }: UpdateMedic
 
         console.log('Medicine update submit: ', formattedData);
         await mutation.mutateAsync(formattedData);
-    };
-
-    const onError = (error: any) => {
-        console.error(error);
     };
 
     const { data: subDisease = [] } = useQuery<SubCategory[]>({

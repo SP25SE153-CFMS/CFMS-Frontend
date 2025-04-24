@@ -16,6 +16,7 @@ import { Button } from '../ui/button';
 import { useEffect, useState } from 'react';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { Loader2 } from 'lucide-react';
+import { onError } from '@/utils/functions/form.function';
 
 interface CreateMedicineProps {
     closeDialog: () => void;
@@ -103,10 +104,6 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
         };
 
         await mutation.mutateAsync(formattedData);
-    };
-
-    const onError = (error: any) => {
-        console.error(error);
     };
 
     const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {

@@ -302,10 +302,26 @@ export default function TaskDetail() {
 
                 <div className="w-full md:w-1/3 space-y-6">
                     <Card className="w-full shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <CardHeader className="border-b ">
+                        <CardHeader className="border-b flex flex-row justify-between items-center">
                             <CardTitle className="text-lg flex items-center gap-2 dark:text-white">
-                                <Users className="h-5 w-5 text-primary" /> Phân công nhân viên
+                                <Users className="h-5 w-5 text-primary" /> Phân công
                             </CardTitle>
+
+                            {/* <Dialog open={open} onOpenChange={setOpen}>
+                                <DialogTrigger asChild>
+                                    <Button variant="outline" className="h-9">
+                                        <Plus className="mr-2 h-4 w-4" />
+                                        Giao việc
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-4xl">
+                                    <DialogHeader>
+                                        <DialogTitle>Giao công việc mới</DialogTitle>
+                                    </DialogHeader>
+
+                                    <AssignmentForm closeDialog={() => setOpen(false)} />
+                                </DialogContent>
+                            </Dialog> */}
                         </CardHeader>
                         <CardContent className="pt-4">
                             {task.assignments && task.assignments.length ? (

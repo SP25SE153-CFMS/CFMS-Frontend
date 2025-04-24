@@ -13,6 +13,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import config from '@/configs';
 import { useChickenCoopStore } from '@/store/chicken-coop.store';
@@ -165,10 +166,12 @@ const ChickenCoopDetails = () => {
                             </DialogDescription>
                         </DialogHeader>
                         {chickenCoop && (
-                            <ChickenCoopForm
-                                closeDialog={() => setOpen(false)}
-                                defaultValues={chickenCoop}
-                            />
+                            <ScrollArea className="max-h-[82vh]">
+                                <ChickenCoopForm
+                                    closeDialog={() => setOpen(false)}
+                                    defaultValues={chickenCoop}
+                                />
+                            </ScrollArea>
                         )}
                     </DialogContent>
                 </Dialog>

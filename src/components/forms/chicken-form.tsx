@@ -50,10 +50,10 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
             description: '',
             status: CommonStatus.ACTIVE,
             chickenTypeId: '',
-            unitId: '',
+            unitId: getSubCategoryByCategoryType(CategoryType.CHICKEN)?.[0].subCategoryId || '',
             packageId: '',
             packageSize: 0,
-            wareId: sessionStorage.getItem('wareId') || wareId,
+            wareId: sessionStorage.getItem('wareId') || wareId || '',
             ...defaultValues,
         },
     });

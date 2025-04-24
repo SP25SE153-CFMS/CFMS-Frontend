@@ -181,7 +181,10 @@ export default function Page() {
                             <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                         </DialogHeader>
                         <ScrollArea className="max-h-[600px]">
-                            <InvitationForm closeDialog={() => setOpen(false)} />
+                            <InvitationForm
+                                closeDialog={() => setOpen(false)}
+                                isCurrentRoleFarmOwner
+                            />
                         </ScrollArea>
                     </DialogContent>
                 </Dialog>

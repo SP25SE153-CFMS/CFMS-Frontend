@@ -24,6 +24,7 @@ import { addResourceSupplier, updateResourceSupplier } from '@/services/supplier
 import { getWarestockResourceByFarm } from '@/services/warehouse.service';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { useParams } from 'next/navigation';
+import { onError } from '@/utils/functions/form.function';
 
 interface ResourceSupplierFormProps {
     defaultValues?: Partial<ResourceSupplier>;
@@ -98,11 +99,6 @@ export default function ResourceSupplierForm({
     async function onSubmit(values: ResourceSupplier) {
         mutation.mutate(values);
     }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
 
     return (
         <Form {...form}>

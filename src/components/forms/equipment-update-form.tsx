@@ -13,6 +13,7 @@ import { getSubMaterial, getSubSize, getSubWeight } from '@/services/category.se
 import { Button } from '../ui/button';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { Loader2 } from 'lucide-react';
+import { onError } from '@/utils/functions/form.function';
 interface UpdateEquipmentProps {
     equipment: Equipment;
     closeDialog: () => void;
@@ -54,10 +55,6 @@ export default function UpdateEquipmentForm({ equipment, closeDialog }: UpdateEq
         };
         console.log('Cập nhật: ', formattedData);
         await mutation.mutateAsync(formattedData);
-    };
-
-    const onError = (error: any) => {
-        console.error(error);
     };
 
     // Gọi sub size

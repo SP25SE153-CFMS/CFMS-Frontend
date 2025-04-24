@@ -28,6 +28,7 @@ import { generateCode } from '@/utils/functions/generate-code.function';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { useState } from 'react';
+import { onError } from '@/utils/functions/form.function';
 
 interface GrowthStageFormProps {
     defaultValues?: Partial<GrowthStage>;
@@ -76,12 +77,6 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
     function onSubmit(values: GrowthStage) {
         const newValues = { ...values, id: values.growthStageId };
         mutation.mutate(newValues);
-    }
-
-    // Form error handler
-    function onError(errors: any) {
-        console.error(errors);
-        toast.error('Có lỗi xảy ra, vui lòng kiểm tra lại thông tin');
     }
 
     // eslint-disable-next-line no-unused-vars

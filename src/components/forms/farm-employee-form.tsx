@@ -42,6 +42,7 @@ import { FarmRole } from '@/utils/enum';
 import { UserStatus, userStatusLabels, userStatusVariant } from '@/utils/enum/status.enum';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { Badge } from '../ui/badge';
+import { onError } from '@/utils/functions/form.function';
 
 interface AddEmployeeFormProps {
     defaultValues?: Partial<FarmEmployee>;
@@ -116,7 +117,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
                 <div className="grid grid-cols-1 gap-6 px-1">
                     {/* Chọn trang trại */}
                     <FormField

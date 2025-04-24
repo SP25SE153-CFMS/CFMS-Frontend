@@ -226,6 +226,15 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                                                 {chicken.chickenName}
                                             </SelectItem>
                                         ))}
+                                        {chickens?.length === 0 && (
+                                            <Link
+                                                href={config.routes.ware}
+                                                className="text-sm font-medium flex items-center p-2"
+                                            >
+                                                <Plus className="w-4 h-4 mr-2" />
+                                                Nhấn vào đây để thêm giống gà
+                                            </Link>
+                                        )}
                                     </SelectContent>
                                 </Select>
                                 {/* <DropdownMenu>

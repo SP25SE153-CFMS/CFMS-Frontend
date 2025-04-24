@@ -31,6 +31,7 @@ import { addCoopEquipment, updateCoopEquipment } from '@/services/chicken-coop.s
 import { vi } from 'date-fns/locale';
 import { formatDate } from '@/utils/functions';
 import { Textarea } from '../ui/textarea';
+import { onError } from '@/utils/functions/form.function';
 
 interface CoopEquipmentFormProps {
     defaultValues?: Partial<CoopEquipment>;
@@ -91,11 +92,6 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
         values.nextMaintenanceDate = dayjs(values.nextMaintenanceDate).format('YYYY-MM-DD');
 
         mutation.mutate(values);
-    }
-
-    // Form error handler
-    function onError(errors: any) {
-        console.error(errors);
     }
 
     // const chickenCoops: ChickenCoop[] = JSON.parse(sessionStorage.getItem('chickenCoops') || '[]');
