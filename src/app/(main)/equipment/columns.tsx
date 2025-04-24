@@ -47,31 +47,31 @@ export const columns: ColumnDef<WareStockResponse>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên thiết bị" />,
         cell: ({ row }) => <div>{row.getValue('equipmentName')}</div>,
     },
-    {
-        accessorKey: 'material',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Chất liệu" />,
-        cell: ({ row }) => <div>{row.getValue('material')}</div>,
-    },
-    {
-        accessorKey: 'usage',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Cách sử dụng" />,
-        cell: ({ row }) => <div>{row.getValue('usage')}</div>,
-    },
+    // {
+    //     accessorKey: 'material',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Chất liệu" />,
+    //     cell: ({ row }) => <div>{row.getValue('material')}</div>,
+    // },
+    // {
+    //     accessorKey: 'usage',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Cách sử dụng" />,
+    //     cell: ({ row }) => <div>{row.getValue('usage')}</div>,
+    // },
     {
         accessorKey: 'warranty',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Bảo hành (tháng)" />,
         cell: ({ row }) => <div>{row.getValue('warranty')}</div>,
     },
-    {
-        accessorKey: 'size',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Kích thước" />,
-        cell: ({ row }) => <div>{row.getValue('size')}</div>,
-    },
-    {
-        accessorKey: 'weight',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Khối lượng" />,
-        cell: ({ row }) => <div>{row.getValue('weight')}</div>,
-    },
+    // {
+    //     accessorKey: 'size',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Kích thước" />,
+    //     cell: ({ row }) => <div>{row.getValue('size')}</div>,
+    // },
+    // {
+    //     accessorKey: 'weight',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Khối lượng" />,
+    //     cell: ({ row }) => <div>{row.getValue('weight')}</div>,
+    // },
     {
         accessorKey: 'purchaseDate',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày mua" />,

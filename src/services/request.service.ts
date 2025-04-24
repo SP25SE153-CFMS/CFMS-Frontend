@@ -5,6 +5,7 @@ import { InventoryReceiptRequest, RequestResponse } from '@/utils/types/custom.t
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { RequestStatus } from '@/utils/enum/status.enum';
+import { InventoryReceipt } from '@/utils/schemas/inventory-receipt.schema';
 
 const PREFIX = '/api/Request';
 
@@ -50,4 +51,11 @@ export const createInvetoryReceiptFromRequest = async (body: InventoryReceiptReq
     const endpoint = PREFIX + '/create-inventory-receipt';
     const response = await post<Response<string>>(endpoint, body);
     return response.data;
+};
+
+// TODO: Get by farm ID or not?
+export const getAllReceipts = async () => {
+    const endpoint = `${PREFIX}/receipts`;
+    const response = await get<Response<InventoryReceipt[]>>(endpoint);
+    return response.data.data;
 };

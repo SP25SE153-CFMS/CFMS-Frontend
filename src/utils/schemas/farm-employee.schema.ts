@@ -2,11 +2,9 @@ import { z } from 'zod';
 import { UserStatus } from '../enum/status.enum';
 
 export const FarmEmployeeSchema = z.object({
-    farmEmployeeId: z
-        .string()
-        .uuid({ message: 'ID nhân viên trang trại không hợp lệ, phải là UUID' }),
-    farmId: z.string().uuid({ message: 'ID trang trại không hợp lệ, phải là UUID' }),
-    userId: z.string().uuid({ message: 'ID người dùng không hợp lệ, phải là UUID' }),
+    farmEmployeeId: z.string().uuid({ message: 'ID nhân viên trang trại không hợp lệ' }),
+    farmId: z.string().uuid({ message: 'ID trang trại không hợp lệ' }),
+    userId: z.string().uuid({ message: 'ID người dùng không hợp lệ' }),
     startDate: z
         .string()
         .datetime({ message: 'Ngày bắt đầu không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),

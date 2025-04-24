@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const SupplierSchema = z.object({
-    supplierId: z.string().uuid({ message: 'ID nhà cung cấp không hợp lệ, phải là UUID' }),
+    supplierId: z.string().uuid({ message: 'ID nhà cung cấp không hợp lệ' }),
     supplierName: z.string().min(1, { message: 'Tên nhà cung cấp là bắt buộc' }).trim(),
     supplierCode: z.string().min(1, { message: 'Mã nhà cung cấp là bắt buộc' }),
     address: z.string().min(1, { message: 'Điền địa chỉ nhà cung cấp' }).trim(),

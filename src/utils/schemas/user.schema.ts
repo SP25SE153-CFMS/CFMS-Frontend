@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { UserStatus } from '../enum/status.enum';
 
 export const UserSchema = z.object({
-    userId: z.string().uuid({ message: 'ID người dùng không hợp lệ, phải là UUID' }),
+    userId: z.string().uuid({ message: 'ID người dùng không hợp lệ' }),
     fullName: z
         .string()
         .min(1, { message: 'Họ và tên là bắt buộc' })

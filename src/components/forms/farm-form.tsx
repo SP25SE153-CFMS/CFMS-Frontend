@@ -323,6 +323,7 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
                                                 international={true}
                                                 onChange={field.onChange}
                                                 value={field.value}
+                                                maxLength={20}
                                                 className="border-primary/50 focus-visible:ring-primary/75"
                                             />
                                         </FormControl>

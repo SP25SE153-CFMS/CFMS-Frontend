@@ -1,18 +1,28 @@
 'use client';
 
 import { DataTable } from '@/components/table/data-table';
-import { getInventoryReceipts } from '@/services/inventory-receipt.service';
 import { useQuery } from '@tanstack/react-query';
 import { columns } from './columns';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
 import Image from '@/components/fallback-image';
 import { Button } from '@/components/ui/button';
+import { getAllReceipts } from '@/services/request.service';
+import { getUsers } from '@/services/user.service';
 
 export default function InventoryReceipt() {
     const { data: inventoryReceipt, isLoading } = useQuery({
         queryKey: ['inventoryReceipt'],
-        queryFn: () => getInventoryReceipts(),
+        queryFn: () => getAllReceipts(),
+    });
+
+    useQuery({
+        queryKey: ['users'],
+        queryFn: async () => {
+            const users = await getUsers();
+            sessionStorage.setItem('users', JSON.stringify(users));
+            return users;
+        },
     });
 
     if (isLoading) {

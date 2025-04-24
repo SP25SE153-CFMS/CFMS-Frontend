@@ -56,7 +56,7 @@ export function FarmCard({ farm }: { farm: FarmResponse }) {
         <>
             <div onClick={handleCardClick} className="cursor-pointer">
                 <Card
-                    className={`hover:shadow-lg transition-shadow duration-300 mb-4 relative overflow-hidden border-t-4 ${border}`}
+                    className={`hover:shadow-lg transition-shadow duration-300 relative overflow-hidden border-t-4 ${border}`}
                 >
                     {/* Role indicator ribbon in the top-right corner */}
                     {/* <div className={`absolute top-0 right-0 w-24 h-24 overflow-hidden`}>

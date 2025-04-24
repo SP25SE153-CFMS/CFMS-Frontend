@@ -1,6 +1,6 @@
 'use client';
 
-import { PanelsTopLeft, Users } from 'lucide-react';
+import { PanelsTopLeft, Settings2, Users } from 'lucide-react';
 import {
     SidebarGroup,
     SidebarGroupContent,
@@ -28,12 +28,32 @@ export default function SidebarFarmOwnerOverview() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
 
-                    {/* Farm Settings */}
+                    {/* Farm Employee */}
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
                             <Link href={config.routes.farmOwner.farmEmployee}>
                                 <Users />
                                 <span>Quản lý nhân công</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+
+                    {/* Farm Settings */}
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <Link href={config.routes.farmOwner.farmEmployee}>
+                                <Users />
+                                <span>Cài đặt trang trại</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+
+                    {/* Farm Settings */}
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <Link href={config.routes.farmOwner.farmEmployee}>
+                                <Settings2 />
+                                <span>Cấu hình hệ thống</span>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

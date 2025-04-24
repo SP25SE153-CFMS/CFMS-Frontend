@@ -3,11 +3,18 @@
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { receiptStatusLabels, receiptStatusVariant, requestStatusLabels, requestStatusVariant } from '@/utils/enum/status.enum';
+import {
+    receiptStatusLabels,
+    receiptStatusVariant,
+    requestStatusLabels,
+    requestStatusVariant,
+} from '@/utils/enum/status.enum';
 import { InventoryReceipt } from '@/utils/schemas/inventory-receipt.schema';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import { DataTableRowActions } from './data-table-row-actions';
+import { User } from '@/utils/schemas/user.schema';
+import { getReceiptType } from '@/utils/functions/category.function';
 
 export const columns: ColumnDef<InventoryReceipt>[] = [
     {
@@ -40,38 +47,59 @@ export const columns: ColumnDef<InventoryReceipt>[] = [
         cell: () => null,
     },
     {
-        accessorKey: 'inventoryCode',
+        // accessorKey: 'inventoryCode',
+        accessorKey: 'receiptCodeNumber',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mã phiếu" />,
-        cell: ({ row }) => <div>{String(row.getValue('inventoryCode')).toUpperCase()}</div>,
+        // cell: ({ row }) => <div>{String(row.getValue('inventoryCode')).toUpperCase()}</div>,
+    },
+    // {
+    //     accessorKey: 'subcategoryName',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Danh mục" />,
+    //     cell: ({ row }) => <div>{row.getValue('subcategoryName')}</div>,
+    // },
+    {
+        accessorKey: 'receiptTypeId',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại phiếu" />,
+        cell: ({ row }) => {
+            const receiptTypeId = row.getValue('receiptTypeId') as string;
+            const receiptType = getReceiptType(receiptTypeId);
+            return <span>{receiptType ?? '-'}</span>;
+        },
     },
     {
-        accessorKey: 'subcategoryName',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Danh mục" />,
-        cell: ({ row }) => <div>{row.getValue('subcategoryName')}</div>,
+        accessorKey: 'batchNumber',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Số lứa nuôi" />,
     },
     {
-        accessorKey: 'createBy',
+        // accessorKey: 'createBy',
+        accessorKey: 'createdByUserId',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tạo bởi" />,
-        cell: () => <span>Ngọc Anh</span>,
+        // cell: () => <span>Ngọc Anh</span>,
+        cell: ({ row }) => {
+            const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
+            const createdBy = users.find((user) => user.userId === row.getValue('createdByUserId'));
+            return <span>{createdBy?.fullName || '-'}</span>;
+        },
     },
     {
-        accessorKey: 'createDate',
+        // accessorKey: 'createDate',
+        accessorKey: 'createdWhen',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày tạo phiếu" />,
         cell: ({ row }) => {
-            const date = new Date(row.getValue('createDate'));
-            return <div>{dayjs(date).format('DD/MM/YYYY')}</div>;
+            const date = new Date(row.getValue('createdWhen'));
+            return <div>{date ? dayjs(date).format('DD/MM/YYYY') : '-'}</div>;
         },
     },
-    {
-        accessorKey: 'status',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
-        cell: ({ row }) => {
-            const status = row.getValue('status') as string;
-            return (
-                <Badge variant={receiptStatusVariant[status]}>{receiptStatusLabels[status]}</Badge>
-            );
-        },
-    },
+    // {
+    //     accessorKey: 'status',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
+    //     cell: ({ row }) => {
+    //         const status = row.getValue('status') as string;
+    //         return (
+    //             <Badge variant={receiptStatusVariant[status]}>{receiptStatusLabels[status]}</Badge>
+    //         );
+    //     },
+    // },
     {
         id: 'action',
         cell: ({ row }) => <DataTableRowActions row={row} />,

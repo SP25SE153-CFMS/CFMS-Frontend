@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
 export const NotificationSchema = z.object({
-    notificationId: z.string().uuid({ message: 'ID thông báo không hợp lệ, phải là UUID' }),
+    notificationId: z.string().uuid({ message: 'ID thông báo không hợp lệ' }),
     notificationName: z.string().min(1, { message: 'Tên thông báo là bắt buộc' }),
-    notificationType: z.string().uuid({ message: 'ID loại thông báo không hợp lệ, phải là UUID' }),
+    notificationType: z.string().uuid({ message: 'ID loại thông báo không hợp lệ' }),
     content: z.string().optional(),
     isRead: z.boolean({ message: 'Trạng thái đọc phải là giá trị boolean' }),
-    userId: z.string().uuid({ message: 'ID người dùng không hợp lệ, phải là UUID' }),
+    userId: z.string().uuid({ message: 'ID người dùng không hợp lệ' }),
 });
 
 export type Notification = z.infer<typeof NotificationSchema>;
