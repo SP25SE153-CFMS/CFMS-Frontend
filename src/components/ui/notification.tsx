@@ -4,8 +4,6 @@ import type React from 'react';
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { formatDistanceToNow } from 'date-fns';
-import { vi } from 'date-fns/locale';
 import {
     BellIcon,
     InboxIcon,
@@ -41,7 +39,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import toast from 'react-hot-toast';
 import { Avatar, AvatarFallback, AvatarImage } from './avatar';
 import initials from 'initials';
-import { convertToThumbnailUrl } from '@/utils/functions';
+import { convertToThumbnailUrl, formatRelativeTime } from '@/utils/functions';
 import { NotificationTypeEnum } from '@/utils/enum/notification-type.enum';
 import {
     Dialog,
@@ -82,8 +80,8 @@ export default function Notification() {
     });
     // const [notifications, setNotifications] = useState<NotificationResponse[]>();
 
-    const { notifications: noties } = useSignalR('/noti');
-    // console.log(noties, connected);
+    const { notifications: noties, connected } = useSignalR('/noti');
+    console.log(noties, connected);
 
     // useEffect(() => {
     //     setNotifications(
@@ -220,15 +218,6 @@ export default function Notification() {
         setDeleteAllDialogOpen(true);
     };
 
-    const formatNotificationTime = (dateString: string) => {
-        try {
-            const date = new Date(dateString);
-            return formatDistanceToNow(date, { addSuffix: true, locale: vi });
-        } catch (error) {
-            return '';
-        }
-    };
-
     return (
         <>
             <Popover open={open} onOpenChange={setOpen}>
@@ -241,12 +230,16 @@ export default function Notification() {
                     >
                         <BellIcon className="h-5 w-5" aria-hidden="true" />
                         {unreadCount > 0 && (
+                            // <Badge
+                            //     className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs"
+                            //     variant="destructive"
+                            // >
+                            //     {unreadCount > 99 ? '99+' : unreadCount}
+                            // </Badge>
                             <Badge
-                                className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs"
+                                className="absolute -right-0 -top-0 flex h-3 min-w-3 items-center px-0 justify-center rounded-full text-xs"
                                 variant="destructive"
-                            >
-                                {unreadCount > 99 ? '99+' : unreadCount}
-                            </Badge>
+                            />
                         )}
                     </Button>
                 </PopoverTrigger>
@@ -254,9 +247,9 @@ export default function Notification() {
                     <div className="flex items-center justify-between border-b px-4 py-3">
                         <div className="flex items-center gap-2">
                             <h3 className="font-medium">Thông báo</h3>
-                            {totalCount > 0 && (
+                            {unreadCount > 0 && (
                                 <Badge variant="default" className="px-2 py-0.5">
-                                    {totalCount}
+                                    {unreadCount} chưa đọc
                                 </Badge>
                             )}
                         </div>
@@ -368,8 +361,8 @@ export default function Notification() {
                                                 </div>
                                             </button>
                                             <div className="text-xs text-muted-foreground">
-                                                {formatNotificationTime(
-                                                    notification?.createdWhen?.toString() ?? '',
+                                                {formatRelativeTime(
+                                                    notification.createdWhen?.toString() ?? '',
                                                 )}
                                             </div>
                                         </div>

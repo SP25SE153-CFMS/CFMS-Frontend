@@ -13,7 +13,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Tractor, Plus, Search, Filter, X, KeyRound, TractorIcon } from 'lucide-react';
+import { Tractor, Plus, Search, Filter, X, KeyRound, TractorIcon, Loader2 } from 'lucide-react';
 import Image from '@/components/fallback-image';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
@@ -182,7 +182,11 @@ export default function Page() {
                         <Button
                             onClick={handleJoinFarm}
                             className="bg-primary hover:opacity-80 text-white"
+                            disabled={enrollMutation.isPending || !farmCode}
                         >
+                            {enrollMutation.isPending && (
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            )}
                             Tham gia
                         </Button>
                     </div>
@@ -332,7 +336,7 @@ export default function Page() {
                     <div className="w-full max-w-3xl mx-auto p-4">
                         <Card className="border-2 border-primary/10 bg-primary/5 shadow-md">
                             <CardContent className="pt-6">
-                                <Alert className="bg-white border-primary/20">
+                                <Alert className="border-primary/20">
                                     <TractorIcon className="h-5 w-5 text-primary/600" />
                                     <AlertTitle className="text-primary/80 text-lg font-medium mb-2">
                                         Không có trang trại
@@ -372,7 +376,11 @@ export default function Page() {
                                         <Button
                                             onClick={handleJoinFarm}
                                             className="bg-primary/60 hover:bg-primary/70 text-white"
+                                            disabled={enrollMutation.isPending || !farmCode}
                                         >
+                                            {enrollMutation.isPending && (
+                                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                            )}
                                             Tham gia
                                         </Button>
                                     </div>

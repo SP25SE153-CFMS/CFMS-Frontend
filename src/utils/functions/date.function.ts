@@ -43,3 +43,19 @@ export const calculateDuration = (startDate: Date, endDate: Date | null) => {
     const end = endDate ? dayjs(endDate) : dayjs();
     return end.diff(start, 'day');
 };
+
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/vi';
+
+// Extend the plugin and set the locale
+dayjs.extend(relativeTime);
+dayjs.locale('vi');
+
+/**
+ * Converts an ISO string to relative time in Vietnamese.
+ * @param isoString A date string like '2025-04-24T02:34:25.071863'
+ * @returns A string like '3 giờ trước'
+ */
+export function formatRelativeTime(isoString: string): string {
+    return dayjs(isoString).fromNow(); // This works if plugin is extended!
+}

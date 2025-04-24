@@ -9,18 +9,24 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import config from '@/configs';
 import initials from 'initials';
 import Link from 'next/link';
 import { signOutUser } from '@/utils/functions/sign-out.function';
-import { BadgeCheck } from 'lucide-react';
+import { BadgeCheck, Check, Moon, Sun } from 'lucide-react';
 import { LogOut } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getCurrentUser } from '@/services/auth.service';
 import { LoadingSpinner } from './ui/loading-spinner';
 import { convertToThumbnailUrl } from '@/utils/functions';
+import { useTheme } from '@/context/theme-context';
+import { useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
 export function ProfileDropdown() {
     const { data: currentUser, isLoading } = useQuery({
@@ -31,6 +37,16 @@ export function ProfileDropdown() {
             return user;
         },
     });
+
+    const { theme, setTheme } = useTheme();
+
+    /* Update theme-color meta tag
+     * when theme is updated */
+    useEffect(() => {
+        const themeColor = theme === 'dark' ? '#020817' : '#fff';
+        const metaThemeColor = document.querySelector("meta[name='theme-color']");
+        if (metaThemeColor) metaThemeColor.setAttribute('content', themeColor);
+    }, [theme]);
 
     if (isLoading) {
         return <LoadingSpinner className="size-8" />;
@@ -84,6 +100,38 @@ export function ProfileDropdown() {
                             Tài khoản
                         </Link>
                     </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuGroup>
+                    <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                            <Sun className="size-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                            <Moon className="absolute size-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                            Giao diện
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                            <DropdownMenuItem onClick={() => setTheme('light')}>
+                                Sáng{' '}
+                                <Check
+                                    size={14}
+                                    className={cn('ml-auto', theme !== 'light' && 'hidden')}
+                                />
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setTheme('dark')}>
+                                Tối
+                                <Check
+                                    size={14}
+                                    className={cn('ml-auto', theme !== 'dark' && 'hidden')}
+                                />
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setTheme('system')}>
+                                Hệ thống
+                                <Check
+                                    size={14}
+                                    className={cn('ml-auto', theme !== 'system' && 'hidden')}
+                                />
+                            </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                    </DropdownMenuSub>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
