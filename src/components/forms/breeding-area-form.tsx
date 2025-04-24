@@ -33,6 +33,7 @@ import { generateCode } from '@/utils/functions/generate-code.function';
 import { convertArea } from '@/utils/functions/area-unit.function';
 import { useMemo } from 'react';
 import { Loader2 } from 'lucide-react';
+import { onError } from '@/utils/functions/form.function';
 
 interface BreedingAreaFormProps {
     defaultValues?: Partial<BreedingArea>;
@@ -74,14 +75,6 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
     // Form submit handler
     const onSubmit = async (values: BreedingArea) => {
         mutation.mutate(values);
-    };
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-        // const firstKey = Object.keys(error)[0];
-        // const firstMessage = error[firstKey].message;
-        // toast.error(firstMessage);
     };
 
     const { data: farms } = useQuery({

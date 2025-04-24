@@ -18,11 +18,23 @@ import {
     CheckCircle2,
     Wheat,
     BriefcaseMedical,
+    Plus,
 } from 'lucide-react';
 import { getResourceSuppliersById } from '@/services/supplier.service';
 import { useParams } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ResourceResponse } from '@/utils/types/custom.type';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import ResourceSupplierForm from '@/components/forms/resource-supplier-form';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 
 // Function để kiểm tra loại resource
 const isFood = (resource: any) => resource.foodCode && resource.foodName;
@@ -49,7 +61,7 @@ export default function ResourceSuppliers() {
         enabled: !!supplierId,
     });
 
-    // console.log('Data: ', resources);
+    const [open, setOpen] = useState(false);
 
     if (isLoading) {
         return (
@@ -63,7 +75,22 @@ export default function ResourceSuppliers() {
         return (
             <div className="flex flex-col items-center justify-center h-[calc(100vh-120px)] w-full text-muted-foreground">
                 <ClipboardListIcon className="w-12 h-12 mb-2 opacity-50" />
-                <p className="text-lg font-medium">Không có dữ liệu</p>
+                <p className="text-lg font-medium mb-4">Không có dữ liệu</p>
+                <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant="outline">
+                            <Plus className="w-4 h-4" />
+                            Thêm mặt hàng
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Thêm mặt hàng</DialogTitle>
+                            <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
+                        </DialogHeader>
+                        <ResourceSupplierForm closeDialog={() => setOpen(false)} />
+                    </DialogContent>
+                </Dialog>
             </div>
         );
     }
@@ -81,15 +108,31 @@ export default function ResourceSuppliers() {
 
     return (
         <div className="max-w-screen-lg mx-auto w-full h-full flex flex-col">
-            <div className="flex justify-center items-center mb-4 px-1">
+            <div className="flex justify-between items-center my-4">
                 <h3 className="font-bold pl-3 text-2xl relative inline-block">
                     Thông tin các mặt hàng
                 </h3>
+
+                <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant="outline">
+                            <Plus className="w-4 h-4" />
+                            Thêm mặt hàng
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Thêm vật phẩm</DialogTitle>
+                            <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
+                        </DialogHeader>
+                        <ResourceSupplierForm closeDialog={() => setOpen(false)} />
+                    </DialogContent>
+                </Dialog>
             </div>
 
             <Tabs defaultValue="all" className="w-full flex-1 flex flex-col">
                 <TabsList
-                    className={`mb-4 w-full grid ${
+                    className={`mb-4 mx-auto w-fit grid ${
                         // Calculate grid columns based on visible tabs
                         `grid-cols-${
                             1 + // All tab
@@ -100,26 +143,26 @@ export default function ResourceSuppliers() {
                         }`
                     } h-auto p-1`}
                 >
-                    <TabsTrigger value="all" className="text-sm py-2">
+                    <TabsTrigger value="all" className="text-sm py-2 px-16">
                         Tất cả ({resources.length})
                     </TabsTrigger>
                     {foodResources.length > 0 && (
-                        <TabsTrigger value="food" className="text-sm py-2">
+                        <TabsTrigger value="food" className="text-sm py-2 px-16">
                             Thực phẩm ({foodResources.length})
                         </TabsTrigger>
                     )}
                     {medicineResources.length > 0 && (
-                        <TabsTrigger value="medicine" className="text-sm py-2">
+                        <TabsTrigger value="medicine" className="text-sm py-2 px-16">
                             Dược phẩm ({medicineResources.length})
                         </TabsTrigger>
                     )}
                     {equipmentResources.length > 0 && (
-                        <TabsTrigger value="equipment" className="text-sm py-2">
+                        <TabsTrigger value="equipment" className="text-sm py-2 px-16">
                             Thiết bị ({equipmentResources.length})
                         </TabsTrigger>
                     )}
                     {otherResources.length > 0 && (
-                        <TabsTrigger value="other" className="text-sm py-2">
+                        <TabsTrigger value="other" className="text-sm py-2 px-16">
                             Khác ({otherResources.length})
                         </TabsTrigger>
                     )}

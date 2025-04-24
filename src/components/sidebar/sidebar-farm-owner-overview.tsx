@@ -1,6 +1,6 @@
 'use client';
 
-import { PanelsTopLeft, Settings2, Users } from 'lucide-react';
+import { PanelsTopLeft, Settings, Settings2, Users } from 'lucide-react';
 import {
     SidebarGroup,
     SidebarGroupContent,
@@ -42,7 +42,7 @@ export default function SidebarFarmOwnerOverview() {
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
                             <Link href={config.routes.farmOwner.farmEmployee}>
-                                <Users />
+                                <Settings />
                                 <span>Cài đặt trang trại</span>
                             </Link>
                         </SidebarMenuButton>

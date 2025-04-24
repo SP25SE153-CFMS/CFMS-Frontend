@@ -13,7 +13,7 @@ export const ResourceSupplierSchema = z.object({
 
 export type ResourceSupplier = z.infer<typeof ResourceSupplierSchema>;
 
-export const CreateResourceSupplierSchema = ResourceSupplierSchema.omit({
+export const AddResourceSupplierSchema = ResourceSupplierSchema.omit({
     resourceSupplierId: true,
 });
-export type CreateResourceSupplier = z.infer<typeof CreateResourceSupplierSchema>;
+export type AddResourceSupplier = z.infer<typeof AddResourceSupplierSchema>;

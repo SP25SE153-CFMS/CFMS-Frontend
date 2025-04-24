@@ -2,7 +2,7 @@ import { Supplier } from '@/utils/schemas/supplier.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 import { ResourceResponse } from '@/utils/types/custom.type';
-import { CreateResourceSupplier } from '@/utils/schemas/resource-supplier.schema';
+import { AddResourceSupplier } from '@/utils/schemas/resource-supplier.schema';
 
 const PREFIX = '/api/Supplier';
 
@@ -48,13 +48,13 @@ export const getResourceSuppliersById = async (supplierId: string) => {
     return response.data.data;
 };
 
-export const addResourceSupplier = async (body: CreateResourceSupplier) => {
+export const addResourceSupplier = async (body: AddResourceSupplier) => {
     const endpoint = `${PREFIX}/add-resource-supplier`;
     const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };
 
-export const updateResourceSupplier = async (body: CreateResourceSupplier) => {
+export const updateResourceSupplier = async (body: any) => {
     const endpoint = `${PREFIX}/update-resource-supplier`;
     const response = await put<Response<string>>(endpoint, body);
     return response.data;
