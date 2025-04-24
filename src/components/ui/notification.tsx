@@ -118,14 +118,13 @@ export default function Notification() {
 
     const handleNotificationClick = async (noti: NotificationResponse) => {
         try {
-            if (noti.notificationType === NotificationTypeEnum.ENROLL_FARM) {
+            if (
+                noti.notificationType === NotificationTypeEnum.ENROLL_FARM ||
+                noti.notificationType === NotificationTypeEnum.INVITE_FARM
+            ) {
                 // Open the farm code dialog
                 setCurrentNotification(noti);
                 setFarmCodeDialogOpen(true);
-            } else if (noti.notificationType === NotificationTypeEnum.INVITE_FARM) {
-                // // Open the farm code dialog
-                // setCurrentNotification(noti);
-                // setFarmCodeDialogOpen(true);
             }
 
             await readOneNotification(noti.notificationId);
