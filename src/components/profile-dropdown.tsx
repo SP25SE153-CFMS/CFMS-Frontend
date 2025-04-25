@@ -27,8 +27,11 @@ import { convertToThumbnailUrl } from '@/utils/functions';
 import { useTheme } from '@/context/theme-context';
 import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 export function ProfileDropdown() {
+    const router = useRouter();
+
     const { data: currentUser, isLoading } = useQuery({
         queryKey: ['currentUser'],
         queryFn: async () => {
@@ -53,12 +56,14 @@ export function ProfileDropdown() {
     }
 
     if (!currentUser) {
-        return (
-            <Avatar className="size-8 rounded-lg">
-                {/* <AvatarImage src={currentUser.avatar || ''} alt={currentUser.fullName} /> */}
-                <AvatarFallback className="rounded-lg">N/A</AvatarFallback>
-            </Avatar>
-        );
+        router.push(config.routes.signIn);
+        return null;
+        // return (
+        //     <Avatar className="size-8 rounded-lg">
+        //         {/* <AvatarImage src={currentUser.avatar || ''} alt={currentUser.fullName} /> */}
+        //         <AvatarFallback className="rounded-lg">N/A</AvatarFallback>
+        //     </Avatar>
+        // );
     }
 
     return (

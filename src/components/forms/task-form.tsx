@@ -77,6 +77,7 @@ import dayjs from 'dayjs';
 import { TaskStatus } from '@/utils/enum/status.enum';
 import { LOCATION_TYPES } from '@/utils/enum/location-type.enum';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
     const router = useRouter();
@@ -941,6 +942,16 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                                                     </div>
                                                                 </SelectItem>
                                                             ))}
+                                                            {resourceOptions?.length === 0 && (
+                                                                <Link
+                                                                    href={config.routes.ware}
+                                                                    className="text-sm font-medium flex items-center p-2"
+                                                                >
+                                                                    <Plus className="w-4 h-4 mr-2" />
+                                                                    Nhấn vào đây để thêm vật phẩm
+                                                                    trong kho
+                                                                </Link>
+                                                            )}
                                                         </SelectContent>
                                                     </Select>
                                                     <FormMessage />

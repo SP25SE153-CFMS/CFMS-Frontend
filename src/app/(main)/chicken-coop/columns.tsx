@@ -55,9 +55,14 @@ export const columns: ColumnDef<ChickenCoop>[] = [
         accessorKey: 'chickenCoopName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên chuồng" />,
         cell: ({ row }) => {
-            sessionStorage.setItem('currentCoop', JSON.stringify(row.original));
+            // sessionStorage.setItem('currentCoop', JSON.stringify(row.original));
             return (
-                <Link href={`/chicken-coop/${row.getValue('chickenCoopId')}`}>
+                <Link
+                    href={`/chicken-coop/${row.getValue('chickenCoopId')}`}
+                    onClick={() => {
+                        sessionStorage.setItem('currentCoop', JSON.stringify(row.original));
+                    }}
+                >
                     {row.getValue('chickenCoopName')}
                 </Link>
             );
