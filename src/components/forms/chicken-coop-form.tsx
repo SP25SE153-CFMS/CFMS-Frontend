@@ -31,6 +31,7 @@ import { Cog, Home, Loader2, RefreshCw, Ruler, SquareMenu } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ChickenCoopStatus } from '@/utils/enum/status.enum';
 
 interface ChickenCoopFormProps {
     defaultValues?: Partial<ChickenCoop>;
@@ -333,6 +334,10 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                                 min={0}
                                                 {...field}
                                                 onChange={handleAreaChange}
+                                                disabled={
+                                                    defaultValues?.status ===
+                                                    ChickenCoopStatus.OCCUPIED
+                                                }
                                             />
                                             <SelectNative
                                                 className="text-muted-foreground hover:text-foreground w-fit rounded-s-none h-10 bg-muted/50"

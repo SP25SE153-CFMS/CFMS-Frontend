@@ -28,18 +28,15 @@ import { getUsers } from '@/services/user.service';
 import { LoadingSpinner } from '../ui/loading-spinner';
 import { useState } from 'react';
 import { Badge } from '../ui/badge';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
 
 interface InvitationFormProps {
     defaultValues?: Partial<InviteEnrollRequest>;
     closeDialog: () => void;
-    isCurrentRoleFarmOwner?: boolean;
 }
 
-export default function InvitationForm({
-    defaultValues,
-    closeDialog,
-    isCurrentRoleFarmOwner,
-}: InvitationFormProps) {
+export default function InvitationForm({ defaultValues, closeDialog }: InvitationFormProps) {
     const form = useForm({
         defaultValues: {
             farmCode: '',
@@ -170,7 +167,8 @@ export default function InvitationForm({
                                             <SelectValue placeholder="Chọn vai trò" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {isCurrentRoleFarmOwner && (
+                                            {getCookie(config.cookies.farmRole) ===
+                                                FarmRole.OWNER?.toString() && (
                                                 <SelectItem
                                                     key={FarmRole.MANAGER}
                                                     value={FarmRole.MANAGER.toString()}

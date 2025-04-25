@@ -45,8 +45,9 @@ export function FarmCard({ farm }: { farm: FarmResponse }) {
 
         sessionStorage.setItem('activeFarm', JSON.stringify(farm));
         setCookie(config.cookies.farmId, farm.farmId);
+        setCookie(config.cookies.farmRole, farm.farmRole);
         if (role === FarmRole.OWNER) {
-            router.push(`${config.routes.farmOwner.dashboard}?farmCode=${farm.farmCode}`);
+            router.push(`${config.routes.dashboard}?farmCode=${farm.farmCode}`);
         } else if (role === FarmRole.MANAGER) {
             router.push(`${config.routes.welcome}?farmCode=${farm.farmCode}`);
         }

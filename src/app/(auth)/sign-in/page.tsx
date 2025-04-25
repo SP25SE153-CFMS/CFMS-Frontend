@@ -34,9 +34,6 @@ export default function Page() {
         onSuccess: (response) => {
             // Show success message
             toast.success(response.message);
-            // Remove old access token, refresh token
-            deleteCookie(config.cookies.accessToken);
-            deleteCookie(config.cookies.refreshToken);
             // Set new access token, refresh token
             setCookie(config.cookies.accessToken, response.data.accessToken);
             setCookie(config.cookies.refreshToken, response.data.refreshToken);
@@ -50,6 +47,10 @@ export default function Page() {
     });
 
     const onSubmit = async (data: SignInRequest) => {
+        // Remove old access token, refresh token
+        deleteCookie(config.cookies.accessToken);
+        deleteCookie(config.cookies.refreshToken);
+        // Call signIn API
         mutation.mutate(data);
     };
 

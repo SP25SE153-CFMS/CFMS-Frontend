@@ -108,10 +108,11 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
 
     const resourceOptions = useMemo(() => {
         if (!resources) return [];
-        const filteredResources = resources.filter(
-            (resource) => Number(resource.specQuantity?.split(' ')?.[0]) > 0,
-        );
-        return filteredResources?.map((resource) => ({
+        // const filteredResources = resources.filter(
+        //     (resource) => Number(resource.specQuantity?.split(' ')?.[0]) > 0,
+        // );
+        // return filteredResources?.map((resource) => ({
+        return resources?.map((resource) => ({
             value:
                 // resource.equipmentId ||
                 // resource.medicineId ||

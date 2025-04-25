@@ -98,8 +98,9 @@ export function FarmSwitcher() {
                 sessionStorage.setItem('activeFarm', JSON.stringify(farm));
                 setCookie(config.cookies.farmId, farm.farmId);
                 queryClient.invalidateQueries();
+                setCookie(config.cookies.farmRole, farm.farmRole);
                 if (farm.farmRole === FarmRole.OWNER) {
-                    router.push(`${config.routes.farmOwner.dashboard}?farmCode=${farm.farmCode}`);
+                    router.push(`${config.routes.dashboard}?farmCode=${farm.farmCode}`);
                 } else if (farm.farmRole === FarmRole.MANAGER) {
                     router.push(`${config.routes.welcome}?farmCode=${farm.farmCode}`);
                 }

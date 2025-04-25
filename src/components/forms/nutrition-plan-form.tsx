@@ -520,7 +520,7 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
                                 feedSessions.map((item, index) => (
                                     <Card key={index} className="border border-muted">
                                         <CardContent className="p-4">
-                                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                                                 <div className="space-y-4">
                                                     {/* Start Time Selection */}
                                                     <FormField
