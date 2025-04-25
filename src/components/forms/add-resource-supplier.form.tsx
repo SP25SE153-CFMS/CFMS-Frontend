@@ -1,6 +1,9 @@
 "use client"
 
-import { type CreateResourceSupplier, CreateResourceSupplierSchema } from "@/utils/schemas/resource-supplier.schema"
+import {
+  AddResourceSupplier,
+  AddResourceSupplierSchema,
+} from '@/utils/schemas/resource-supplier.schema';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
@@ -20,9 +23,9 @@ interface CreateResourceProps {
   supplierId: string
 }
 
-export default function AddResourceSupplier({ closeModal, supplierId }: CreateResourceProps) {
-  const form = useForm<CreateResourceSupplier>({
-    resolver: zodResolver(CreateResourceSupplierSchema),
+export default function AddResourceSupplierForm({ closeModal, supplierId }: CreateResourceProps) {
+  const form = useForm<AddResourceSupplier>({
+    resolver: zodResolver(AddResourceSupplierSchema),
     defaultValues: {
       description: "",
       supplierId: supplierId,
@@ -58,7 +61,7 @@ export default function AddResourceSupplier({ closeModal, supplierId }: CreateRe
     },
   })
 
-  const onSubmit = async (values: CreateResourceSupplier) => {
+  const onSubmit = async (values: AddResourceSupplier) => {
     const formattedData = {
       ...values,
       price: Number(values.price),
