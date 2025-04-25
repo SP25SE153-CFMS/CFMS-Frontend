@@ -40,10 +40,8 @@ interface SupplierFormProps {
 export default function SupplierForm({ defaultValues, closeDialog }: SupplierFormProps) {
     // Get active farm từ sessionStorage
     const activeFarm = JSON.parse(sessionStorage.getItem('activeFarm') || '{}');
-    // console.log('Active farm: ', activeFarm);
     // Get farm id từ active farm
     const farmId = activeFarm?.farmId ?? '';
-    // console.log('Farm ID form: ', farmId);
 
     const isUpdate = !!defaultValues?.supplierId;
 
@@ -79,7 +77,7 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
 
     // Form submit handler
     async function onSubmit(values: Supplier) {
-        console.log('Dữ liệu gửi lên API:', values);
+        // console.log('Dữ liệu gửi lên API:', values);
         mutation.mutate(values);
     }
 

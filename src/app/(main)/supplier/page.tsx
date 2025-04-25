@@ -24,18 +24,14 @@ export default function Supplier() {
     const [openDialog, setOpenDialog] = useState(false);
 
     const activeFarm = JSON.parse(sessionStorage.getItem('activeFarm') || '{}');
-    // console.log('Active farm: ', activeFarm);
 
     const farmId = activeFarm?.farmId ?? '';
-    // console.log('Farm ID test: ', farmId);
 
     const { data: suppliers = [], isLoading } = useQuery({
         queryKey: ['suppliers', farmId],
         queryFn: () => getSuppliersByFarmId(farmId),
         enabled: !!farmId,
     });
-
-    // console.log('Supplier: ', suppliers);
 
     const open = () => setOpenDialog(true);
     const closeDialog = () => setOpenDialog(false);
