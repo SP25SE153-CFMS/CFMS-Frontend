@@ -24,8 +24,7 @@ import { ArrowLeftRight, Package, Clipboard, User, ArrowLeft, Save } from 'lucid
 const requestData = {
     inventoryRequestId: 'req-001',
     requestType: 'export',
-    wareFrom: 'Kho A',
-    wareTo: 'Kho B',
+    ware: 'Kho A',
     createBy: 'Ngọc Anh',
     productItems: [
         { id: '1', name: 'Cám A1', quantity: '100', unit: 'Bao' },
@@ -38,8 +37,7 @@ export default function CreateReceipt() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         requestType: requestData.requestType,
-        wareFrom: requestData.wareFrom,
-        wareTo: requestData.wareTo,
+        ware: requestData.ware,
         createBy: requestData.createBy,
         productItems: requestData.productItems,
         note: '',
@@ -108,29 +106,14 @@ export default function CreateReceipt() {
                                     />
                                 </div>
 
-                                {/* Kho xuất */}
-                                {formData.requestType === 'export' && (
-                                    <div className="space-y-2">
-                                        <Label className="flex items-center gap-2">
-                                            <Package className="h-4 w-4" />
-                                            Kho xuất
-                                        </Label>
-                                        <Input
-                                            value={formData.wareFrom}
-                                            disabled
-                                            className="bg-background"
-                                        />
-                                    </div>
-                                )}
-
-                                {/* Kho nhập */}
+                                {/* Kho */}
                                 <div className="space-y-2">
                                     <Label className="flex items-center gap-2">
                                         <Package className="h-4 w-4" />
-                                        Kho nhập
+                                        Kho
                                     </Label>
                                     <Input
-                                        value={formData.wareTo}
+                                        value={formData.ware}
                                         disabled
                                         className="bg-background"
                                     />

@@ -52,12 +52,12 @@ export const columns: ColumnDef<WareStockResponse>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng" />,
     },
     {
-        accessorKey: 'supplierName',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Nhà cung cấp" />,
-    },
-    {
         accessorKey: 'unitSpecification',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Quy cách tính" />,
+    },
+    {
+        accessorKey: 'supplierName',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Nhà cung cấp" />,
     },
     {
         id: 'actions',

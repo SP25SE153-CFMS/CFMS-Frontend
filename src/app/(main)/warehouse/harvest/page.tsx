@@ -45,6 +45,8 @@ export default function Page() {
         enabled: !!wId && !!rId,
     });
 
+    console.log("Harvests data: ", harvests);
+
     // Check if harvests is loading
     if (isLoading) {
         return (
@@ -93,11 +95,11 @@ export default function Page() {
                     <div className="flex items-center gap-2">
                         {/* <Wheat className="h-5 w-5 text-muted-foreground" /> */}
                         <CardTitle className="text-2xl font-bold">
-                            Quản lý kho sản phảm thu hoạch
+                            Quản lý kho sản phẩm thu hoạch
                         </CardTitle>
                     </div>
                     <CardDescription className="text-sm">
-                        Danh sách tất cả sản phảm thu hoạch trong trang trại
+                        Danh sách tất cả sản phẩm thu hoạch trong trang trại
                     </CardDescription>
                 </CardHeader>
                 <Separator />
@@ -110,7 +112,7 @@ export default function Page() {
                 <DialogContent className="max-w-2xl">
                     <DialogHeader>
                         <DialogTitle className="text-xl font-semibold">
-                            Tạo sản phảm thu hoạch
+                            Tạo sản phẩm thu hoạch
                         </DialogTitle>
                         <DialogDescription>Nhập đầy đủ các thông tin dưới.</DialogDescription>
                     </DialogHeader>

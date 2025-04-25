@@ -14,7 +14,7 @@ export const CreateFoodSchema = FoodSchema.omit({ foodId: true }).extend({
     wareId: z.string().uuid({ message: 'Kho không hợp lệ, phải là UUID' }),
     packageId: z.string().uuid({ message: 'Quy cách đóng gói không hợp lệ, phải là UUID' }),
     unitId: z.string().uuid({ message: 'Đơn vị không hợp lệ, phải là UUID' }),
-    packageSize: z.number().default(0),
+    packageSize: z.number().positive('Phải lớn hơn 0.'),
 });
 
 export type CreateFood = z.infer<typeof CreateFoodSchema>;
