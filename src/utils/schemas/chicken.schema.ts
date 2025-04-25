@@ -22,7 +22,7 @@ export const ChickenSchema = z.object({
 
     // TODO: Reconfirm this code
     packageId: z.string(),
-    packageSize: z.number(),
+    packageSize: z.number().positive('Phải lớn hơn 0.'),
     wareId: z.string(),
     unitId: z.string(),
 });

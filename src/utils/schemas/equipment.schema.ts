@@ -16,10 +16,10 @@ export const EquipmentSchema = z.object({
     material: z.string().optional(),
     materialId: z.string().uuid({ message: 'Chất liệu không hợp lệ' }),
     usage: z.string().optional(),
-    warranty: z.number().default(0),
-    size: z.number().default(0),
+    warranty: z.number().positive('Phải lớn hơn 0.'),
+    size: z.number().positive('Phải lớn hơn 0.'),
     sizeUnitId: z.string().uuid({ message: 'Đơn vị kích thước không hợp lệ' }),
-    weight: z.number().default(0),
+    weight: z.number().positive('Phải lớn hơn 0.'),
     weightUnitId: z.string().uuid({ message: 'Đơn vị khối lượng không hợp lệ' }),
 });
 
@@ -28,7 +28,7 @@ export const CreateEquipmentSchema = EquipmentSchema.omit({ equipmentId: true })
     wareId: z.string().uuid({ message: 'Kho không hợp lệ' }),
     packageId: z.string().uuid({ message: 'Quy cách đóng gói không hợp lệ' }),
     unitId: z.string().uuid({ message: 'Đơn vị không hợp lệ' }),
-    packageSize: z.number().default(0),
+    packageSize: z.number().positive('Phải lớn hơn 0.'),
 });
 
 export type CreateEquipment = z.infer<typeof CreateEquipmentSchema>;

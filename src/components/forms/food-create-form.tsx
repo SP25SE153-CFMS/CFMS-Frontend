@@ -281,8 +281,8 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                                         <div>
                                             <Input
                                                 value={ware?.warehouseName || ''}
-                                                disabled
                                                 className="bg-background"
+                                                disabled
                                             />
                                         </div>
                                     </FormControl>
@@ -302,9 +302,13 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                                     <FormControl>
                                         <div>
                                             <Input
+                                                type="number"
+                                                min={0}
+                                                placeholder="0"
                                                 {...field}
-                                                value="0"
-                                                disabled
+                                                onChange={(e) =>
+                                                    field.onChange(Number(e.target.value))
+                                                }
                                                 className="bg-background"
                                             />
                                         </div>

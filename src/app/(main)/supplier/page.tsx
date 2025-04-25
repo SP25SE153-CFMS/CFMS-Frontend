@@ -32,6 +32,8 @@ export default function Supplier() {
         enabled: !!farmId,
     });
 
+    // console.log('Supplier: ', suppliers);
+
     const open = () => setOpenDialog(true);
     const closeDialog = () => setOpenDialog(false);
     const onOpenChange = (val: boolean) => setOpenDialog(val);

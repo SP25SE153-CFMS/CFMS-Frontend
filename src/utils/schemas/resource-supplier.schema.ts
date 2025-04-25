@@ -15,5 +15,6 @@ export type ResourceSupplier = z.infer<typeof ResourceSupplierSchema>;
 
 export const AddResourceSupplierSchema = ResourceSupplierSchema.omit({
     resourceSupplierId: true,
+    // resourceId: true,
 });
 export type AddResourceSupplier = z.infer<typeof AddResourceSupplierSchema>;

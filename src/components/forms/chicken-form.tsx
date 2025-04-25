@@ -321,9 +321,13 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                                     <FormControl>
                                         <div>
                                             <Input
+                                                type="number"
+                                                min={0}
+                                                placeholder="0"
                                                 {...field}
-                                                value="0"
-                                                disabled
+                                                onChange={(e) =>
+                                                    field.onChange(Number(e.target.value))
+                                                }
                                                 className="bg-background"
                                             />
                                         </div>
