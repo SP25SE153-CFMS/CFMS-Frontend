@@ -73,12 +73,8 @@ export default function Page() {
 
     // farmsForSearch: All farms for searching
     const { data: farmsForSearch } = useQuery({
-        queryKey: ['farms'],
-        queryFn: async () => {
-            const farms = await getFarms();
-            sessionStorage.setItem('farms', JSON.stringify(farms));
-            return farms;
-        },
+        queryKey: ['allFarms'],
+        queryFn: getFarms,
     });
 
     // Farm code for employee to join
