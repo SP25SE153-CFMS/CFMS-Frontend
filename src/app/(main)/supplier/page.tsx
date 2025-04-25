@@ -24,7 +24,7 @@ export default function Supplier() {
     const [openDialog, setOpenDialog] = useState(false);
 
     const activeFarm = JSON.parse(sessionStorage.getItem('activeFarm') || '{}');
-    console.log('Active farm: ', activeFarm);
+    // console.log('Active farm: ', activeFarm);
 
     const farmId = activeFarm?.farmId ?? '';
     // console.log('Farm ID test: ', farmId);

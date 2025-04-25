@@ -33,29 +33,30 @@ import { generateCode } from '@/utils/functions/generate-code.function';
 import { Loader2 } from 'lucide-react';
 
 interface SupplierFormProps {
-    defaultValues?: Partial<Supplier | CreateSupplier>;
+    defaultValues?: Partial<Supplier>;
     closeDialog: () => void;
 }
 
 export default function SupplierForm({ defaultValues, closeDialog }: SupplierFormProps) {
     // Get active farm từ sessionStorage
     const activeFarm = JSON.parse(sessionStorage.getItem('activeFarm') || '{}');
-    console.log('Active farm: ', activeFarm);
+    // console.log('Active farm: ', activeFarm);
     // Get farm id từ active farm
     const farmId = activeFarm?.farmId ?? '';
-    console.log('Farm ID form: ', farmId);
+    // console.log('Farm ID form: ', farmId);
 
-    const form = useForm<CreateSupplier>({
-        resolver: zodResolver(defaultValues ? SupplierSchema : CreateSupplierSchema),
+    const isUpdate = !!defaultValues?.supplierId;
+
+    const form = useForm<Supplier>({
+        resolver: zodResolver(isUpdate ? SupplierSchema : CreateSupplierSchema),
         defaultValues: {
             supplierName: '',
             supplierCode: '',
             address: '',
             phoneNumber: '',
             bankAccount: '',
-            farmId: farmId,
             status: 1,
-            ...defaultValues,
+            ...(isUpdate ? defaultValues : { farmId, ...defaultValues }),
         },
     });
 
@@ -78,7 +79,7 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
 
     // Form submit handler
     async function onSubmit(values: Supplier) {
-        // console.log('Dữ liệu gửi lên API:', values);
+        console.log('Dữ liệu gửi lên API:', values);
         mutation.mutate(values);
     }
 

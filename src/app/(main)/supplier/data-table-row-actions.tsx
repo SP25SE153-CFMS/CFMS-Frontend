@@ -98,10 +98,6 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             {/* Cập nhật */}
             <Dialog open={update} onOpenChange={setUpdate}>
                 <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Cập nhật sản phẩm</DialogTitle>
-                        <DialogDescription>Nhập</DialogDescription>
-                    </DialogHeader>
                     <ScrollArea>
                         <SupplierForm
                             closeDialog={() => setUpdate(false)}
