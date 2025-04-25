@@ -58,6 +58,7 @@ import config from '@/configs';
 import { getWarestockResourceByFarm } from '@/services/warehouse.service';
 import { getCookie } from 'cookies-next';
 import { onError } from '@/utils/functions/form.function';
+import Link from 'next/link';
 
 interface NutritionPlanFormProps {
     defaultValues?: Partial<NutritionPlan>;
@@ -94,7 +95,8 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
             ? defaultValues.feedSessions
             : [
                   {
-                      feedingTime: '',
+                      startTime: '',
+                      endTime: '',
                       feedAmount: 0,
                       unitId: '',
                       note: '',
@@ -175,7 +177,8 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
         setFeedSessions([
             ...feedSessions,
             {
-                feedingTime: '',
+                startTime: '',
+                endTime: '',
                 feedAmount: 0,
                 unitId: '',
                 note: '',
@@ -353,6 +356,21 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
                                                                                     {food.foodName}
                                                                                 </SelectItem>
                                                                             ))}
+                                                                            {foods?.length ===
+                                                                                0 && (
+                                                                                <Link
+                                                                                    href={
+                                                                                        config
+                                                                                            .routes
+                                                                                            .ware
+                                                                                    }
+                                                                                    className="text-sm font-medium flex items-center p-2"
+                                                                                >
+                                                                                    <Plus className="w-4 h-4 mr-2" />
+                                                                                    Nhấn vào đây để
+                                                                                    tạo thức ăn
+                                                                                </Link>
+                                                                            )}
                                                                         </SelectContent>
                                                                     </Select>
                                                                 </FormControl>
@@ -504,23 +522,53 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
                                         <CardContent className="p-4">
                                             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                                                 <div className="space-y-4">
-                                                    {/* Feeding Time Selection */}
+                                                    {/* Start Time Selection */}
                                                     <FormField
                                                         control={form.control}
-                                                        name={`feedSessions.${index}.feedingTime`}
+                                                        name={`feedSessions.${index}.startTime`}
                                                         render={() => (
                                                             <FormItem>
                                                                 <FormLabel className="flex items-center">
                                                                     <Clock className="mr-1 h-4 w-4 text-primary" />
-                                                                    Thời gian cho ăn
+                                                                    Thời gian bắt đầu
                                                                 </FormLabel>
                                                                 <FormControl>
                                                                     <TimePicker
-                                                                        value={item.feedingTime}
+                                                                        value={item.startTime}
                                                                         onChange={(value) =>
                                                                             updateFeedSession(
                                                                                 index,
-                                                                                'feedingTime',
+                                                                                'startTime',
+                                                                                value,
+                                                                            )
+                                                                        }
+                                                                        className="w-full"
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </div>
+
+                                                <div className="space-y-4">
+                                                    {/* End Time Selection */}
+                                                    <FormField
+                                                        control={form.control}
+                                                        name={`feedSessions.${index}.endTime`}
+                                                        render={() => (
+                                                            <FormItem>
+                                                                <FormLabel className="flex items-center">
+                                                                    <Clock className="mr-1 h-4 w-4 text-primary" />
+                                                                    Thời gian kết thúc
+                                                                </FormLabel>
+                                                                <FormControl>
+                                                                    <TimePicker
+                                                                        value={item.endTime}
+                                                                        onChange={(value) =>
+                                                                            updateFeedSession(
+                                                                                index,
+                                                                                'endTime',
                                                                                 value,
                                                                             )
                                                                         }
