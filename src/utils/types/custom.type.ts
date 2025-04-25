@@ -27,8 +27,11 @@ import { NutritionPlanDetail } from '../schemas/nutrition-plan-detail.schema';
 import { FeedSession } from '../schemas/feed-session.schema';
 import { TaskResource } from '../schemas/task-resource.schema';
 import { Warehouse } from '../schemas/warehouse.schema';
-import { CreateInventoryReceipt } from '../schemas/inventory-receipt.schema';
-import { CreateInventoryReceiptDetail } from '../schemas/inventory-receipt-detail.schema';
+import { CreateInventoryReceipt, InventoryReceipt } from '../schemas/inventory-receipt.schema';
+import {
+    CreateInventoryReceiptDetail,
+    InventoryReceiptDetail,
+} from '../schemas/inventory-receipt-detail.schema';
 import { TaskLocation } from '../schemas/task-location.schema';
 import { HarvestProduct } from '../schemas/harvest-product.schema';
 import { Request } from '../schemas/request.schema';
@@ -264,4 +267,12 @@ export type RequestResponse = EntityAudit &
     Request & {
         taskRequests: TaskRequest[];
         inventoryRequests: InventoryRequestResponse[];
+    };
+
+export type ReceiptResponse = InventoryReceipt &
+    EntityAudit &
+    InventoryReceiptDetail & {
+        receiptCodeNumber: string;
+        wareFrom: WarehouseResponse;
+        wareTo: WarehouseResponse;
     };

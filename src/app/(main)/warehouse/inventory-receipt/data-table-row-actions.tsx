@@ -13,9 +13,11 @@ import { Row } from '@tanstack/react-table';
 import { useState } from 'react';
 import ReceiptDetail from './inventory-receipt-detail';
 import { InventoryReceiptDetail } from '@/utils/schemas/inventory-receipt-detail.schema';
-import { inventoryReceipts } from '@/utils/data/table.data';
+import { inventoryReceiptDetails, inventoryReceipts } from '@/utils/data/table.data';
 import { useRouter } from 'next/navigation';
 import config from '@/configs';
+import { useQuery } from '@tanstack/react-query';
+import { getReceipts } from '@/services/request.service';
 
 interface Props<T> {
     row: Row<T>;
@@ -24,13 +26,17 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const router = useRouter();
     const [open, setOpen] = useState(false);
 
+    const { data: receipts, isLoading } = useQuery({
+        queryKey: ['receipts'],
+        queryFn: () => getReceipts(),
+    });
+
     const inventoryReceiptDetail = row.original as InventoryReceiptDetail;
-    const receipt = inventoryReceipts.find(
+    const receipt = inventoryReceiptDetails.find(
         (receipt) => receipt.inventoryReceiptId === inventoryReceiptDetail.inventoryReceiptId,
     );
 
-    // Chuyển code sang Request
-    const status = receipt?.status ?? -1;
+    console.log("Receipt: ", receipt);
 
     return (
         <>
@@ -45,17 +51,17 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     {/* Chi tiết */}
                     <DropdownMenuItem onClick={() => setOpen(true)}>Chi tiết</DropdownMenuItem>
 
-                    <DropdownMenuItem>Duyệt</DropdownMenuItem>
+                    {/* <DropdownMenuItem>Duyệt</DropdownMenuItem>
                     <DropdownMenuItem>Hủy</DropdownMenuItem>
-                    <DropdownMenuSeparator />
+                    <DropdownMenuSeparator /> */}
 
                     {/* Tạo phiếu đưa qua request */}
-                    <DropdownMenuItem
+                    {/* <DropdownMenuItem
                         disabled={status === 0 || status == 1}
                         onClick={() => router.push(config.routes.createReceipt)}
                     >
                         Tạo phiếu
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                 </DropdownMenuContent>
             </DropdownMenu>
 
@@ -63,7 +69,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Chi tiết phiếu {receipt?.subcategoryName}</DialogTitle>
+                        <DialogTitle>Chi tiết phiếu</DialogTitle>
                     </DialogHeader>
                     <ScrollArea>
                         <ReceiptDetail receiptId={inventoryReceiptDetail.inventoryReceiptId} />

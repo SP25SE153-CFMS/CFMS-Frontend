@@ -33,7 +33,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                         onClick={() => {
-                            router.push(`${config.routes.request}/${row.getValue('requestId')}`);
+                            (`${config.routes.request}/${row.getValue('requestId')}`);
                         }}
                     >
                         Chi tiết

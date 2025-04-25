@@ -21,6 +21,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Building2, Phone, MapPin, CreditCard, Save, X } from 'lucide-react';
 import {
+    CreateSupplier,
     CreateSupplierSchema,
     type Supplier,
     SupplierSchema,
@@ -32,12 +33,19 @@ import { generateCode } from '@/utils/functions/generate-code.function';
 import { Loader2 } from 'lucide-react';
 
 interface SupplierFormProps {
-    defaultValues?: Partial<Supplier>;
+    defaultValues?: Partial<Supplier | CreateSupplier>;
     closeDialog: () => void;
 }
 
 export default function SupplierForm({ defaultValues, closeDialog }: SupplierFormProps) {
-    const form = useForm<Supplier>({
+    // Get active farm từ sessionStorage
+    const activeFarm = JSON.parse(sessionStorage.getItem('activeFarm') || '{}');
+    console.log('Active farm: ', activeFarm);
+    // Get farm id từ active farm
+    const farmId = activeFarm?.farmId ?? '';
+    console.log('Farm ID form: ', farmId);
+
+    const form = useForm<CreateSupplier>({
         resolver: zodResolver(defaultValues ? SupplierSchema : CreateSupplierSchema),
         defaultValues: {
             supplierName: '',
@@ -45,6 +53,7 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
             address: '',
             phoneNumber: '',
             bankAccount: '',
+            farmId: farmId,
             status: 1,
             ...defaultValues,
         },
@@ -69,7 +78,7 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
 
     // Form submit handler
     async function onSubmit(values: Supplier) {
-        console.log('Dữ liệu gửi lên API:', values);
+        // console.log('Dữ liệu gửi lên API:', values);
         mutation.mutate(values);
     }
 
@@ -163,6 +172,14 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
                                                     placeholder="Nhập số điện thoại"
                                                     className="pl-10"
                                                     {...field}
+                                                    onChange={(e) => {
+                                                        // Loại bỏ khoảng trắng khi người dùng nhập
+                                                        const value = e.target.value.replace(
+                                                            /\s+/g,
+                                                            '',
+                                                        );
+                                                        field.onChange(value);
+                                                    }}
                                                 />
                                             </div>
                                         </FormControl>

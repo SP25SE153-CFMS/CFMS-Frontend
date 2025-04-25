@@ -7,13 +7,16 @@ export const SupplierSchema = z.object({
     address: z.string().min(1, { message: 'Điền địa chỉ nhà cung cấp' }).trim(),
     phoneNumber: z
         .string()
-        .regex(/^[0-9]{10,11}$/, { message: 'Điền số điện thoại' })
-        .trim(),
+        .trim()
+        // .regex(/^[0-9]{10,11}$/, { message: 'Điền số điện thoại' }),
+        .optional(),
     bankAccount: z.string(),
     status: z.number().int().default(1),
 });
 
-export const CreateSupplierSchema = SupplierSchema.omit({ supplierId: true });
+export const CreateSupplierSchema = SupplierSchema.omit({ supplierId: true }).extend({
+    farmId: z.string().uuid({ message: 'ID nhà cung cấp không hợp lệ' }),
+});
 
 export type Supplier = z.infer<typeof SupplierSchema>;
 export type CreateSupplier = z.infer<typeof CreateSupplierSchema>;

@@ -8,12 +8,27 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
 import Image from '@/components/fallback-image';
 import { Button } from '@/components/ui/button';
+import { getReceipts } from '@/services/request.service';
+import { getUsers } from '@/services/user.service';
+import { useMemo } from 'react';
+import { User } from '@/utils/schemas/user.schema';
 
 export default function InventoryReceipt() {
-    const { data: inventoryReceipt, isLoading } = useQuery({
-        queryKey: ['inventoryReceipt'],
-        queryFn: () => getInventoryReceipts(),
+    const { data: receipts, isLoading } = useQuery({
+        queryKey: ['receipts'],
+        queryFn: () => getReceipts(),
     });
+
+    useQuery({
+        queryKey: ['users'],
+        queryFn: async () => {
+            const users = await getUsers();
+            sessionStorage.setItem('users', JSON.stringify(users));
+            return users;
+        },
+    });
+
+    console.log('Toan bo receipt: ', receipts);
 
     if (isLoading) {
         return (
@@ -23,7 +38,17 @@ export default function InventoryReceipt() {
         );
     }
 
-    if (!inventoryReceipt) {
+    // const filteredReceipt = useMemo(() => {
+    //     if (!receipts) return [];
+
+    //     return receipts.filter((receipt) => {
+    //         const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
+    //         const createdBy = users.find((user) => user.userId === receipt.createdByUserId);
+    //         const createdByName = createdBy?.fullName.toLowerCase() || '';
+    //     });
+    // }, [receipts]);
+
+    if (!receipts) {
         return (
             <div className="w-full h-full flex items-center justify-center">
                 <Card className="px-36 py-8">
@@ -45,7 +70,7 @@ export default function InventoryReceipt() {
                 <p className="text-muted-foreground">Danh sách tất cả phiếu nhập/xuất nội bộ</p>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={inventoryReceipt} columns={columns} />
+                <DataTable data={receipts} columns={columns} />
             </div>
         </div>
     );
