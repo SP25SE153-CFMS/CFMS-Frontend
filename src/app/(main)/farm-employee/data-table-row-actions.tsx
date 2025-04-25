@@ -244,7 +244,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         <Button
                             variant="destructive"
                             onClick={handleUpdateStatus}
-                            disabled={deleteMutation.isPending}
+                            disabled={updateStatusMutation.isPending}
                         >
                             {deleteMutation.isPending && (
                                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />

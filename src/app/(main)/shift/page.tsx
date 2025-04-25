@@ -41,8 +41,6 @@ export default function Page() {
         );
     }
 
-    console.log(shifts);
-
     // Check if shifts is not null, undefined
     if (!shifts) {
         return (
