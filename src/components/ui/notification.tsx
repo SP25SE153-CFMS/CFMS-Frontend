@@ -126,7 +126,6 @@ export default function Notification() {
                 // Open the farm code dialog
                 setCurrentNotification(noti);
                 setFarmCodeDialogOpen(true);
-                queryClient.invalidateQueries({ queryKey: ['farms'] });
             }
 
             await readOneNotification(noti.notificationId);
@@ -144,6 +143,7 @@ export default function Notification() {
             const response = await acceptInvitation(currentNotification.notificationId);
             toast.success(response.message);
             setFarmCodeDialogOpen(false);
+            queryClient.invalidateQueries({ queryKey: ['farms'] });
 
             // Redirect to appropriate page if needed
             // if (currentNotification.metadata && typeof currentNotification.metadata === 'object') {
@@ -171,6 +171,7 @@ export default function Notification() {
             const response = await rejectInvitation(currentNotification.notificationId);
             toast.success(response.message);
             setFarmCodeDialogOpen(false);
+            queryClient.invalidateQueries({ queryKey: ['farms'] });
         } catch (error: any) {
             console.error(error);
             toast.error(error?.response?.data?.message);

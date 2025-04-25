@@ -85,7 +85,8 @@ export type CategoryResponse = Category & {
     chickens?: ChickenResponse[];
 };
 
-export type ChickenTypeResponse = SubCategory & {
+export type ChickenTypeResponse = {
+    chickenType: SubCategory;
     chickens: Chicken[];
 };
 

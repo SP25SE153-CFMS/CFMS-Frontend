@@ -154,14 +154,14 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                     {/* Chicken type */}
                     <div className="*:not-first:mt-2 col-span-2">
                         <Label>Loại gà</Label>
-                        <Select
+                        {/*<Select
                             defaultValue={chickenTypeId}
                             onValueChange={setChickenTypeId}
                             disabled={chickenTypes?.some(
                                 (type) => type.subCategoryId === chickenTypeId,
                             )}
                         >
-                            {/* <SelectTrigger>
+                             <SelectTrigger>
                                 <SelectValue placeholder="Chọn loại gà" />
                             </SelectTrigger>
                             <SelectContent className="max-h-72">
@@ -170,7 +170,7 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                                         {type.subCategoryName}
                                     </SelectItem>
                                 ))}
-                            </SelectContent> */}
+                            </SelectContent> 
                             <Input
                                 disabled
                                 value={
@@ -179,7 +179,15 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                                     )?.subCategoryName
                                 }
                             />
-                        </Select>
+                        </Select>*/}
+                        <Input
+                            disabled
+                            value={
+                                chickenTypes?.find(
+                                    (type) => type?.chickenType?.subCategoryId === chickenTypeId,
+                                )?.chickenType?.subCategoryName
+                            }
+                        />
                     </div>
 
                     {/* Growth stage */}

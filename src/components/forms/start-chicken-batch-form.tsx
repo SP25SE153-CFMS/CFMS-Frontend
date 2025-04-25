@@ -64,7 +64,9 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
         }
     }, []);
 
-    const chickens = chickenTypes?.find((type) => type.subCategoryId === chickenTypeId)?.chickens;
+    const chickens = chickenTypes?.find(
+        (type) => type.chickenType?.subCategoryId === chickenTypeId,
+    )?.chickens;
 
     const mutation = useMutation({
         mutationFn: startChickenBatch,
@@ -160,8 +162,9 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                         <Input
                             disabled
                             value={
-                                chickenTypes?.find((type) => type.subCategoryId === chickenTypeId)
-                                    ?.subCategoryName
+                                chickenTypes?.find(
+                                    (type) => type.chickenType?.subCategoryId === chickenTypeId,
+                                )?.chickenType?.subCategoryName
                             }
                         />
                     </div>
