@@ -65,7 +65,7 @@ export default function SidebarOverview({
                     {getCookie(config.cookies.farmRole) === FarmRole.OWNER?.toString() && (
                         <SidebarMenuItem>
                             <SidebarMenuButton asChild>
-                                <Link href={config.routes.welcome}>
+                                <Link href={config.routes.dashboard}>
                                     <PanelsTopLeft />
                                     <span>Trang chủ</span>
                                 </Link>

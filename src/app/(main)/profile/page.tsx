@@ -72,7 +72,7 @@ export default function ProfilePage() {
     const queryClient = useQueryClient();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const { data: currentUser } = useQuery({
+    const { data: currentUser, refetch } = useQuery({
         queryKey: ['currentUser'],
         queryFn: () => getCurrentUser(),
     });
@@ -99,9 +99,9 @@ export default function ProfilePage() {
     // Setup mutation for updating profile
     const mutation = useMutation({
         mutationFn: updateUserProfile,
-        onSuccess: (data) => {
+        onSuccess: () => {
             // Update the cache with the new user data
-            queryClient.setQueryData(['currentUser'], data);
+            refetch();
             setIsEditing(false);
             toast.success('Thông tin cá nhân đã được cập nhật.');
         },
