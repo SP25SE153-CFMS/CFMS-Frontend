@@ -31,6 +31,7 @@ import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { Loader2 } from 'lucide-react';
+import { getCookie } from 'cookies-next';
 
 interface SupplierFormProps {
     defaultValues?: Partial<Supplier>;
@@ -39,9 +40,7 @@ interface SupplierFormProps {
 
 export default function SupplierForm({ defaultValues, closeDialog }: SupplierFormProps) {
     // Get active farm từ sessionStorage
-    const activeFarm = JSON.parse(sessionStorage.getItem('activeFarm') || '{}');
-    // Get farm id từ active farm
-    const farmId = activeFarm?.farmId ?? '';
+    const farmId = getCookie('farmId') ?? '';
 
     const isUpdate = !!defaultValues?.supplierId;
 

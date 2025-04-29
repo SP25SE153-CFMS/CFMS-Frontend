@@ -19,13 +19,12 @@ import { getSuppliersByFarmId } from '@/services/supplier.service';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
 import Image from '@/components/fallback-image';
+import { getCookie } from 'cookies-next';
 
 export default function Supplier() {
     const [openDialog, setOpenDialog] = useState(false);
 
-    const activeFarm = JSON.parse(sessionStorage.getItem('activeFarm') || '{}');
-
-    const farmId = activeFarm?.farmId ?? '';
+    const farmId = getCookie('farmId') ?? '';
 
     const { data: suppliers = [], isLoading } = useQuery({
         queryKey: ['suppliers', farmId],
