@@ -39,7 +39,7 @@ export default function InventoryReceipt() {
         });
     }, [receipts]);
 
-    console.log('Toan bo receipt: ', receipts);
+    // console.log('Toan bo receipt: ', receipts);
 
     if (isLoading) {
         return (
