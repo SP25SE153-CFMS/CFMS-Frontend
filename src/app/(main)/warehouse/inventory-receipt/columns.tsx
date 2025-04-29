@@ -13,6 +13,7 @@ import { InventoryReceipt } from '@/utils/schemas/inventory-receipt.schema';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import { DataTableRowActions } from './data-table-row-actions';
+import { User } from '@/utils/schemas/user.schema';
 
 export const columns: ColumnDef<InventoryReceipt>[] = [
     {
@@ -55,9 +56,13 @@ export const columns: ColumnDef<InventoryReceipt>[] = [
     //     cell: ({ row }) => <div>{row.getValue('subcategoryName')}</div>,
     // },
     {
-        accessorKey: 'createBy',
+        accessorKey: 'createdByUserId',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tạo bởi" />,
-        cell: () => <span>Ngọc Anh</span>,
+        cell: ({ row }) => {
+            const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
+            const createBy = users.find((user) => user.userId === row.getValue('createdByUserId'));
+            return <span>{createBy?.fullName ?? '-'}</span>;
+        },
     },
     {
         accessorKey: 'batchNumber',

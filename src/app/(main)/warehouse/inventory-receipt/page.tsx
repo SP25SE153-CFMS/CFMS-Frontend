@@ -28,6 +28,17 @@ export default function InventoryReceipt() {
         },
     });
 
+    const filteredReceipt = useMemo(() => {
+        if (!receipts) return [];
+
+        const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
+
+        return receipts.filter((receipt) => {
+            const createdBy = users.find((user) => user.userId === receipt.createdByUserId);
+            return !!createdBy;
+        });
+    }, [receipts]);
+
     console.log('Toan bo receipt: ', receipts);
 
     if (isLoading) {
@@ -37,16 +48,6 @@ export default function InventoryReceipt() {
             </div>
         );
     }
-
-    // const filteredReceipt = useMemo(() => {
-    //     if (!receipts) return [];
-
-    //     return receipts.filter((receipt) => {
-    //         const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
-    //         const createdBy = users.find((user) => user.userId === receipt.createdByUserId);
-    //         const createdByName = createdBy?.fullName.toLowerCase() || '';
-    //     });
-    // }, [receipts]);
 
     if (!receipts) {
         return (
@@ -70,7 +71,7 @@ export default function InventoryReceipt() {
                 <p className="text-muted-foreground">Danh sách tất cả phiếu nhập/xuất nội bộ</p>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={receipts} columns={columns} />
+                <DataTable data={filteredReceipt} columns={columns} />
             </div>
         </div>
     );

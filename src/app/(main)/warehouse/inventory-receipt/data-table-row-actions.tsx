@@ -36,7 +36,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
         (receipt) => receipt.inventoryReceiptId === inventoryReceiptDetail.inventoryReceiptId,
     );
 
-    console.log("Receipt: ", receipt);
+    // console.log("Receipt: ", receipt);
 
     return (
         <>
