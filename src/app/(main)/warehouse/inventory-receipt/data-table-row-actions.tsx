@@ -24,17 +24,25 @@ interface Props<T> {
 }
 export function DataTableRowActions<T>({ row }: Props<T>) {
     const router = useRouter();
-    const [open, setOpen] = useState(false);
 
-    const { data: receipts, isLoading } = useQuery({
-        queryKey: ['receipts'],
-        queryFn: () => getReceipts(),
-    });
+    const inventoryReceiptId = (row.original as InventoryReceiptDetail).inventoryReceiptId;
 
-    const inventoryReceiptDetail = row.original as InventoryReceiptDetail;
-    const receipt = inventoryReceiptDetails.find(
-        (receipt) => receipt.inventoryReceiptId === inventoryReceiptDetail.inventoryReceiptId,
-    );
+    const handleReceiptDetail = () => {
+        router.push(config.routes.inventoryReceipt + '/' + inventoryReceiptId)
+    }
+    
+    // const { data: receipts } = useQuery({
+    //     queryKey: ['receipts'],
+    //     queryFn: async () => {
+    //         const receipts = await getReceipts();
+    //         sessionStorage.setItem('receiptDetail', JSON.stringify(receipts));
+    //         return receipts;
+    //     },
+    // });
+
+    // const receipt = receipts?.find(
+    //     (r) => r.inventoryReceiptId === inventoryReceiptDetail.inventoryReceiptId,
+    // );
 
     // console.log("Receipt: ", receipt);
 
@@ -49,33 +57,9 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
                 <DropdownMenuContent align="end">
                     {/* Chi tiết */}
-                    <DropdownMenuItem onClick={() => setOpen(true)}>Chi tiết</DropdownMenuItem>
-
-                    {/* <DropdownMenuItem>Duyệt</DropdownMenuItem>
-                    <DropdownMenuItem>Hủy</DropdownMenuItem>
-                    <DropdownMenuSeparator /> */}
-
-                    {/* Tạo phiếu đưa qua request */}
-                    {/* <DropdownMenuItem
-                        disabled={status === 0 || status == 1}
-                        onClick={() => router.push(config.routes.createReceipt)}
-                    >
-                        Tạo phiếu
-                    </DropdownMenuItem> */}
+                    <DropdownMenuItem onClick={handleReceiptDetail}>Chi tiết</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
-
-            {/* Chi tiết phiếu */}
-            <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Chi tiết phiếu</DialogTitle>
-                    </DialogHeader>
-                    <ScrollArea>
-                        <ReceiptDetail receiptId={inventoryReceiptDetail.inventoryReceiptId} />
-                    </ScrollArea>
-                </DialogContent>
-            </Dialog>
         </>
     );
 }

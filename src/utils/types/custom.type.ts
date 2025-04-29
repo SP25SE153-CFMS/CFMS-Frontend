@@ -128,6 +128,8 @@ export type ResourceResponse = Resource & {
     expiryDate: string;
     purchaseDate: string;
     disease: string;
+    createdWhen: string;
+    packageSize: number;
     // Food
     foodCode: string;
     foodName: string;
@@ -270,9 +272,10 @@ export type RequestResponse = EntityAudit &
     };
 
 export type ReceiptResponse = InventoryReceipt &
-    EntityAudit &
-    InventoryReceiptDetail & {
+    EntityAudit & Resource & {
+        inventoryReceiptDetails: InventoryReceiptDetail[];
         receiptCodeNumber: string;
         wareFrom: WarehouseResponse;
         wareTo: WarehouseResponse;
+        // resourceTypeId: string;
     };

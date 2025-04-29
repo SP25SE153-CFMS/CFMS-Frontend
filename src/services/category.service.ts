@@ -48,7 +48,7 @@ export const addSubCategory = async (body: SubCategory) => {
 export const updateSubCategory = async (body: SubCategory) => {
     const endpoint = PREFIX + '/updateSub';
     const response = await put<Response<string>>(endpoint, body);
-    return response.data;
+    return response.data.data;
 };
 
 export const getCategoryByType = async (type: CategoryType) => {
@@ -73,6 +73,12 @@ export const getSubByTypeAndFarm = async (categoryType: CategoryType) => {
     const farmId = getCookie(config.cookies.farmId);
     const endpoint = PREFIX + '/sub-by-type-and-farm/' + categoryType + '/' + farmId;
     const response = await get<Response<SubCategory[]>>(endpoint);
+    return response.data.data;
+};
+
+export const getSubBySubId = async (subCategoryId: string) => {
+    const endpoint = PREFIX + '/' + 'get-sub-cate' + '/' + subCategoryId;
+    const response = await get<Response<SubCategory>>(endpoint);
     return response.data.data;
 };
 
