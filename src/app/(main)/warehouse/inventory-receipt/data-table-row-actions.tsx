@@ -11,7 +11,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Row } from '@tanstack/react-table';
 import { useState } from 'react';
-import ReceiptDetail from './inventory-receipt-detail';
 import { InventoryReceiptDetail } from '@/utils/schemas/inventory-receipt-detail.schema';
 import { inventoryReceiptDetails, inventoryReceipts } from '@/utils/data/table.data';
 import { useRouter } from 'next/navigation';
@@ -28,9 +27,9 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const inventoryReceiptId = (row.original as InventoryReceiptDetail).inventoryReceiptId;
 
     const handleReceiptDetail = () => {
-        router.push(config.routes.inventoryReceipt + '/' + inventoryReceiptId)
-    }
-    
+        router.push(config.routes.inventoryReceipt + '/' + inventoryReceiptId);
+    };
+
     // const { data: receipts } = useQuery({
     //     queryKey: ['receipts'],
     //     queryFn: async () => {
