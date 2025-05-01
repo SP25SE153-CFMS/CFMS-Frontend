@@ -5,7 +5,7 @@ import { Input } from '../ui/input';
 
 type SubCateDisplayProps = {
     id: string;
-    mode: 'badge' | 'input' | 'description';
+    mode: 'badge' | 'input' | 'description' ;
 };
 
 export default function SubCateDisplay({ id, mode }: SubCateDisplayProps) {
@@ -62,8 +62,11 @@ export default function SubCateDisplay({ id, mode }: SubCateDisplayProps) {
             />
         );
     } else if (mode === 'description') {
-        return (
-            <span className="text-sm">{subCate.description || 'Không có mô tả'}</span>
-        );
-    }
+        return <span className="text-sm">{subCate.description || 'Không có mô tả'}</span>;
+    } 
 }
+
+
+// else if (mode === 'name') {
+//     return <span className="text-sm">{subCate.subCategoryName}</span>;
+// }

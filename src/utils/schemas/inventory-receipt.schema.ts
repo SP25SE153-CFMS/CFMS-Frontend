@@ -27,5 +27,13 @@ export const CreateInventoryReceiptSchema = InventoryReceiptSchema.omit({
     createdBy: true,
     createDate: true,
     subcategoryName: true,
+    status: true,
+}).extend({
+    batchNumber: z.number(),
+    resourceId: z.string().uuid({ message: 'ID không hợp lệ, phải là UUID' }),
+    actualQuantity: z.number(),
+    unitId: z.string().uuid({ message: 'ID không hợp lệ, phải là UUID' }),
+    note: z.string(),
+    requestId: z.string().uuid({ message: 'ID không hợp lệ, phải là UUID' }),
 });
 export type CreateInventoryReceipt = z.infer<typeof CreateInventoryReceiptSchema>;

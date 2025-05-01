@@ -103,7 +103,7 @@ export default function InventoryDetail() {
                 <h2 className="mb-4 text-lg font-semibold">Danh sách chi tiết phiếu</h2>
 
                 <div className="grid gap-6">
-                    {receipt.inventoryReceiptDetails.map((detail, index) => {
+                    {receipt.inventoryReceiptDetails.map((detail) => {
                         const resource = resources?.find((r) => r.resourceId === detail.resourceId);
 
                         return (
