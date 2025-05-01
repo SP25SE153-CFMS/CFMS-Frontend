@@ -21,6 +21,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Building2, Phone, MapPin, CreditCard, Save, X } from 'lucide-react';
 import {
+    CreateSupplier,
     CreateSupplierSchema,
     type Supplier,
     SupplierSchema,
@@ -30,6 +31,7 @@ import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { Loader2 } from 'lucide-react';
+import { getCookie } from 'cookies-next';
 
 interface SupplierFormProps {
     defaultValues?: Partial<Supplier>;
@@ -37,8 +39,13 @@ interface SupplierFormProps {
 }
 
 export default function SupplierForm({ defaultValues, closeDialog }: SupplierFormProps) {
+    // Get active farm từ sessionStorage
+    const farmId = getCookie('farmId') ?? '';
+
+    const isUpdate = !!defaultValues?.supplierId;
+
     const form = useForm<Supplier>({
-        resolver: zodResolver(defaultValues ? SupplierSchema : CreateSupplierSchema),
+        resolver: zodResolver(isUpdate ? SupplierSchema : CreateSupplierSchema),
         defaultValues: {
             supplierName: '',
             supplierCode: '',
@@ -46,7 +53,7 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
             phoneNumber: '',
             bankAccount: '',
             status: 1,
-            ...defaultValues,
+            ...(isUpdate ? defaultValues : { farmId, ...defaultValues }),
         },
     });
 
@@ -69,7 +76,7 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
 
     // Form submit handler
     async function onSubmit(values: Supplier) {
-        console.log('Dữ liệu gửi lên API:', values);
+        // console.log('Dữ liệu gửi lên API:', values);
         mutation.mutate(values);
     }
 
@@ -163,6 +170,14 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
                                                     placeholder="Nhập số điện thoại"
                                                     className="pl-10"
                                                     {...field}
+                                                    onChange={(e) => {
+                                                        // Loại bỏ khoảng trắng khi người dùng nhập
+                                                        const value = e.target.value.replace(
+                                                            /\s+/g,
+                                                            '',
+                                                        );
+                                                        field.onChange(value);
+                                                    }}
                                                 />
                                             </div>
                                         </FormControl>

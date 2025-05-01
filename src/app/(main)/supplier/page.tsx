@@ -20,19 +20,17 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
 import Image from '@/components/fallback-image';
 import { getCookie } from 'cookies-next';
-import config from '@/configs';
 
 export default function Supplier() {
     const [openDialog, setOpenDialog] = useState(false);
 
-    const farmId = getCookie(config.cookies.farmId) ?? '';
+    const farmId = getCookie('farmId') ?? '';
+
     const { data: suppliers = [], isLoading } = useQuery({
         queryKey: ['suppliers', farmId],
         queryFn: () => getSuppliersByFarmId(farmId),
         enabled: !!farmId,
     });
-
-    // console.log('Supplier: ', suppliers);
 
     const open = () => setOpenDialog(true);
     const closeDialog = () => setOpenDialog(false);

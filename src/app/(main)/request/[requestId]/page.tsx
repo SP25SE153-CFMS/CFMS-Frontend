@@ -44,7 +44,7 @@ import { DATE_TIME_FORMAT } from '@/utils/constants/date.constant';
 import toast from 'react-hot-toast';
 import { RequestStatus } from '@/utils/enum/status.enum';
 import config from '@/configs';
-import CreateReceipt from '../../warehouse/inventory-receipt/create/page';
+import CreateReceipt from './create/page';
 
 export default function RequestDetailPage() {
     const router = useRouter();
@@ -56,8 +56,11 @@ export default function RequestDetailPage() {
 
     const { data: requestDetail, isLoading } = useQuery({
         queryKey: ['requestDetail', requestId],
-        queryFn: () => getRequestById(requestId),
+        queryFn: () => getRequestById(requestId)
+        
     });
+
+    console.log("Detail cua request: ", requestDetail);
 
     const queryClient = useQueryClient();
 
@@ -279,7 +282,7 @@ export default function RequestDetailPage() {
         // TODO: Handle creating inventory receipt logic here
         // This could involve navigating to another page or opening a modal
         // toast('Chức năng này đang được triển khai');
-        
+        router.push(`${config.routes.request}/${requestId}/create`);
     };
 
     return (
