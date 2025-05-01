@@ -77,6 +77,12 @@ export const getSubByTypeAndFarm = async (categoryType: CategoryType) => {
     return response.data.data;
 };
 
+export const getSubBySubId = async (subCategoryId: string) => {
+    const endpoint = PREFIX + '/' + 'get-sub-cate' + '/' + subCategoryId;
+    const response = await get<Response<SubCategory>>(endpoint);
+    return response.data.data;
+};
+
 export const getUnits = async () => {
     return await getCategoryByType(CategoryType.UNIT);
 };

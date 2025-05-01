@@ -1,7 +1,11 @@
 import { Request } from '@/utils/schemas/request.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
-import { InventoryReceiptRequest, RequestResponse } from '@/utils/types/custom.type';
+import {
+    InventoryReceiptRequest,
+    ReceiptResponse,
+    RequestResponse,
+} from '@/utils/types/custom.type';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { RequestStatus } from '@/utils/enum/status.enum';
@@ -53,9 +57,8 @@ export const createInvetoryReceiptFromRequest = async (body: InventoryReceiptReq
     return response.data;
 };
 
-// TODO: Get by farm ID or not?
-export const getAllReceipts = async () => {
-    const endpoint = `${PREFIX}/receipts`;
-    const response = await get<Response<InventoryReceipt[]>>(endpoint);
+export const getReceipts = async () => {
+    const endpoint = PREFIX + '/receipts';
+    const response = await get<Response<ReceiptResponse[]>>(endpoint);
     return response.data.data;
 };

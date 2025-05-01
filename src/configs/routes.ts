@@ -19,7 +19,7 @@ const routes = {
     employee: '/employee',
     farmEmployee: '/farm-employee',
     inventoryReceipt: '/warehouse/inventory-receipt',
-    createReceipt: 'inventory-receipt/create',
+    // createReceipt: 'inventory-receipt/create',
     profile: '/profile',
     chickenBatch: '/chicken-batch',
     nutritionPlan: '/nutrition-plan',

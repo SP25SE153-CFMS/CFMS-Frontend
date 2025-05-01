@@ -80,7 +80,7 @@ export function getRequestType(requestTypeId: string): string {
 }
 
 export function getReceiptType(receiptTypeId: string): string {
-    const categories = getSubCategoryByCategoryType(CategoryType.RECEIPT_TYPE);
+    const categories = getSubCategoryByCategoryType(CategoryType.INVENTORY_REQUEST_TYPE);
     const receiptType = categories.find((cat) => cat.subCategoryId === receiptTypeId);
     return receiptType?.subCategoryName ?? '';
 }
