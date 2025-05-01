@@ -1,22 +1,16 @@
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Row } from '@tanstack/react-table';
-import { useState } from 'react';
 import { InventoryReceiptDetail } from '@/utils/schemas/inventory-receipt-detail.schema';
-import { inventoryReceiptDetails, inventoryReceipts } from '@/utils/data/table.data';
 import { useRouter } from 'next/navigation';
 import config from '@/configs';
-import { useQuery } from '@tanstack/react-query';
-import { getReceipts } from '@/services/request.service';
+
 
 interface Props<T> {
     row: Row<T>;
