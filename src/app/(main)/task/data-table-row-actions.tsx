@@ -44,7 +44,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
             toast.success('Xóa thành công');
             router.refresh();
         } catch (error: any) {
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         } finally {
             setLoading(false);
             setOpenDelete(false);

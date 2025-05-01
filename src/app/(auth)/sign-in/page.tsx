@@ -42,7 +42,7 @@ export default function Page() {
         },
         onError: (err: any) => {
             // Show error message
-            toast.error(err?.response?.data?.message);
+            toast(err?.response?.data?.message, { icon: '⚠️' });
         },
     });
 

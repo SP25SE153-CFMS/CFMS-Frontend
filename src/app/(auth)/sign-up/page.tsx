@@ -40,7 +40,9 @@ export default function SignUp() {
             router.push(config.routes.farm);
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại');
+            toast(error?.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại', {
+                icon: '⚠️',
+            });
         },
     });
     const onSubmit = (data: SignUpRequest) => {

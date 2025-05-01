@@ -68,7 +68,7 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
             toast.success(message);
         },
         onError: (err: any) => {
-            toast.error(err?.response?.data?.message);
+            toast(err?.response?.data?.message, { icon: '⚠️' });
         },
     });
 

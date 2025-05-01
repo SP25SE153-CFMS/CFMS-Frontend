@@ -106,7 +106,7 @@ export default function ProfilePage() {
             toast.success('Thông tin cá nhân đã được cập nhật.');
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -122,13 +122,13 @@ export default function ProfilePage() {
 
         // Validate file type
         if (!file.type.startsWith('image/')) {
-            toast.error('Vui lòng chọn một tệp hình ảnh.');
+            toast('Vui lòng chọn một tệp hình ảnh.', { icon: '⚠️' });
             return;
         }
 
         // Validate file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
-            toast.error('Kích thước tệp không được vượt quá 5MB.');
+            toast('Kích thước tệp không được vượt quá 5MB.', { icon: '⚠️' });
             return;
         }
 

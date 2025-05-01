@@ -163,13 +163,13 @@ export default function Page() {
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
     const handleJoinFarm = async () => {
         if (!farmCode) {
-            toast.error('Vui lòng nhập mã code trang trại');
+            toast('Vui lòng nhập mã code trang trại', { icon: '⚠️' });
             return;
         }
         await enrollMutation.mutateAsync(farmCode);

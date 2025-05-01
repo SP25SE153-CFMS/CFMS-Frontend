@@ -97,7 +97,11 @@ export function FarmSwitcher() {
             try {
                 sessionStorage.setItem('activeFarm', JSON.stringify(farm));
                 setCookie(config.cookies.farmId, farm.farmId);
+                // Invalidate queries 'farms' to refetch data
+                queryClient.invalidateQueries({ queryKey: ['farms'] });
+                // Invalidate all queries to refetch data
                 queryClient.invalidateQueries();
+                queryClient.invalidateQueries({ queryKey: ['*'] });
                 setCookie(config.cookies.farmRole, farm.farmRole);
                 if (farm.farmRole === FarmRole.OWNER) {
                     router.push(`${config.routes.dashboard}?farmCode=${farm.farmCode}`);

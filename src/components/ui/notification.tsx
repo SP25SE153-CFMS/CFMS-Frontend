@@ -113,7 +113,7 @@ export default function Notification() {
             // toast.success('Đã đánh dấu tất cả thông báo là đã đọc');
         } catch (error) {
             console.error(error);
-            // toast.error(error?.response?.data?.message);
+            // toast(error?.response?.data?.message, { icon: '⚠️' });
         }
     };
 
@@ -156,7 +156,7 @@ export default function Notification() {
             // }
         } catch (error: any) {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         } finally {
             setIsSubmitting(false);
         }
@@ -174,7 +174,7 @@ export default function Notification() {
             queryClient.invalidateQueries({ queryKey: ['farms'] });
         } catch (error: any) {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         } finally {
             setIsSubmitting(false);
         }
@@ -186,7 +186,7 @@ export default function Notification() {
     //         await refetch();
     //         // toast.success('Đã xóa thông báo');
     //     } catch (error) {
-    //         toast.error('Không thể xóa thông báo');
+    //         toast('Không thể xóa thông báo', { icon: '⚠️' });
     //     }
     //     setDeleteDialogOpen(false);
     //     setNotificationToDelete(null);
@@ -198,7 +198,7 @@ export default function Notification() {
             await refetch();
             // toast.success('Đã xóa tất cả thông báo');
         } catch (error) {
-            toast.error('Không thể xóa tất cả thông báo');
+            toast('Không thể xóa tất cả thông báo', { icon: '⚠️' });
         }
         setDeleteAllDialogOpen(false);
     };
@@ -212,7 +212,7 @@ export default function Notification() {
             await refetch();
             // toast.success('Đã xóa thông báo');
         } catch (error) {
-            toast.error('Không thể xóa thông báo');
+            toast('Không thể xóa thông báo', { icon: '⚠️' });
         }
     };
 

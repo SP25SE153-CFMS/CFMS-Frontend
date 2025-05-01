@@ -61,7 +61,7 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 

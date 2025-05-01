@@ -115,7 +115,7 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
             }
         },
         onError: (err: any) => {
-            toast.error(err?.response?.data?.message);
+            toast(err?.response?.data?.message, { icon: '⚠️' });
         },
     });
 

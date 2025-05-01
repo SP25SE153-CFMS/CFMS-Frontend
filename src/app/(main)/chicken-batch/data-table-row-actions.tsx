@@ -54,7 +54,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             queryClient.invalidateQueries({ queryKey: ['chickenBatches', chickenCoopId] });
             toast.success('Kết thúc lứa nuôi thành công');
         } catch (error: any) {
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         }
     };
 
@@ -66,7 +66,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             queryClient.invalidateQueries({ queryKey: ['chickenBatches', chickenCoopId] });
             setOpenDelete(false);
         } catch (error: any) {
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         }
     };
 

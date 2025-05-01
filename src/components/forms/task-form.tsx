@@ -233,7 +233,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
     //     },
     //     onError: (error: any) => {
     //         console.error('Không thể tạo công việc:', error);
-    //         toast.error(error?.response?.data?.message);
+    //         toast(error?.response?.data?.message, { icon: '⚠️' });
     //     },
     // })
 
@@ -251,7 +251,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
             router.refresh();
         } catch (error: any) {
             console.error('Không thể tạo công việc:', error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         } finally {
             setIsSubmitting(false);
         }

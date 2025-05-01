@@ -47,7 +47,7 @@ export function DataTableRowActions({ row }: Props) {
             queryClient.invalidateQueries({ queryKey: ['configs'] });
             setOpenDelete(false);
         } catch (error: any) {
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         }
     };
 

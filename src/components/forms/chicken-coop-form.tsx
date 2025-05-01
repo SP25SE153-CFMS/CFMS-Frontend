@@ -86,7 +86,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -124,7 +124,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
     const regenerateCode = () => {
         const input = form.getValues('chickenCoopName');
         if (!input) {
-            toast.error('Vui lòng nhập tên chuồng gà trước');
+            toast('Vui lòng nhập tên chuồng gà trước', { icon: '⚠️' });
             return;
         }
 

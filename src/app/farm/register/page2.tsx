@@ -89,7 +89,7 @@ export default function Page() {
             router.push(config.routes.farm);
         },
         onError: (err: any) => {
-            toast.error(err?.response?.data?.message);
+            toast(err?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -102,7 +102,7 @@ export default function Page() {
     // Form error handler
     const onError = (error: any) => {
         console.error(error);
-        toast.error('Đã xảy ra lỗi');
+        toast('Đã xảy ra lỗi', { icon: '⚠️' });
     };
 
     // Handle location selection from map
@@ -134,7 +134,7 @@ export default function Page() {
                 setFormStep(1);
                 setActiveTab('location');
             } else {
-                toast.error('Vui lòng điền đầy đủ thông tin cơ bản');
+                toast('Vui lòng điền đầy đủ thông tin cơ bản', { icon: '⚠️' });
             }
         } else if (formStep === 1) {
             form.trigger(['latitude', 'longitude']);
@@ -146,7 +146,7 @@ export default function Page() {
                 setFormStep(2);
                 setActiveTab('contact');
             } else {
-                toast.error('Vui lòng chọn vị trí trang trại');
+                toast('Vui lòng chọn vị trí trang trại', { icon: '⚠️' });
             }
         }
     };

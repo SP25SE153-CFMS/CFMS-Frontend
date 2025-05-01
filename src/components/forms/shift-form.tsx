@@ -56,7 +56,7 @@ export default function ShiftForm({ defaultValues, closeDialog }: ShiftFormProps
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 

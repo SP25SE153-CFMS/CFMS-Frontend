@@ -78,7 +78,7 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra');
+            toast(error?.response?.data?.message || 'Có lỗi xảy ra', { icon: '⚠️' });
         },
     });
 

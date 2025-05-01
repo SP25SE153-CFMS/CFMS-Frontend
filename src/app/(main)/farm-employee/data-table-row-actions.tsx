@@ -59,7 +59,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -72,7 +72,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -246,7 +246,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                             onClick={handleUpdateStatus}
                             disabled={updateStatusMutation.isPending}
                         >
-                            {deleteMutation.isPending && (
+                            {updateStatusMutation.isPending && (
                                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                             )}
                             {userStatusLabels[status]}

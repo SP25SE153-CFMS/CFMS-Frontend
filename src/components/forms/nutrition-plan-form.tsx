@@ -44,7 +44,7 @@ import {
     Trash2,
     Weight,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { CreateNutritionPlanDetail } from '@/utils/schemas/nutrition-plan-detail.schema';
 import { SelectNative } from '@/components/ui/select-native';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -78,31 +78,41 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
         queryFn: () => getWarestockResourceByFarm(RESOURCE_TYPE_NAME),
     });
 
-    const [nutritionPlanDetails, setNutriPlanDetails] = useState<CreateNutritionPlanDetail[]>(
-        defaultValues?.nutritionPlanDetails?.length
-            ? defaultValues.nutritionPlanDetails
-            : [
-                  {
-                      foodId: foods?.[0]?.foodId ?? '',
-                      foodWeight: 0,
-                      unitId: '',
-                  },
-              ],
+    // Default unit
+    const defaultUnitId = useMemo(
+        () => getSubCategoryByCategoryType(CategoryType.WEIGHT_UNIT)?.[0]?.subCategoryId || '',
+        [],
     );
 
-    const [feedSessions, setFeedSessions] = useState<CreateFSWithoutNutriPlan[]>(
-        defaultValues?.feedSessions?.length
-            ? defaultValues.feedSessions
-            : [
-                  {
-                      startTime: '',
-                      endTime: '',
-                      feedAmount: 0,
-                      unitId: '',
-                      note: '',
-                  },
-              ],
-    );
+    // Initialize data
+    const initialNutritionDetails = defaultValues?.nutritionPlanDetails?.length
+        ? defaultValues.nutritionPlanDetails
+        : [
+              {
+                  foodId: foods?.[0]?.foodId ?? '',
+                  foodWeight: 0,
+                  unitId: defaultUnitId,
+              },
+          ];
+
+    // Initialize data
+    const initialFeedSessions = defaultValues?.feedSessions?.length
+        ? defaultValues.feedSessions
+        : [
+              {
+                  startTime: '',
+                  endTime: '',
+                  feedAmount: 0,
+                  unitId: defaultUnitId,
+                  note: '',
+              },
+          ];
+
+    const [nutritionPlanDetails, setNutriPlanDetails] =
+        useState<CreateNutritionPlanDetail[]>(initialNutritionDetails);
+
+    const [feedSessions, setFeedSessions] =
+        useState<CreateFSWithoutNutriPlan[]>(initialFeedSessions);
 
     // Initialize form
     const form = useForm<NutritionPlan>({
@@ -132,7 +142,7 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -153,7 +163,7 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
             {
                 foodId: foods?.[0]?.foodId ?? '',
                 foodWeight: 0,
-                unitId: '',
+                unitId: defaultUnitId,
             },
         ]);
     };
@@ -180,7 +190,7 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
                 startTime: '',
                 endTime: '',
                 feedAmount: 0,
-                unitId: '',
+                unitId: defaultUnitId,
                 note: '',
             },
         ]);

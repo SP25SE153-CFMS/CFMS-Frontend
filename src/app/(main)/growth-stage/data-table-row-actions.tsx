@@ -79,7 +79,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
     const handleDeleteNutritionPlan = async () => {
         if (!currentNutritionPlanOfGrowthStage) {
-            toast.error('Không tìm thấy chế độ dinh dưỡng');
+            toast('Không tìm thấy chế độ dinh dưỡng', { icon: '⚠️' });
             return;
         }
         await deleteNutritionPlanFromGrowthStage(
@@ -97,7 +97,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
         // Check if nutritionPlanId is valid
         if (!nutritionPlanId) {
-            toast.error('Không tìm thấy chế độ dinh dưỡng');
+            toast('Không tìm thấy chế độ dinh dưỡng', { icon: '⚠️' });
             return;
         }
 

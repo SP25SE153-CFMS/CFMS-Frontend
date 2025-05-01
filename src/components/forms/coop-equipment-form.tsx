@@ -81,7 +81,7 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 

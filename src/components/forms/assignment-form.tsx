@@ -105,7 +105,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -139,9 +139,9 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
 
         if (teamLeaderCount !== 1) {
             if (teamLeaderCount === 0) {
-                toast.error('Vui lòng chỉ định một Đội trưởng cho nhóm');
+                toast('Vui lòng chỉ định một Đội trưởng cho nhóm', { icon: '⚠️' });
             } else {
-                toast.error('Chỉ được phép có một Đội trưởng trong nhóm');
+                toast('Chỉ được phép có một Đội trưởng trong nhóm', { icon: '⚠️' });
             }
             return;
         }

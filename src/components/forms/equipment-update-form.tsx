@@ -44,7 +44,7 @@ export default function UpdateEquipmentForm({ equipment, closeDialog }: UpdateEq
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra');
+            toast(error?.response?.data?.message || 'Có lỗi xảy ra', { icon: '⚠️' });
         },
     });
 

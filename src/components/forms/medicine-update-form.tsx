@@ -48,7 +48,7 @@ export default function UpdateMedicineForm({ medicine, closeModal }: UpdateMedic
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra');
+            toast(error?.response?.data?.message || 'Có lỗi xảy ra', { icon: '⚠️' });
         },
     });
 

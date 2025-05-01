@@ -70,7 +70,9 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
         },
         onError: (error: any) => {
             console.error('Lỗi API:', error); // Log toàn bộ error object
-            toast.error(error?.response?.data?.message || error?.message || 'Lỗi không xác định');
+            toast(error?.response?.data?.message || error?.message || 'Lỗi không xác định', {
+                icon: '⚠️',
+            });
         },
     });
 

@@ -76,7 +76,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
             closeDialog();
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra');
+            toast(error?.response?.data?.message || 'Có lỗi xảy ra', { icon: '⚠️' });
         },
     });
 

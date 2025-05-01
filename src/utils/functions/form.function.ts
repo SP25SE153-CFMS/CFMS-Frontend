@@ -19,5 +19,5 @@ export const onError = (error: any) => {
     console.error(error);
     const firstKey = Object.keys(error)[0];
     const firstMessage = error[firstKey].message;
-    toast.error(firstMessage);
+    toast(firstMessage, { icon: '⚠️' });
 };

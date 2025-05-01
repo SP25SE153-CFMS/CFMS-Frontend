@@ -82,7 +82,7 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
             });
             toast.success('Kết thúc lứa nuôi thành công');
         } catch (error: any) {
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         }
     };
 

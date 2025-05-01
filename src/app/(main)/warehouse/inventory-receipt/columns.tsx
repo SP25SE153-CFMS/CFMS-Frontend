@@ -7,7 +7,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import { DataTableRowActions } from './data-table-row-actions';
 import { User } from '@/utils/schemas/user.schema';
-import { getReceiptType } from '@/utils/functions/category.function';
+import { getRequestType } from '@/utils/functions/category.function';
 
 export const columns: ColumnDef<InventoryReceipt>[] = [
     {
@@ -44,7 +44,7 @@ export const columns: ColumnDef<InventoryReceipt>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Loại phiếu" />,
         cell: ({ row }) => {
             const receiptTypeId = row.getValue('receiptTypeId') as string;
-            const receiptType = getReceiptType(receiptTypeId);
+            const receiptType = getRequestType(receiptTypeId);
             return <span>{receiptType ?? '-'}</span>;
         },
     },

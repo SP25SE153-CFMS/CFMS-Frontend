@@ -62,7 +62,7 @@ export function ConfigForm({ defaultValues, closeDialog }: ConfigFormProps) {
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
