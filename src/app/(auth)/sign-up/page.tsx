@@ -55,12 +55,13 @@ export default function SignUp() {
 
     const onError = (errors: FieldErrors<SignUpRequest>) => {
         console.log('Errors: ', errors);
-        toast.error(
+        toast(
             errors.fullname?.message ||
                 errors.phoneNumber?.message ||
                 errors.mail?.message ||
                 errors.password?.message ||
                 'Có lỗi xảy ra, vui lòng thử lại',
+            { icon: '⚠️' },
         );
     };
 

@@ -157,9 +157,9 @@ export default function ProfilePage() {
             toast.success('Ảnh đại diện đã được cập nhật.');
         },
         onError: (error: any) => {
-            toast.error(
-                error?.response?.data?.message || 'Có lỗi xảy ra khi cập nhật ảnh đại diện.',
-            );
+            toast(error?.response?.data?.message || 'Có lỗi xảy ra khi cập nhật ảnh đại diện.', {
+                icon: '⚠️',
+            });
             setAvatarPreview(null);
         },
         onSettled: () => {

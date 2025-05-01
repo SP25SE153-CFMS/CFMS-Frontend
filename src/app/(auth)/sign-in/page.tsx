@@ -55,8 +55,9 @@ export default function Page() {
     };
 
     const onError = (errors: FieldErrors<SignInRequest>) => {
-        toast.error(
+        toast(
             errors.mail?.message || errors.password?.message || 'Có lỗi xảy ra, vui lòng thử lại',
+            { icon: '⚠️' },
         );
     };
 
