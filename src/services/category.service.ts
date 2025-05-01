@@ -48,7 +48,7 @@ export const addSubCategory = async (body: SubCategory) => {
 export const updateSubCategory = async (body: SubCategory) => {
     const endpoint = PREFIX + '/updateSub';
     const response = await put<Response<string>>(endpoint, body);
-    return response.data.data;
+    return response.data;
 };
 
 export const getCategoryByType = async (type: CategoryType) => {
