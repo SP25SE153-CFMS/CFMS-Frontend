@@ -27,12 +27,15 @@ import { convertToThumbnailUrl } from '@/utils/functions';
 import { useTheme } from '@/context/theme-context';
 import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { useRouter } from 'next/navigation';
 
 export function ProfileDropdown() {
-    const router = useRouter();
+    // const router = useRouter();
 
-    const { data: currentUser, isLoading } = useQuery({
+    const {
+        data: currentUser,
+        isLoading,
+        refetch,
+    } = useQuery({
         queryKey: ['currentUser'],
         queryFn: async () => {
             const user = await getCurrentUser();
@@ -56,7 +59,8 @@ export function ProfileDropdown() {
     }
 
     if (!currentUser) {
-        router.push(config.routes.signIn);
+        refetch();
+        // router.push(config.routes.signIn);
         return null;
         // return (
         //     <Avatar className="size-8 rounded-lg">

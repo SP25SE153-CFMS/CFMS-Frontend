@@ -12,6 +12,15 @@ import {
     AlertCircleIcon,
     CheckCheck,
     RotateCw,
+    Tag,
+    Phone,
+    Mail,
+    Calendar,
+    MapPin,
+    IdCard,
+    Activity,
+    X,
+    Send,
 } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
@@ -51,6 +60,9 @@ import {
 } from '@/components/ui/dialog';
 import { NotificationResponse } from '@/utils/types/custom.type';
 import { acceptInvitation, rejectInvitation } from '@/services/farm.service';
+import InfoItem from '../info-item';
+import dayjs from 'dayjs';
+import { userStatusLabels, userStatusVariant } from '@/utils/enum/status.enum';
 
 function Dot({ className }: { className?: string }) {
     return (
@@ -336,13 +348,15 @@ export default function Notification() {
                                         <Avatar className="h-10 w-10 rounded-full object-cover">
                                             <AvatarImage
                                                 src={convertToThumbnailUrl(
-                                                    notification.user.avatar || '',
+                                                    notification.createdByUser?.avatar || '',
                                                 )}
-                                                alt={notification.user.fullName}
+                                                alt={notification.createdByUser?.fullName || ''}
                                                 className="rounded-sm object-contain"
                                             />
                                             <AvatarFallback className="rounded-sm">
-                                                {initials(notification.user.fullName)}
+                                                {initials(
+                                                    notification.createdByUser?.fullName || '',
+                                                )}
                                             </AvatarFallback>
                                         </Avatar>
                                         <div className="flex-1 space-y-1">
@@ -409,7 +423,8 @@ export default function Notification() {
             <Dialog open={farmCodeDialogOpen} onOpenChange={setFarmCodeDialogOpen}>
                 <DialogContent className="sm:max-w-md">
                     <DialogHeader>
-                        <DialogTitle>
+                        <DialogTitle className="flex items-center gap-2">
+                            <Send size={20} />
                             {(currentNotification && currentNotification?.notificationName) ||
                                 'Tham gia trang trại'}
                         </DialogTitle>
@@ -418,13 +433,91 @@ export default function Notification() {
                                 'Vui lòng nhập mã trang trại để xác nhận tham gia.'}
                         </DialogDescription>
                     </DialogHeader>
+                    {currentNotification?.createdByUser && (
+                        <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4 shadow-md">
+                            {/* <div className="flex justify-between items-center mb-4">
+                                <h3 className="font-bold pl-3 text-lg relative before:content-[''] before:absolute before:top-[3px] before:left-0 before:w-[4px] before:h-full before:bg-primary inline-block">
+                                    Thông tin chi tiết
+                                </h3>
+                            </div> */}
+
+                            <InfoItem
+                                label="Họ và tên"
+                                value={currentNotification.createdByUser?.fullName}
+                                icon={<Tag size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Số điện thoại"
+                                value={currentNotification.createdByUser?.phoneNumber || 'Không có'}
+                                icon={<Phone size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Email"
+                                value={currentNotification.createdByUser?.mail}
+                                icon={<Mail size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Ngày sinh"
+                                value={
+                                    currentNotification.createdByUser?.dateOfBirth
+                                        ? dayjs(
+                                              currentNotification.createdByUser?.dateOfBirth,
+                                          ).format('DD/MM/YYYY')
+                                        : 'Không có'
+                                }
+                                icon={<Calendar size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Địa chỉ"
+                                value={currentNotification.createdByUser?.address || 'Không có'}
+                                icon={<MapPin size={16} />}
+                            />
+
+                            <InfoItem
+                                label="CCCD"
+                                value={currentNotification.createdByUser?.cccd || 'Không có'}
+                                icon={<IdCard size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Trạng thái"
+                                value={
+                                    <Badge
+                                        variant={
+                                            userStatusVariant[
+                                                currentNotification.createdByUser?.status
+                                            ]
+                                        }
+                                    >
+                                        {
+                                            userStatusLabels[
+                                                currentNotification.createdByUser?.status
+                                            ]
+                                        }
+                                    </Badge>
+                                }
+                                icon={<Activity size={16} />}
+                            />
+
+                            {/* <InfoItem
+                                label="Vai trò hệ thống"
+                                value={`Vai trò ${currentNotification.createdByUser?.systemRole}`}
+                                icon={<User size={16} />}
+                            /> */}
+                        </div>
+                    )}
                     <DialogFooter className="sm:justify-between">
                         <Button
                             type="button"
-                            variant="outline"
+                            variant="destructive"
                             onClick={handleReject}
                             disabled={isSubmitting}
                         >
+                            <X className="h-4 w-4" />
                             Từ chối
                         </Button>
                         <Button type="button" onClick={handleAccept} disabled={isSubmitting}>
@@ -434,7 +527,10 @@ export default function Notification() {
                                     Đang xử lý...
                                 </>
                             ) : (
-                                'Chấp nhận'
+                                <>
+                                    <CheckCheck className="h-4 w-4" />
+                                    Chấp nhận
+                                </>
                             )}
                         </Button>
                     </DialogFooter>

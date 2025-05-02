@@ -66,7 +66,7 @@ export default function FarmEmployeeForm({ defaultValues, closeDialog }: AddEmpl
 
     const normalizedQuery = searchQuery.trim().toLowerCase();
     const filteredUsers = users?.filter((user) => {
-        const normalizedMail = user.mail.trim().toLowerCase();
+        const normalizedMail = user.mail?.trim().toLowerCase();
         const normalizedPhone = user.phoneNumber?.replace(/\s/g, '').trim();
         const normalizedCccd = user.cccd?.trim().toLowerCase();
         return (
