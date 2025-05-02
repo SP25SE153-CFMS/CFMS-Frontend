@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
-import { addDays, format } from 'date-fns';
+import { addDays } from 'date-fns';
 import { vi } from 'date-fns/locale';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -72,10 +72,12 @@ import { getWareByFarmId, getWarestockResourceByFarm } from '@/services/warehous
 import config from '@/configs';
 import { createTask } from '@/services/task.service';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
-import { capitalizeFirstLetter } from '@/utils/functions';
+import { formatDate } from '@/utils/functions';
 import dayjs from 'dayjs';
 import { TaskStatus } from '@/utils/enum/status.enum';
 import { LOCATION_TYPES } from '@/utils/enum/location-type.enum';
+import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
     const router = useRouter();
@@ -104,20 +106,30 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
         queryFn: () => getWarestockResourceByFarm(RESOURCE_TYPE_NAME),
     });
 
-    const resourceOptions = resources?.map((resource) => ({
-        value:
-            resource.equipmentId ||
-            resource.medicineId ||
-            resource.foodId ||
-            resource.harvestProductId ||
-            resource.chickenId,
-        label:
-            resource.equipmentName ||
-            resource.medicineName ||
-            resource.foodName ||
-            resource.harvestProductName ||
-            resource.chickenName,
-    }));
+    const resourceOptions = useMemo(() => {
+        if (!resources) return [];
+        // const filteredResources = resources.filter(
+        //     (resource) => Number(resource.specQuantity?.split(' ')?.[0]) > 0,
+        // );
+        // return filteredResources?.map((resource) => ({
+        return resources?.map((resource) => ({
+            value:
+                // resource.equipmentId ||
+                // resource.medicineId ||
+                // resource.foodId ||
+                // resource.harvestProductId ||
+                // resource.chickenId,
+                resource.resourceId,
+            label:
+                resource.equipmentName ||
+                resource.medicineName ||
+                resource.foodName ||
+                resource.harvestProductName ||
+                resource.chickenName,
+            specQuantity: resource.specQuantity,
+            unitSpecification: resource.unitSpecification,
+        }));
+    }, [resources]);
 
     const form = useForm<CreateTask>({
         resolver: zodResolver(CreateTaskSchema),
@@ -128,7 +140,8 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
             isHavest: false,
             status: TaskStatus.PENDING,
             frequency: 0,
-            timeUnitId: '',
+            timeUnitId:
+                getSubCategoryByCategoryType(CategoryType.TIME_UNIT)?.[0]?.subCategoryId || '',
             startWorkDate: new Date(),
             endWorkDate: new Date(),
             shiftIds: [],
@@ -148,14 +161,6 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
         control: form.control,
         name: 'taskResources',
     });
-
-    const formatDate = (date: Date) => {
-        if (date) {
-            const translatedDate = format(date, 'PPP', { locale: vi });
-            return capitalizeFirstLetter(translatedDate);
-        }
-        return 'Chọn ngày';
-    };
 
     const calculateWorkDates = useCallback(() => {
         const startDate = form.getValues('startWorkDate');
@@ -219,20 +224,34 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
         setSelectedDates(dates);
     }, [calculateWorkDates]);
 
+    // const mutation = useMutation({
+    //     mutationFn: (values: CreateTask) => createTask(values),
+    //     onSuccess: () => {
+    //         toast.success('Tạo công việc thành công');
+    //         router.push(config.routes.task);
+    //         router.refresh();
+    //     },
+    //     onError: (error: any) => {
+    //         console.error('Không thể tạo công việc:', error);
+    //         toast(error?.response?.data?.message, { icon: '⚠️' });
+    //     },
+    // })
+
     async function onSubmit(values: any) {
         setIsSubmitting(true);
         try {
-            console.log('Submitting form data:', values);
             values.startWorkDate = isFrequencyAssigned
                 ? calculateWorkDates().map((d) => dayjs(d).format('YYYY-MM-DD'))
                 : [dayjs(values.startWorkDate).format('YYYY-MM-DD')];
             values.endWorkDate = dayjs(values.endWorkDate).format('YYYY-MM-DD');
             values.isHavest = values.isHavest ? 1 : 0;
+            values.farmId = getCookie(config.cookies.farmId) ?? '';
             await createTask(values);
             router.push(config.routes.task);
             router.refresh();
-        } catch (error) {
+        } catch (error: any) {
             console.error('Không thể tạo công việc:', error);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         } finally {
             setIsSubmitting(false);
         }
@@ -347,7 +366,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                     )}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                         control={form.control}
                         name="isHavest"
@@ -369,7 +388,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                         )}
                     />
 
-                    {/* <FormField
+                    <FormField
                         control={form.control}
                         name="status"
                         render={({ field }) => (
@@ -407,8 +426,8 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                 <FormMessage />
                             </FormItem>
                         )}
-                    /> */}
-                </div>
+                    />
+                </div> */}
             </div>
         ),
         [form.control],
@@ -911,9 +930,29 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                                                     value={res.value}
                                                                 >
                                                                     {/* {getResourceName(res)} */}
-                                                                    {res.label}
+                                                                    <strong>{res.label}</strong>
+                                                                    <div className="text-sm text-muted-foreground mt-1">
+                                                                        <p>
+                                                                            Tồn kho:{' '}
+                                                                            {res.specQuantity}
+                                                                        </p>
+                                                                        <p>
+                                                                            Quy cách:{' '}
+                                                                            {res.unitSpecification}
+                                                                        </p>
+                                                                    </div>
                                                                 </SelectItem>
                                                             ))}
+                                                            {resourceOptions?.length === 0 && (
+                                                                <Link
+                                                                    href={config.routes.ware}
+                                                                    className="text-sm font-medium flex items-center p-2"
+                                                                >
+                                                                    <Plus className="w-4 h-4 mr-2" />
+                                                                    Nhấn vào đây để thêm vật phẩm
+                                                                    trong kho
+                                                                </Link>
+                                                            )}
                                                         </SelectContent>
                                                     </Select>
                                                     <FormMessage />

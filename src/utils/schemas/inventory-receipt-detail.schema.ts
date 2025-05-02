@@ -1,13 +1,11 @@
 import { z } from 'zod';
 
 export const InventoryReceiptDetailSchema = z.object({
-    inventoryReceiptDetailId: z
-        .string()
-        .uuid({ message: 'ID chi tiết phiếu nhập không hợp lệ, phải là UUID' }),
-    inventoryReceiptId: z.string().uuid({ message: 'ID phiếu nhập không hợp lệ, phải là UUID' }),
-    resourceId: z.string().uuid({ message: 'ID tài nguyên không hợp lệ, phải là UUID' }),
+    inventoryReceiptDetailId: z.string().uuid({ message: 'ID chi tiết phiếu nhập không hợp lệ' }),
+    inventoryReceiptId: z.string().uuid({ message: 'ID phiếu nhập không hợp lệ' }),
+    resourceId: z.string().uuid({ message: 'ID tài nguyên không hợp lệ' }),
     actualQuantity: z.coerce.number().positive({ message: 'Số lượng thực tế phải là số dương' }),
-    unitId: z.string().uuid({ message: 'ID đơn vị không hợp lệ, phải là UUID' }),
+    unitId: z.string().uuid({ message: 'ID đơn vị không hợp lệ' }),
     // reason: z.string().optional(),
     actualDate: z
         .string()

@@ -55,26 +55,31 @@ export const columns: ColumnDef<ChickenCoop>[] = [
         accessorKey: 'chickenCoopName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên chuồng" />,
         cell: ({ row }) => {
-            sessionStorage.setItem('currentCoop', JSON.stringify(row.original));
+            // sessionStorage.setItem('currentCoop', JSON.stringify(row.original));
             return (
-                <Link href={`/chicken-coop/${row.getValue('chickenCoopId')}`}>
+                <Link
+                    href={`/chicken-coop/${row.getValue('chickenCoopId')}`}
+                    onClick={() => {
+                        sessionStorage.setItem('currentCoop', JSON.stringify(row.original));
+                    }}
+                >
                     {row.getValue('chickenCoopName')}
                 </Link>
             );
         },
     },
-    {
-        accessorKey: 'maxQuantity',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Sức chứa" />,
-        cell: ({ row }) => <div className="w-[80px]">{row.getValue('maxQuantity') ?? '0'} con</div>,
-    },
     // {
-    //     accessorKey: 'currentQuantity',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng hiện tại" />,
-    //     cell: ({ row }) => (
-    //         <div className="w-[80px]">{row.getValue('currentQuantity') ?? '0'} con</div>
-    //     ),
+    //     accessorKey: 'maxQuantity',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Sức chứa" />,
+    //     cell: ({ row }) => <div className="w-[80px]">{row.getValue('maxQuantity') ?? '0'} con</div>,
     // },
+    {
+        accessorKey: 'currentQuantity',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng hiện tại" />,
+        cell: ({ row }) => (
+            <div className="w-[80px]">{row.getValue('currentQuantity') ?? '0'} con</div>
+        ),
+    },
     {
         accessorKey: 'areaUnitId', // Ensure the data exists in the row
         header: () => null, // No header

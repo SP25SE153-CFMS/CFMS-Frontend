@@ -40,28 +40,28 @@ export const columns: ColumnDef<WareStockResponse>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên thuốc" />,
         cell: ({ row }) => <div>{row.getValue('medicineName')}</div>,
     },
-    {
-        accessorKey: 'usage',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Cách sử dụng" />,
-        cell: ({ row }) => <div>{row.getValue('usage')}</div>,
-    },
-    {
-        accessorKey: 'dosageForm',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Liều lượng" />,
-        cell: ({ row }) => <div>{row.getValue('dosageForm')}</div>,
-    },
-    {
-        accessorKey: 'storageCondition',
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Điều kiện bảo quản" />
-        ),
-        cell: ({ row }) => <div>{row.getValue('storageCondition')}</div>,
-    },
-    {
-        accessorKey: 'disease',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Bệnh" />,
-        cell: ({ row }) => <div>{row.getValue('disease')}</div>,
-    },
+    // {
+    //     accessorKey: 'usage',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Cách sử dụng" />,
+    //     cell: ({ row }) => <div>{row.getValue('usage')}</div>,
+    // },
+    // {
+    //     accessorKey: 'dosageForm',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Liều lượng" />,
+    //     cell: ({ row }) => <div>{row.getValue('dosageForm')}</div>,
+    // },
+    // {
+    //     accessorKey: 'storageCondition',
+    //     header: ({ column }) => (
+    //         <DataTableColumnHeader column={column} title="Điều kiện bảo quản" />
+    //     ),
+    //     cell: ({ row }) => <div>{row.getValue('storageCondition')}</div>,
+    // },
+    // {
+    //     accessorKey: 'disease',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Bệnh" />,
+    //     cell: ({ row }) => <div>{row.getValue('disease')}</div>,
+    // },
     {
         accessorKey: 'productionDate',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày sản xuất" />,

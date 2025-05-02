@@ -1,19 +1,13 @@
 'use client';
 
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
-import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-    receiptStatusLabels,
-    receiptStatusVariant,
-    requestStatusLabels,
-    requestStatusVariant,
-} from '@/utils/enum/status.enum';
 import { InventoryReceipt } from '@/utils/schemas/inventory-receipt.schema';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import { DataTableRowActions } from './data-table-row-actions';
 import { User } from '@/utils/schemas/user.schema';
+import { getRequestType } from '@/utils/functions/category.function';
 
 export const columns: ColumnDef<InventoryReceipt>[] = [
     {
@@ -44,6 +38,15 @@ export const columns: ColumnDef<InventoryReceipt>[] = [
         accessorKey: 'inventoryReceiptId',
         header: () => null,
         cell: () => null,
+    },
+    {
+        accessorKey: 'receiptTypeId',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại phiếu" />,
+        cell: ({ row }) => {
+            const receiptTypeId = row.getValue('receiptTypeId') as string;
+            const receiptType = getRequestType(receiptTypeId);
+            return <span>{receiptType ?? '-'}</span>;
+        },
     },
     {
         accessorKey: 'receiptCodeNumber',

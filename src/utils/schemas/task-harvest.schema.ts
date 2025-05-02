@@ -1,16 +1,14 @@
 import { z } from 'zod';
 
 export const TaskHarvestSchema = z.object({
-    taskHarvestId: z
-        .string()
-        .uuid({ message: 'ID thu hoạch công việc không hợp lệ, phải là UUID' }),
-    taskId: z.string().uuid({ message: 'ID công việc không hợp lệ, phải là UUID' }),
-    harvestTypeId: z.string().uuid({ message: 'ID loại thu hoạch không hợp lệ, phải là UUID' }),
+    taskHarvestId: z.string().uuid({ message: 'ID thu hoạch công việc không hợp lệ' }),
+    taskId: z.string().uuid({ message: 'ID công việc không hợp lệ' }),
+    harvestTypeId: z.string().uuid({ message: 'ID loại thu hoạch không hợp lệ' }),
     quantity: z.coerce
         .number()
         .int()
         .nonnegative({ message: 'Số lượng phải là số nguyên không âm' }),
-    unitId: z.string().uuid({ message: 'ID đơn vị không hợp lệ, phải là UUID' }),
+    unitId: z.string().uuid({ message: 'ID đơn vị không hợp lệ' }),
     quality: z.string().optional(),
 });
 

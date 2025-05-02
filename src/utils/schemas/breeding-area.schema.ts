@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { BreedingAreaStatus } from '../enum/status.enum';
 
 export const BreedingAreaSchema = z.object({
-    breedingAreaId: z.string().uuid({ message: 'ID khu nuôi không hợp lệ, phải là UUID' }),
+    breedingAreaId: z.string().uuid({ message: 'ID khu nuôi không hợp lệ' }),
 
     breedingAreaCode: z
         .string()
@@ -18,13 +18,13 @@ export const BreedingAreaSchema = z.object({
 
     area: z.coerce.number().positive({ message: 'Diện tích phải là số dương' }),
 
-    areaUnitId: z.string().uuid({ message: 'Đơn vị diện tích không hợp lệ, phải là UUID' }),
+    areaUnitId: z.string().uuid({ message: 'Đơn vị diện tích không hợp lệ' }),
 
     imageUrl: z.string().trim().url({ message: 'Hình ảnh phải là URL hợp lệ' }),
 
     notes: z.string().max(500, { message: 'Ghi chú không được vượt quá 500 ký tự' }).optional(),
 
-    farmId: z.string().uuid({ message: 'ID trang trại không hợp lệ, phải là UUID' }),
+    farmId: z.string().uuid({ message: 'ID trang trại không hợp lệ' }),
 
     status: z.nativeEnum(BreedingAreaStatus, { message: 'Trạng thái không hợp lệ' }),
 });

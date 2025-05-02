@@ -33,6 +33,7 @@ import { userStatusLabels } from '@/utils/enum/status.enum';
 import { getCurrentUser } from '@/services/auth.service';
 import { uploadAvatar } from '@/services/user.service';
 import { convertToThumbnailUrl } from '@/utils/functions';
+import { onError } from '@/utils/functions/form.function';
 
 // Define the user profile schema
 const profileSchema = z.object({
@@ -71,7 +72,7 @@ export default function ProfilePage() {
     const queryClient = useQueryClient();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const { data: currentUser } = useQuery({
+    const { data: currentUser, refetch } = useQuery({
         queryKey: ['currentUser'],
         queryFn: () => getCurrentUser(),
     });
@@ -98,14 +99,14 @@ export default function ProfilePage() {
     // Setup mutation for updating profile
     const mutation = useMutation({
         mutationFn: updateUserProfile,
-        onSuccess: (data) => {
+        onSuccess: () => {
             // Update the cache with the new user data
-            queryClient.setQueryData(['currentUser'], data);
+            refetch();
             setIsEditing(false);
             toast.success('Thông tin cá nhân đã được cập nhật.');
         },
-        onError: (error: Error) => {
-            toast.error(error.message || 'Có lỗi xảy ra khi cập nhật thông tin.');
+        onError: (error: any) => {
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -121,13 +122,13 @@ export default function ProfilePage() {
 
         // Validate file type
         if (!file.type.startsWith('image/')) {
-            toast.error('Vui lòng chọn một tệp hình ảnh.');
+            toast('Vui lòng chọn một tệp hình ảnh.', { icon: '⚠️' });
             return;
         }
 
         // Validate file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
-            toast.error('Kích thước tệp không được vượt quá 5MB.');
+            toast('Kích thước tệp không được vượt quá 5MB.', { icon: '⚠️' });
             return;
         }
 
@@ -156,9 +157,9 @@ export default function ProfilePage() {
             toast.success('Ảnh đại diện đã được cập nhật.');
         },
         onError: (error: any) => {
-            toast.error(
-                error?.response?.data?.message || 'Có lỗi xảy ra khi cập nhật ảnh đại diện.',
-            );
+            toast(error?.response?.data?.message || 'Có lỗi xảy ra khi cập nhật ảnh đại diện.', {
+                icon: '⚠️',
+            });
             setAvatarPreview(null);
         },
         onSettled: () => {
@@ -336,7 +337,7 @@ export default function ProfilePage() {
                                     {isEditing ? (
                                         <Form {...form}>
                                             <form
-                                                onSubmit={form.handleSubmit(onSubmit)}
+                                                onSubmit={form.handleSubmit(onSubmit, onError)}
                                                 className="space-y-4"
                                             >
                                                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

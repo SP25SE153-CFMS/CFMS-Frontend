@@ -50,10 +50,10 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
             description: '',
             status: CommonStatus.ACTIVE,
             chickenTypeId: '',
-            unitId: '',
+            unitId: getSubCategoryByCategoryType(CategoryType.CHICKEN)?.[0].subCategoryId || '',
             packageId: '',
             packageSize: 0,
-            wareId: sessionStorage.getItem('wareId') || wareId,
+            wareId: sessionStorage.getItem('wareId') || wareId || '',
             ...defaultValues,
         },
     });
@@ -73,7 +73,7 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 

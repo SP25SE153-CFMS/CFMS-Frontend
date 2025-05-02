@@ -3,11 +3,13 @@ import { env } from '@/env';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { getCookie } from 'cookies-next';
 
+const API_BASE_URL = getCookie('API_URL') || env.NEXT_PUBLIC_API_URL || '';
+
 /**
  * Create an Axios instance with default configurations.
  */
 const axiosInstance: AxiosInstance = axios.create({
-    baseURL: env.NEXT_PUBLIC_API_URL, // Set API base URL
+    baseURL: API_BASE_URL, // Set API base URL
 });
 
 // Axios Response Interceptor to handle errors globally
@@ -43,7 +45,7 @@ export const request = <T>(
 ): Promise<AxiosResponse<T>> => {
     const accessToken = getCookie(config.cookies.accessToken);
 
-    const url = endpoint.startsWith('http') ? endpoint : env.NEXT_PUBLIC_API_URL + endpoint;
+    const url = endpoint.startsWith('http') ? endpoint : API_BASE_URL + endpoint;
 
     return axiosInstance({
         url,

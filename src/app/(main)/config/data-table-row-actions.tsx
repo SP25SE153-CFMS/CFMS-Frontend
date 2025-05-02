@@ -46,8 +46,8 @@ export function DataTableRowActions({ row }: Props) {
             toast.success('Xóa cấu hình thành công');
             queryClient.invalidateQueries({ queryKey: ['configs'] });
             setOpenDelete(false);
-        } catch (error) {
-            toast.error('Đã có lỗi xảy ra khi xóa cấu hình');
+        } catch (error: any) {
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         }
     };
 

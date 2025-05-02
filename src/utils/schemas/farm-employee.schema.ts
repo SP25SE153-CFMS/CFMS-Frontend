@@ -1,12 +1,10 @@
 import { z } from 'zod';
-import { FarmEmployeeStatus } from '../enum/status.enum';
+import { UserStatus } from '../enum/status.enum';
 
 export const FarmEmployeeSchema = z.object({
-    farmEmployeeId: z
-        .string()
-        .uuid({ message: 'ID nhân viên trang trại không hợp lệ, phải là UUID' }),
-    farmId: z.string().uuid({ message: 'ID trang trại không hợp lệ, phải là UUID' }),
-    userId: z.string().uuid({ message: 'ID người dùng không hợp lệ, phải là UUID' }),
+    farmEmployeeId: z.string().uuid({ message: 'ID nhân viên trang trại không hợp lệ' }),
+    farmId: z.string().uuid({ message: 'ID trang trại không hợp lệ' }),
+    userId: z.string().uuid({ message: 'ID người dùng không hợp lệ' }),
     startDate: z
         .string()
         .datetime({ message: 'Ngày bắt đầu không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
@@ -14,7 +12,8 @@ export const FarmEmployeeSchema = z.object({
         .string()
         .datetime({ message: 'Ngày kết thúc không hợp lệ, phải là định dạng ngày giờ hợp lệ' })
         .nullable(),
-    status: z.nativeEnum(FarmEmployeeStatus, { message: 'Trạng thái không hợp lệ' }),
+    // status: z.nativeEnum(FarmEmployeeStatus, { message: 'Trạng thái không hợp lệ' }),
+    status: z.nativeEnum(UserStatus, { message: 'Trạng thái không hợp lệ' }),
     farmRole: z.coerce.number().int({ message: 'Vai trò trang trại phải là số nguyên' }),
 });
 

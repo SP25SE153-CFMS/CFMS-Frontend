@@ -2,9 +2,9 @@ import { z } from 'zod';
 import { ChickenBatchStatus } from '../enum/status.enum';
 
 export const ChickenBatchSchema = z.object({
-    chickenBatchId: z.string().uuid({ message: 'ID lứa nuôi không hợp lệ, phải là UUID' }),
+    chickenBatchId: z.string().uuid({ message: 'ID lứa nuôi không hợp lệ' }),
 
-    chickenCoopId: z.string().uuid({ message: 'ID chuồng gà không hợp lệ, phải là UUID' }),
+    chickenCoopId: z.string().uuid({ message: 'ID chuồng gà không hợp lệ' }),
 
     chickenBatchName: z
         .string()

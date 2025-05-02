@@ -24,16 +24,15 @@ import Link from 'next/link';
 import config from '@/configs';
 import { signOutUser } from '@/utils/functions/sign-out.function';
 import { useQuery } from '@tanstack/react-query';
-import { getCurrentUser } from '@/services/auth.service';
 import { LoadingSpinner } from '../ui/loading-spinner';
 import { convertToThumbnailUrl } from '@/utils/functions';
+import { User } from '@/utils/schemas/user.schema';
 
 export default function SidebarFooterMenu() {
     const { isMobile } = useSidebar();
 
-    const { data: user, isLoading } = useQuery({
+    const { data: user, isLoading } = useQuery<User>({
         queryKey: ['currentUser'],
-        queryFn: () => getCurrentUser(),
     });
 
     if (isLoading) {

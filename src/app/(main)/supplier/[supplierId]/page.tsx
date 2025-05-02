@@ -86,7 +86,22 @@ export default function ResourceSuppliers() {
         return (
             <div className="flex flex-col items-center justify-center h-[calc(100vh-120px)] w-full text-muted-foreground">
                 <ClipboardListIcon className="w-12 h-12 mb-2 opacity-50" />
-                <p className="text-lg font-medium">Không có dữ liệu</p>
+                <p className="text-lg font-medium mb-4">Không có dữ liệu</p>
+                {/* <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant="outline">
+                            <Plus className="w-4 h-4" />
+                            Thêm mặt hàng
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Thêm mặt hàng</DialogTitle>
+                            <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
+                        </DialogHeader>
+                        <ResourceSupplierForm closeDialog={() => setOpen(false)} />
+                    </DialogContent>
+                </Dialog> */}
             </div>
         );
     }
@@ -128,7 +143,7 @@ export default function ResourceSuppliers() {
 
             <Tabs defaultValue="all" className="w-full flex-1 flex flex-col">
                 <TabsList
-                    className={`mb-4 w-full grid ${
+                    className={`mb-4 mx-auto w-fit grid ${
                         // Calculate grid columns based on visible tabs
                         `grid-cols-${
                             1 + // All tab
@@ -140,21 +155,21 @@ export default function ResourceSuppliers() {
                         }`
                     } h-auto p-1`}
                 >
-                    <TabsTrigger value="all" className="text-sm py-2">
+                    <TabsTrigger value="all" className="text-sm py-2 px-16">
                         Tất cả ({resources.length})
                     </TabsTrigger>
                     {foodResources.length > 0 && (
-                        <TabsTrigger value="food" className="text-sm py-2">
+                        <TabsTrigger value="food" className="text-sm py-2 px-16">
                             Thực phẩm ({foodResources.length})
                         </TabsTrigger>
                     )}
                     {medicineResources.length > 0 && (
-                        <TabsTrigger value="medicine" className="text-sm py-2">
+                        <TabsTrigger value="medicine" className="text-sm py-2 px-16">
                             Dược phẩm ({medicineResources.length})
                         </TabsTrigger>
                     )}
                     {equipmentResources.length > 0 && (
-                        <TabsTrigger value="equipment" className="text-sm py-2">
+                        <TabsTrigger value="equipment" className="text-sm py-2 px-16">
                             Thiết bị ({equipmentResources.length})
                         </TabsTrigger>
                     )}
@@ -164,7 +179,7 @@ export default function ResourceSuppliers() {
                         </TabsTrigger>
                     )}
                     {otherResources.length > 0 && (
-                        <TabsTrigger value="other" className="text-sm py-2">
+                        <TabsTrigger value="other" className="text-sm py-2 px-16">
                             Khác ({otherResources.length})
                         </TabsTrigger>
                     )}

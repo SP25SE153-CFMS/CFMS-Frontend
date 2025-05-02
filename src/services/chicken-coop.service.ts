@@ -14,7 +14,7 @@ export const getChickenCoops = async () => {
 
 export const getChickenCoopsByBreedingAreaId = async (breedingAreaId: string) => {
     const endpoint = PREFIX + '/BreedingArea/' + breedingAreaId;
-    const response = await get<Response<ChickenCoop[]>>(endpoint);
+    const response = await get<Response<ChickenCoopResponse[]>>(endpoint);
     return response.data.data;
 };
 

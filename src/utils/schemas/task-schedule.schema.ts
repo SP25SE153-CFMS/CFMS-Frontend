@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const TaskScheduleSchema = z.object({
-    taskScheduleId: z.string().uuid({ message: 'ID lịch công việc không hợp lệ, phải là UUID' }),
+    taskScheduleId: z.string().uuid({ message: 'ID lịch công việc không hợp lệ' }),
     frequency: z.coerce
         .number()
         .int()

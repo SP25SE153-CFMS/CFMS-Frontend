@@ -38,7 +38,7 @@ export default function ChickenBatchForm({
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message || 'Đã xảy ra lỗi');
+            toast(error?.response?.data?.message || 'Đã xảy ra lỗi', { icon: '⚠️' });
         },
     });
 

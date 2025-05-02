@@ -80,7 +80,7 @@ export default function Dashboard() {
                         <Image
                             width={400}
                             height={400}
-                            src={farmData.imageUrl || 'no-data.jpg'}
+                            src={farmData.imageUrl || 'example.com'}
                             alt={farmData.farmName}
                             className="rounded-lg shadow-lg object-cover h-[400px] w-full"
                             preview

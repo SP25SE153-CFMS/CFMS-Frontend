@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const RevokedTokenSchema = z.object({
-    revokedTokenId: z.string().uuid({ message: 'ID token bị thu hồi không hợp lệ, phải là UUID' }),
+    revokedTokenId: z.string().uuid({ message: 'ID token bị thu hồi không hợp lệ' }),
     token: z.string().min(1, { message: 'Token là bắt buộc' }),
     tokenType: z.coerce.number().int({ message: 'Loại token phải là số nguyên' }),
     revokedAt: z
@@ -10,7 +10,7 @@ export const RevokedTokenSchema = z.object({
     expiryDate: z
         .string()
         .datetime({ message: 'Ngày hết hạn không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
-    userId: z.string().uuid({ message: 'ID người dùng không hợp lệ, phải là UUID' }),
+    userId: z.string().uuid({ message: 'ID người dùng không hợp lệ' }),
 });
 
 export type RevokedToken = z.infer<typeof RevokedTokenSchema>;

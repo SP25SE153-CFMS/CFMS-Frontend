@@ -15,5 +15,10 @@ export type HarvestProduct = z.infer<typeof HarvestProductSchema>;
 
 export const CreateHarvestProductSchema = HarvestProductSchema.omit({
     harvestProductId: true,
+}).extend({
+    wareId: z.string().uuid({ message: 'Kho không hợp lệ' }),
+    packageId: z.string().uuid({ message: 'Quy cách đóng gói không hợp lệ' }),
+    unitId: z.string().uuid({ message: 'Đơn vị không hợp lệ' }),
+    packageSize: z.number().positive('Phải lớn hơn 0.'),
 });
 export type CreateHarvestProduct = z.infer<typeof CreateHarvestProductSchema>;

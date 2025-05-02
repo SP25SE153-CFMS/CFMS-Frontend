@@ -28,6 +28,7 @@ import { generateCode } from '@/utils/functions/generate-code.function';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { useState } from 'react';
+import { onError } from '@/utils/functions/form.function';
 
 interface GrowthStageFormProps {
     defaultValues?: Partial<GrowthStage>;
@@ -68,7 +69,7 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -78,15 +79,8 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
         mutation.mutate(newValues);
     }
 
-    // Form error handler
-    function onError(errors: any) {
-        console.error(errors);
-        toast.error('Có lỗi xảy ra, vui lòng kiểm tra lại thông tin');
-    }
-
     // eslint-disable-next-line no-unused-vars
-    const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
-        const input = e.target.value;
+    const handleGenerateCode = (input: string) => {
         const existingCodes = new Set(
             JSON.parse(sessionStorage.getItem('growthStages') || '[]').map(
                 (stage: GrowthStage) => stage.stageCode,
@@ -102,13 +96,10 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
 
         form.setValue('stageCode', code);
         form.setValue('stageName', input);
+        setNewStageCode(code);
     };
 
-    const [growthStages, setGrowthStages] = useState<GrowthStage[]>(
-        JSON.parse(sessionStorage.getItem('growthStages') || '[]'),
-    );
     const [newStageCode, setNewStageCode] = useState('');
-    const [isAdding, setIsAdding] = useState(false);
 
     return (
         <Form {...form}>
@@ -125,7 +116,6 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                                     <Input
                                         type="text"
                                         placeholder="Nhập tên giai đoạn"
-                                        disabled={defaultValues !== undefined}
                                         {...field}
                                         // onBlur={handleGenerateCode}
                                     />
@@ -140,89 +130,60 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                         control={form.control}
                         name="stageCode"
                         render={({ field }) => {
-                            const handleAddStage = () => {
-                                if (newStageCode.trim()) {
-                                    const newStage = {
-                                        growthStageId: `new-${Date.now()}`, // Generate a unique ID
-                                        stageCode: newStageCode,
-                                        stageName: '',
-                                        chickenType: '',
-                                        minAgeWeek: 0,
-                                        maxAgeWeek: 0,
-                                        farmId: '',
-                                        description: '',
-                                    };
-                                    const updatedStages = [...growthStages, newStage];
-                                    setGrowthStages(updatedStages);
-                                    sessionStorage.setItem(
-                                        'growthStages',
-                                        JSON.stringify(updatedStages),
-                                    );
-                                    setNewStageCode('');
-                                    setIsAdding(false);
-                                    field.onChange(newStage.growthStageId); // Set the new value
-                                }
-                            };
+                            const growthStages = JSON.parse(
+                                sessionStorage.getItem('growthStages') || '[]',
+                            ) as GrowthStage[];
+                            const uniqueGrowthStages = Array.from(
+                                new Map(
+                                    growthStages.map((stage) => [stage.stageCode, stage]),
+                                ).values(),
+                            );
 
                             return (
                                 <FormItem>
                                     <FormLabel>Mã giai đoạn</FormLabel>
                                     <FormControl>
                                         <Select
-                                            onValueChange={(value) => {
-                                                if (value === 'add-new') {
-                                                    setIsAdding(true);
-                                                } else {
-                                                    field.onChange(value);
-                                                }
-                                            }}
+                                            onValueChange={field.onChange}
                                             defaultValue={field.value}
+                                            disabled={!!defaultValues}
                                         >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Chọn mã giai đoạn" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {growthStages?.map((stage) => (
+                                                <Input
+                                                    defaultValue={newStageCode}
+                                                    placeholder="Gõ vào đây để thêm mã giai đoạn mới"
+                                                    onClick={() => {
+                                                        if (!newStageCode) {
+                                                            handleGenerateCode(
+                                                                form.getValues('stageName'),
+                                                            );
+                                                        }
+                                                    }}
+                                                    onChange={(e) => {
+                                                        field.onChange(e.target.value);
+                                                        setNewStageCode(e.target.value);
+                                                    }}
+                                                    className="text-sm"
+                                                />
+                                                {uniqueGrowthStages?.map((stage) => (
                                                     <SelectItem
-                                                        key={stage.growthStageId}
-                                                        value={stage.growthStageId}
+                                                        key={stage.stageCode}
+                                                        value={stage.stageCode}
                                                     >
                                                         {stage.stageCode}
                                                     </SelectItem>
                                                 ))}
-                                                <SelectItem value="add-new">
-                                                    + Thêm mã giai đoạn mới
-                                                </SelectItem>
+                                                {newStageCode && (
+                                                    <SelectItem value={newStageCode}>
+                                                        {newStageCode}
+                                                    </SelectItem>
+                                                )}
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
-                                    {isAdding && (
-                                        <div className="mt-2">
-                                            <input
-                                                type="text"
-                                                value={newStageCode}
-                                                onChange={(e) => setNewStageCode(e.target.value)}
-                                                placeholder="Nhập mã giai đoạn mới"
-                                                className="border rounded px-2 py-1 w-full"
-                                            />
-                                            <div className="flex justify-end mt-2">
-                                                <button
-                                                    type="button"
-                                                    onClick={handleAddStage}
-                                                    className="bg-blue-500 text-white px-4 py-1 rounded mr-2"
-                                                >
-                                                    Thêm
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setIsAdding(false)}
-                                                    className="bg-gray-300 px-4 py-1 rounded"
-                                                >
-                                                    Hủy
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
                                     <FormMessage />
                                 </FormItem>
                             );
@@ -293,7 +254,7 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                                 <FormControl>
                                     <Input
                                         type="number"
-                                        min={0}
+                                        min={1}
                                         placeholder="Nhập tuổi kết thúc (tuần)"
                                         {...field}
                                     />

@@ -63,29 +63,35 @@ export type ChickenResponse = Chicken & {
 
 export type GrowthStageResponse = GrowthStage & {
     nutritionPlanId: string;
+    nutritionPlan: NutritionPlan;
 };
 
 export type GrowthBatchResponse = GrowthBatch & {
     growthStage: GrowthStageResponse;
 };
 
-export type ChickenBatchResponse = ChickenBatch & {
-    vaccineLogs: VaccinationLog[];
-    healthLogs: HealthLog[];
-    quantityLogs: QuantityLog[];
-    feedLogs: FeedLog[];
-    chicken: ChickenResponse;
-    growthBatches: GrowthBatchResponse[];
-    currentStageId: string;
-    chickenDetails: ChickenDetail[];
-};
+export type ChickenBatchResponse = ChickenBatch &
+    DashboardChickenBatch & {
+        vaccineLogs: VaccinationLog[];
+        healthLogs: HealthLog[];
+        quantityLogs: QuantityLog[];
+        feedLogs: FeedLog[];
+        chicken: ChickenResponse;
+        growthBatches: GrowthBatchResponse[];
+        currentStageId: string;
+        chickenDetails: ChickenDetail[];
+        minGrowDays: number;
+        maxGrowDays: number;
+        initChickenQuantity: number;
+    };
 
 export type CategoryResponse = Category & {
     subCategories: SubCategory[];
     chickens?: ChickenResponse[];
 };
 
-export type ChickenTypeResponse = SubCategory & {
+export type ChickenTypeResponse = {
+    chickenType: SubCategory;
     chickens: Chicken[];
 };
 
@@ -102,6 +108,15 @@ export type StartChickenBatch = {
     chickenDetailRequests: ChickenDetailRequest[];
     minGrowDays: number;
     maxGrowDays: number;
+};
+
+export type ExportChicken = {
+    chickenBatchId: string;
+    logDate: string | Date;
+    notes: string;
+    quantityLogDetails: ChickenDetailRequest[];
+    logType: number;
+    imageUrl?: string;
 };
 
 export type SplitChickenBatch = Omit<StartChickenBatch, 'chickenId'> & {
@@ -235,7 +250,12 @@ export type WarestockResourceByType = Food &
     Equipment &
     Medicine &
     HarvestProduct &
-    Chicken & { resourceId: string };
+    Chicken & {
+        specQuantity: string;
+        unitSpecification: string;
+        supplierName: string;
+        resourceId: string;
+    };
 
 export type InventoryReceiptRequest = CreateInventoryReceipt & {
     requestId: string;
@@ -243,7 +263,7 @@ export type InventoryReceiptRequest = CreateInventoryReceipt & {
 };
 
 export type DashboardChickenBatch = {
-    activeChicken: number;
+    aliveChicken: number;
     deadthChicken: number;
     totalChicken: number;
 };
@@ -271,8 +291,29 @@ export type RequestResponse = EntityAudit &
         inventoryRequests: InventoryRequestResponse[];
     };
 
+export type FarmResponse = Farm & {
+    farmRole: number;
+};
+
+type EmployeeInvitation = {
+    userId: string;
+};
+
+export type InviteEnrollRequest = {
+    farmCode: string;
+    methodAccess: string;
+    farmRole: number;
+    employeesInvitation: EmployeeInvitation[];
+};
+
+export type InviteEnrollDecisionRequest = {
+    notificationId: string;
+    decision: number;
+};
+
 export type ReceiptResponse = InventoryReceipt &
-    EntityAudit & Resource & {
+    EntityAudit &
+    Resource & {
         inventoryReceiptDetails: InventoryReceiptDetail[];
         receiptCodeNumber: string;
         wareFrom: WarehouseResponse;

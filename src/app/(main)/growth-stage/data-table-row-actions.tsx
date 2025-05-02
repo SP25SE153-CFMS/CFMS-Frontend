@@ -9,7 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Trash, Trash2 } from 'lucide-react';
+import { Plus, Trash, Trash2 } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogContent,
@@ -44,6 +44,8 @@ import {
 } from '@/components/ui/select';
 import { getNutritionPlans } from '@/services/nutrition-plan.service';
 import { GrowthStageResponse } from '@/utils/types/custom.type';
+import Link from 'next/link';
+import config from '@/configs';
 
 interface Props<T> {
     row: Row<T>;
@@ -77,7 +79,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
     const handleDeleteNutritionPlan = async () => {
         if (!currentNutritionPlanOfGrowthStage) {
-            toast.error('Không tìm thấy chế độ dinh dưỡng');
+            toast('Không tìm thấy chế độ dinh dưỡng', { icon: '⚠️' });
             return;
         }
         await deleteNutritionPlanFromGrowthStage(
@@ -95,7 +97,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
         // Check if nutritionPlanId is valid
         if (!nutritionPlanId) {
-            toast.error('Không tìm thấy chế độ dinh dưỡng');
+            toast('Không tìm thấy chế độ dinh dưỡng', { icon: '⚠️' });
             return;
         }
 
@@ -191,6 +193,15 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                                             {nutritionPlan.name}
                                         </SelectItem>
                                     ))}
+                                    {nutritionPlans?.length === 0 && (
+                                        <Link
+                                            href={config.routes.nutritionPlan}
+                                            className="text-sm font-medium flex items-center p-2"
+                                        >
+                                            <Plus className="w-4 h-4 mr-2" />
+                                            Nhấn vào đây để tạo chế độ dinh dưỡng
+                                        </Link>
+                                    )}
                                 </SelectContent>
                             </Select>
                         </div>

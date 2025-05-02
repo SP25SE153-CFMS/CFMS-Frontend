@@ -2,7 +2,7 @@
 import SubCateDisplay from '@/components/badge/BadgeReceipt';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormField, FormLabel } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
     Table,
@@ -38,7 +38,7 @@ import { useForm } from 'react-hook-form';
 export default function RequestDetail() {
     const router = useRouter();
     const { requestId }: { requestId: string } = useParams();
-    console.log('Request ID:', requestId);
+    // console.log('Request ID:', requestId);
 
     const { data: requestDetail } = useQuery({
         queryKey: ['requestDetail', requestId],
@@ -51,6 +51,7 @@ export default function RequestDetail() {
     });
 
     const subCategoryName = subCate?.subCategoryName;
+    const receiptType = requestDetail?.requestTypeId;
 
     const form = useForm<CreateInventoryReceipt>({
         resolver: zodResolver(CreateInventoryReceiptSchema),
@@ -59,7 +60,7 @@ export default function RequestDetail() {
             inventoryRequestId: '',
             wareFromId: '',
             wareToId: '',
-            receiptTypeId: '',
+            receiptTypeId: receiptType,
             batchNumber: 0,
             resourceId: '',
             actualQuantity: 0,
@@ -89,24 +90,17 @@ export default function RequestDetail() {
 
     return (
         <div className="container mx-auto p-6">
-            {requestDetail.inventoryRequests.map((detail) => {
+            <h1>
+                Tạo phiếu <SubCateDisplay id={requestDetail.requestTypeId} mode="description" />
+            </h1>
+            {requestDetail.inventoryRequests.map((request) => {
                 return (
-                    <div key={detail.requestId}>
-                        <h1>
-                            Chi tiết phiếu:{' '}
-                            <SubCateDisplay id={detail.inventoryRequestTypeId} mode="badge" />
-                        </h1>
-
+                    <div key={request.requestId}>
                         <Form {...form}>
                             <form>
                                 <div>
                                     {/* inventoryRequestId */}
-                                    {/* receiptTypeId */}
-                                    {/* batchNumber */}
-                                    {/* resourceId */}
-                                    {/* actualQuantity */}
-                                    {/* unitId */}
-                                    {/* note */}
+
                                     {(subCategoryName === 'IMPORT' ||
                                         subCategoryName === 'EXPORT') && (
                                         <FormField
@@ -139,6 +133,35 @@ export default function RequestDetail() {
                                             )}
                                         />
                                     )}
+
+                                    {/* note */}
+                                    <FormField
+                                        control={form.control}
+                                        name="note"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Ghi chú</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="Ghi chú" {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+{/* 
+                                    {request.inventoryRequestDetails.map((d) => {
+                                        return (
+                                            <div>
+                                                {/* batchNumber */}
+                                                <p>Số lượng cần nhập: {d.expectedQuantity}</p>
+
+                                                {/* resourceId */}
+                                                <p>Resource ID: {d.resourceId}</p>
+                                            </div>
+                                        );
+                                    })} */}
+
+                                    {/* actualQuantity */}
+                                    {/* unitId */}
                                 </div>
                             </form>
                         </Form>

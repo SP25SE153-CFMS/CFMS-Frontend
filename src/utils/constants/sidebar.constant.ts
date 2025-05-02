@@ -1,5 +1,5 @@
 import config from '@/configs';
-import { LucideIcon, Egg, House, UsersRound, Warehouse } from 'lucide-react';
+import { LucideIcon, House, UsersRound, Warehouse, AudioWaveform } from 'lucide-react';
 
 export interface NavSubItem {
     title: string;
@@ -39,7 +39,7 @@ export const sidebarItems: NavGroup[] = [
             {
                 title: 'Quản lý lứa nuôi',
                 path: basePath,
-                icon: Egg,
+                icon: AudioWaveform,
                 subItems: [
                     { title: 'Danh sách lứa nuôi', path: config.routes.chickenBatch },
                     // { title: 'Danh sách giống gà', path: config.routes.chicken },

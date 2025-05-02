@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Calendar, Clock, Egg, Home, Info, Type, Users } from 'lucide-react';
+import { Box, Calendar, Clock, Crown, Egg, Home, Info, Plus, Type, Users } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -18,16 +18,26 @@ import { getTaskById } from '@/services/task.service';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import Image from '@/components/fallback-image';
-import { taskStatusLabels, taskStatusVariant } from '@/utils/enum/status.enum';
+import { TaskStatus, taskStatusLabels, taskStatusVariant } from '@/utils/enum/status.enum';
 import { formatDate } from '@/utils/functions';
 import { Badge } from '@/components/ui/badge';
 import config from '@/configs';
 import dayjs from 'dayjs';
 import InfoItem from '@/components/info-item';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { TaskLocationResponse } from '@/utils/types/custom.type';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import AssignmentForm from '@/components/forms/assignment-form';
 
 export default function TaskDetail() {
+    const [open, setOpen] = useState(false);
     const { taskId }: { taskId: string } = useParams();
     const router = useRouter();
 
@@ -164,7 +174,7 @@ export default function TaskDetail() {
                                                             Số lượng
                                                         </TableHead>
                                                         <TableHead className="text-right dark:text-slate-200">
-                                                            Đơn vị
+                                                            Quy cách
                                                         </TableHead>
                                                     </TableRow>
                                                 </TableHeader>
@@ -301,10 +311,28 @@ export default function TaskDetail() {
 
                 <div className="w-full md:w-1/3 space-y-6">
                     <Card className="w-full shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <CardHeader className="border-b ">
+                        <CardHeader className="border-b flex flex-row justify-between items-center">
                             <CardTitle className="text-lg flex items-center gap-2 dark:text-white">
-                                <Users className="h-5 w-5 text-primary" /> Phân công nhân viên
+                                <Users className="h-5 w-5 text-primary" /> Phân công
                             </CardTitle>
+
+                            {task?.status === TaskStatus.PENDING && (
+                                <Dialog open={open} onOpenChange={setOpen}>
+                                    <DialogTrigger asChild className="h-auto">
+                                        <Button variant="outline">
+                                            <Plus className="mr-2 h-4 w-4" />
+                                            Giao việc
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="max-w-4xl">
+                                        <DialogHeader>
+                                            <DialogTitle>Giao công việc mới</DialogTitle>
+                                        </DialogHeader>
+
+                                        <AssignmentForm closeDialog={() => setOpen(false)} />
+                                    </DialogContent>
+                                </Dialog>
+                            )}
                         </CardHeader>
                         <CardContent className="pt-4">
                             {task.assignments && task.assignments.length ? (
@@ -327,15 +355,24 @@ export default function TaskDetail() {
                                             {task.assignments.map((assignment, index) => (
                                                 <TableRow
                                                     key={index}
-                                                    className="hover:bg-slate-50 dark:hover:bg-slate-700 "
+                                                    className="hover:bg-slate-50 dark:hover:bg-slate-700"
                                                 >
                                                     <TableCell className="dark:text-slate-300">
-                                                        {/* {farmEmployees?.find(
-                                                            (e) =>
-                                                                e.userId ===
-                                                                assignment.assignedToId,
-                                                        )?.user?.fullName ?? 'N/A'} */}
-                                                        {assignment.assignedTo}
+                                                        <div className="flex items-center gap-1.5">
+                                                            {assignment.assignedTo}
+                                                            {assignment.status === 0 && (
+                                                                <TooltipProvider>
+                                                                    <Tooltip>
+                                                                        <TooltipTrigger asChild>
+                                                                            <Crown className="h-4 w-4 text-amber-500" />
+                                                                        </TooltipTrigger>
+                                                                        <TooltipContent>
+                                                                            <p>Đội trưởng</p>
+                                                                        </TooltipContent>
+                                                                    </Tooltip>
+                                                                </TooltipProvider>
+                                                            )}
+                                                        </div>
                                                     </TableCell>
                                                     <TableCell className="dark:text-slate-300">
                                                         {assignment.assignedDate

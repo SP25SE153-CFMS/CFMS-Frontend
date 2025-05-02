@@ -44,7 +44,7 @@ import {
     Trash2,
     Weight,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { CreateNutritionPlanDetail } from '@/utils/schemas/nutrition-plan-detail.schema';
 import { SelectNative } from '@/components/ui/select-native';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -56,6 +56,9 @@ import { TimePicker } from '../ui/time-picker';
 import { useRouter } from 'next/navigation';
 import config from '@/configs';
 import { getWarestockResourceByFarm } from '@/services/warehouse.service';
+import { getCookie } from 'cookies-next';
+import { onError } from '@/utils/functions/form.function';
+import Link from 'next/link';
 
 interface NutritionPlanFormProps {
     defaultValues?: Partial<NutritionPlan>;
@@ -75,30 +78,41 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
         queryFn: () => getWarestockResourceByFarm(RESOURCE_TYPE_NAME),
     });
 
-    const [nutritionPlanDetails, setNutriPlanDetails] = useState<CreateNutritionPlanDetail[]>(
-        defaultValues?.nutritionPlanDetails?.length
-            ? defaultValues.nutritionPlanDetails
-            : [
-                  {
-                      foodId: foods?.[0]?.foodId ?? '',
-                      foodWeight: 0,
-                      unitId: '',
-                  },
-              ],
+    // Default unit
+    const defaultUnitId = useMemo(
+        () => getSubCategoryByCategoryType(CategoryType.WEIGHT_UNIT)?.[0]?.subCategoryId || '',
+        [],
     );
 
-    const [feedSessions, setFeedSessions] = useState<CreateFSWithoutNutriPlan[]>(
-        defaultValues?.feedSessions?.length
-            ? defaultValues.feedSessions
-            : [
-                  {
-                      feedingTime: '',
-                      feedAmount: 0,
-                      unitId: '',
-                      note: '',
-                  },
-              ],
-    );
+    // Initialize data
+    const initialNutritionDetails = defaultValues?.nutritionPlanDetails?.length
+        ? defaultValues.nutritionPlanDetails
+        : [
+              {
+                  foodId: foods?.[0]?.foodId ?? '',
+                  foodWeight: 0,
+                  unitId: defaultUnitId,
+              },
+          ];
+
+    // Initialize data
+    const initialFeedSessions = defaultValues?.feedSessions?.length
+        ? defaultValues.feedSessions
+        : [
+              {
+                  startTime: '',
+                  endTime: '',
+                  feedAmount: 0,
+                  unitId: defaultUnitId,
+                  note: '',
+              },
+          ];
+
+    const [nutritionPlanDetails, setNutriPlanDetails] =
+        useState<CreateNutritionPlanDetail[]>(initialNutritionDetails);
+
+    const [feedSessions, setFeedSessions] =
+        useState<CreateFSWithoutNutriPlan[]>(initialFeedSessions);
 
     // Initialize form
     const form = useForm<NutritionPlan>({
@@ -118,7 +132,6 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
     const mutation = useMutation({
         mutationFn: defaultValues ? updateNutritionPlan : createNutritionPlan,
         onSuccess: () => {
-            // closeDialog?.();
             queryClient.invalidateQueries({ queryKey: ['nutritionPlans'] });
             toast.success(
                 defaultValues
@@ -129,7 +142,7 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -139,14 +152,10 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
             ...values,
             nutritionPlanDetails,
             feedSessions,
+            farmId: getCookie(config.cookies.farmId) ?? '',
         };
         mutation.mutate(newValues);
     }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
 
     const addNutriPlanDetail = () => {
         setNutriPlanDetails([
@@ -154,7 +163,7 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
             {
                 foodId: foods?.[0]?.foodId ?? '',
                 foodWeight: 0,
-                unitId: '',
+                unitId: defaultUnitId,
             },
         ]);
     };
@@ -178,9 +187,10 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
         setFeedSessions([
             ...feedSessions,
             {
-                feedingTime: '',
+                startTime: '',
+                endTime: '',
                 feedAmount: 0,
-                unitId: '',
+                unitId: defaultUnitId,
                 note: '',
             },
         ]);
@@ -356,6 +366,21 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
                                                                                     {food.foodName}
                                                                                 </SelectItem>
                                                                             ))}
+                                                                            {foods?.length ===
+                                                                                0 && (
+                                                                                <Link
+                                                                                    href={
+                                                                                        config
+                                                                                            .routes
+                                                                                            .ware
+                                                                                    }
+                                                                                    className="text-sm font-medium flex items-center p-2"
+                                                                                >
+                                                                                    <Plus className="w-4 h-4 mr-2" />
+                                                                                    Nhấn vào đây để
+                                                                                    tạo thức ăn
+                                                                                </Link>
+                                                                            )}
                                                                         </SelectContent>
                                                                     </Select>
                                                                 </FormControl>
@@ -505,25 +530,55 @@ export default function NutritionPlanForm({ defaultValues }: NutritionPlanFormPr
                                 feedSessions.map((item, index) => (
                                     <Card key={index} className="border border-muted">
                                         <CardContent className="p-4">
-                                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                                                 <div className="space-y-4">
-                                                    {/* Feeding Time Selection */}
+                                                    {/* Start Time Selection */}
                                                     <FormField
                                                         control={form.control}
-                                                        name={`feedSessions.${index}.feedingTime`}
+                                                        name={`feedSessions.${index}.startTime`}
                                                         render={() => (
                                                             <FormItem>
                                                                 <FormLabel className="flex items-center">
                                                                     <Clock className="mr-1 h-4 w-4 text-primary" />
-                                                                    Thời gian cho ăn
+                                                                    Thời gian bắt đầu
                                                                 </FormLabel>
                                                                 <FormControl>
                                                                     <TimePicker
-                                                                        value={item.feedingTime}
+                                                                        value={item.startTime}
                                                                         onChange={(value) =>
                                                                             updateFeedSession(
                                                                                 index,
-                                                                                'feedingTime',
+                                                                                'startTime',
+                                                                                value,
+                                                                            )
+                                                                        }
+                                                                        className="w-full"
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </div>
+
+                                                <div className="space-y-4">
+                                                    {/* End Time Selection */}
+                                                    <FormField
+                                                        control={form.control}
+                                                        name={`feedSessions.${index}.endTime`}
+                                                        render={() => (
+                                                            <FormItem>
+                                                                <FormLabel className="flex items-center">
+                                                                    <Clock className="mr-1 h-4 w-4 text-primary" />
+                                                                    Thời gian kết thúc
+                                                                </FormLabel>
+                                                                <FormControl>
+                                                                    <TimePicker
+                                                                        value={item.endTime}
+                                                                        onChange={(value) =>
+                                                                            updateFeedSession(
+                                                                                index,
+                                                                                'endTime',
                                                                                 value,
                                                                             )
                                                                         }

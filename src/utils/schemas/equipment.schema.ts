@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const EquipmentSchema = z.object({
-    equipmentId: z.string().uuid({ message: 'ID thiết bị không hợp lệ, phải là UUID' }),
+    equipmentId: z.string().uuid({ message: 'ID thiết bị không hợp lệ' }),
     equipmentCode: z
         .string()
         .trim()
@@ -25,9 +25,9 @@ export const EquipmentSchema = z.object({
 
 export type Equipment = z.infer<typeof EquipmentSchema>;
 export const CreateEquipmentSchema = EquipmentSchema.omit({ equipmentId: true }).extend({
-    wareId: z.string().uuid({ message: 'Kho không hợp lệ, phải là UUID' }),
-    packageId: z.string().uuid({ message: 'Quy cách đóng gói không hợp lệ, phải là UUID' }),
-    unitId: z.string().uuid({ message: 'Đơn vị không hợp lệ, phải là UUID' }),
+    wareId: z.string().uuid({ message: 'Kho không hợp lệ' }),
+    packageId: z.string().uuid({ message: 'Quy cách đóng gói không hợp lệ' }),
+    unitId: z.string().uuid({ message: 'Đơn vị không hợp lệ' }),
     packageSize: z.number().positive('Phải lớn hơn 0.'),
 });
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { BookCopy, ChevronRight, Settings, Settings2 } from 'lucide-react';
+import { BookCopy, ChevronRight, PanelsTopLeft, Settings, Settings2 } from 'lucide-react';
 import {
     SidebarGroup,
     SidebarGroupContent,
@@ -17,6 +17,8 @@ import config from '@/configs';
 import Link from 'next/link';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { CategoryResponse } from '@/utils/types/custom.type';
+import { getCookie } from 'cookies-next';
+import { FarmRole } from '@/utils/enum';
 
 export default function SidebarOverview({
     categories,
@@ -52,6 +54,7 @@ export default function SidebarOverview({
             </>
         );
     };
+
     // Return the page
     return (
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -59,14 +62,16 @@ export default function SidebarOverview({
             <SidebarGroupContent>
                 <SidebarMenu>
                     {/* Dashboard */}
-                    {/* <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                            <Link href={config.routes.welcome}>
-                                <PanelsTopLeft />
-                                <span>Trang chủ</span>
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem> */}
+                    {getCookie(config.cookies.farmRole) === FarmRole.OWNER?.toString() && (
+                        <SidebarMenuItem>
+                            <SidebarMenuButton asChild>
+                                <Link href={config.routes.dashboard}>
+                                    <PanelsTopLeft />
+                                    <span>Trang chủ</span>
+                                </Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    )}
 
                     {/* Common Category */}
                     <Collapsible className="group/collapsible">

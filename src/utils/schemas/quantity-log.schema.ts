@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 export const QuantityLogSchema = z.object({
-    quantityLogId: z.string().uuid({ message: 'ID nhật ký số lượng không hợp lệ, phải là UUID' }),
-    chickenBatchId: z.string().uuid({ message: 'ID lô gà không hợp lệ, phải là UUID' }),
+    quantityLogId: z.string().uuid({ message: 'ID nhật ký số lượng không hợp lệ' }),
+    chickenBatchId: z.string().uuid({ message: 'ID lô gà không hợp lệ' }),
     logDate: z
         .string()
         .datetime({ message: 'Ngày nhật ký không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),

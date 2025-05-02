@@ -3,9 +3,7 @@ import { CreateNutritionPlanDetail } from './nutrition-plan-detail.schema';
 import { CreateFSWithoutNutriPlan } from './feed-session.schema';
 
 export const NutritionPlanSchema = z.object({
-    nutritionPlanId: z
-        .string()
-        .uuid({ message: 'ID chế độ dinh dưỡng không hợp lệ, phải là UUID' }),
+    nutritionPlanId: z.string().uuid({ message: 'ID chế độ dinh dưỡng không hợp lệ' }),
     name: z.string().min(1, { message: 'Tên kế hoạch là bắt buộc' }),
     description: z.string().optional(),
 });

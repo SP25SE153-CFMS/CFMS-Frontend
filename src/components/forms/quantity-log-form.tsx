@@ -24,15 +24,21 @@ import { useParams } from 'next/navigation';
 import { addQuantityLog } from '@/services/chicken-batch.service';
 import { formatDate } from '@/utils/functions';
 import { vi } from 'date-fns/locale';
-import { QuantityLogStatus } from '@/utils/enum/status.enum';
+import { QuantityLogStatus, quantityLogStatusLabels } from '@/utils/enum/status.enum';
 import dayjs from 'dayjs';
+import { onError } from '@/utils/functions/form.function';
 
 interface QuantityLogFormProps {
     defaultValues?: Partial<QuantityLog>;
     closeDialog: () => void;
+    status?: QuantityLogStatus;
 }
 
-export default function QuantityLogForm({ defaultValues, closeDialog }: QuantityLogFormProps) {
+export default function QuantityLogForm({
+    defaultValues,
+    closeDialog,
+    status = QuantityLogStatus.EXPORT,
+}: QuantityLogFormProps) {
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
 
     // Initialize form
@@ -40,10 +46,10 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
         resolver: zodResolver(CreateQuantityLogSchema),
         defaultValues: {
             chickenBatchId,
-            logDate: '',
+            logDate: new Date().toISOString(),
             notes: '',
             quantity: 0,
-            logType: QuantityLogStatus.EXPORT,
+            logType: status,
             ...defaultValues,
         },
     });
@@ -62,7 +68,7 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -74,7 +80,7 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
                 <div className="grid grid-cols-1 gap-6 px-1">
                     {/* Chicken Batch ID */}
                     {/* <FormField
@@ -114,7 +120,9 @@ export default function QuantityLogForm({ defaultValues, closeDialog }: Quantity
                         name="logDate"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Ngày nhật ký</FormLabel>
+                                <FormLabel>
+                                    Ngày {quantityLogStatusLabels[status]?.toLowerCase()}
+                                </FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
                                         <FormControl>

@@ -47,7 +47,7 @@ export const VaccinationLogSchema = z.object({
         message: 'Ngày cập nhật không hợp lệ',
     }),
     vaccineId: z.string().uuid('ID vắc-xin phải là UUID hợp lệ'),
-    flockId: z.string().uuid({ message: 'ID vaccine không hợp lệ, phải là UUID' }),
+    flockId: z.string().uuid({ message: 'ID vaccine không hợp lệ' }),
 });
 
 // Export types

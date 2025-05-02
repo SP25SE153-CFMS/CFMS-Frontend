@@ -50,7 +50,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -92,7 +92,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         <DialogTitle>Cập nhật chuồng nuôi</DialogTitle>
                         <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                     </DialogHeader>
-                    <ScrollArea className="max-h-[600px]">
+                    <ScrollArea className="max-h-[82vh]">
                         <ChickenCoopForm
                             closeDialog={() => setOpenUpdate(false)}
                             defaultValues={chickenCoop}

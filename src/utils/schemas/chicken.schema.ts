@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { CommonStatus } from '../enum/status.enum';
 
 export const ChickenSchema = z.object({
-    chickenId: z.string().uuid({ message: 'ID gà không hợp lệ, phải là UUID' }),
+    chickenId: z.string().uuid({ message: 'ID gà không hợp lệ' }),
 
     chickenCode: z.string().trim().min(1, { message: 'Mã gà là bắt buộc' }),
 
@@ -14,7 +14,7 @@ export const ChickenSchema = z.object({
 
     status: z.nativeEnum(CommonStatus, { message: 'Trạng thái không hợp lệ' }),
 
-    chickenTypeId: z.string().uuid({ message: 'ID loại không hợp lệ, phải là UUID' }),
+    chickenTypeId: z.string().uuid({ message: 'ID loại không hợp lệ' }),
 
     // createdDate: z
     //     .string()

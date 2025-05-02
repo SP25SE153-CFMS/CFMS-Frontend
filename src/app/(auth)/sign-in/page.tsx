@@ -34,9 +34,6 @@ export default function Page() {
         onSuccess: (response) => {
             // Show success message
             toast.success(response.message);
-            // Remove old access token, refresh token
-            deleteCookie(config.cookies.accessToken);
-            deleteCookie(config.cookies.refreshToken);
             // Set new access token, refresh token
             setCookie(config.cookies.accessToken, response.data.accessToken);
             setCookie(config.cookies.refreshToken, response.data.refreshToken);
@@ -45,24 +42,30 @@ export default function Page() {
         },
         onError: (err: any) => {
             // Show error message
-            toast.error(err?.response?.data?.message);
+            toast(err?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
     const onSubmit = async (data: SignInRequest) => {
+        // Remove old access token, refresh token
+        deleteCookie(config.cookies.accessToken);
+        deleteCookie(config.cookies.refreshToken);
+        // Call signIn API
         mutation.mutate(data);
     };
 
     const onError = (errors: FieldErrors<SignInRequest>) => {
-        toast.error(
+        toast(
             errors.mail?.message || errors.password?.message || 'Có lỗi xảy ra, vui lòng thử lại',
+            { icon: '⚠️' },
         );
     };
 
     return (
         <div className="flex items-center justify-center px-[56px] py-[24px] min-h-screen bg-background transition-colors duration-300">
             <div className="flex size-min justify-center items-center gap-x-[32px] shrink-0 overflow-hidden">
-                <div className="flex flex-col w-1/2 relative items-start self-stretch columns-xl content-center px-[47px] pt-[49px] rounded-[34px] bg-primary dark:bg-primary/90">
+                {/* Left Panel */}
+                <div className="flex flex-col w-1/2 relative items-start self-stretch columns-xl content-center px-[47px] pt-[49px] rounded-[34px] bg-gradient-to-br from-primary to-primary/80 dark:from-primary/90 dark:to-primary/70">
                     <h2 className="text-center text-[48px] text-white not-italic font-bold leading-[normal]">
                         Hệ Thống Quản Lý Trang Trại Gà Với CFMS
                     </h2>
@@ -80,6 +83,7 @@ export default function Page() {
                     </div>
                 </div>
 
+                {/* Right Panel */}
                 <div className="flex flex-col w-1/2 py-[10px] px-[42px] gap-y-[27px] gap-x-[34px] justify-center items-center content-center self-stretch bg-background dark:bg-background">
                     <p className="text-[26px] text-center font-bold not-italic leading-[normal] whitespace-nowrap text-foreground">
                         Hệ Thống Quản Lý <span className="text-primary">Trang Trại Gà</span>

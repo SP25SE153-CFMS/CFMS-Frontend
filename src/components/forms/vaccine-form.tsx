@@ -18,6 +18,7 @@ import { createVaccine, updateVaccine } from '@/services/vaccine.service';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
+import { onError } from '@/utils/functions/form.function';
 
 interface VaccineFormProps {
     defaultValues?: Partial<Vaccine>;
@@ -58,7 +59,7 @@ export default function VaccineForm({ defaultValues, closeDialog }: VaccineFormP
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -66,11 +67,6 @@ export default function VaccineForm({ defaultValues, closeDialog }: VaccineFormP
     async function onSubmit(values: Vaccine) {
         mutation.mutate(values);
     }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
 
     return (
         <Form {...form}>

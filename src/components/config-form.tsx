@@ -25,6 +25,7 @@ import { createConfig } from '@/services/config.service';
 import { updateConfig } from '@/services/config.service';
 import { formatDate } from '@/utils/functions';
 import { vi } from 'date-fns/locale';
+import { onError } from '@/utils/functions/form.function';
 
 interface ConfigFormProps {
     defaultValues?: Partial<SystemConfig>;
@@ -61,7 +62,7 @@ export function ConfigForm({ defaultValues, closeDialog }: ConfigFormProps) {
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -69,11 +70,6 @@ export function ConfigForm({ defaultValues, closeDialog }: ConfigFormProps) {
     async function onSubmit(values: SystemConfig) {
         mutation.mutate(values);
     }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
 
     return (
         <Form {...form}>
