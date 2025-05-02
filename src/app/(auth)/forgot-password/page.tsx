@@ -52,6 +52,11 @@ export default function ForgotPasswordPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Remove data from session storage
+        sessionStorage.removeItem(config.cookies.accessToken);
+        sessionStorage.removeItem(config.cookies.refreshToken);
+        sessionStorage.removeItem(config.cookies.farmId);
+
         const emailValidationError = validateEmail(email);
         if (emailValidationError) {
             setEmailError(emailValidationError);
