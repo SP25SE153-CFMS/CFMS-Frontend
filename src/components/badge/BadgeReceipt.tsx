@@ -57,9 +57,9 @@ export default function SubCateDisplay({ id, mode }: SubCateDisplayProps) {
         );
     } else if (mode === 'input') {
         return (
-            <input
+            <Input
                 readOnly
-                className="inline min-w-0 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm focus:border-gray-300 focus:ring-0"
+                className="focus:ring-2 focus:ring-blue-500"
                 value={subCate.subCategoryName}
             />
         );
