@@ -26,9 +26,10 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import config from '@/configs';
+import { useQueryParams } from '@/hooks';
 
 const FormSchema = z.object({
-    pin: z.string().min(6, { message: 'Mã OTP phải có 6 số' }),
+    otp: z.string().min(6, { message: 'Mã OTP phải có 6 số' }),
 });
 
 export default function InputOTPForm() {
@@ -39,10 +40,12 @@ export default function InputOTPForm() {
     const [timeLeft, setTimeLeft] = useState(60);
     const [isResendDisabled, setIsResendDisabled] = useState(true);
 
+    const { otp } = useQueryParams();
+
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            pin: '',
+            otp: '',
         },
     });
 
@@ -59,6 +62,14 @@ export default function InputOTPForm() {
 
         return () => clearTimeout(timer);
     }, [timeLeft]);
+
+    useEffect(() => {
+        if (otp) {
+            form.setValue('otp', otp);
+            sessionStorage.setItem('otp', otp);
+            router.push(config.routes.resetPassword);
+        }
+    }, [otp, form, router]);
 
     // Format time as MM:SS
     const formatTime = (seconds: number) => {
@@ -78,7 +89,7 @@ export default function InputOTPForm() {
     const onSubmit = (values: z.infer<typeof FormSchema>) => {
         try {
             // Log the OTP value
-            console.log('OTP submitted:', values.pin);
+            console.log('OTP submitted:', values.otp);
 
             setShowSuccessDialog(true);
 
@@ -114,7 +125,7 @@ export default function InputOTPForm() {
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                             <FormField
                                 control={form.control}
-                                name="pin"
+                                name="otp"
                                 render={({ field }) => (
                                     <FormItem className="space-y-3">
                                         <FormControl>

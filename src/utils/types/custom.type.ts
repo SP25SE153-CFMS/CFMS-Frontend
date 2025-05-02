@@ -320,3 +320,9 @@ export type ReceiptResponse = InventoryReceipt &
         wareTo: WarehouseResponse;
         // resourceTypeId: string;
     };
+
+export type ResetPasswordRequest = {
+    newPassword: string;
+    confirmPassword: string;
+    otp: string;
+};
