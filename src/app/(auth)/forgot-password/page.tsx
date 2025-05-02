@@ -27,6 +27,7 @@ import {
 import config from '@/configs';
 import { forgotPassword } from '@/services/auth.service';
 import toast from 'react-hot-toast';
+import { deleteCookie } from 'cookies-next';
 
 export default function ForgotPasswordPage() {
     const router = useRouter();
@@ -52,10 +53,10 @@ export default function ForgotPasswordPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Remove data from session storage
-        sessionStorage.removeItem(config.cookies.accessToken);
-        sessionStorage.removeItem(config.cookies.refreshToken);
-        sessionStorage.removeItem(config.cookies.farmId);
+        // Remove data from cookies
+        deleteCookie(config.cookies.accessToken);
+        deleteCookie(config.cookies.refreshToken);
+        deleteCookie(config.cookies.farmId);
 
         const emailValidationError = validateEmail(email);
         if (emailValidationError) {
@@ -68,6 +69,7 @@ export default function ForgotPasswordPage() {
 
         try {
             const response = await forgotPassword(email);
+            sessionStorage.setItem('email', email);
             toast.success(response.message);
 
             setShowSuccessDialog(true);

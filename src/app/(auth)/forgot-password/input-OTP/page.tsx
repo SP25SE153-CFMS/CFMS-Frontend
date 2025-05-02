@@ -27,6 +27,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import config from '@/configs';
 import { useQueryParams } from '@/hooks';
+import { forgotPassword } from '@/services/auth.service';
+import toast from 'react-hot-toast';
 
 const FormSchema = z.object({
     otp: z.string().min(6, { message: 'Mã OTP phải có 6 số' }),
@@ -37,7 +39,7 @@ export default function InputOTPForm() {
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
     const [showErrorDialog, setShowErrorDialog] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const [timeLeft, setTimeLeft] = useState(60);
+    const [timeLeft, setTimeLeft] = useState(5 * 60); // 5 minutes
     const [isResendDisabled, setIsResendDisabled] = useState(true);
 
     const { otp } = useQueryParams();
@@ -79,10 +81,21 @@ export default function InputOTPForm() {
     };
 
     // Resend OTP function
-    const handleResendOTP = () => {
-        console.log('Resending OTP...');
-        setTimeLeft(60);
-        setIsResendDisabled(true);
+    const handleResendOTP = async () => {
+        try {
+            const email = sessionStorage.getItem('email') || '';
+            const response = await forgotPassword(email);
+            setTimeLeft(60);
+            setIsResendDisabled(true);
+            toast.success(response.message || 'Yêu cầu gửi lại mã OTP thành công');
+        } catch (error: any) {
+            console.error('Error resending OTP:', error);
+            toast(
+                error?.response?.data?.message ||
+                    'Có lỗi xảy ra khi gửi lại mã OTP, vui lòng thử lại',
+                { icon: '⚠️' },
+            );
+        }
     };
 
     // Hàm submit

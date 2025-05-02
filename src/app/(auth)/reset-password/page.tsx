@@ -59,6 +59,7 @@ export default function ResetPasswordPage() {
         try {
             // Log the password (in a real app, never log passwords)
             const response = await resetPassword({
+                email: sessionStorage.getItem('email') || '',
                 newPassword: values.password,
                 confirmPassword: values.confirmPassword,
                 otp: sessionStorage.getItem('otp') || '',
