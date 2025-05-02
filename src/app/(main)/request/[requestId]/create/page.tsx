@@ -147,18 +147,8 @@ export default function RequestDetail() {
                                             </FormItem>
                                         )}
                                     />
-{/* 
-                                    {request.inventoryRequestDetails.map((d) => {
-                                        return (
-                                            <div>
-                                                {/* batchNumber */}
-                                                <p>Số lượng cần nhập: {d.expectedQuantity}</p>
 
-                                                {/* resourceId */}
-                                                <p>Resource ID: {d.resourceId}</p>
-                                            </div>
-                                        );
-                                    })} */}
+                                  
 
                                     {/* actualQuantity */}
                                     {/* unitId */}
