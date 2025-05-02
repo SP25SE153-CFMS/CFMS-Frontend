@@ -1,7 +1,6 @@
 'use client';
 
 import { DataTable } from '@/components/table/data-table';
-import { getInventoryReceipts } from '@/services/inventory-receipt.service';
 import { useQuery } from '@tanstack/react-query';
 import { columns } from './columns';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';

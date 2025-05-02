@@ -33,9 +33,6 @@ export default function SignUp() {
         onSuccess: (response) => {
             // Show success message
             toast.success(response.message);
-            // Remove old access token, refresh token
-            deleteCookie(config.cookies.accessToken);
-            deleteCookie(config.cookies.refreshToken);
             // Set new access token, refresh token
             setCookie(config.cookies.accessToken, response.data.accessToken);
             setCookie(config.cookies.refreshToken, response.data.refreshToken);
@@ -43,21 +40,28 @@ export default function SignUp() {
             router.push(config.routes.farm);
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại');
+            toast(error?.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại', {
+                icon: '⚠️',
+            });
         },
     });
     const onSubmit = (data: SignUpRequest) => {
+        // Remove old access token, refresh token
+        deleteCookie(config.cookies.accessToken);
+        deleteCookie(config.cookies.refreshToken);
+        // Call signUp API
         mutation.mutate(data);
     };
 
     const onError = (errors: FieldErrors<SignUpRequest>) => {
         console.log('Errors: ', errors);
-        toast.error(
+        toast(
             errors.fullname?.message ||
                 errors.phoneNumber?.message ||
                 errors.mail?.message ||
                 errors.password?.message ||
                 'Có lỗi xảy ra, vui lòng thử lại',
+            { icon: '⚠️' },
         );
     };
 

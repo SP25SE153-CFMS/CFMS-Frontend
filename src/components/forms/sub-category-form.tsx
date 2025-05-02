@@ -31,6 +31,7 @@ import toast from 'react-hot-toast';
 import { addSubCategory, updateSubCategory } from '@/services/category.service';
 import { DataType, dataTypeLabels } from '@/utils/enum';
 import { Loader2 } from 'lucide-react';
+import { onError } from '@/utils/functions/form.function';
 
 interface SubCategoryFormProps {
     defaultValues?: Partial<SubCategory>;
@@ -74,7 +75,7 @@ export default function SubCategoryForm({
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -82,11 +83,6 @@ export default function SubCategoryForm({
     function onSubmit(values: SubCategory) {
         mutation.mutate(values);
     }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
 
     return (
         <Form {...form}>

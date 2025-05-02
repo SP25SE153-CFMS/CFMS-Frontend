@@ -1,14 +1,14 @@
 import { z } from 'zod';
 
 export const WareStockSchema = z.object({
-    wareStockId: z.string().uuid({ message: 'ID kho hàng không hợp lệ, phải là UUID' }),
-    wareId: z.string().uuid({ message: 'ID kho không hợp lệ, phải là UUID' }).optional(),
-    resourceId: z.string().uuid({ message: 'ID tài nguyên không hợp lệ, phải là UUID' }).optional(),
+    wareStockId: z.string().uuid({ message: 'ID kho hàng không hợp lệ' }),
+    wareId: z.string().uuid({ message: 'ID kho không hợp lệ' }).optional(),
+    resourceId: z.string().uuid({ message: 'ID tài nguyên không hợp lệ' }).optional(),
     quantity: z.coerce
         .number()
         .int()
         .nonnegative({ message: 'Số lượng phải là số nguyên không âm' }),
-    unitId: z.string().uuid({ message: 'ID đơn vị không hợp lệ, phải là UUID' }).optional(),
+    unitId: z.string().uuid({ message: 'ID đơn vị không hợp lệ' }).optional(),
 });
 
 export type WareStock = z.infer<typeof WareStockSchema>;

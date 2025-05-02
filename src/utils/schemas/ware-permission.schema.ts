@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
 export const WarePermissionSchema = z.object({
-    permissionId: z.string().uuid({ message: 'ID quyền không hợp lệ, phải là UUID' }),
-    wareId: z.string().uuid({ message: 'ID kho không hợp lệ, phải là UUID' }).optional(),
-    userId: z.string().uuid({ message: 'ID người dùng không hợp lệ, phải là UUID' }).optional(),
+    permissionId: z.string().uuid({ message: 'ID quyền không hợp lệ' }),
+    wareId: z.string().uuid({ message: 'ID kho không hợp lệ' }).optional(),
+    userId: z.string().uuid({ message: 'ID người dùng không hợp lệ' }).optional(),
     permissionLevel: z.coerce
         .number()
         .int()

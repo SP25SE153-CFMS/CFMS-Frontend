@@ -2,9 +2,9 @@ import { z } from 'zod';
 import { TaskStatus } from '../enum/status.enum';
 
 export const TaskSchema = z.object({
-    taskId: z.string().uuid({ message: 'ID công việc không hợp lệ, phải là UUID' }),
+    taskId: z.string().uuid({ message: 'ID công việc không hợp lệ' }),
     taskName: z.string().min(1, { message: 'Tên công việc là bắt buộc' }),
-    taskTypeId: z.string().uuid({ message: 'ID loại công việc không hợp lệ, phải là UUID' }),
+    taskTypeId: z.string().uuid({ message: 'ID loại công việc không hợp lệ' }),
     description: z.string().optional(),
     isHavest: z.boolean().default(false),
     status: z.nativeEnum(TaskStatus, { message: 'Trạng thái không hợp lệ' }),

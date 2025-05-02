@@ -55,10 +55,10 @@ export default function Dashboard() {
 
     // Function to get the total chickens in a batch
     const getBatchChickenCount = (batch: any) => {
-        if (!batch.chickenDetails || batch.chickenDetails.length === 0) {
+        if (!batch.chickenDetails || batch.chickenDetails?.length === 0) {
             return '0';
         }
-        return batch.chickenDetails.reduce(
+        return batch.chickenDetails?.reduce(
             (total: number, detail: any) => total + detail.quantity,
             0,
         );
@@ -148,7 +148,7 @@ export default function Dashboard() {
                                 </CardHeader>
                                 <CardContent className="pt-4">
                                     <div className="text-3xl font-bold text-green-600">
-                                        {farmData.chickenBatches.length}
+                                        {farmData.chickenBatches?.length}
                                     </div>
                                     <p className="text-xs text-muted-foreground">
                                         Lứa nuôi đang hoạt động
@@ -176,7 +176,7 @@ export default function Dashboard() {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {farmData.chickenBatches.length === 0 && (
+                                        {farmData.chickenBatches?.length === 0 && (
                                             <TableRow>
                                                 <TableCell colSpan={4} className="text-center">
                                                     <div className="flex h-[150px] flex-col items-center justify-center gap-2 p-4 text-center">
@@ -190,7 +190,7 @@ export default function Dashboard() {
                                                 </TableCell>
                                             </TableRow>
                                         )}
-                                        {farmData.chickenBatches.map((batch) => (
+                                        {farmData.chickenBatches?.map((batch) => (
                                             <TableRow
                                                 key={batch.chickenBatchId}
                                                 className="hover:bg-amber-50 dark:hover:bg-amber-900/10"

@@ -26,6 +26,7 @@ import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { vi } from 'date-fns/locale';
 import { formatDate } from '@/utils/functions';
+import { onError } from '@/utils/functions/form.function';
 
 interface AddEquipmentFormProps {
     defaultValues?: Partial<Equipment>;
@@ -61,7 +62,7 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -69,11 +70,6 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
     async function onSubmit(values: Equipment) {
         mutation.mutate(values);
     }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
 
     return (
         <Form {...form}>

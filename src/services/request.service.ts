@@ -1,10 +1,15 @@
 import { Request } from '@/utils/schemas/request.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
-import { InventoryReceiptRequest, ReceiptResponse, RequestResponse } from '@/utils/types/custom.type';
+import {
+    InventoryReceiptRequest,
+    ReceiptResponse,
+    RequestResponse,
+} from '@/utils/types/custom.type';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { RequestStatus } from '@/utils/enum/status.enum';
+import { InventoryReceipt } from '@/utils/schemas/inventory-receipt.schema';
 
 const PREFIX = '/api/Request';
 
@@ -52,9 +57,8 @@ export const createInvetoryReceiptFromRequest = async (body: InventoryReceiptReq
     return response.data;
 };
 
-
-export const getReceipts = async() => {
+export const getReceipts = async () => {
     const endpoint = PREFIX + '/receipts';
     const response = await get<Response<ReceiptResponse[]>>(endpoint);
     return response.data.data;
-}
+};

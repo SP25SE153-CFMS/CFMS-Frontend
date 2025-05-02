@@ -39,11 +39,15 @@ import { TaskStatus } from '@/utils/enum/status.enum';
 import { vi } from 'date-fns/locale';
 import { formatDate } from '@/utils/functions';
 import MultipleSelector from '../ui/multiselect';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import { LoadingSpinner } from '../ui/loading-spinner';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { onError } from '@/utils/functions/form.function';
+import { useParams } from 'next/navigation';
+import { Input } from '../ui/input';
+import { TaskResponse } from '@/utils/types/custom.type';
 
 interface AssignmentFormProps {
     defaultValues?: Partial<Assignment>;
@@ -58,12 +62,14 @@ interface AssignedMember {
 }
 
 export default function AssignmentForm({ defaultValues, closeDialog }: AssignmentFormProps) {
+    const { taskId }: { taskId: string } = useParams();
+
     // Initialize form
     const form = useForm<Assignment>({
         resolver: zodResolver(defaultValues ? AssignmentSchema : CreateAssignmentSchema),
         defaultValues: {
             assignmentId: '',
-            taskId: '',
+            taskId: taskId || '',
             assignedToId: '',
             assignedDate: new Date().toISOString(),
             // status: AssignmentStatus.ASSIGNED,
@@ -102,7 +108,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -116,10 +122,11 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
     useEffect(() => {
         const teamLeaderCount = assignedMembers.filter((member) => member.status === 0).length;
 
-        if (assignedMembers.length > 0 && teamLeaderCount === 0) {
-            setTeamLeaderError('Vui lòng chỉ định một Đội trưởng cho nhóm');
-            setIsFormValid(false);
-        } else if (teamLeaderCount > 1) {
+        // if (assignedMembers.length > 0 && teamLeaderCount === 0) {
+        //     setTeamLeaderError('Vui lòng chỉ định một Đội trưởng cho nhóm');
+        //     setIsFormValid(false);
+        // } else
+        if (teamLeaderCount > 1) {
             setTeamLeaderError('Chỉ được phép có một Đội trưởng trong nhóm');
             setIsFormValid(false);
         } else {
@@ -135,9 +142,9 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
 
         if (teamLeaderCount !== 1) {
             if (teamLeaderCount === 0) {
-                toast.error('Vui lòng chỉ định một Đội trưởng cho nhóm');
+                toast('Vui lòng chỉ định một Đội trưởng cho nhóm', { icon: '⚠️' });
             } else {
-                toast.error('Chỉ được phép có một Đội trưởng trong nhóm');
+                toast('Chỉ được phép có một Đội trưởng trong nhóm', { icon: '⚠️' });
             }
             return;
         }
@@ -153,10 +160,6 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
         };
 
         mutation.mutate(formattedValues);
-    }
-
-    function onError(error: any) {
-        console.error(error);
     }
 
     // Handle adding a member to the assigned list
@@ -213,6 +216,15 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
         }
     };
 
+    const sortedTasks = useMemo(() => {
+        return tasks?.sort((a, b) => {
+            if (a.startWorkDate && b.startWorkDate) {
+                return new Date(a.startWorkDate).getTime() - new Date(b.startWorkDate).getTime();
+            }
+            return 0;
+        });
+    }, [tasks]);
+
     if (isTaskLoading || isEmployeesLoading) {
         return (
             <div className="flex flex-col items-center justify-center h-[75vh] gap-4">
@@ -235,24 +247,50 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                 <FormItem>
                                     <FormLabel>Công việc</FormLabel>
                                     <FormControl>
-                                        <Select
-                                            onValueChange={field.onChange}
-                                            defaultValue={field.value}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Chọn công việc" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {tasks?.map((task) => (
-                                                    <SelectItem
-                                                        key={task.taskId}
-                                                        value={task.taskId}
-                                                    >
-                                                        {task.taskName}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                        {taskId ? (
+                                            <Input
+                                                type="text"
+                                                value={
+                                                    tasks?.find(
+                                                        (task: TaskResponse) =>
+                                                            task.taskId === taskId,
+                                                    )?.taskName || ''
+                                                }
+                                                disabled
+                                            />
+                                        ) : (
+                                            <Select
+                                                onValueChange={field.onChange}
+                                                defaultValue={field.value}
+                                            >
+                                                <SelectTrigger className="h-auto">
+                                                    <SelectValue placeholder="Chọn công việc" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {sortedTasks?.map((task) => (
+                                                        <SelectItem
+                                                            key={task.taskId}
+                                                            value={task.taskId}
+                                                        >
+                                                            <div className="flex flex-col items-start justify-between">
+                                                                <span className="text-sm font-medium line-clamp-2 border-b border-transparent text-black">
+                                                                    {task.taskName}{' '}
+                                                                </span>
+                                                                <p className="text-xs text-muted-foreground line-clamp-2">
+                                                                    {task.description ||
+                                                                        'Không có mô tả'}
+                                                                </p>
+                                                                <p className="text-xs text-muted-foreground line-clamp-2">
+                                                                    Thòi gian:{' '}
+                                                                    {task.startWorkDate &&
+                                                                        `${dayjs(task.startWorkDate).format('DD/MM/YYYY')} - ${task?.shiftSchedule?.shiftName}`}
+                                                                </p>
+                                                            </div>
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        )}
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

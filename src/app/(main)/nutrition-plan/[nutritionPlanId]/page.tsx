@@ -118,14 +118,14 @@ export default function Page() {
                     </Card>
                 </div>
 
-                {/* Feed Session */}
+                {/* Food */}
                 <div className="col-span-3">
-                    <CardFeedSession feedSessions={nutritionPlan?.feedSessions || []} />
+                    <CardFood nutritionPlanDetails={nutritionPlan?.nutritionPlanDetails || []} />
                 </div>
             </div>
 
-            {/* Food */}
-            <CardFood nutritionPlanDetails={nutritionPlan?.nutritionPlanDetails || []} />
+            {/* Feed Session */}
+            <CardFeedSession feedSessions={nutritionPlan?.feedSessions || []} />
         </div>
     );
 }

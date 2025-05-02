@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
-    CreateResourceSupplierSchema,
+    AddResourceSupplierSchema,
     ResourceSupplierSchema,
     type ResourceSupplier,
 } from '@/utils/schemas/resource-supplier.schema';
@@ -24,6 +24,8 @@ import { addResourceSupplier, updateResourceSupplier } from '@/services/supplier
 import { getWarestockResourceByFarm } from '@/services/warehouse.service';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { useParams } from 'next/navigation';
+import { onError } from '@/utils/functions/form.function';
+import { useMemo } from 'react';
 
 interface ResourceSupplierFormProps {
     defaultValues?: Partial<ResourceSupplier>;
@@ -39,11 +41,8 @@ export default function ResourceSupplierForm({
 
     // Initialize form
     const form = useForm<ResourceSupplier>({
-        resolver: zodResolver(
-            defaultValues ? CreateResourceSupplierSchema : ResourceSupplierSchema,
-        ),
+        resolver: zodResolver(defaultValues ? ResourceSupplierSchema : AddResourceSupplierSchema),
         defaultValues: {
-            resourceSupplierId: '',
             resourceId: '',
             supplierId,
             price: 0,
@@ -56,22 +55,32 @@ export default function ResourceSupplierForm({
     const { data: resources } = useQuery({
         queryKey: ['resources'],
         queryFn: () => getWarestockResourceByFarm('all'),
-        enabled: !!defaultValues?.resourceId,
+        // enabled: !!defaultValues?.resourceId,
     });
-    const resourceOptions = resources?.map((resource) => ({
-        value:
-            resource.equipmentId ||
-            resource.medicineId ||
-            resource.foodId ||
-            resource.harvestProductId ||
-            resource.chickenId,
-        label:
-            resource.equipmentName ||
-            resource.medicineName ||
-            resource.foodName ||
-            resource.harvestProductName ||
-            resource.chickenName,
-    }));
+
+    const resourceOptions = useMemo(() => {
+        if (!resources) return [];
+        const filteredResources = resources.filter(
+            (resource) => Number(resource.specQuantity?.split(' ')?.[0]) > 0,
+        );
+        return filteredResources?.map((resource) => ({
+            value:
+                // resource.equipmentId ||
+                // resource.medicineId ||
+                // resource.foodId ||
+                // resource.harvestProductId ||
+                // resource.chickenId,
+                resource.resourceId,
+            label:
+                resource.equipmentName ||
+                resource.medicineName ||
+                resource.foodName ||
+                resource.harvestProductName ||
+                resource.chickenName,
+            specQuantity: resource.specQuantity,
+            unitSpecification: resource.unitSpecification,
+        }));
+    }, [resources]);
 
     // Query client
     const queryClient = useQueryClient();
@@ -79,18 +88,14 @@ export default function ResourceSupplierForm({
     // Mutations for creating and updating
     const mutation = useMutation({
         mutationFn: defaultValues ? updateResourceSupplier : addResourceSupplier,
-        onSuccess: () => {
+        onSuccess: (response) => {
             closeDialog();
-            queryClient.invalidateQueries({ queryKey: ['resourceSuppliers'] });
-            toast.success(
-                defaultValues
-                    ? 'Cập nhật nhà cung cấp tài nguyên thành công'
-                    : 'Tạo nhà cung cấp tài nguyên thành công',
-            );
+            queryClient.invalidateQueries({ queryKey: ['resources', supplierId] });
+            toast.success(response.message || 'Thành công');
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -99,15 +104,10 @@ export default function ResourceSupplierForm({
         mutation.mutate(values);
     }
 
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
-
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
+                <div className="grid grid-cols-1 gap-6 px-1">
                     {/* Vật phẩm */}
                     <FormField
                         control={form.control}
@@ -124,7 +124,12 @@ export default function ResourceSupplierForm({
                                     <SelectContent>
                                         {resourceOptions?.map((res) => (
                                             <SelectItem key={res.value} value={res.value}>
-                                                {res.label}
+                                                {/* {getResourceName(res)} */}
+                                                <strong>{res.label}</strong>
+                                                <div className="text-sm text-muted-foreground mt-1">
+                                                    <p>Tồn kho: {res.specQuantity}</p>
+                                                    <p>Quy cách: {res.unitSpecification}</p>
+                                                </div>
                                             </SelectItem>
                                         ))}
                                     </SelectContent>

@@ -22,6 +22,7 @@ import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { formatDate } from '@/utils/functions';
 import { vi } from 'date-fns/locale';
+import { onError } from '@/utils/functions/form.function';
 
 interface EmployeeFormProps {
     defaultValues?: Partial<User>;
@@ -62,7 +63,7 @@ export default function EmployeeForm({ defaultValues, closeDialog }: EmployeeFor
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -73,7 +74,7 @@ export default function EmployeeForm({ defaultValues, closeDialog }: EmployeeFor
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
                     {/* Họ và Tên */}
                     <FormField

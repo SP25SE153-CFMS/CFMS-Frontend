@@ -21,6 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { CategoryStatus, categoryStatusLabels } from '@/utils/enum/status.enum';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { Loader2 } from 'lucide-react';
+import { onError } from '@/utils/functions/form.function';
 interface CategoryFormProps {
     defaultValues?: Partial<Category>;
     closeDialog: () => void;
@@ -60,7 +61,7 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
@@ -68,11 +69,6 @@ export default function CategoryForm({ defaultValues, closeDialog }: CategoryFor
     async function onSubmit(values: Category) {
         mutation.mutate(values);
     }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
 
     return (
         <Form {...form}>

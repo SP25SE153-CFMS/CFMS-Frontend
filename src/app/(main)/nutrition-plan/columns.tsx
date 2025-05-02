@@ -52,9 +52,10 @@ export const columns: ColumnDef<NutritionPlan>[] = [
     {
         accessorKey: 'description',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mô tả" />,
-        // cell: ({ row }) => (
-        //     <div className="max-w-[450px] truncate">{row.getValue('description')}</div>
-        // ),
+        cell: ({ row }) => {
+            const description = row.getValue('description') as string;
+            return <div>{description || 'Không có'}</div>;
+        },
     },
     // {
     //     accessorKey: 'feedSessions',

@@ -33,6 +33,7 @@ import { generateCode } from '@/utils/functions/generate-code.function';
 import { convertArea } from '@/utils/functions/area-unit.function';
 import { useMemo } from 'react';
 import { Loader2 } from 'lucide-react';
+import { onError } from '@/utils/functions/form.function';
 
 interface BreedingAreaFormProps {
     defaultValues?: Partial<BreedingArea>;
@@ -67,21 +68,13 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
             toast.success(message);
         },
         onError: (err: any) => {
-            toast.error(err?.response?.data?.message);
+            toast(err?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
     // Form submit handler
     const onSubmit = async (values: BreedingArea) => {
         mutation.mutate(values);
-    };
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-        // const firstKey = Object.keys(error)[0];
-        // const firstMessage = error[firstKey].message;
-        // toast.error(firstMessage);
     };
 
     const { data: farms } = useQuery({
@@ -161,7 +154,11 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                                                 <Input
                                                     placeholder="Nhập tên khu nuôi"
                                                     {...field}
-                                                    onBlur={handleGenerateCode}
+                                                    onBlur={
+                                                        defaultValues
+                                                            ? undefined // Don't generate code if editing
+                                                            : handleGenerateCode // Generate code if creating
+                                                    }
                                                 />
                                             </FormControl>
                                             <FormMessage />

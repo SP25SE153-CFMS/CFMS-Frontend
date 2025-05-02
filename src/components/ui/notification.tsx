@@ -3,10 +3,25 @@
 import type React from 'react';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { formatDistanceToNow } from 'date-fns';
-import { vi } from 'date-fns/locale';
-import { BellIcon, InboxIcon, Trash2Icon, XIcon, AlertCircleIcon, CheckCheck } from 'lucide-react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+    BellIcon,
+    InboxIcon,
+    Trash2Icon,
+    XIcon,
+    AlertCircleIcon,
+    CheckCheck,
+    RotateCw,
+    Tag,
+    Phone,
+    Mail,
+    Calendar,
+    MapPin,
+    IdCard,
+    Activity,
+    X,
+    Send,
+} from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,9 +30,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     getNotificationForCurrentUser,
     readAllNotifications,
-    readOneNotification,
     clearAllNotifications,
     clearOneNotification,
+    readOneNotification,
 } from '@/services/notification.service';
 import {
     AlertDialog,
@@ -33,7 +48,21 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import toast from 'react-hot-toast';
 import { Avatar, AvatarFallback, AvatarImage } from './avatar';
 import initials from 'initials';
-import { convertToThumbnailUrl } from '@/utils/functions';
+import { convertToThumbnailUrl, formatRelativeTime } from '@/utils/functions';
+import { NotificationTypeEnum } from '@/utils/enum/notification-type.enum';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { NotificationResponse } from '@/utils/types/custom.type';
+import { acceptInvitation, rejectInvitation } from '@/services/farm.service';
+import InfoItem from '../info-item';
+import dayjs from 'dayjs';
+import { userStatusLabels, userStatusVariant } from '@/utils/enum/status.enum';
 
 function Dot({ className }: { className?: string }) {
     return (
@@ -60,15 +89,34 @@ export default function Notification() {
         queryKey: ['notifications'],
         queryFn: () => getNotificationForCurrentUser(),
     });
+    // const [notifications, setNotifications] = useState<NotificationResponse[]>();
+
+    // const { notifications: noties, connected } = useSignalR('/noti');
+    // console.log(noties, connected);
+
+    // useEffect(() => {
+    //     setNotifications(
+    //         notis?.map((noti) => ({
+    //             ...noti,
+    //             notificationType: 'INVITATION',
+    //         })),
+    //     );
+    // }, [notis]);
 
     const [open, setOpen] = useState(false);
-    // const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deleteAllDialogOpen, setDeleteAllDialogOpen] = useState(false);
-    // const [notificationToDelete, setNotificationToDelete] = useState<string | null>(null);
+    const [farmCodeDialogOpen, setFarmCodeDialogOpen] = useState(false);
+    const [currentNotification, setCurrentNotification] = useState<NotificationResponse | null>(
+        null,
+    );
+    // const [farmCode, setFarmCode] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Count unread notifications (note: checking !isRead since true means it has been read)
     const unreadCount = notifications?.filter((n) => !n.isRead).length || 0;
     const totalCount = notifications?.length || 0;
+
+    const queryClient = useQueryClient();
 
     const handleMarkAllAsRead = async () => {
         try {
@@ -76,16 +124,71 @@ export default function Notification() {
             await refetch();
             // toast.success('Đã đánh dấu tất cả thông báo là đã đọc');
         } catch (error) {
-            toast.error('Không thể đánh dấu thông báo là đã đọc');
+            console.error(error);
+            // toast(error?.response?.data?.message, { icon: '⚠️' });
         }
     };
 
-    const handleNotificationClick = async (id: string) => {
+    const handleNotificationClick = async (noti: NotificationResponse) => {
         try {
-            await readOneNotification(id);
+            if (
+                noti.notificationType === NotificationTypeEnum.ENROLL_FARM ||
+                noti.notificationType === NotificationTypeEnum.INVITE_FARM
+            ) {
+                // Open the farm code dialog
+                setCurrentNotification(noti);
+                setFarmCodeDialogOpen(true);
+            }
+
+            await readOneNotification(noti.notificationId);
             await refetch();
         } catch (error) {
-            toast.error('Không thể đánh dấu thông báo là đã đọc');
+            console.error(error);
+        }
+    };
+
+    const handleAccept = async () => {
+        if (!currentNotification) return;
+
+        setIsSubmitting(true);
+        try {
+            const response = await acceptInvitation(currentNotification.notificationId);
+            toast.success(response.message);
+            setFarmCodeDialogOpen(false);
+            queryClient.invalidateQueries({ queryKey: ['farms'] });
+
+            // Redirect to appropriate page if needed
+            // if (currentNotification.metadata && typeof currentNotification.metadata === 'object') {
+            //     if (
+            //         'farmId' in currentNotification.metadata &&
+            //         typeof currentNotification.metadata.farmId === 'string'
+            //     ) {
+            //         router.push(`/farms/${currentNotification.metadata.farmId}`);
+            //     }
+            // }
+        } catch (error: any) {
+            console.error(error);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleReject = async () => {
+        if (!currentNotification) return;
+
+        setIsSubmitting(true);
+        try {
+            // Here you would call your API to reject the invitation/enrollment
+            const response = await rejectInvitation(currentNotification.notificationId);
+            toast.success(response.message);
+            setFarmCodeDialogOpen(false);
+            queryClient.invalidateQueries({ queryKey: ['farms'] });
+        } catch (error: any) {
+            console.error(error);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -95,7 +198,7 @@ export default function Notification() {
     //         await refetch();
     //         // toast.success('Đã xóa thông báo');
     //     } catch (error) {
-    //         toast.error('Không thể xóa thông báo');
+    //         toast('Không thể xóa thông báo', { icon: '⚠️' });
     //     }
     //     setDeleteDialogOpen(false);
     //     setNotificationToDelete(null);
@@ -107,7 +210,7 @@ export default function Notification() {
             await refetch();
             // toast.success('Đã xóa tất cả thông báo');
         } catch (error) {
-            toast.error('Không thể xóa tất cả thông báo');
+            toast('Không thể xóa tất cả thông báo', { icon: '⚠️' });
         }
         setDeleteAllDialogOpen(false);
     };
@@ -121,21 +224,12 @@ export default function Notification() {
             await refetch();
             // toast.success('Đã xóa thông báo');
         } catch (error) {
-            toast.error('Không thể xóa thông báo');
+            toast('Không thể xóa thông báo', { icon: '⚠️' });
         }
     };
 
     const confirmDeleteAllNotifications = () => {
         setDeleteAllDialogOpen(true);
-    };
-
-    const formatNotificationTime = (dateString: string) => {
-        try {
-            const date = new Date(dateString);
-            return formatDistanceToNow(date, { addSuffix: true, locale: vi });
-        } catch (error) {
-            return '';
-        }
     };
 
     return (
@@ -150,12 +244,16 @@ export default function Notification() {
                     >
                         <BellIcon className="h-5 w-5" aria-hidden="true" />
                         {unreadCount > 0 && (
+                            // <Badge
+                            //     className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs"
+                            //     variant="destructive"
+                            // >
+                            //     {unreadCount > 99 ? '99+' : unreadCount}
+                            // </Badge>
                             <Badge
-                                className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs"
+                                className="absolute -right-0 -top-0 flex h-3 min-w-3 items-center px-0 justify-center rounded-full text-xs"
                                 variant="destructive"
-                            >
-                                {unreadCount > 99 ? '99+' : unreadCount}
-                            </Badge>
+                            />
                         )}
                     </Button>
                 </PopoverTrigger>
@@ -163,13 +261,31 @@ export default function Notification() {
                     <div className="flex items-center justify-between border-b px-4 py-3">
                         <div className="flex items-center gap-2">
                             <h3 className="font-medium">Thông báo</h3>
-                            {totalCount > 0 && (
+                            {unreadCount > 0 && (
                                 <Badge variant="default" className="px-2 py-0.5">
-                                    {totalCount}
+                                    {unreadCount} chưa đọc
                                 </Badge>
                             )}
                         </div>
                         <div className="flex gap-2">
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-8 w-8 p-0"
+                                            onClick={() => refetch()}
+                                        >
+                                            <RotateCw className="h-4 w-4" />
+                                            <span className="sr-only">Lấy thông báo mới nhất</span>
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Lấy thông báo mới nhất</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                             {unreadCount > 0 && (
                                 <TooltipProvider>
                                     <Tooltip>
@@ -232,22 +348,22 @@ export default function Notification() {
                                         <Avatar className="h-10 w-10 rounded-full object-cover">
                                             <AvatarImage
                                                 src={convertToThumbnailUrl(
-                                                    notification.user.avatar || '',
+                                                    notification.createdByUser?.avatar || '',
                                                 )}
-                                                alt={notification.user.fullName}
+                                                alt={notification.createdByUser?.fullName || ''}
                                                 className="rounded-sm object-contain"
                                             />
                                             <AvatarFallback className="rounded-sm">
-                                                {initials(notification.user.fullName)}
+                                                {initials(
+                                                    notification.createdByUser?.fullName || '',
+                                                )}
                                             </AvatarFallback>
                                         </Avatar>
                                         <div className="flex-1 space-y-1">
                                             <button
                                                 className="text-left text-sm after:absolute after:inset-0"
                                                 onClick={() =>
-                                                    handleNotificationClick(
-                                                        notification.notificationId,
-                                                    )
+                                                    handleNotificationClick(notification)
                                                 }
                                             >
                                                 {/* <span className="font-semibold hover:underline">
@@ -261,8 +377,8 @@ export default function Notification() {
                                                 </div>
                                             </button>
                                             <div className="text-xs text-muted-foreground">
-                                                {formatNotificationTime(
-                                                    notification?.createdWhen?.toString() ?? '',
+                                                {formatRelativeTime(
+                                                    notification.createdWhen?.toString() ?? '',
                                                 )}
                                             </div>
                                         </div>
@@ -303,30 +419,123 @@ export default function Notification() {
                 </PopoverContent>
             </Popover>
 
-            {/* Delete Single Notification Dialog */}
-            {/* <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Xóa thông báo</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa thông báo này không? Hành động này không thể
-                            hoàn tác.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Hủy</AlertDialogCancel>
-                        <AlertDialogAction
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            onClick={() =>
-                                notificationToDelete &&
-                                handleDeleteNotification(notificationToDelete)
-                            }
+            {/* Farm Code Dialog for ENROLLMENT or INVITATION */}
+            <Dialog open={farmCodeDialogOpen} onOpenChange={setFarmCodeDialogOpen}>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                            <Send size={20} />
+                            {(currentNotification && currentNotification?.notificationName) ||
+                                'Tham gia trang trại'}
+                        </DialogTitle>
+                        <DialogDescription>
+                            {currentNotification?.content ||
+                                'Vui lòng nhập mã trang trại để xác nhận tham gia.'}
+                        </DialogDescription>
+                    </DialogHeader>
+                    {currentNotification?.createdByUser && (
+                        <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4 shadow-md">
+                            {/* <div className="flex justify-between items-center mb-4">
+                                <h3 className="font-bold pl-3 text-lg relative before:content-[''] before:absolute before:top-[3px] before:left-0 before:w-[4px] before:h-full before:bg-primary inline-block">
+                                    Thông tin chi tiết
+                                </h3>
+                            </div> */}
+
+                            <InfoItem
+                                label="Họ và tên"
+                                value={currentNotification.createdByUser?.fullName}
+                                icon={<Tag size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Số điện thoại"
+                                value={currentNotification.createdByUser?.phoneNumber || 'Không có'}
+                                icon={<Phone size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Email"
+                                value={currentNotification.createdByUser?.mail}
+                                icon={<Mail size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Ngày sinh"
+                                value={
+                                    currentNotification.createdByUser?.dateOfBirth
+                                        ? dayjs(
+                                              currentNotification.createdByUser?.dateOfBirth,
+                                          ).format('DD/MM/YYYY')
+                                        : 'Không có'
+                                }
+                                icon={<Calendar size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Địa chỉ"
+                                value={currentNotification.createdByUser?.address || 'Không có'}
+                                icon={<MapPin size={16} />}
+                            />
+
+                            <InfoItem
+                                label="CCCD"
+                                value={currentNotification.createdByUser?.cccd || 'Không có'}
+                                icon={<IdCard size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Trạng thái"
+                                value={
+                                    <Badge
+                                        variant={
+                                            userStatusVariant[
+                                                currentNotification.createdByUser?.status
+                                            ]
+                                        }
+                                    >
+                                        {
+                                            userStatusLabels[
+                                                currentNotification.createdByUser?.status
+                                            ]
+                                        }
+                                    </Badge>
+                                }
+                                icon={<Activity size={16} />}
+                            />
+
+                            {/* <InfoItem
+                                label="Vai trò hệ thống"
+                                value={`Vai trò ${currentNotification.createdByUser?.systemRole}`}
+                                icon={<User size={16} />}
+                            /> */}
+                        </div>
+                    )}
+                    <DialogFooter className="sm:justify-between">
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            onClick={handleReject}
+                            disabled={isSubmitting}
                         >
-                            Xóa
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog> */}
+                            <X className="h-4 w-4" />
+                            Từ chối
+                        </Button>
+                        <Button type="button" onClick={handleAccept} disabled={isSubmitting}>
+                            {isSubmitting ? (
+                                <>
+                                    <span className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-background border-t-transparent"></span>
+                                    Đang xử lý...
+                                </>
+                            ) : (
+                                <>
+                                    <CheckCheck className="h-4 w-4" />
+                                    Chấp nhận
+                                </>
+                            )}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
             {/* Delete All Notifications Dialog */}
             <AlertDialog open={deleteAllDialogOpen} onOpenChange={setDeleteAllDialogOpen}>

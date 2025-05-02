@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const FarmSchema = z.object({
-    farmId: z.string().uuid({ message: 'ID trang trại không hợp lệ, phải là UUID' }),
+    farmId: z.string().uuid({ message: 'ID trang trại không hợp lệ' }),
     farmName: z
         .string()
         .min(1, { message: 'Tên trang trại là bắt buộc' })
@@ -19,7 +19,7 @@ export const FarmSchema = z.object({
         .number()
         .positive({ message: 'Diện tích phải là số dương' })
         .max(1_000_000, { message: 'Diện tích không được vượt quá 1,000,000 m²' }),
-    areaUnitId: z.string().uuid({ message: 'Đơn vị diện tích không hợp lệ, phải là UUID' }),
+    areaUnitId: z.string().uuid({ message: 'Đơn vị diện tích không hợp lệ' }),
     scale: z.coerce.number().positive({ message: 'Quy mô phải là số nguyên dương' }),
     phoneNumber: z
         .string()

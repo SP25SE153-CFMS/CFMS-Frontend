@@ -49,7 +49,7 @@ export default function EvaluationResultForm({
             toast.success('Form submitted successfully!');
         } catch (error) {
             console.error(error);
-            toast.error('Failed to submit the form.');
+            toast('Failed to submit the form.', { icon: '⚠️' });
         }
     };
 

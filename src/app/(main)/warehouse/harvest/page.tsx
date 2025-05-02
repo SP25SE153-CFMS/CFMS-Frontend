@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/dialog';
 import { useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import ChickenForm from '@/components/forms/chicken-form';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,6 +21,7 @@ import Link from 'next/link';
 import config from '@/configs';
 import { Separator } from '@/components/ui/separator';
 import { getWareStockByResourceTypeId } from '@/services/warehouse.service';
+import CreateHarvestProductForm from '@/components/forms/harvest-product-form';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -45,7 +45,7 @@ export default function Page() {
         enabled: !!wId && !!rId,
     });
 
-    console.log("Harvests data: ", harvests);
+    console.log('Harvests data: ', harvests);
 
     // Check if harvests is loading
     if (isLoading) {
@@ -118,7 +118,7 @@ export default function Page() {
                     </DialogHeader>
                     <ScrollArea className="max-h-[70vh]">
                         <div className="p-1">
-                            <ChickenForm closeDialog={() => setOpen(false)} />
+                            <CreateHarvestProductForm closeDialog={() => setOpen(false)} />
                         </div>
                     </ScrollArea>
                 </DialogContent>

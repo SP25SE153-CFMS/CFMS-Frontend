@@ -38,9 +38,7 @@ export default function TaskCard({ task }: { task: TaskResponse }) {
 
                 <div className="flex items-center justify-between">
                     <div className="text-xs text-muted-foreground">
-                        {task.startWorkDate
-                            ? dayjs(task.startWorkDate).format('DD/MM/YYYY')
-                            : 'Không có ngày bắt đầu'}
+                        {`${task.startWorkDate ? dayjs(task.startWorkDate).format('DD/MM/YYYY') : 'N/A'} - ${task?.shiftSchedule?.shiftName ?? 'N/A'}`}
                     </div>
 
                     {/*{task.assignee && (

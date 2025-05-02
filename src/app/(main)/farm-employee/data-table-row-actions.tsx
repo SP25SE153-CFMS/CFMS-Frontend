@@ -9,7 +9,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import config from '@/configs';
 import {
     Dialog,
     DialogContent,
@@ -25,17 +24,15 @@ import {
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
 import toast from 'react-hot-toast';
-import { useQueryClient } from '@tanstack/react-query';
-
-import { deleteFarmEmployee } from '@/services/farm-employee.service';
-import { getCookie } from 'cookies-next';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import InfoItem from '@/components/info-item';
-import { Activity, Calendar, IdCard, Mail, MapPin, Phone, Tag } from 'lucide-react';
+import { Activity, Calendar, IdCard, Loader2, Mail, MapPin, Phone, Tag } from 'lucide-react';
 import dayjs from 'dayjs';
 import { Badge } from '@/components/ui/badge';
-import { userStatusLabels, userStatusVariant } from '@/utils/enum/status.enum';
+import { UserStatus, userStatusLabels, userStatusVariant } from '@/utils/enum/status.enum';
 import FarmEmployeeForm from '@/components/forms/farm-employee-form';
 import { FarmEmployeeResponse } from '@/utils/types/custom.type';
+import { deleteEmployeeInFarm, updateEmployeeInFarm } from '@/services/farm.service';
 
 interface Props<T> {
     row: Row<T>;
@@ -43,22 +40,59 @@ interface Props<T> {
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openDetail, setOpenDetail] = useState(false);
-    const [openUpdate, setOpenUpdate] = useState(false);
+    const [openUpdateInfo, setOpenUpdateInfo] = useState(false);
+    const [openUpdateStatus, setOpenUpdateStatus] = useState(false);
+    const [status, setStatus] = useState<UserStatus>(UserStatus.FIRED);
     const [openDelete, setOpenDelete] = useState(false);
-
-    const farmId = getCookie(config.cookies.farmId);
 
     const queryClient = useQueryClient();
 
     const farmEmployee = row.original as FarmEmployeeResponse;
     const employee = farmEmployee.user;
 
-    const handleDelete = async () => {
-        await deleteFarmEmployee(farmEmployee.farmEmployeeId).then(() => {
+    const deleteMutation = useMutation({
+        mutationFn: deleteEmployeeInFarm,
+        onSuccess: () => {
             toast.success('Xóa nhân viên trang trại thành công');
-            queryClient.invalidateQueries({ queryKey: ['farmEmployees', farmId] });
+            queryClient.invalidateQueries({ queryKey: ['farmEmployees'] });
             setOpenDelete(false);
-        });
+        },
+        onError: (error: any) => {
+            console.error(error);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
+        },
+    });
+
+    const updateStatusMutation = useMutation({
+        mutationFn: updateEmployeeInFarm,
+        onSuccess: () => {
+            toast.success(`${userStatusLabels[status]} nhân viên thành công`);
+            queryClient.invalidateQueries({ queryKey: ['farmEmployees'] });
+            setOpenUpdateStatus(false);
+        },
+        onError: (error: any) => {
+            console.error(error);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
+        },
+    });
+
+    const handleDelete = async () => {
+        const farmEmployeeId = farmEmployee.farmEmployeeId;
+        await deleteMutation.mutateAsync(farmEmployeeId);
+    };
+
+    const handleUpdateStatus = async () => {
+        const newValues = {
+            ...farmEmployee,
+            status,
+            user: undefined,
+            phoneNumber: null,
+            mail: null,
+            farmRole: null,
+            startDate: null,
+            endDate: null,
+        };
+        await updateStatusMutation.mutateAsync(newValues);
     };
 
     return (
@@ -74,8 +108,24 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <DropdownMenuItem onClick={() => setOpenDetail(true)}>
                         Xem chi tiết
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
-                        Cập nhật
+                    <DropdownMenuItem onClick={() => setOpenUpdateInfo(true)}>
+                        Cập nhật thông tin
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() => {
+                            setOpenUpdateStatus(true);
+                            setStatus(UserStatus.INACTIVE);
+                        }}
+                    >
+                        {userStatusLabels[UserStatus.INACTIVE]}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() => {
+                            setOpenUpdateStatus(true);
+                            setStatus(UserStatus.FIRED);
+                        }}
+                    >
+                        {userStatusLabels[UserStatus.FIRED]}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
@@ -162,18 +212,48 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             </Dialog>
 
             {/* Update Dialog */}
-            <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
+            <Dialog open={openUpdateInfo} onOpenChange={setOpenUpdateInfo}>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Cập nhật nhân viên trang trại</DialogTitle>
                         <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                     </DialogHeader>
                     <FarmEmployeeForm
-                        closeDialog={() => setOpenUpdate(false)}
+                        closeDialog={() => setOpenUpdateInfo(false)}
                         defaultValues={farmEmployee}
                     />
                 </DialogContent>
             </Dialog>
+
+            {/* Update Status Dialog */}
+            <AlertDialog open={openUpdateStatus} onOpenChange={setOpenUpdateStatus}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            Xác nhận {userStatusLabels[status]?.toLowerCase()}
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Bạn có chắc chắn muốn {userStatusLabels[status]?.toLowerCase()} nhân
+                            viên trang trại này?
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <div className="flex justify-end space-x-2">
+                        <Button variant="outline" onClick={() => setOpenUpdateStatus(false)}>
+                            Hủy
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            onClick={handleUpdateStatus}
+                            disabled={updateStatusMutation.isPending}
+                        >
+                            {updateStatusMutation.isPending && (
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            )}
+                            {userStatusLabels[status]}
+                        </Button>
+                    </div>
+                </AlertDialogContent>
+            </AlertDialog>
 
             {/* Delete Confirmation Dialog */}
             <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
@@ -188,7 +268,14 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         <Button variant="outline" onClick={() => setOpenDelete(false)}>
                             Hủy
                         </Button>
-                        <Button variant="destructive" onClick={handleDelete}>
+                        <Button
+                            variant="destructive"
+                            onClick={handleDelete}
+                            disabled={deleteMutation.isPending}
+                        >
+                            {deleteMutation.isPending && (
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            )}
                             Xóa
                         </Button>
                     </div>

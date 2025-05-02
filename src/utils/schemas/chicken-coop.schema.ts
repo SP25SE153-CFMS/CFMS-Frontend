@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { ChickenCoopStatus } from '../enum/status.enum';
 
 export const ChickenCoopSchema = z.object({
-    chickenCoopId: z.string().uuid({ message: 'ID chuồng gà không hợp lệ, phải là UUID' }),
+    chickenCoopId: z.string().uuid({ message: 'ID chuồng gà không hợp lệ' }),
 
     chickenCoopCode: z
         .string()
@@ -19,7 +19,7 @@ export const ChickenCoopSchema = z.object({
     maxQuantity: z.coerce.number().min(0).int({ message: 'Sức chứa phải là số nguyên' }),
     status: z.nativeEnum(ChickenCoopStatus, { message: 'Trạng thái không hợp lệ' }),
 
-    breedingAreaId: z.string().uuid({ message: 'ID khu vực chăn nuôi không hợp lệ, phải là UUID' }),
+    breedingAreaId: z.string().uuid({ message: 'Khu nuôi không hợp lệ' }),
     area: z.coerce.number().positive({ message: 'Diện tích phải là số dương' }),
 
     currentQuantity: z.coerce
@@ -29,13 +29,13 @@ export const ChickenCoopSchema = z.object({
 
     description: z.string().trim().optional(),
 
-    purposeId: z.string().uuid({ message: 'ID mục đích không hợp lệ, phải là UUID' }),
+    purposeId: z.string().uuid({ message: 'ID mục đích không hợp lệ' }),
 
     density: z.coerce.number().min(0).positive({ message: 'Mật độ phải là số dương' }),
 
-    densityUnitId: z.string().uuid({ message: 'Đơn vị mật độ không hợp lệ, phải là UUID' }),
+    densityUnitId: z.string().uuid({ message: 'Đơn vị mật độ không hợp lệ' }),
 
-    areaUnitId: z.string().uuid({ message: 'Đơn vị diện tích không hợp lệ, phải là UUID' }),
+    areaUnitId: z.string().uuid({ message: 'Đơn vị diện tích không hợp lệ' }),
 });
 
 export type ChickenCoop = z.infer<typeof ChickenCoopSchema>;

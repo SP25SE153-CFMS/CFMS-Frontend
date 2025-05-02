@@ -13,6 +13,7 @@
     },
     "dependencies": {
         "@hookform/resolvers": "^3.10.0",
+        "@microsoft/signalr": "^8.0.7",
         "@radix-ui/react-accordion": "^1.2.3",
         "@radix-ui/react-alert-dialog": "^1.1.6",
         "@radix-ui/react-avatar": "^1.1.2",
@@ -61,11 +62,13 @@
         "react-icons": "^5.4.0",
         "react-leaflet": "^4.2.1",
         "react-phone-number-input": "^3.4.12",
+        "react-qr-code": "^2.0.15",
         "recharts": "^2.15.1",
         "tailwind-merge": "^2.6.0",
         "tailwindcss-animate": "^1.0.7",
         "translate": "^3.0.1",
         "uuid": "^11.1.0",
+        "vaul": "^1.1.2",
         "zod": "^3.24.2",
         "zustand": "^5.0.3"
     },

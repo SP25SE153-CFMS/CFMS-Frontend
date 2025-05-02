@@ -38,9 +38,9 @@ export default function EvaluatedTargetForm({ defaultValues, onSubmit }: Evaluat
         try {
             onSubmit(data);
             toast.success('Form submitted successfully!');
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            toast.error('Failed to submit the form.');
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         }
     };
 

@@ -32,6 +32,7 @@ import { CategoryType } from '@/utils/enum/category.enum';
 import { SelectNative } from '../ui/select-native';
 import { addFeedSession, updateFeedSession } from '@/services/nutrition-plan.service';
 import { formatDate } from '@/utils/functions';
+import { onError } from '@/utils/functions/form.function';
 interface FeedSessionFormProps {
     defaultValues?: Partial<FeedSession>;
     closeDialog: () => void;
@@ -46,7 +47,8 @@ export default function FeedSessionForm({ defaultValues, closeDialog }: FeedSess
         defaultValues: {
             feedSessionId: '',
             nutritionPlanId: nutritionPlanId as string,
-            feedingTime: '',
+            startTime: '',
+            endTime: '',
             feedAmount: 0,
             unitId: '',
             note: '',
@@ -69,20 +71,16 @@ export default function FeedSessionForm({ defaultValues, closeDialog }: FeedSess
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 
     // Form submit handler
     async function onSubmit(values: FeedSession) {
-        values.feedingTime = dayjs(values.feedingTime).format('YYYY-MM-DD');
+        values.startTime = dayjs(values.startTime).format('YYYY-MM-DD');
+        values.endTime = dayjs(values.endTime).format('YYYY-MM-DD');
         mutation.mutate(values);
     }
-
-    // Form error handler
-    const onError = (error: any) => {
-        console.error(error);
-    };
 
     return (
         <Form {...form}>
@@ -91,10 +89,57 @@ export default function FeedSessionForm({ defaultValues, closeDialog }: FeedSess
                     {/* Thời gian cho ăn */}
                     <FormField
                         control={form.control}
-                        name="feedingTime"
+                        name="startTime"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Thời gian cho ăn</FormLabel>
+                                <FormLabel>Thời gian bắt đầu</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={'outline'}
+                                                className={cn(
+                                                    'w-full pl-3 text-left font-normal',
+                                                    !field.value && 'text-muted-foreground',
+                                                )}
+                                            >
+                                                {formatDate(field.value)}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={
+                                                field.value ? new Date(field.value) : undefined
+                                            }
+                                            onSelect={(date) => {
+                                                if (date) {
+                                                    const currentTime = new Date();
+                                                    date.setHours(currentTime.getHours());
+                                                    date.setMinutes(currentTime.getMinutes());
+                                                    field.onChange(date.toISOString());
+                                                }
+                                            }}
+                                            initialFocus
+                                            disabled={(date) => date < new Date()}
+                                            locale={vi}
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Thời gian cho ăn */}
+                    <FormField
+                        control={form.control}
+                        name="endTime"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Thời gian kết thúc</FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
                                         <FormControl>

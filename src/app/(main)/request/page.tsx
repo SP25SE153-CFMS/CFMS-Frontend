@@ -311,7 +311,7 @@ export default function Page() {
                 })}
             </div> */}
 
-            {filteredRequests?.length === 0 && (
+            {/* {filteredRequests?.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-10 bg-muted/20 rounded-lg border border-dashed p-8 mt-4">
                     <Image
                         src="/no-data.jpg"
@@ -342,15 +342,9 @@ export default function Page() {
                                 Xem tất cả
                             </Button>
                         )}
-                        {/* <Link href={config.routes.createRequest || '#'}>
-                            <Button>
-                                <Plus size={16} className="mr-1" />
-                                Tạo phiếu yêu cầu
-                            </Button>
-                        </Link> */}
                     </div>
                 </div>
-            )}
+            )} */}
         </div>
     );
 }

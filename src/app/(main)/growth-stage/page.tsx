@@ -2,7 +2,16 @@
 
 import { useState } from 'react';
 import Image from '@/components/fallback-image';
-import { Download, Search, ChevronLeft, Plus, Filter } from 'lucide-react';
+import {
+    Download,
+    Search,
+    ChevronLeft,
+    Plus,
+    Filter,
+    Grid,
+    Columns3,
+    TrendingUp,
+} from 'lucide-react';
 
 import { columns } from './columns';
 
@@ -31,12 +40,23 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import {
+    Timeline,
+    TimelineContent,
+    TimelineDate,
+    TimelineHeader,
+    TimelineIndicator,
+    TimelineItem,
+    TimelineSeparator,
+    TimelineTitle,
+} from '@/components/ui/timeline';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
 
+    const [viewMode, setViewMode] = useState<'table' | 'timeline'>('table');
     const [searchTerm, setSearchTerm] = useState('');
     const [stageCodeFilter, setStageCodeFilter] = useState('all');
 
@@ -135,6 +155,45 @@ export default function Page() {
         return matchesSearch && matchesStageFilter;
     });
 
+    const timelines = filteredGrowthStages.reduce(
+        (acc, stage) => {
+            const timeline = acc.find((t) => t.stageCode === stage.stageCode);
+            const stageData = {
+                id: stage.growthStageId,
+                date: `Tuần ${stage.minAgeWeek} - ${stage.maxAgeWeek}`,
+                title: stage.stageName,
+                description: stage.description ?? '',
+                minAgeWeek: stage.minAgeWeek, // Include minAgeWeek for sorting
+            };
+
+            if (timeline) {
+                timeline.stages.push(stageData);
+            } else {
+                acc.push({
+                    stageCode: stage.stageCode,
+                    stages: [stageData],
+                });
+            }
+
+            return acc;
+        },
+        [] as {
+            stageCode: string;
+            stages: {
+                id: string;
+                date: string;
+                title: string;
+                description: string;
+                minAgeWeek: number;
+            }[];
+        }[],
+    );
+
+    // Sort each timeline's stages by minAgeWeek
+    timelines.forEach((timeline) => {
+        timeline.stages.sort((a, b) => a.minAgeWeek - b.minAgeWeek);
+    });
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -155,9 +214,12 @@ export default function Page() {
             {/* Main Content */}
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">
-                        Quản lý giai đoạn phát triển
-                    </h1>
+                    <div className="flex items-center gap-3 mb-2">
+                        <TrendingUp className="h-6 w-6 text-muted-foreground" />
+                        <h1 className="text-2xl font-bold tracking-tight">
+                            Quản lý giai đoạn phát triển
+                        </h1>
+                    </div>
                     <p className="text-muted-foreground mt-1">
                         Quản lý tất cả các giai đoạn phát triển trong trang trại
                     </p>
@@ -195,7 +257,7 @@ export default function Page() {
             <Card>
                 <CardHeader className="pb-3">
                     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                        <div className="flex flex-col gap-4 md:flex-row md:items-center w-full">
+                        <div className="flex flex-col gap-4 md:flex-row md:items-center w-full justify-between">
                             <div className="relative w-full md:w-72">
                                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                                 <Input
@@ -224,11 +286,77 @@ export default function Page() {
                                     </SelectContent>
                                 </Select>
                             </div>
+                            <div className="flex items-center gap-1 border rounded-md p-1">
+                                <Button
+                                    variant={viewMode === 'timeline' ? 'default' : 'ghost'}
+                                    size="sm"
+                                    className="h-7 px-4"
+                                    onClick={() => setViewMode('timeline')}
+                                >
+                                    <Grid className="h-4 w-4" />
+                                    <span>Dạng timeline</span>
+                                </Button>
+                                <Button
+                                    variant={viewMode === 'table' ? 'default' : 'ghost'}
+                                    size="sm"
+                                    className="h-7 px-4"
+                                    onClick={() => setViewMode('table')}
+                                >
+                                    <Columns3 className="h-4 w-4" />
+                                    <span>Dạng bảng</span>
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <DataTable data={filteredGrowthStages} columns={columns} />
+                    {/* Timeline View */}
+                    {viewMode === 'timeline' && (
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                            {timelines.map((timeline) => (
+                                <Card
+                                    className="shadow-md border-t-4 mt-4 border-t-primary"
+                                    key={timeline.stageCode}
+                                >
+                                    <CardHeader className="font-bold text-lg mb-4 text-center">
+                                        {timeline.stageCode}
+                                    </CardHeader>
+                                    <CardContent>
+                                        <Timeline defaultValue={3}>
+                                            {timeline.stages.map((item, idx) => (
+                                                <TimelineItem
+                                                    key={item.id}
+                                                    step={idx}
+                                                    className="group-data-[orientation=vertical]/timeline:sm:ms-32 pb-12"
+                                                >
+                                                    <TimelineHeader>
+                                                        <TimelineSeparator />
+                                                        <TimelineDate className="group-data-[orientation=vertical]/timeline:sm:absolute group-data-[orientation=vertical]/timeline:sm:-left-32 group-data-[orientation=vertical]/timeline:sm:w-20 group-data-[orientation=vertical]/timeline:sm:text-right">
+                                                            {item.date}
+                                                        </TimelineDate>
+                                                        <TimelineTitle className="sm:-mt-0.5">
+                                                            {item.title}
+                                                        </TimelineTitle>
+                                                        <TimelineIndicator />
+                                                    </TimelineHeader>
+                                                    <TimelineContent>
+                                                        {item.description}
+                                                    </TimelineContent>
+                                                </TimelineItem>
+                                            ))}
+                                        </Timeline>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Table View */}
+                    {viewMode === 'table' && (
+                        <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
+                            <DataTable data={filteredGrowthStages} columns={columns} />
+                        </div>
+                    )}
                 </CardContent>
             </Card>
         </div>

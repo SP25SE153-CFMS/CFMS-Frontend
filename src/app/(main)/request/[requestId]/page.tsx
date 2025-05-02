@@ -56,11 +56,10 @@ export default function RequestDetailPage() {
 
     const { data: requestDetail, isLoading } = useQuery({
         queryKey: ['requestDetail', requestId],
-        queryFn: () => getRequestById(requestId)
-        
+        queryFn: () => getRequestById(requestId),
     });
 
-    console.log("Detail cua request: ", requestDetail);
+    console.log('Detail cua request: ', requestDetail);
 
     const queryClient = useQueryClient();
 
@@ -73,7 +72,7 @@ export default function RequestDetailPage() {
         },
         onError: (error: any) => {
             console.error(error);
-            toast.error(error?.response?.data?.message);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
         },
     });
 

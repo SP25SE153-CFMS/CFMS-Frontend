@@ -55,22 +55,22 @@ export const chickenCoopStatusVariant: Record<string, any> = {
 export enum UserStatus {
     INACTIVE,
     ACTIVE,
-    BANNED,
     FIRED,
+    DELETED,
 }
 
 export const userStatusLabels: Record<string, string> = {
-    [UserStatus.INACTIVE]: 'Không hoạt động',
+    [UserStatus.INACTIVE]: 'Đình chỉ',
     [UserStatus.ACTIVE]: 'Đang làm việc',
-    [UserStatus.BANNED]: 'Bị cấm',
-    [UserStatus.FIRED]: 'Nghỉ việc',
+    [UserStatus.FIRED]: 'Sa thải',
+    [UserStatus.DELETED]: 'Bị xóa',
 };
 
 export const userStatusVariant: Record<string, any> = {
-    [UserStatus.INACTIVE]: 'muted',
+    [UserStatus.INACTIVE]: 'outline',
     [UserStatus.ACTIVE]: 'default',
-    [UserStatus.BANNED]: 'warning',
-    [UserStatus.FIRED]: 'destructive',
+    [UserStatus.FIRED]: 'muted',
+    [UserStatus.DELETED]: 'destructive',
 };
 
 // Farm employee status
@@ -133,26 +133,26 @@ export const flockStatusVariant: Record<string, any> = {
 // Request status
 export enum RequestStatus {
     PENDING,
-    APPROVED,
     REJECTED,
+    APPROVED,
 }
 
 export const requestStatusLabels: Record<string, string> = {
     [RequestStatus.PENDING]: 'Đang chờ duyệt',
-    [RequestStatus.APPROVED]: 'Đã duyệt',
     [RequestStatus.REJECTED]: 'Từ chối',
+    [RequestStatus.APPROVED]: 'Đã duyệt',
 };
 
 export const requestStatusVariant: Record<string, any> = {
     [RequestStatus.PENDING]: 'outline',
-    [RequestStatus.APPROVED]: 'default',
     [RequestStatus.REJECTED]: 'destructive',
+    [RequestStatus.APPROVED]: 'default',
 };
 
 export const requestStatusBadge: Record<string, any> = {
     [RequestStatus.PENDING]: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-    [RequestStatus.APPROVED]: 'bg-green-50 text-green-700 border-green-200',
     [RequestStatus.REJECTED]: 'bg-red-50 text-red-700 border-red-200',
+    [RequestStatus.APPROVED]: 'bg-green-50 text-green-700 border-green-200',
 };
 
 // Chicken batch status

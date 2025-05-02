@@ -2,11 +2,9 @@ import { z } from 'zod';
 import { CommonStatus } from '../enum/status.enum';
 
 export const GrowthBatchSchema = z.object({
-    growthBatchId: z.string().uuid({ message: 'ID lô tăng trưởng không hợp lệ, phải là UUID' }),
-    chickenBatchId: z.string().uuid({ message: 'ID lô gà không hợp lệ, phải là UUID' }),
-    growthStageId: z
-        .string()
-        .uuid({ message: 'ID giai đoạn tăng trưởng không hợp lệ, phải là UUID' }),
+    growthBatchId: z.string().uuid({ message: 'ID lô tăng trưởng không hợp lệ' }),
+    chickenBatchId: z.string().uuid({ message: 'ID lô gà không hợp lệ' }),
+    growthStageId: z.string().uuid({ message: 'ID giai đoạn tăng trưởng không hợp lệ' }),
     startDate: z
         .string()
         .datetime({ message: 'Ngày bắt đầu không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
