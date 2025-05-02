@@ -56,7 +56,7 @@ export default function Page() {
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
 
-    const [viewMode, setViewMode] = useState<'table' | 'timeline'>('table');
+    const [viewMode, setViewMode] = useState<'table' | 'timeline'>('timeline');
     const [searchTerm, setSearchTerm] = useState('');
     const [stageCodeFilter, setStageCodeFilter] = useState('all');
 
