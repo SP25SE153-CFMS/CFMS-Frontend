@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { create } from 'zustand';
 
 // State types
@@ -9,7 +10,6 @@ interface States {
 interface Actions {
     openDialog: () => void;
     closeDialog: () => void;
-    // eslint-disable-next-line no-unused-vars
     onOpenChange: (open: boolean) => void;
 }
 

@@ -170,6 +170,20 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
         }
     };
 
+    const handleMaxQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const maxQuantity = Number(e.target.value);
+        form.setValue('maxQuantity', maxQuantity);
+
+        // Calculate area based on max quantity and density
+        if (form.getValues('density') === 0) {
+            form.setValue('area', 0);
+        } else {
+            const result = maxQuantity / form.getValues('density');
+            const area = Math.round(result);
+            form.setValue('area', area);
+        }
+    };
+
     return (
         <Form {...form}>
             <form
@@ -407,9 +421,9 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                     <FormItem className="md:col-span-2">
                                         <div className="flex items-center justify-between">
                                             <FormLabel>Sức chứa tối đa</FormLabel>
-                                            <div className="text-xs text-muted-foreground">
+                                            {/* <div className="text-xs text-muted-foreground">
                                                 Tự động tính từ diện tích và mật độ
-                                            </div>
+                                            </div> */}
                                         </div>
                                         <div className="relative">
                                             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -420,9 +434,10 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                                     type="number"
                                                     placeholder="Sức chứa tối đa"
                                                     min={0}
-                                                    disabled
-                                                    className="h-10 pl-10 bg-muted/50 font-medium"
+                                                    // disabled
+                                                    className="h-10 pl-10 font-medium"
                                                     {...field}
+                                                    onChange={handleMaxQuantityChange}
                                                 />
                                             </FormControl>
                                             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">

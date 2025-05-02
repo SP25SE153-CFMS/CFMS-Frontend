@@ -28,7 +28,6 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-    DropdownMenuSeparator,
     DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -43,6 +42,8 @@ import { Badge } from '@/components/ui/badge';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import Link from 'next/link';
+import { mapEnumToValues } from '@/utils/functions/enum.function';
+import { ChickenCoopStatus, chickenCoopStatusLabels } from '@/utils/enum/status.enum';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -342,7 +343,7 @@ export default function Page() {
                                         Lọc
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-[220px]">
+                                <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Khu vực nuôi</DropdownMenuLabel>
                                     {breedingAreas.map((area) => (
                                         <DropdownMenuItem
@@ -360,11 +361,11 @@ export default function Page() {
                                             )}
                                         </DropdownMenuItem>
                                     ))}
-                                    <DropdownMenuSeparator />
+                                    {/* <DropdownMenuSeparator />
                                     <DropdownMenuLabel>Trạng thái</DropdownMenuLabel>
                                     <DropdownMenuItem>Tất cả chuồng</DropdownMenuItem>
                                     <DropdownMenuItem>Đang hoạt động</DropdownMenuItem>
-                                    <DropdownMenuItem>Tạm ngưng</DropdownMenuItem>
+                                    <DropdownMenuItem>Tạm ngưng</DropdownMenuItem> */}
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </div>
@@ -374,24 +375,33 @@ export default function Page() {
                     <Tabs defaultValue="all" className="w-full">
                         <TabsList className="mb-4">
                             <TabsTrigger value="all">Tất cả ({chickenCoops.length})</TabsTrigger>
-                            <TabsTrigger value="active">Đang hoạt động</TabsTrigger>
-                            <TabsTrigger value="inactive">Tạm ngưng</TabsTrigger>
+                            {mapEnumToValues(ChickenCoopStatus).map((status) => (
+                                <TabsTrigger key={status} value={status}>
+                                    {chickenCoopStatusLabels[status]} (
+                                    {
+                                        chickenCoops.filter(
+                                            (coop) => coop.status?.toString() === status,
+                                        ).length
+                                    }
+                                    )
+                                </TabsTrigger>
+                            ))}
                         </TabsList>
                         <TabsContent value="all" className="m-0">
                             <DataTable data={filteredData || []} columns={columns} />
                         </TabsContent>
-                        <TabsContent value="active" className="m-0">
-                            <DataTable
-                                data={filteredData?.filter((coop) => coop.status === 0) || []}
-                                columns={columns}
-                            />
-                        </TabsContent>
-                        <TabsContent value="inactive" className="m-0">
-                            <DataTable
-                                data={filteredData?.filter((coop) => coop.status === 1) || []}
-                                columns={columns}
-                            />
-                        </TabsContent>
+                        {mapEnumToValues(ChickenCoopStatus).map((status) => (
+                            <TabsContent key={status} value={status} className="m-0">
+                                <DataTable
+                                    data={
+                                        filteredData?.filter(
+                                            (coop) => coop.status?.toString() === status,
+                                        ) || []
+                                    }
+                                    columns={columns}
+                                />
+                            </TabsContent>
+                        ))}
                     </Tabs>
                 </CardContent>
             </Card>
