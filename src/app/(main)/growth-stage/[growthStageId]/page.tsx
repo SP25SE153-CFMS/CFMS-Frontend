@@ -1,11 +1,14 @@
 'use client';
 
 import InfoItem from '@/components/info-item';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import config from '@/configs';
 import { getGrowthStageById } from '@/services/growth-stage.service';
 import { getChickenType } from '@/utils/functions/category.function';
 import { useQuery } from '@tanstack/react-query';
-import { ChartArea, Clock, House, Leaf, Tag } from 'lucide-react';
+import { ChartArea, Clock, FolderTree, House, Leaf, Tag } from 'lucide-react';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 export default function GrowthStagePage() {
@@ -73,18 +76,6 @@ export default function GrowthStagePage() {
                                 }
                                 icon={<House size={16} />}
                             />
-
-                            {/* Uncomment this code when you want to update */}
-                            {/* <div className="flex flex-row gap-x-3 gap-y-3 sm:flex-col mt-8">
-        <Button
-            component={Link}
-            to={`/dashboard/center/${centerId}/court/${courtId}/update`}
-            className="py-[10px] flex-1"
-            leftSection={<GrUpdate />}
-        >
-            Cập nhật
-        </Button> 
-    </div> */}
                         </div>
                     </Card>
                 </div>
@@ -153,17 +144,16 @@ export default function GrowthStagePage() {
                                     </strong>
                                 </div> */}
 
-                            {/* Uncomment this code when you want to update */}
-                            {/* <div className="flex flex-row gap-x-3 gap-y-3 sm:flex-col mt-8">
-                            <Button
-                                component={Link}
-                                to={`/dashboard/center/${centerId}/court/${courtId}/update`}
-                                className="py-[10px] flex-1"
-                                leftSection={<GrUpdate />}
-                            >
-                                Cập nhật
-                            </Button> 
-                        </div> */}
+                            {stage?.nutritionPlanId && (
+                                <Link
+                                    href={`${config.routes.nutritionPlan}/${stage?.nutritionPlanId}`}
+                                >
+                                    <Button variant="default" className="w-full gap-2">
+                                        <FolderTree size={16} />
+                                        Xem chi tiết
+                                    </Button>
+                                </Link>
+                            )}
                         </div>
                     </Card>
                 </div>

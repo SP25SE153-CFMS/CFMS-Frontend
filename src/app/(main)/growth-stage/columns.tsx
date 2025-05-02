@@ -111,10 +111,12 @@ export const columns: ColumnDef<GrowthStage>[] = [
             const nutritionPlan = nutritionPlans.find(
                 (plan) => plan.nutritionPlanId === nutritionPlanId,
             );
-            return (
+            return nutritionPlan ? (
                 <Link href={`${config.routes.nutritionPlan}/${nutritionPlanId}`}>
                     {nutritionPlan?.name ?? 'Không có'}
                 </Link>
+            ) : (
+                <div>Không có</div>
             );
         },
     },

@@ -109,6 +109,15 @@ export type StartChickenBatch = {
     maxGrowDays: number;
 };
 
+export type ExportChicken = {
+    chickenBatchId: string;
+    logDate: string | Date;
+    notes: string;
+    quantityLogDetails: ChickenDetailRequest[];
+    logType: number;
+    imageUrl?: string;
+};
+
 export type SplitChickenBatch = Omit<StartChickenBatch, 'chickenId'> & {
     parentBatchId: string;
     notes: string;

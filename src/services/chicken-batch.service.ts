@@ -3,6 +3,7 @@ import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 import {
     ChickenBatchResponse,
+    ExportChicken,
     SplitChickenBatch,
     StartChickenBatch,
 } from '@/utils/types/custom.type';
@@ -49,6 +50,12 @@ export const getChickenBatchByCoopId = async (chickenCoopId: string) => {
 export const addQuantityLog = async (quantityLog: QuantityLog) => {
     const endpoint = PREFIX + '/add-quantitylog';
     const response = await post<Response<string>>(endpoint, quantityLog);
+    return response.data;
+};
+
+export const exportChicken = async (body: ExportChicken) => {
+    const endpoint = PREFIX + '/add-quantitylog';
+    const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };
 

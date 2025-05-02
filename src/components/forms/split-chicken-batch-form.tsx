@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { AlertCircle, CalendarIcon, Loader2, Plus, Trash2 } from 'lucide-react';
 import dayjs from 'dayjs';
@@ -33,6 +33,7 @@ import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { formatDate } from '@/utils/functions';
 import { getChickenCoopsByBreedingAreaId } from '@/services/chicken-coop.service';
 import { Textarea } from '../ui/textarea';
+import { ChickenGender, chickenGenderLabels } from '@/utils/enum/gender.enum';
 
 export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: () => void }) {
     const queryClient = useQueryClient();
@@ -107,6 +108,39 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
 
         mutation.mutate(formData);
     };
+
+    const getQuantityMessage = useCallback(
+        (gender: ChickenGender) => {
+            const chickenDetails = JSON.parse(sessionStorage.getItem('chickenDetails') || '[]');
+            const detail = chickenDetails.find(
+                (item: ChickenDetailRequest) => item.gender === gender,
+            );
+            if (!detail) return '';
+            const currentQuantityInForm = chickenDetailRequests?.find(
+                (item) => item.gender === gender,
+            );
+            if (!currentQuantityInForm) return '';
+            if (currentQuantityInForm?.quantity > detail.quantity) {
+                return `Số lượng ${chickenGenderLabels[detail.gender]?.toLowerCase()} không được vượt quá ${detail.quantity}`;
+            }
+            return '';
+        },
+        [chickenDetailRequests],
+    );
+
+    const roosterQuantityMessage = useMemo(
+        () => getQuantityMessage(ChickenGender.ROOSTER),
+        [getQuantityMessage],
+    );
+
+    const henQuantityMessage = useMemo(
+        () => getQuantityMessage(ChickenGender.HEN),
+        [getQuantityMessage],
+    );
+
+    const isErrorQuantity = useMemo(() => {
+        return !!roosterQuantityMessage || !!henQuantityMessage;
+    }, [roosterQuantityMessage, henQuantityMessage]);
 
     return (
         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -348,73 +382,82 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
 
                     <div className="space-y-4 border p-4 rounded-md">
                         {chickenDetailRequests.map((detail, index) => (
-                            <div key={index} className="grid grid-cols-5 gap-4 pt-2">
-                                <div className="col-span-2">
-                                    <Label htmlFor={`gender-${index}`}>Giới tính</Label>
-                                    <Select
-                                        value={detail.gender.toString()}
-                                        onValueChange={(value) => {
-                                            const newDetails = [...chickenDetailRequests];
-                                            newDetails[index].gender = Number.parseInt(value);
-                                            setChickenDetailRequests(newDetails);
-                                        }}
-                                        disabled={chickenDetailRequests.length >= 2}
-                                    >
-                                        <SelectTrigger id={`gender-${index}`}>
-                                            <SelectValue placeholder="Chọn giới tính" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem
-                                                value="0"
-                                                disabled={
-                                                    index > 0 &&
-                                                    chickenDetailRequests[0].gender === 0
-                                                }
-                                            >
-                                                Trống
-                                            </SelectItem>
-                                            <SelectItem
-                                                value="1"
-                                                disabled={
-                                                    index > 0 &&
-                                                    chickenDetailRequests[0].gender === 1
-                                                }
-                                            >
-                                                Mái
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                            <div key={index}>
+                                <div className="grid grid-cols-5 gap-4 pt-2">
+                                    <div className="col-span-2">
+                                        <Label htmlFor={`gender-${index}`}>Giới tính</Label>
+                                        <Select
+                                            value={detail.gender.toString()}
+                                            onValueChange={(value) => {
+                                                const newDetails = [...chickenDetailRequests];
+                                                newDetails[index].gender = Number.parseInt(value);
+                                                setChickenDetailRequests(newDetails);
+                                            }}
+                                            disabled={chickenDetailRequests.length >= 2}
+                                        >
+                                            <SelectTrigger id={`gender-${index}`}>
+                                                <SelectValue placeholder="Chọn giới tính" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem
+                                                    value="0"
+                                                    disabled={
+                                                        index > 0 &&
+                                                        chickenDetailRequests[0].gender === 0
+                                                    }
+                                                >
+                                                    Trống
+                                                </SelectItem>
+                                                <SelectItem
+                                                    value="1"
+                                                    disabled={
+                                                        index > 0 &&
+                                                        chickenDetailRequests[0].gender === 1
+                                                    }
+                                                >
+                                                    Mái
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="col-span-2">
+                                        <Label htmlFor={`quantity-${index}`}>Số lượng</Label>
+                                        <Input
+                                            id={`quantity-${index}`}
+                                            type="number"
+                                            min="1"
+                                            value={detail.quantity}
+                                            onChange={(e) => {
+                                                const newDetails = [...chickenDetailRequests];
+                                                newDetails[index].quantity =
+                                                    Number.parseInt(e.target.value) || 0;
+                                                setChickenDetailRequests(newDetails);
+                                            }}
+                                        />
+                                    </div>
+                                    {chickenDetailRequests.length > 1 && (
+                                        <Button
+                                            type="button"
+                                            variant="destructive"
+                                            size="sm"
+                                            className="mt-6"
+                                            onClick={() => {
+                                                const newDetails = [...chickenDetailRequests];
+                                                newDetails.splice(index, 1);
+                                                setChickenDetailRequests(newDetails);
+                                            }}
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </Button>
+                                    )}
                                 </div>
-                                <div className="col-span-2">
-                                    <Label htmlFor={`quantity-${index}`}>Số lượng</Label>
-                                    <Input
-                                        id={`quantity-${index}`}
-                                        type="number"
-                                        min="1"
-                                        value={detail.quantity}
-                                        onChange={(e) => {
-                                            const newDetails = [...chickenDetailRequests];
-                                            newDetails[index].quantity =
-                                                Number.parseInt(e.target.value) || 0;
-                                            setChickenDetailRequests(newDetails);
-                                        }}
-                                    />
-                                </div>
-                                {chickenDetailRequests.length > 1 && (
-                                    <Button
-                                        type="button"
-                                        variant="destructive"
-                                        size="sm"
-                                        className="mt-6"
-                                        onClick={() => {
-                                            const newDetails = [...chickenDetailRequests];
-                                            newDetails.splice(index, 1);
-                                            setChickenDetailRequests(newDetails);
-                                        }}
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </Button>
-                                )}
+                                <span className="text-red-500 text-sm">
+                                    {detail.gender === ChickenGender.ROOSTER &&
+                                        roosterQuantityMessage}
+                                </span>
+                                <span className="text-red-500 text-sm">
+                                    {detail.gender === ChickenGender.HEN && henQuantityMessage}
+                                </span>
                             </div>
                         ))}
 
@@ -468,7 +511,7 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                 <Button
                     type="submit"
                     className="flex items-center w-xl"
-                    disabled={mutation.isPending}
+                    disabled={isErrorQuantity || mutation.isPending}
                 >
                     {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Tách lứa nuôi

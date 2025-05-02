@@ -48,9 +48,9 @@ import {
 } from '@/components/ui/dialog';
 import SplitChickenBatchForm from '@/components/forms/split-chicken-batch-form';
 import { GrowthStageResponse } from '@/utils/types/custom.type';
-import QuantityLogForm from '@/components/forms/quantity-log-form';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { calculateDuration } from '@/utils/functions';
+import ExportChickenForm from '@/components/forms/export-chicken-form';
 
 export default function Page() {
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
@@ -60,7 +60,11 @@ export default function Page() {
 
     const { data: chickenBatch, isLoading } = useQuery({
         queryKey: ['chickenBatch', chickenBatchId],
-        queryFn: () => getChickenBatchById(chickenBatchId),
+        queryFn: async () => {
+            const data = await getChickenBatchById(chickenBatchId);
+            sessionStorage.setItem('chickenDetails', JSON.stringify(data.chickenDetails));
+            return data;
+        },
         enabled: !!chickenBatchId,
     });
 
@@ -191,14 +195,16 @@ export default function Page() {
                                             Xuất chuồng
                                         </Button>
                                     </DialogTrigger>
-                                    <DialogContent className="max-w-lg">
+                                    <DialogContent className="max-w-3xl">
                                         <DialogHeader>
                                             <DialogTitle>Xuất chuồng</DialogTitle>
                                             <DialogDescription>
                                                 Hãy nhập các thông tin dưới đây để xuất chuồng
                                             </DialogDescription>
                                         </DialogHeader>
-                                        <QuantityLogForm closeDialog={() => setOpenExport(false)} />
+                                        <ExportChickenForm
+                                            closeDialog={() => setOpenExport(false)}
+                                        />
                                     </DialogContent>
                                 </Dialog>
                             )}
