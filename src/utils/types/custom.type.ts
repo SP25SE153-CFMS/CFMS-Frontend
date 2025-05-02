@@ -82,6 +82,7 @@ export type ChickenBatchResponse = ChickenBatch &
         chickenDetails: ChickenDetail[];
         minGrowDays: number;
         maxGrowDays: number;
+        initChickenQuantity: number;
     };
 
 export type CategoryResponse = Category & {

@@ -255,11 +255,17 @@ export default function Page() {
                                 <InfoItem
                                     icon={<Egg className="h-4 w-4" />}
                                     label="Tổng số lượng"
+                                    value={chickenBatch?.initChickenQuantity + ' con'}
+                                />
+
+                                <InfoItem
+                                    icon={<Egg className="h-4 w-4" />}
+                                    label="Số lượng còn lại"
                                     value={
                                         chickenBatch?.chickenDetails.reduce(
                                             (acc, curr) => acc + curr.quantity,
                                             0,
-                                        ) || '-'
+                                        ) + ' con'
                                     }
                                 />
 

@@ -41,7 +41,7 @@ export const columns: ColumnDef<QuantityLog>[] = [
     {
         accessorKey: 'quantity',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Số Lượng" />,
-        cell: ({ row }) => <div>{row.getValue('quantity')}</div>,
+        cell: ({ row }) => <div>{row.getValue('quantity') + ' con'}</div>,
     },
     {
         accessorKey: 'logType',
