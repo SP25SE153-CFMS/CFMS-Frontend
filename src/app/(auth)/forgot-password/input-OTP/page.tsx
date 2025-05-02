@@ -42,7 +42,7 @@ export default function InputOTPForm() {
     const [timeLeft, setTimeLeft] = useState(5 * 60); // 5 minutes
     const [isResendDisabled, setIsResendDisabled] = useState(true);
 
-    const { otp } = useQueryParams();
+    const { otp, email } = useQueryParams();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -69,9 +69,10 @@ export default function InputOTPForm() {
         if (otp) {
             form.setValue('otp', otp);
             sessionStorage.setItem('otp', otp);
+            sessionStorage.setItem('email', email);
             router.push(config.routes.resetPassword);
         }
-    }, [otp, form, router]);
+    }, [otp, form, router, email]);
 
     // Format time as MM:SS
     const formatTime = (seconds: number) => {
