@@ -73,11 +73,10 @@ export default function ForgotPasswordPage() {
             toast.success(response.message);
 
             setShowSuccessDialog(true);
-            router.push(config.routes.inputOTP);
-            // setTimeout(() => {
-            //     setShowSuccessDialog(false);
-            //     router.push(config.routes.inputOTP);
-            // }, 1000);
+            setTimeout(() => {
+                setShowSuccessDialog(false);
+                router.push(config.routes.inputOTP);
+            }, 1000);
         } catch (err: any) {
             console.error(err);
             toast(err?.response?.data?.message, { icon: '⚠️' });
