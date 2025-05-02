@@ -3,7 +3,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
-import dayjs from 'dayjs';
 import { FeedSession } from '@/utils/schemas/feed-session.schema';
 
 export const columns: ColumnDef<FeedSession>[] = [
@@ -37,10 +36,16 @@ export const columns: ColumnDef<FeedSession>[] = [
     //     cell: ({ row }) => <div>{row.getValue('feedSessionId')}</div>,
     // },
     {
-        accessorKey: 'feedingTime',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Thời Gian Cho Ăn" />,
-        cell: ({ row }) => (
-            <div>{dayjs(row.getValue('feedingTime')).format('DD/MM/YYYY HH:mm')}</div>
+        accessorKey: 'startTime',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Thời Gian Bắt Đầu" />,
+        // cell: ({ row }) => (
+        //     <div>{dayjs(row.getValue('startTime')).format('DD/MM/YYYY HH:mm')}</div>
+        // ),
+    },
+    {
+        accessorKey: 'endTime',
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Thời Gian Kết thúc" />
         ),
     },
     {

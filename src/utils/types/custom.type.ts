@@ -63,6 +63,7 @@ export type ChickenResponse = Chicken & {
 
 export type GrowthStageResponse = GrowthStage & {
     nutritionPlanId: string;
+    nutritionPlan: NutritionPlan;
 };
 
 export type GrowthBatchResponse = GrowthBatch & {

@@ -7,6 +7,8 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import { DataTableRowActions } from './data-table-row-actions';
 import { getChickenType } from '@/utils/functions/category.function';
 import { NutritionPlan } from '@/utils/schemas/nutrition-plan.schema';
+import Link from 'next/link';
+import config from '@/configs';
 
 export const columns: ColumnDef<GrowthStage>[] = [
     {
@@ -42,10 +44,9 @@ export const columns: ColumnDef<GrowthStage>[] = [
         accessorKey: 'stageName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tên giai đoạn" />,
         cell: ({ row }) => (
-            // <Link href={`${config.routes.growthStage}/${row.getValue('growthStageId')}`}>
-            //     {row.getValue('stageName')}
-            // </Link>\
-            <div>{row.getValue('stageName')}</div>
+            <Link href={`${config.routes.growthStage}/${row.getValue('growthStageId')}`}>
+                {row.getValue('stageName')}
+            </Link>
         ),
     },
     {
@@ -53,7 +54,7 @@ export const columns: ColumnDef<GrowthStage>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mô tả" />,
         cell: ({ row }) => (
             <div className="max-w-[200px] text-left cursor-default">
-                {row.getValue('description')}
+                {row.getValue('description') || 'Không có mô tả'}
             </div>
         ),
         // <TooltipProvider>
@@ -70,7 +71,7 @@ export const columns: ColumnDef<GrowthStage>[] = [
     {
         accessorKey: 'stageCode',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mã giai đoạn" />,
-        cell: ({ row }) => <div>{row.getValue('stageCode') ?? 'Không có'}</div>,
+        cell: ({ row }) => <div>{row.getValue('stageCode') || 'Không có'}</div>,
     },
     {
         accessorKey: 'chickenType',
@@ -110,7 +111,11 @@ export const columns: ColumnDef<GrowthStage>[] = [
             const nutritionPlan = nutritionPlans.find(
                 (plan) => plan.nutritionPlanId === nutritionPlanId,
             );
-            return <div>{nutritionPlan?.name ?? 'Không có'}</div>;
+            return (
+                <Link href={`${config.routes.nutritionPlan}/${nutritionPlanId}`}>
+                    {nutritionPlan?.name ?? 'Không có'}
+                </Link>
+            );
         },
     },
     {
