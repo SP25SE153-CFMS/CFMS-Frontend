@@ -43,7 +43,7 @@ export const getCurrentUser = async () => {
 
 export const forgotPassword = async (email: string) => {
     const endpoint = `${PREFIX}/forgot-password`;
-    const response = await get<Response<string>>(endpoint, { email });
+    const response = await post<Response<string>>(endpoint, { email });
     return response.data;
 };
 

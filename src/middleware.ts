@@ -46,6 +46,10 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL(SIGN_IN_ROUTE, request.url));
     }
 
+    if (pathname === RESET_PASSWORD) {
+        return NextResponse.next();
+    }
+
     // If user has an access token but no farm ID and is not on the farm selection page,
     // redirect to farm selection page
     if (
