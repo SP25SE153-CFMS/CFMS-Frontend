@@ -349,5 +349,5 @@ export type HealthLogDetails = {
 };
 
 export type HealthLogRequest = CreateHealthLog & {
-    healthLogDetails: ChickenDetailRequest[];
+    healthLogDetails: HealthLogDetails[];
 };
