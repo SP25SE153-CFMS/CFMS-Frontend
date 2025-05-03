@@ -92,13 +92,13 @@ export const splitChickenBatch = async (body: SplitChickenBatch) => {
 
 export const addHealthLog = async (body: HealthLogRequest) => {
     const endpoint = PREFIX + '/add-healthlog';
-    const response = await post<Response<string>>(endpoint, body);
+    const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };
 
 export const deleteHealthLog = async (chickenBatchId: string, healthLogId: string) => {
     const endpoint = PREFIX + '/delete-healthlog';
     const body = { batchId: chickenBatchId, healthLogId };
-    const response = await post<Response<string>>(endpoint, body);
+    const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };
