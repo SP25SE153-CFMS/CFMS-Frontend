@@ -9,7 +9,6 @@ import {
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { RequestStatus } from '@/utils/enum/status.enum';
-import { InventoryReceipt } from '@/utils/schemas/inventory-receipt.schema';
 
 const PREFIX = '/api/Request';
 
@@ -44,9 +43,13 @@ export const deleteRequest = async (id: string) => {
     return response.data;
 };
 
-export const approveRequest = async (requestId: string, isApprove: RequestStatus) => {
+export const approveRequest = async (
+    requestId: string,
+    isApproved: RequestStatus,
+    notes: string,
+) => {
     const endpoint = PREFIX + '/approve';
-    const body = { requestId, isApprove };
+    const body = { requestId, isApproved, notes };
     const response = await put<Response<string>>(endpoint, body);
     return response.data;
 };

@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 
+import { CheckCircle, Clock, X } from 'lucide-react';
+
 // This is a common status enum for all entities
 export enum CommonStatus {
     INACTIVE,
@@ -153,6 +155,18 @@ export const requestStatusBadge: Record<string, any> = {
     [RequestStatus.PENDING]: 'bg-yellow-50 text-yellow-700 border-yellow-200',
     [RequestStatus.REJECTED]: 'bg-red-50 text-red-700 border-red-200',
     [RequestStatus.APPROVED]: 'bg-green-50 text-green-700 border-green-200',
+};
+
+export const requestStatusColor: Record<string, string> = {
+    [RequestStatus.PENDING]: 'yellow',
+    [RequestStatus.REJECTED]: 'red',
+    [RequestStatus.APPROVED]: 'green',
+};
+
+export const requestStatusIcon: Record<string, any> = {
+    [RequestStatus.PENDING]: Clock,
+    [RequestStatus.REJECTED]: X,
+    [RequestStatus.APPROVED]: CheckCircle,
 };
 
 // Chicken batch status
