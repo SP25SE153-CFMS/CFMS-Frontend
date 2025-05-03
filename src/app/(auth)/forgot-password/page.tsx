@@ -158,7 +158,7 @@ export default function ForgotPasswordPage() {
             <AlertDialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2 text-red-600">
+                        <AlertDialogTitle className="flex items-center gap-2 text-orange-600">
                             <AlertCircle className="h-5 w-5" />
                             Lỗi
                         </AlertDialogTitle>

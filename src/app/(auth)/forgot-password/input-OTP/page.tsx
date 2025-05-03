@@ -104,11 +104,11 @@ export default function InputOTPForm() {
         setIsLoading(true);
         try {
             const response = await resetPassword({
-                email: sessionStorage.getItem('email') || '',
+                email: sessionStorage.getItem('email') || email,
                 otp: values.otp,
             });
             sessionStorage.setItem('otp', values.otp);
-            sessionStorage.setItem('email', sessionStorage.getItem('email') || '');
+            sessionStorage.setItem('email', sessionStorage.getItem('email') || email);
             toast.success(response.message || 'Xác thực thành công');
 
             setShowSuccessDialog(true);
@@ -238,7 +238,7 @@ export default function InputOTPForm() {
             <AlertDialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2 text-red-600">
+                        <AlertDialogTitle className="flex items-center gap-2 text-orange-600">
                             <AlertCircle className="h-5 w-5" />
                             Lỗi xác thực
                         </AlertDialogTitle>

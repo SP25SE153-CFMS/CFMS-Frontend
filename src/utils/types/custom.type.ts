@@ -70,11 +70,22 @@ export type GrowthBatchResponse = GrowthBatch & {
     growthStage: GrowthStageResponse;
 };
 
+export type QuantityLogDetails = {
+    quantityLogDetailId: string;
+    quantityLogId: string;
+    quantity: number;
+    gender: ChickenGender;
+};
+
+export type QuantityLogResponse = QuantityLog & {
+    quantityLogDetails: QuantityLogDetails[];
+};
+
 export type ChickenBatchResponse = ChickenBatch &
     DashboardChickenBatch & {
         vaccineLogs: VaccinationLog[];
         healthLogs: HealthLog[];
-        quantityLogs: QuantityLog[];
+        quantityLogs: QuantityLogResponse[];
         feedLogs: FeedLog[];
         chicken: ChickenResponse;
         growthBatches: GrowthBatchResponse[];

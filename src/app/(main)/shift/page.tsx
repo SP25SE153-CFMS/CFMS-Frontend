@@ -20,7 +20,6 @@ import { deleteShift, getShifts } from '@/services/shift.service';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import Image from '@/components/fallback-image';
 import ShiftCard from './shift-card';
-import { Separator } from '@radix-ui/react-separator';
 import {
     AlertDialog,
     AlertDialogContent,
@@ -31,6 +30,7 @@ import {
 import toast from 'react-hot-toast';
 import { Shift } from '@/utils/schemas/shift.schema';
 import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 
 export default function Page() {
     const [open, setOpen] = useState(false);

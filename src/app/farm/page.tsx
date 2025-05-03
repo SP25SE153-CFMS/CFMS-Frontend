@@ -51,8 +51,8 @@ import {
     DialogDescription,
     DialogFooter,
     DialogClose,
+    DialogTrigger,
 } from '@/components/ui/dialog';
-import { DialogTrigger } from '@radix-ui/react-dialog';
 import { FarmRole, farmRoleConfigs } from '@/utils/enum';
 import InfoItem from '@/components/info-item';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';

@@ -26,7 +26,7 @@ import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { DataTable } from '@/components/table/data-table';
 import { columns as tableColumns } from './columns';
 import RequestCard from './request-card';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function Page() {
     // State for filtering
