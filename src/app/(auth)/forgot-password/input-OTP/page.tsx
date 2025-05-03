@@ -20,14 +20,14 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertCircle, CheckCircle, KeyRound, RefreshCw } from 'lucide-react';
+import { AlertCircle, CheckCircle, KeyRound, Loader2, RefreshCw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import config from '@/configs';
 import { useQueryParams } from '@/hooks';
-import { forgotPassword } from '@/services/auth.service';
+import { forgotPassword, resetPassword } from '@/services/auth.service';
 import toast from 'react-hot-toast';
 
 const FormSchema = z.object({
@@ -41,6 +41,7 @@ export default function InputOTPForm() {
     const [errorMessage, setErrorMessage] = useState('');
     const [timeLeft, setTimeLeft] = useState(5 * 60); // 5 minutes
     const [isResendDisabled, setIsResendDisabled] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
     const { otp, email } = useQueryParams();
 
@@ -68,10 +69,9 @@ export default function InputOTPForm() {
     useEffect(() => {
         if (otp) {
             form.setValue('otp', otp);
-            sessionStorage.setItem('otp', otp);
-            sessionStorage.setItem('email', email);
-            router.push(config.routes.resetPassword);
+            form.handleSubmit(onSubmit)();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [otp, form, router, email]);
 
     // Format time as MM:SS
@@ -100,10 +100,16 @@ export default function InputOTPForm() {
     };
 
     // Hàm submit
-    const onSubmit = (values: z.infer<typeof FormSchema>) => {
+    const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+        setIsLoading(true);
         try {
-            // Log the OTP value
-            console.log('OTP submitted:', values.otp);
+            const response = await resetPassword({
+                email: sessionStorage.getItem('email') || '',
+                otp: values.otp,
+            });
+            sessionStorage.setItem('otp', values.otp);
+            sessionStorage.setItem('email', sessionStorage.getItem('email') || '');
+            toast.success(response.message || 'Xác thực thành công');
 
             setShowSuccessDialog(true);
 
@@ -112,11 +118,14 @@ export default function InputOTPForm() {
                 // console.log('Chuyển đến trang đổi mật khẩu');
                 router.push(config.routes.resetPassword);
             }, 1000);
-        } catch (error) {
+        } catch (error: any) {
+            console.error(error);
             setErrorMessage(
-                error instanceof Error ? error.message : 'Có lỗi xảy ra khi gửi mã OTP',
+                error?.response?.data?.message || 'Có lỗi xảy ra khi gửi yêu cầu đặt lại mật khẩu',
             );
             setShowErrorDialog(true);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -170,6 +179,11 @@ export default function InputOTPForm() {
                                                             <InputOTPSlot
                                                                 index={5}
                                                                 className="h-12 w-12 text-lg"
+                                                                onKeyDown={() => {
+                                                                    console.log('a');
+
+                                                                    form.handleSubmit(onSubmit)();
+                                                                }}
                                                             />
                                                         </InputOTPGroup>
                                                     </div>
@@ -182,7 +196,8 @@ export default function InputOTPForm() {
                                     </FormItem>
                                 )}
                             />
-                            <Button type="submit" className="w-full">
+                            <Button type="submit" className="w-full" disabled={isLoading}>
+                                {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                                 Xác nhận
                             </Button>
                         </form>

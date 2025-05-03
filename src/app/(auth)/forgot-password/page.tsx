@@ -79,11 +79,9 @@ export default function ForgotPasswordPage() {
             }, 1000);
         } catch (err: any) {
             console.error(err);
-            toast(err?.response?.data?.message, { icon: '⚠️' });
+            // toast(err?.response?.data?.message, { icon: '⚠️' });
             setErrorMessage(
-                err instanceof Error
-                    ? err.message
-                    : 'Có lỗi xảy ra khi gửi yêu cầu đặt lại mật khẩu',
+                err?.response?.data?.message || 'Có lỗi xảy ra khi gửi yêu cầu đặt lại mật khẩu',
             );
             setShowErrorDialog(true);
         } finally {

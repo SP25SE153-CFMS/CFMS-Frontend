@@ -84,9 +84,9 @@ export default function ResetPasswordPage() {
             // }, 1000);
         } catch (error: any) {
             console.error(error);
-            toast(error?.response?.data?.message, { icon: '⚠️' });
+            // toast(error?.response?.data?.message, { icon: '⚠️' });
             setErrorMessage(
-                error instanceof Error ? error.message : 'Có lỗi xảy ra khi đổi mật khẩu',
+                error?.response?.data?.message || 'Có lỗi xảy ra khi gửi yêu cầu đặt lại mật khẩu',
             );
             setShowErrorDialog(true);
         }

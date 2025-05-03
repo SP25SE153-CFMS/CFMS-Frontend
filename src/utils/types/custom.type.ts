@@ -323,7 +323,7 @@ export type ReceiptResponse = InventoryReceipt &
 
 export type ResetPasswordRequest = {
     email: string;
-    newPassword: string;
-    confirmPassword: string;
+    newPassword?: string;
+    confirmPassword?: string;
     otp: string;
 };
