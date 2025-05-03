@@ -16,8 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getSubBySubId } from '@/services/category.service';
-import { getRequestById } from '@/services/request.service';
-import { formatDate } from '@/utils/functions';
+import { getReceipts, getRequestById } from '@/services/request.service';
 import {
     type CreateInventoryReceipt,
     CreateInventoryReceiptSchema,
@@ -29,22 +28,28 @@ import {
     ArrowLeft,
     ArrowDownToLine,
     ArrowUpFromLine,
-    Calendar,
     Clipboard,
     Info,
     NotebookTextIcon as NoteText,
     CheckCircle2,
     XCircle,
+    Layers,
+    ChevronUp,
+    ChevronDown,
 } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Badge } from '@/components/ui/badge';
+import dayjs from 'dayjs';
 
 export default function RequestDetail() {
     const router = useRouter();
     const { requestId }: { requestId: string } = useParams();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [batchNumber, setBatchNumber] = useState<number>(1);
+    const [showBatchList, setShowBatchList] = useState(false);
+    const [openedBatchIndex, setOpenedBatchIndex] = useState<number | null>(null);
 
     const { data: requestDetail, isLoading: isLoadingRequest } = useQuery({
         queryKey: ['requestDetail', requestId],
@@ -57,9 +62,14 @@ export default function RequestDetail() {
         enabled: !!requestDetail?.requestTypeId,
     });
 
+    const { data: receipts } = useQuery({
+        queryKey: ['receipts'],
+        queryFn: () => getReceipts(),
+    });
+
     const subCategoryName = subCate?.subCategoryName;
     const receiptType = requestDetail?.requestTypeId;
-
+    // const newBatchNumber = requestDetail?.inventoryRequests.inventoryReceipts.length + 1;
     const form = useForm<CreateInventoryReceipt>({
         resolver: zodResolver(CreateInventoryReceiptSchema),
         defaultValues: {
@@ -81,15 +91,25 @@ export default function RequestDetail() {
     });
 
     useEffect(() => {
-        if (requestDetail && requestDetail.inventoryRequests.length > 0) {
+        if (requestDetail && subCate) {
             const request = requestDetail.inventoryRequests[0];
-            if (subCategoryName === 'IMPORT' && request.wareToId) {
-                form.setValue('wareToId', request.wareToId);
-            } else if (subCategoryName === 'EXPORT' && request.wareFromId) {
-                form.setValue('wareFromId', request.wareFromId);
-            }
+            form.reset({
+                requestId: requestId,
+                inventoryRequestId: request?.inventoryRequestId || '',
+                wareFromId: subCate.subCategoryName === 'EXPORT' ? request?.wareFromId || '' : '',
+                wareToId: subCate.subCategoryName === 'IMPORT' ? request?.wareToId || '' : '',
+                receiptTypeId: requestDetail.requestTypeId,
+                batchNumber: (request.inventoryReceipts.length || 0) +1,
+                receiptDetails:
+                    request?.inventoryRequestDetails.map((d) => ({
+                        resourceId: d.resourceId,
+                        actualQuantity: 0,
+                        unitId: d.unitId || '',
+                        note: '',
+                    })) || [],
+            });
         }
-    }, [requestDetail, subCategoryName, form]);
+    }, [requestDetail, subCate]);
 
     const onSubmit = (data: CreateInventoryReceipt) => {
         setIsSubmitting(true);
@@ -99,6 +119,12 @@ export default function RequestDetail() {
             setIsSubmitting(false);
             // Show success message or redirect
         }, 1500);
+    };
+
+    const onError = (errors: any) => {
+        console.log('Form errors:', errors);
+        // Có thể hiện toast hoặc alert ở đây nếu muốn
+        // alert('Có lỗi trong form, vui lòng kiểm tra lại!');
     };
 
     if (isLoadingRequest || isLoadingSubCate) {
@@ -166,185 +192,321 @@ export default function RequestDetail() {
             </div>
 
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                    {requestDetail.inventoryRequests.map((request) => (
-                        <div key={request.requestId} className="space-y-6">
-                            {(subCategoryName === 'IMPORT' || subCategoryName === 'EXPORT') && (
-                                <Card>
-                                    <CardHeader className="pb-2">
-                                        <CardTitle className="text-lg flex items-center gap-2">
-                                            <Info className="h-5 w-5 text-blue-500" />
-                                            {subCategoryName === 'IMPORT'
-                                                ? 'Thông tin phiếu nhập'
-                                                : 'Thông tin phiếu xuất'}
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="space-y-5 p-5">
-                                        {/* Request Type Section */}
-                                        <div className="rounded-lg bg-white p-3">
-                                            <div className="flex items-center justify-between">
-                                                <span className="text-sm font-medium text-gray-700">
-                                                    Loại phiếu:
-                                                </span>
-                                                <SubCateDisplay
-                                                    id={requestDetail.requestTypeId}
-                                                    mode="badge"
-                                                />
-                                            </div>
-                                        </div>
+                <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-6">
+                    {requestDetail.inventoryRequests.map((request) => {
+                        // const receipt = receipts?.find(
+                        //     (r) => r.inventoryRequestId === request.inventoryRequestId,
+                        // );
+                        const matchedReceipt =
+                            receipts?.filter(
+                                (r) => r.inventoryRequestId === request.inventoryRequestId,
+                            ) || [];
+                        // Lọc danh sách lô tương ứng resource hiện tại
 
-                                        <div className="flex items-center justify-between p-3">
-                                            <FormField
-                                                control={form.control}
-                                                name={
-                                                    subCategoryName === 'IMPORT'
-                                                        ? 'wareToId'
-                                                        : 'wareFromId'
-                                                }
-                                                render={({ field }) => (
-                                                    <>
-                                                        {/* Ẩn input id để submit */}
-                                                        <input type="hidden" {...field} />
-                                                        {/* Hiển thị tên kho */}
-                                                        <FormLabel className="text-sm font-medium text-gray-700 m-0">
-                                                            {subCategoryName === 'IMPORT'
-                                                                ? 'Kho nhập:'
-                                                                : 'Kho xuất:'}
-                                                        </FormLabel>
-                                                        <Input
-                                                            value={
-                                                                subCategoryName === 'IMPORT'
-                                                                    ? request.wareTo
-                                                                          ?.warehouseName || ''
-                                                                    : request.wareFrom
-                                                                          ?.warehouseName || ''
-                                                            }
-                                                            readOnly
-                                                            className="w-64 rounded-md border-gray-200 bg-gray-50 text-sm font-medium text-gray-700 focus:border-gray-300 focus:ring-0"
-                                                            tabIndex={-1}
-                                                        />
-                                                    </>
-                                                )}
-                                            />
-                                        </div>
-
-                                        <FormField
-                                            control={form.control}
-                                            name="inventoryRequestId"
-                                            render={({ field }) => (
-                                                <Input
-                                                    {...field}
-                                                    type="hidden"
-                                                    value={request.inventoryRequestId}
-                                                />
-                                            )}
-                                        />
-                                    </CardContent>
-                                </Card>
-                            )}
-
-                            <div className="space-y-4">
-                                <h2 className="text-xl font-semibold flex items-center gap-2">
-                                    <Clipboard className="h-5 w-5 text-blue-600" />
-                                    Chi tiết phiếu
-                                </h2>
-
-                                {request.inventoryRequestDetails.map((detail, index) => (
-                                    <Card
-                                        key={detail.inventoryRequestDetailId}
-                                        className="overflow-hidden"
-                                    >
-                                        <CardHeader className="bg-muted/50 pb-2">
-                                            <div className="flex justify-between items-center">
-                                                <CardTitle className="text-base flex items-center gap-2">
-                                                    <span>Sản phẩm {index + 1}</span>
-                                                </CardTitle>
-                                                <Badge
-                                                    variant="outline"
-                                                    className="bg-blue-50 text-blue-700"
-                                                >
-                                                    Số lượng yêu cầu: {detail.expectedQuantity}
-                                                </Badge>
-                                            </div>
+                        // console.log('Receipt: ', matchedReceipt);
+                        // console.log('So lo: ', request.inventoryReceipts.length);
+                        return (
+                            <div key={request.requestId} className="space-y-6">
+                                {(subCategoryName === 'IMPORT' || subCategoryName === 'EXPORT') && (
+                                    <Card>
+                                        <CardHeader className="pb-2">
+                                            <CardTitle className="text-lg flex items-center gap-2">
+                                                <Info className="h-5 w-5 text-blue-500" />
+                                                {subCategoryName === 'IMPORT'
+                                                    ? 'Thông tin phiếu nhập'
+                                                    : 'Thông tin phiếu xuất'}
+                                            </CardTitle>
                                         </CardHeader>
-
-                                        <CardContent className="pt-4">
-                                            <div className="grid md:grid-cols-2 gap-6">
-                                                <div>
-                                                    <ResourceCard resourceId={detail.resourceId} />
-                                                </div>
-
-                                                <div className="space-y-4">
-                                                    <div className="grid grid-cols-2 gap-4">
-                                                        <FormField
-                                                            control={form.control}
-                                                            name={`receiptDetails.${index}.actualQuantity`}
-                                                            render={({ field }) => (
-                                                                <FormItem>
-                                                                    <FormLabel>
-                                                                        Số lượng thực tế
-                                                                    </FormLabel>
-                                                                    <FormControl>
-                                                                        <Input
-                                                                            type="number"
-                                                                            min={0}
-                                                                            {...field}
-                                                                            placeholder="Nhập số lượng"
-                                                                            className="focus:ring-2 focus:ring-blue-500"
-                                                                            value={field.value}
-                                                                            onChange={(e) => {
-                                                                                const value =
-                                                                                    e.target.value;
-                                                                                field.onChange(
-                                                                                    value === ''
-                                                                                        ? undefined
-                                                                                        : Number(
-                                                                                              value,
-                                                                                          ),
-                                                                                );
-                                                                            }}
-                                                                        />
-                                                                    </FormControl>
-                                                                    <FormMessage />
-                                                                </FormItem>
-                                                            )}
-                                                        />
-
-                                                        <FormItem>
-                                                            <FormLabel>Đơn vị</FormLabel>
-                                                            <SubCateDisplay
-                                                                id={detail.unitId}
-                                                                mode="input"
-                                                            />
-                                                        </FormItem>
-                                                    </div>
-
-                                                    <FormField
-                                                        control={form.control}
-                                                        name={`receiptDetails.${index}.note`}
-                                                        render={({ field }) => (
-                                                            <FormItem>
-                                                                <FormLabel className="flex items-center gap-1">
-                                                                    <NoteText className="h-4 w-4" />
-                                                                    Ghi chú
-                                                                </FormLabel>
-                                                                <FormControl>
-                                                                    <Input
-                                                                        {...field}
-                                                                        placeholder="Nhập ghi chú nếu có"
-                                                                    />
-                                                                </FormControl>
-                                                            </FormItem>
-                                                        )}
+                                        <CardContent className="space-y-5 p-5">
+                                            {/* Request Type Section */}
+                                            <div className="rounded-lg bg-white p-3">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-sm font-medium text-gray-700">
+                                                        Loại phiếu:
+                                                    </span>
+                                                    <SubCateDisplay
+                                                        id={requestDetail.requestTypeId}
+                                                        mode="badge"
                                                     />
                                                 </div>
                                             </div>
+
+                                            <div className="flex items-center justify-between p-3">
+                                                <FormField
+                                                    control={form.control}
+                                                    name={
+                                                        subCategoryName === 'IMPORT'
+                                                            ? 'wareToId'
+                                                            : 'wareFromId'
+                                                    }
+                                                    render={({ field }) => (
+                                                        <>
+                                                            {/* Ẩn input id để submit */}
+                                                            <input type="hidden" {...field} />
+                                                            {/* Hiển thị tên kho */}
+                                                            <FormLabel className="text-sm font-medium text-gray-700 m-0">
+                                                                {subCategoryName === 'IMPORT'
+                                                                    ? 'Kho nhập:'
+                                                                    : 'Kho xuất:'}
+                                                            </FormLabel>
+                                                            <Input
+                                                                value={
+                                                                    subCategoryName === 'IMPORT'
+                                                                        ? request.wareTo
+                                                                              ?.warehouseName || ''
+                                                                        : request.wareFrom
+                                                                              ?.warehouseName || ''
+                                                                }
+                                                                readOnly
+                                                                className="w-64 rounded-md border-gray-200 bg-gray-50 text-sm font-medium text-gray-700 focus:border-gray-300 focus:ring-0"
+                                                                tabIndex={-1}
+                                                            />
+                                                        </>
+                                                    )}
+                                                />
+                                            </div>
+
+                                            <FormField
+                                                control={form.control}
+                                                name="inventoryRequestId"
+                                                render={({ field }) => (
+                                                    <Input
+                                                        {...field}
+                                                        type="hidden"
+                                                        value={request.inventoryRequestId}
+                                                    />
+                                                )}
+                                            />
                                         </CardContent>
                                     </Card>
-                                ))}
+                                )}
+
+                                <div className="space-y-4">
+                                    <h2 className="text-xl font-semibold flex items-center gap-2">
+                                        <Clipboard className="h-5 w-5 text-blue-600" />
+                                        Chi tiết phiếu
+                                    </h2>
+
+                                    {request.inventoryRequestDetails.map((detail, index) => (
+                                        <Card
+                                            key={detail.inventoryRequestDetailId}
+                                            className="overflow-hidden"
+                                        >
+                                            <CardHeader className="bg-muted/50 pb-2">
+                                                <div className="flex justify-between items-center">
+                                                    <CardTitle className="text-base flex items-center gap-2">
+                                                        <span>Sản phẩm {index + 1}</span>
+                                                    </CardTitle>
+                                                    <Badge
+                                                        variant="outline"
+                                                        className="bg-blue-50 text-blue-700"
+                                                    >
+                                                        Số lượng yêu cầu: {detail.expectedQuantity}
+                                                    </Badge>
+                                                </div>
+                                            </CardHeader>
+
+                                            <CardContent className="pt-4">
+                                                <div className="grid md:grid-cols-2 gap-6">
+                                                    {/* Left Column - Batch List */}
+                                                    <div className="space-y-4">
+                                                        <div
+                                                            className="flex items-center gap-2 bg-gray-50 border-2 rounded-[5px] px-4 py-3 cursor-pointer hover:text-blue-600 transition-colors"
+                                                            onClick={() =>
+                                                                setOpenedBatchIndex(
+                                                                    openedBatchIndex === index
+                                                                        ? null
+                                                                        : index,
+                                                                )
+                                                            }
+                                                        >
+                                                            <h3 className="font-medium">
+                                                                Danh sách số lô (
+                                                                {request.inventoryReceipts.length})
+                                                            </h3>
+                                                            {openedBatchIndex === index ? (
+                                                                <ChevronUp className="h-4 w-4" />
+                                                            ) : (
+                                                                <ChevronDown className="h-4 w-4" />
+                                                            )}
+                                                        </div>
+
+                                                        {openedBatchIndex === index && (
+                                                            <div className="space-y-4 border rounded-lg p-4">
+                                                                {request.inventoryReceipts.length >
+                                                                0 ? (
+                                                                    <div className="space-y-3">
+                                                                        {matchedReceipt.map(
+                                                                            (receipt) => (
+                                                                                <div
+                                                                                    key={
+                                                                                        receipt.inventoryReceiptId
+                                                                                    }
+                                                                                    className="border-b pb-3 last:border-b-0 last:pb-0"
+                                                                                >
+                                                                                    <p className="font-medium text-blue-600">
+                                                                                        Số lô:{' '}
+                                                                                        {
+                                                                                            receipt.batchNumber
+                                                                                        }
+                                                                                    </p>
+                                                                                    <div className="pl-4 mt-2 space-y-1">
+                                                                                        {receipt.inventoryReceiptDetails
+                                                                                            .filter(
+                                                                                                (
+                                                                                                    receiptD,
+                                                                                                ) =>
+                                                                                                    receiptD.resourceId ===
+                                                                                                    detail.resourceId,
+                                                                                            )
+                                                                                            .map(
+                                                                                                (
+                                                                                                    receiptD,
+                                                                                                ) => (
+                                                                                                    <div
+                                                                                                        key={
+                                                                                                            receiptD.inventoryReceiptDetailId
+                                                                                                        }
+                                                                                                        className="text-sm"
+                                                                                                    >
+                                                                                                        <p className="flex justify-between">
+                                                                                                            <span className="text-gray-600">
+                                                                                                                Số
+                                                                                                                lượng:
+                                                                                                            </span>
+                                                                                                            <span className="font-medium">
+                                                                                                                {
+                                                                                                                    receiptD.actualQuantity
+                                                                                                                }
+                                                                                                            </span>
+                                                                                                        </p>
+                                                                                                        <p className="flex justify-between">
+                                                                                                            <span className="text-gray-600">
+                                                                                                                Ngày
+                                                                                                                nhập:
+                                                                                                            </span>
+                                                                                                            <span className="font-medium">
+                                                                                                                {dayjs(
+                                                                                                                    receiptD.actualDate,
+                                                                                                                ).format(
+                                                                                                                    'DD/MM/YYYY',
+                                                                                                                )}
+                                                                                                            </span>
+                                                                                                        </p>
+                                                                                                        <p className="flex justify-between">
+                                                                                                            <span className="text-gray-600">
+                                                                                                                Ghi
+                                                                                                                chú:
+                                                                                                            </span>
+                                                                                                            <span className="font-medium">
+                                                                                                                {receiptD.note ||
+                                                                                                                    'Không có ghi chú'}
+                                                                                                            </span>
+                                                                                                        </p>
+                                                                                                    </div>
+                                                                                                ),
+                                                                                            )}
+                                                                                    </div>
+                                                                                </div>
+                                                                            ),
+                                                                        )}
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="text-gray-500 italic text-center py-2">
+                                                                        <p>Chưa có lô hàng nào.</p>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Right Column - Product Info and Inputs */}
+                                                    <div className="space-y-4">
+                                                        <div>
+                                                            <ResourceCard
+                                                                resourceId={detail.resourceId}
+                                                            />
+                                                        </div>
+
+                                                        <div className="space-y-4">
+                                                            <div className="grid grid-cols-2 gap-4">
+                                                                <FormField
+                                                                    control={form.control}
+                                                                    name={`receiptDetails.${index}.actualQuantity`}
+                                                                    render={({ field }) => (
+                                                                        <FormItem>
+                                                                            <FormLabel>
+                                                                                Số lượng thực tế
+                                                                            </FormLabel>
+                                                                            <FormControl>
+                                                                                <Input
+                                                                                    type="number"
+                                                                                    min={0}
+                                                                                    {...field}
+                                                                                    placeholder="Nhập số lượng"
+                                                                                    className="focus:ring-2 focus:ring-blue-500"
+                                                                                    value={
+                                                                                        field.value
+                                                                                    }
+                                                                                    onChange={(
+                                                                                        e,
+                                                                                    ) => {
+                                                                                        const value =
+                                                                                            e.target
+                                                                                                .value;
+                                                                                        field.onChange(
+                                                                                            value ===
+                                                                                                ''
+                                                                                                ? undefined
+                                                                                                : Number(
+                                                                                                      value,
+                                                                                                  ),
+                                                                                        );
+                                                                                    }}
+                                                                                />
+                                                                            </FormControl>
+                                                                            <FormMessage />
+                                                                        </FormItem>
+                                                                    )}
+                                                                />
+
+                                                                <FormItem>
+                                                                    <FormLabel>Đơn vị</FormLabel>
+                                                                    <SubCateDisplay
+                                                                        id={detail.unitId}
+                                                                        mode="input"
+                                                                    />
+                                                                </FormItem>
+                                                            </div>
+
+                                                            <FormField
+                                                                control={form.control}
+                                                                name={`receiptDetails.${index}.note`}
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel className="flex items-center gap-1">
+                                                                            <NoteText className="h-4 w-4" />
+                                                                            Ghi chú
+                                                                        </FormLabel>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                {...field}
+                                                                                placeholder="Nhập ghi chú nếu có"
+                                                                            />
+                                                                        </FormControl>
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
 
                     <Separator />
 

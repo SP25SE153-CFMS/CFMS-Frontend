@@ -5,8 +5,12 @@ export const InventoryReceiptSchema = z.object({
     inventoryCode: z.string().length(12, { message: 'Mã code k quá 12 kí tự' }).trim(),
     inventoryRequestId: z.string().uuid({ message: 'ID yêu cầu nhập/xuất kho không hợp lệ' }),
     receiptTypeId: z.string().uuid({ message: 'ID loại phiếu nhập/xuất không hợp lệ' }),
-    wareFromId: z.string().uuid({ message: 'ID kho nguồn không hợp lệ' }),
-    wareToId: z.string().uuid({ message: 'ID kho đích không hợp lệ' }),
+    wareFromId: z
+        .string()
+        .uuid({ message: 'ID kho nguồn không hợp lệ' })
+        .optional()  // undefined
+        .or(z.literal('')),  // null
+    wareToId: z.string().uuid({ message: 'ID kho đích không hợp lệ' }).optional().or(z.literal('')),
     status: z.coerce.number().int({ message: 'Trạng thái phải là số nguyên' }),
     createdBy: z.string().uuid(),
     createDate: z.string().datetime({ message: 'Phải là ngày hợp lệ.' }),

@@ -283,6 +283,7 @@ export type InventoryRequestResponse = InventoryRequest & {
     inventoryRequestDetails: InventoryRequestDetailResponse[];
     wareFrom: WarehouseResponse;
     wareTo: WarehouseResponse;
+    inventoryReceipts: InventoryReceipt[];
 };
 
 export type RequestResponse = EntityAudit &
@@ -318,5 +319,5 @@ export type ReceiptResponse = InventoryReceipt &
         receiptCodeNumber: string;
         wareFrom: WarehouseResponse;
         wareTo: WarehouseResponse;
-        // resourceTypeId: string;
+        batchNumber: number;
     };

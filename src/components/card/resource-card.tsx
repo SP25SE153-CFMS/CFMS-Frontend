@@ -79,7 +79,7 @@ export default function ResourceCard({ resourceId, onViewDetails }: ResourceCard
     };
 
     return (
-        <Card className="w-full max-w-md transition-all duration-200 hover:shadow-md">
+        <Card className="w-full transition-all duration-200 hover:shadow-md">
             <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                     <CardTitle className="text-lg flex items-center">
