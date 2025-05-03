@@ -2,7 +2,7 @@
 
 import type React from 'react';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
     BellIcon,
@@ -63,6 +63,8 @@ import { acceptInvitation, rejectInvitation } from '@/services/farm.service';
 import InfoItem from '../info-item';
 import dayjs from 'dayjs';
 import { userStatusLabels, userStatusVariant } from '@/utils/enum/status.enum';
+import { useSignalR } from '@/hooks';
+import { LoadingSpinner } from './loading-spinner';
 
 function Dot({ className }: { className?: string }) {
     return (
@@ -89,19 +91,14 @@ export default function Notification() {
         queryKey: ['notifications'],
         queryFn: () => getNotificationForCurrentUser(),
     });
-    // const [notifications, setNotifications] = useState<NotificationResponse[]>();
 
-    // const { notifications: noties, connected } = useSignalR('/noti');
-    // console.log(noties, connected);
+    const { notifications: newNoties } = useSignalR('/noti');
 
-    // useEffect(() => {
-    //     setNotifications(
-    //         notis?.map((noti) => ({
-    //             ...noti,
-    //             notificationType: 'INVITATION',
-    //         })),
-    //     );
-    // }, [notis]);
+    useEffect(() => {
+        if (newNoties) {
+            refetch();
+        }
+    }, [newNoties]);
 
     const [open, setOpen] = useState(false);
     const [deleteAllDialogOpen, setDeleteAllDialogOpen] = useState(false);
@@ -231,6 +228,15 @@ export default function Notification() {
     const confirmDeleteAllNotifications = () => {
         setDeleteAllDialogOpen(true);
     };
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-[75vh] gap-4">
+                <LoadingSpinner />
+                <p className="text-muted-foreground animate-pulse">Đang tải dữ liệu...</p>
+            </div>
+        );
+    }
 
     return (
         <>

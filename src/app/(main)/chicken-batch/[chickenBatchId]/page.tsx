@@ -403,13 +403,13 @@ export default function Page() {
                 onStepClick={(step) => setCurrentGrowthStage(sortedGrowthBatches[step].growthStage)}
                 className="mb-4 max-w-3xl mx-auto"
             />
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 my-6">
-                <div>
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 my-6">
+                <div className="lg:col-span-2">
                     <CardNutritionPlan
                         nutritionPlanId={currentGrowthStage?.nutritionPlanId ?? ''}
                     />
                 </div>
-                <div className="col-span-2">
+                <div className="lg:col-span-3">
                     <Chart />
                 </div>
             </div>

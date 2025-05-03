@@ -230,8 +230,12 @@ export type NotificationResponse = (Notification & EntityAudit) & {
     user: User;
 };
 
+export type NutritionPlanDetailResponse = NutritionPlanDetail & {
+    food: Food;
+};
+
 export type NutritionPlanResponse = NutritionPlan & {
-    nutritionPlanDetails: NutritionPlanDetail[];
+    nutritionPlanDetails: NutritionPlanDetailResponse[];
     feedSessions: FeedSession[];
 };
 
