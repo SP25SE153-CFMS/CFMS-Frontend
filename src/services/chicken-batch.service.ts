@@ -4,6 +4,7 @@ import { Response } from '@/utils/types';
 import {
     ChickenBatchResponse,
     ExportChicken,
+    HealthLogRequest,
     SplitChickenBatch,
     StartChickenBatch,
 } from '@/utils/types/custom.type';
@@ -86,5 +87,18 @@ export const endChickenBatch = async (chickenBatchId: string) => {
 export const splitChickenBatch = async (body: SplitChickenBatch) => {
     const endpoint = PREFIX + '/split-chickenbatch/';
     const response = await put<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const addHealthLog = async (body: HealthLogRequest) => {
+    const endpoint = PREFIX + '/add-healthlog';
+    const response = await post<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const deleteHealthLog = async (chickenBatchId: string, healthLogId: string) => {
+    const endpoint = PREFIX + '/delete-healthlog';
+    const body = { batchId: chickenBatchId, healthLogId };
+    const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };

@@ -229,15 +229,6 @@ export default function Notification() {
         setDeleteAllDialogOpen(true);
     };
 
-    if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center h-[75vh] gap-4">
-                <LoadingSpinner />
-                <p className="text-muted-foreground animate-pulse">Đang tải dữ liệu...</p>
-            </div>
-        );
-    }
-
     return (
         <>
             <Popover open={open} onOpenChange={setOpen}>

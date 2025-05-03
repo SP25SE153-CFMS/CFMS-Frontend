@@ -12,7 +12,7 @@ import { FeedLog } from '../schemas/feed-log.schema';
 import { Food } from '../schemas/food.schema';
 import { GrowthBatch } from '../schemas/growth-batch.schema';
 import { GrowthStage } from '../schemas/growth-stage.schema';
-import { HealthLog } from '../schemas/health-log.schema';
+import { CreateHealthLog, HealthLog } from '../schemas/health-log.schema';
 import { Medicine } from '../schemas/medicine.schema';
 import { Notification } from '../schemas/notification.schema';
 import { QuantityLog } from '../schemas/quantity-log.schema';
@@ -341,4 +341,13 @@ export type ResetPasswordRequest = {
     newPassword?: string;
     confirmPassword?: string;
     otp: string;
+};
+
+export type HealthLogDetails = {
+    criteriaId: string;
+    result: string;
+};
+
+export type HealthLogRequest = CreateHealthLog & {
+    healthLogDetails: ChickenDetailRequest[];
 };
