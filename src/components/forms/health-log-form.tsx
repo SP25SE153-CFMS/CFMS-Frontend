@@ -10,6 +10,7 @@ import {
     Stethoscope,
     Trash2,
     CalendarPlus2Icon as CalendarIcon2,
+    Notebook,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -299,7 +300,10 @@ export default function HealthLogForm({ defaultValues, closeDialog }: HealthLogF
                             name="notes"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-sm font-medium">Ghi chú</FormLabel>
+                                    <FormLabel className="text-sm font-medium flex items-center">
+                                        <Notebook className="w-3.5 h-3.5 mr-1 text-muted-foreground" />
+                                        Ghi chú
+                                    </FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder="Nhập ghi chú về tình trạng sức khỏe..."
@@ -314,7 +318,7 @@ export default function HealthLogForm({ defaultValues, closeDialog }: HealthLogF
                     </div>
 
                     <div className="space-y-4">
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center gap-2">
                             <div>
                                 <h3 className="text-sm font-medium">Các tiêu chí sức khỏe</h3>
                                 <p className="text-xs text-muted-foreground mt-1">

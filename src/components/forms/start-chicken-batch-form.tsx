@@ -133,7 +133,6 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                                     selected={startDate}
                                     locale={vi}
                                     onSelect={(day) => setStartDate(day ?? new Date())}
-                                    disabled={(date) => date < new Date()}
                                     initialFocus
                                 />
                             </PopoverContent>
