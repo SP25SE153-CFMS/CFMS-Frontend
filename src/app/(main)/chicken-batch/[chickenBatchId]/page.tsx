@@ -115,6 +115,10 @@ export default function Page() {
         },
     ];
 
+    const remainingQuantity = useMemo(() => {
+        return chickenBatch?.chickenDetails.reduce((acc, curr) => acc + curr.quantity, 0);
+    }, []);
+
     return (
         <div>
             <div className="flex justify-between">
@@ -190,7 +194,11 @@ export default function Page() {
                             {isReadyToExport && (
                                 <Dialog open={openExport} onOpenChange={setOpenExport}>
                                     <DialogTrigger asChild>
-                                        <Button variant="outline" className="w-full gap-2">
+                                        <Button
+                                            variant="outline"
+                                            className="w-full gap-2"
+                                            disabled={remainingQuantity === 0}
+                                        >
                                             <ExternalLink size={16} />
                                             Xuất chuồng
                                         </Button>
@@ -210,7 +218,11 @@ export default function Page() {
                             )}
                             <Dialog open={openSplit} onOpenChange={setOpenSplit}>
                                 <DialogTrigger asChild>
-                                    <Button variant="default" className="w-full gap-2">
+                                    <Button
+                                        variant="default"
+                                        className="w-full gap-2"
+                                        disabled={remainingQuantity === 0}
+                                    >
                                         <Split size={16} />
                                         Tách lứa nuôi
                                     </Button>
@@ -261,12 +273,7 @@ export default function Page() {
                                 <InfoItem
                                     icon={<Egg className="h-4 w-4" />}
                                     label="Số lượng còn lại"
-                                    value={
-                                        chickenBatch?.chickenDetails.reduce(
-                                            (acc, curr) => acc + curr.quantity,
-                                            0,
-                                        ) + ' con'
-                                    }
+                                    value={remainingQuantity + ' con'}
                                 />
 
                                 <InfoItem

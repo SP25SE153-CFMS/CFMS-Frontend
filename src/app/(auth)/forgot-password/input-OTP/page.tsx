@@ -145,7 +145,21 @@ export default function InputOTPForm() {
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-6"
+                            onKeyDown={(e) => {
+                                // Allow only numbers, backspace, and arrow keys
+                                if (
+                                    !/[0-9]/.test(e.key) && // Allow digits
+                                    e.key !== 'Backspace' && // Allow backspace
+                                    e.key !== 'ArrowLeft' && // Allow left arrow
+                                    e.key !== 'ArrowRight' // Allow right arrow
+                                ) {
+                                    e.preventDefault();
+                                }
+                            }}
+                        >
                             <FormField
                                 control={form.control}
                                 name="otp"
@@ -180,8 +194,6 @@ export default function InputOTPForm() {
                                                                 index={5}
                                                                 className="h-12 w-12 text-lg"
                                                                 onKeyDown={() => {
-                                                                    console.log('a');
-
                                                                     form.handleSubmit(onSubmit)();
                                                                 }}
                                                             />
