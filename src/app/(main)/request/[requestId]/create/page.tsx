@@ -1,6 +1,6 @@
 'use client';
 
-import SubCateDisplay from '@/components/badge/BadgeReceipt';
+import SubCateDisplay, { ResourceDisplay } from '@/components/badge/BadgeReceipt';
 import ResourceCard from '@/components/card/resource-card';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +16,11 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getSubBySubId } from '@/services/category.service';
-import { getReceipts, getRequestById } from '@/services/request.service';
+import {
+    createInvetoryReceiptFromRequest,
+    getReceipts,
+    getRequestById,
+} from '@/services/request.service';
 import {
     type CreateInventoryReceipt,
     CreateInventoryReceiptSchema,
@@ -42,7 +46,9 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Badge } from '@/components/ui/badge';
 import dayjs from 'dayjs';
-import { createInventoryReceipt } from '@/services/inventory-receipt.service';
+import toast from 'react-hot-toast';
+import { onError } from '@/utils/functions/form.function';
+import { getResources } from '@/services/resource.service';
 
 export default function RequestDetail() {
     const router = useRouter();
@@ -114,25 +120,24 @@ export default function RequestDetail() {
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: createInventoryReceipt,
+        mutationFn: createInvetoryReceiptFromRequest,
         onSuccess: () => {
-            
-        }
-    })
+            queryClient.invalidateQueries({ queryKey: ['receipts'] });
+            toast.success('Tạo phiếu thành công.');
+        },
+        onError: (error: any) => {
+            console.log('Form errors:', error);
+        },
+    });
 
-    const onSubmit = async (values: CreateInventoryReceipt) => {
+    const onSubmit = async (data: CreateInventoryReceipt) => {
         setIsSubmitting(true);
         // console.log('Form data:', data);
-        await setTimeout(() => {
-            setIsSubmitting(false);
-            // Show success message or redirect
-        }, 1500);
-    };
-
-    const onError = (errors: any) => {
-        console.log('Form errors:', errors);
-        // Có thể hiện toast hoặc alert ở đây nếu muốn
-        // alert('Có lỗi trong form, vui lòng kiểm tra lại!');
+        await mutation.mutateAsync(data);
+        // setTimeout(() => {
+        //     setIsSubmitting(false);
+        //     // Show success message or redirect
+        // }, 1500);
     };
 
     if (isLoadingRequest || isLoadingSubCate) {
@@ -181,10 +186,6 @@ export default function RequestDetail() {
         if (subCategoryName === 'EXPORT')
             return <ArrowUpFromLine className="h-5 w-5 text-amber-600" />;
         return <Clipboard className="h-5 w-5 text-sky-600" />;
-    };
-
-    const formatDate = (date: string) => {
-        return dayjs(date).format('DD/MM/YYYY HH:mm');
     };
 
     return (
@@ -328,46 +329,54 @@ export default function RequestDetail() {
                                                             </p>
                                                             <div className="pl-4 mt-3 space-y-2">
                                                                 {receipt.inventoryReceiptDetails.map(
-                                                                    (receiptD) => (
-                                                                        <div
-                                                                            key={
-                                                                                receiptD.inventoryReceiptDetailId
-                                                                            }
-                                                                            className="text-sm bg-slate-50 rounded-lg p-3 border border-slate-100"
-                                                                        >
-                                                                            <p className="flex justify-between mb-1">
-                                                                                <span className="text-slate-600">
-                                                                                    Số lượng:
-                                                                                </span>
-                                                                                <span className="font-medium text-slate-800">
-                                                                                    {
-                                                                                        receiptD.actualQuantity
+                                                                    (receiptD) => {
+                                                                        return (
+                                                                            <div
+                                                                                key={
+                                                                                    receiptD.inventoryReceiptDetailId
+                                                                                }
+                                                                                className="text-sm bg-slate-50 rounded-lg p-3 border border-slate-100"
+                                                                            >
+                                                                                <ResourceDisplay
+                                                                                    id={
+                                                                                        receiptD.resourceId
                                                                                     }
-                                                                                </span>
-                                                                            </p>
-                                                                            <p className="flex justify-between mb-1">
-                                                                                <span className="text-slate-600">
-                                                                                    Ngày nhập:
-                                                                                </span>
-                                                                                <span className="font-medium text-slate-800">
-                                                                                    {dayjs(
-                                                                                        receiptD.actualDate,
-                                                                                    ).format(
-                                                                                        'DD/MM/YYYY',
-                                                                                    )}
-                                                                                </span>
-                                                                            </p>
-                                                                            <p className="flex justify-between">
-                                                                                <span className="text-slate-600">
-                                                                                    Ghi chú:
-                                                                                </span>
-                                                                                <span className="font-medium text-slate-800">
-                                                                                    {receiptD.note ||
-                                                                                        'Không có ghi chú'}
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                    ),
+                                                                                />
+
+                                                                                <p className="flex justify-between mb-1">
+                                                                                    <span className="text-slate-600">
+                                                                                        Số lượng:
+                                                                                    </span>
+                                                                                    <span className="font-medium text-slate-800">
+                                                                                        {
+                                                                                            receiptD.actualQuantity
+                                                                                        }
+                                                                                    </span>
+                                                                                </p>
+                                                                                <p className="flex justify-between mb-1">
+                                                                                    <span className="text-slate-600">
+                                                                                        Ngày nhập:
+                                                                                    </span>
+                                                                                    <span className="font-medium text-slate-800">
+                                                                                        {dayjs(
+                                                                                            receiptD.actualDate,
+                                                                                        ).format(
+                                                                                            'DD/MM/YYYY',
+                                                                                        )}
+                                                                                    </span>
+                                                                                </p>
+                                                                                <p className="flex justify-between">
+                                                                                    <span className="text-slate-600">
+                                                                                        Ghi chú:
+                                                                                    </span>
+                                                                                    <span className="font-medium text-slate-800">
+                                                                                        {receiptD.note ||
+                                                                                            'Không có ghi chú'}
+                                                                                    </span>
+                                                                                </p>
+                                                                            </div>
+                                                                        );
+                                                                    },
                                                                 )}
                                                             </div>
                                                         </div>

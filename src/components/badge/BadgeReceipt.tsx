@@ -2,10 +2,15 @@ import { getSubBySubId } from '@/services/category.service';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 import { Input } from '../ui/input';
+import { getResourceById } from '@/services/resource.service';
 
 type SubCateDisplayProps = {
     id: string;
     mode: 'badge' | 'input' | 'description' | 'title';
+};
+
+type ResourceDisplayProps = {
+    id: string;
 };
 
 export default function SubCateDisplay({ id, mode }: SubCateDisplayProps) {
@@ -70,6 +75,38 @@ export default function SubCateDisplay({ id, mode }: SubCateDisplayProps) {
     }
 }
 
-// else if (mode === 'name') {
-//     return <span className="text-sm">{subCate.subCategoryName}</span>;
-// }
+export function ResourceDisplay({ id }: ResourceDisplayProps) {
+    const { data: resource } = useQuery({
+        queryKey: ['resource', id],
+        queryFn: () => getResourceById(id),
+        enabled: !!id,
+    });
+
+    return (
+        <div>
+            {/* Food */}
+            {resource?.food && (
+                <div className="flex justify-between mb-1">
+                    <span className="text-slate-600">Tên sản phẩm:</span>
+                    <span className="font-medium text-slate-800">{resource.food.foodName}</span>
+                </div>
+            )}
+
+            {/* Equipment */}
+            {resource?.equipment && (
+                <div className="flex justify-between mb-1">
+                    <span className="text-slate-600">Tên sản phẩm:</span>
+                    <span className="font-medium text-slate-800">{resource.equipment.equipmentName}</span>
+                </div>
+            )}
+
+            {/* Medicine */}
+            {resource?.medicine && (
+                <div className="flex justify-between mb-1">
+                    <span className="text-slate-600">Tên sản phẩm:</span>
+                    <span className="font-medium text-slate-800">{resource.medicine.medicineName}</span>
+                </div>
+            )}
+        </div>
+    );
+}

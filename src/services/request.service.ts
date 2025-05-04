@@ -9,6 +9,7 @@ import {
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { RequestStatus } from '@/utils/enum/status.enum';
+import { CreateInventoryReceipt } from '@/utils/schemas/inventory-receipt.schema';
 
 const PREFIX = '/api/Request';
 
@@ -54,7 +55,7 @@ export const approveRequest = async (
     return response.data;
 };
 
-export const createInvetoryReceiptFromRequest = async (body: InventoryReceiptRequest) => {
+export const createInvetoryReceiptFromRequest = async (body: CreateInventoryReceipt) => {
     const endpoint = PREFIX + '/create-inventory-receipt';
     const response = await post<Response<string>>(endpoint, body);
     return response.data;
