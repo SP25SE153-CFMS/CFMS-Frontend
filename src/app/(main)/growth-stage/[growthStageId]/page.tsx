@@ -23,17 +23,7 @@ import { addNutritionPlanToGrowthStage, getGrowthStageById } from '@/services/gr
 import { getNutritionPlans } from '@/services/nutrition-plan.service';
 import { getChickenType } from '@/utils/functions/category.function';
 import { useQuery } from '@tanstack/react-query';
-import {
-    ChartArea,
-    Clock,
-    FolderTree,
-    House,
-    Leaf,
-    Plus,
-    Tag,
-    Trash,
-    Utensils,
-} from 'lucide-react';
+import { ChartArea, Clock, FolderTree, House, Leaf, Plus, Tag, Utensils } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';

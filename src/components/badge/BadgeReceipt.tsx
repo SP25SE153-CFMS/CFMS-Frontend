@@ -1,7 +1,6 @@
 import { getSubBySubId } from '@/services/category.service';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
-import { Input } from '../ui/input';
 
 type SubCateDisplayProps = {
     id: string;
@@ -62,8 +61,6 @@ export default function SubCateDisplay({ id, mode }: SubCateDisplayProps) {
             />
         );
     } else if (mode === 'description') {
-        return (
-            <span className="text-sm">{subCate.description || 'Không có mô tả'}</span>
-        );
+        return <span className="text-sm">{subCate.description || 'Không có mô tả'}</span>;
     }
 }

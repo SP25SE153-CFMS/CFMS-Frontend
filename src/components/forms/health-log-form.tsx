@@ -7,7 +7,6 @@ import {
     ClipboardList,
     Loader2,
     Plus,
-    Stethoscope,
     Trash2,
     CalendarPlus2Icon as CalendarIcon2,
     Notebook,
@@ -47,7 +46,7 @@ import {
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
 import { useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 

@@ -24,7 +24,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { deleteResource } from '@/services/resource.service';
-import { deleteProduct } from '@/services/warehouse-product.service';
 import type { Food } from '@/utils/schemas/food.schema';
 import type { WareStockResponse } from '@/utils/types/custom.type';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
@@ -40,28 +39,26 @@ interface Props<T> {
 export function DataTableRowActions<T>({ row }: Props<T>) {
     // Lấy dữ liệu từ row
     const rowData = row.original as WareStockResponse;
-    
+
     const [openDelete, setOpenDelete] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
     const queryClient = useQueryClient();
 
-
     // Xác định dữ liệu food từ rowData
     // Nếu rowData.foods tồn tại, sử dụng nó, nếu không thử sử dụng rowData trực tiếp
     const foodData = rowData.foods || (rowData as unknown as Food);
-    
+
     // Lấy foodId từ nguồn phù hợp
     const foodId = foodData.foodId || (rowData as any).foodId;
 
-    
     const resourceId = rowData.resourceId;
 
     const handleDelete = async () => {
         await deleteResource(resourceId).then(() => {
             toast.success('Xóa thức ăn thành công');
-            queryClient.invalidateQueries({queryKey: ['foods']});
-            setOpenDelete(false)
-        })
+            queryClient.invalidateQueries({ queryKey: ['foods'] });
+            setOpenDelete(false);
+        });
     };
 
     // Kiểm tra xem có đủ dữ liệu để cập nhật không

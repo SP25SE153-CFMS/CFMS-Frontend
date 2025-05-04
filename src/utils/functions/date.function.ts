@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { capitalizeFirstLetter } from './string.function';
-import { DATE_FORMAT, TIME_FORMAT } from '../constants/date.constant';
+import { DATE_FORMAT } from '../constants/date.constant';
 
 /**
  * Converts a numeric string representing a day of the week to its Vietnamese name.
@@ -47,7 +47,7 @@ export function formatDate(dateStr: string | any, format = DATE_FORMAT) {
  * console.log(formatTime('2023-01-01T10:00:00Z')); // '10:00'
  * console.log(formatTime('2023-01-01T10:00:00Z', 'hh:mm A')); // '10:00 AM'
  */
-export function formatTime(timeStr: string | any, _format = TIME_FORMAT) {
+export function formatTime(timeStr: string | any) {
     if (!timeStr) return '';
 
     // const time = dayjs(timeStr);

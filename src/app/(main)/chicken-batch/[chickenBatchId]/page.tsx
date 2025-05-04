@@ -11,7 +11,6 @@ import {
     FileText,
     Info,
     InfoIcon,
-    Split,
     SplitSquareVertical,
     Sprout,
     Tag,
