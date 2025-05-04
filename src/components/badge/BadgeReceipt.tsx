@@ -21,35 +21,59 @@ export default function SubCateDisplay({ id, mode }: SubCateDisplayProps) {
     });
 
     if (isLoading) {
-        return mode === 'badge' ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
-                <Loader2 className="h-3 w-3 animate-spin" />
-                <span>Đang tải...</span>
-            </span>
-        ) : (
-            <div className="relative">
-                <input
-                    disabled
-                    className="w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500 shadow-sm focus:border-gray-300 focus:ring-0"
-                    value="Đang tải..."
-                />
-                <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-gray-400" />
-            </div>
-        );
+        const loadingContent = {
+            badge: (
+                <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    <span>Đang tải...</span>
+                </span>
+            ),
+            input: (
+                <div className="relative">
+                    <input
+                        disabled
+                        className="w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500 shadow-sm focus:border-gray-300 focus:ring-0"
+                        value="Đang tải..."
+                    />
+                    <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-gray-400" />
+                </div>
+            ),
+            title: (
+                <div className="flex items-center gap-2 text-base font-semibold text-gray-700">
+                    <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
+                    <span>Đang tải tiêu đề...</span>
+                </div>
+            ),
+            description: (
+                <p className="flex items-center gap-2 text-sm text-gray-500 italic">
+                    <Loader2 className="h-3 w-3 animate-spin text-gray-400" />
+                    Đang tải mô tả...
+                </p>
+            ),
+        };
+
+        return loadingContent[mode];
     }
 
     if (!subCate) {
-        return mode === 'badge' ? (
-            <span className="inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
-                Không xác định
-            </span>
-        ) : (
-            <input
-                disabled
-                className="w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500 shadow-sm focus:border-gray-300 focus:ring-0"
-                value="Không xác định"
-            />
-        );
+        const fallbackContent = {
+            badge: (
+                <span className="inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
+                    Không xác định
+                </span>
+            ),
+            input: (
+                <input
+                    disabled
+                    className="w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500 shadow-sm focus:border-gray-300 focus:ring-0"
+                    value="Không xác định"
+                />
+            ),
+            title: <span className="text-sm font-medium text-gray-500">Không xác định</span>,
+            description: <span className="text-sm italic text-gray-500">Không có mô tả</span>,
+        };
+
+        return fallbackContent[mode];
     }
 
     const subDesc = subCate.description?.toLowerCase?.() || 'không có mô tả';
