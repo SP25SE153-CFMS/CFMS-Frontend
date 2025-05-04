@@ -35,6 +35,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import AssignmentForm from '@/components/forms/assignment-form';
+import Link from 'next/link';
 
 export default function TaskDetail() {
     const [open, setOpen] = useState(false);
@@ -297,14 +298,16 @@ export default function TaskDetail() {
                             >
                                 Quay lại
                             </Button>
-                            {/* <div className="space-x-2">
-                                <Button
-                                    variant="default"
-                                    className="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700"
-                                >
-                                    Chỉnh sửa
-                                </Button>
-                            </div> */}
+                            <div className="space-x-2">
+                                <Link href={`${config.routes.task}/${taskId}/update`}>
+                                    <Button
+                                        variant="default"
+                                        className="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+                                    >
+                                        Chỉnh sửa
+                                    </Button>
+                                </Link>
+                            </div>
                         </CardFooter>
                     </Card>
                 </div>

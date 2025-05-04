@@ -28,11 +28,11 @@ export const createTask = async (body: CreateTask) => {
     return response.data;
 };
 
-// export const updateTask = async (body: Task) => {
-//     const endpoint = PREFIX;
-//     const response = await put<Response<string>>(endpoint, body);
-//     return response.data;
-// };
+export const updateTask = async (body: CreateTask) => {
+    const endpoint = PREFIX;
+    const response = await put<Response<string>>(endpoint, body);
+    return response.data;
+};
 
 export const updateTaskStatus = async (taskId: string, status: number) => {
     const endpoint = PREFIX;

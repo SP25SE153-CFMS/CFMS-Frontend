@@ -107,13 +107,13 @@ export default function Notification() {
                 const interval = setInterval(() => {
                     document.title = toggle ? '🔔 Bạn có thông báo mới! | CFMS' : originalTitle;
                     toggle = !toggle;
-                }, 3000);
+                }, 1000);
 
                 // Stop toggling after a certain duration (e.g., 15 seconds)
                 setTimeout(() => {
                     clearInterval(interval);
                     document.title = originalTitle; // Reset to the original title
-                }, 15000);
+                }, 10000);
             });
         },
     });

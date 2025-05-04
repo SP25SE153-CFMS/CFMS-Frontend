@@ -9,7 +9,7 @@ import { addDays } from 'date-fns';
 import { vi } from 'date-fns/locale';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateTask, CreateTaskSchema, Task } from '@/utils/schemas/task.schema';
+import { CreateTask, CreateTaskSchema } from '@/utils/schemas/task.schema';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -79,7 +79,7 @@ import { LOCATION_TYPES } from '@/utils/enum/location-type.enum';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 
-export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
+export function CreateTaskForm() {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [locationType, setLocationType] = useState<string>('');
@@ -153,7 +153,6 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                     quantity: 0,
                 },
             ],
-            ...defaultValues,
         },
     });
 
@@ -451,7 +450,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                         />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                        <FormLabel>Là công việc giao tuần tự</FormLabel>
+                        <FormLabel>Giao tuần tự</FormLabel>
                         <FormDescription>
                             Đánh dấu nếu công việc này liên quan đến giao tuần tự.
                         </FormDescription>
@@ -929,17 +928,21 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                                                     key={res.value}
                                                                     value={res.value}
                                                                 >
-                                                                    {/* {getResourceName(res)} */}
-                                                                    <strong>{res.label}</strong>
-                                                                    <div className="text-sm text-muted-foreground mt-1">
-                                                                        <p>
-                                                                            Tồn kho:{' '}
-                                                                            {res.specQuantity}
-                                                                        </p>
-                                                                        <p>
-                                                                            Quy cách:{' '}
-                                                                            {res.unitSpecification}
-                                                                        </p>
+                                                                    <div className="flex flex-col items-start justify-between">
+                                                                        {/* {getResourceName(res)} */}
+                                                                        <strong>{res.label}</strong>
+                                                                        <div className="text-sm text-muted-foreground mt-1">
+                                                                            <p className="text-left">
+                                                                                Tồn kho:{' '}
+                                                                                {res.specQuantity}
+                                                                            </p>
+                                                                            <p className="text-left">
+                                                                                Quy cách:{' '}
+                                                                                {
+                                                                                    res.unitSpecification
+                                                                                }
+                                                                            </p>
+                                                                        </div>
                                                                     </div>
                                                                 </SelectItem>
                                                             ))}

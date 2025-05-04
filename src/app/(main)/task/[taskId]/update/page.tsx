@@ -1,13 +1,58 @@
 'use client';
 
-import { CreateTaskForm } from '@/components/forms/create-task-form';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ClipboardList, CalendarClock } from 'lucide-react';
 import Link from 'next/link';
 import config from '@/configs';
+import { useParams } from 'next/navigation';
+import { getTaskById } from '@/services/task.service';
+import { useQuery } from '@tanstack/react-query';
+import { UpdateTaskForm } from '@/components/forms/update-task-form';
+import { UpdateTask } from '@/utils/schemas/task.schema';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
-export default function CreateTaskPage() {
+export default function UpdateTaskPage() {
+    const { taskId }: { taskId: string } = useParams();
+
+    const { data: task, isLoading } = useQuery({
+        queryKey: ['task', taskId],
+        queryFn: () => getTaskById(taskId),
+    });
+
+    const defaultValues: UpdateTask = {
+        taskName: task?.taskName || '',
+        taskTypeId: task?.taskTypeId || '',
+        isHavest: task?.isHavest || false,
+        status: task?.status || 0,
+        startWorkDate: task?.startWorkDate ? new Date(task?.startWorkDate) : new Date(),
+        endWorkDate: task?.endWorkDate ? new Date(task?.endWorkDate) : new Date(),
+        locationType: task?.taskLocation?.locationType || '',
+        locationId:
+            task?.taskLocation?.location?.chickenCoopId ||
+            task?.taskLocation?.locationNavigation?.wareId ||
+            '',
+        taskResources:
+            task?.taskResources?.map((item) => ({
+                resourceId: item.resourceId,
+                quantity: Number(item.specQuantity.split(' ')[0]),
+            })) || [],
+        description: task?.description || '',
+        taskId: taskId,
+        assignedTos: task?.assignments || [],
+        shiftId: '',
+        shiftName: task?.shiftSchedule?.shiftName || '',
+    };
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-[75vh] gap-4">
+                <LoadingSpinner />
+                <p className="text-muted-foreground animate-pulse">Đang tải dữ liệu...</p>
+            </div>
+        );
+    }
+
     return (
         <div className="container py-8 max-w-6xl mx-auto">
             {/* Header with back button */}
@@ -17,9 +62,9 @@ export default function CreateTaskPage() {
                         <ClipboardList className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold">Tạo công việc mới</h1>
+                        <h1 className="text-2xl font-bold">Cập nhật công việc</h1>
                         <p className="text-muted-foreground mt-1">
-                            Điền thông tin để tạo một công việc mới trong hệ thống
+                            Chỉnh sửa thông tin để cập nhật công việc trong hệ thống
                         </p>
                     </div>
                 </div>
@@ -76,11 +121,11 @@ export default function CreateTaskPage() {
                         <CardHeader className="pb-4">
                             <CardTitle>Thông tin công việc</CardTitle>
                             <CardDescription>
-                                Điền đầy đủ thông tin bên dưới để tạo công việc mới
+                                Chỉnh sửa thông tin bên dưới để cập nhật công việc
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <CreateTaskForm />
+                            <UpdateTaskForm defaultValues={defaultValues} />
                         </CardContent>
                     </Card>
                 </div>

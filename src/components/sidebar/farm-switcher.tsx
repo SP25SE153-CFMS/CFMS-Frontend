@@ -59,7 +59,7 @@ const FarmImage = ({ src, alt, size = FARM_IMAGE_SIZE, className = '' }: FarmIma
 //     </div>
 // );
 
-export function FarmSwitcher() {
+export default function FarmSwitcher() {
     const router = useRouter();
     const { isMobile } = useSidebar();
 
