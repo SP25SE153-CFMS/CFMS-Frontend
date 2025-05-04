@@ -7,17 +7,9 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import config from '@/configs';
 import { RequestResponse } from '@/utils/types/custom.type';
-import { getRequestTitle } from './[requestId]/page';
+import { getRequestTitle, getRequestType } from '@/lib/helper';
 
 export default function RequestCard({ request }: { request: RequestResponse }) {
-    const getRequestType = (request: RequestResponse) => {
-        if (!request) return 'Phiếu khác';
-        if (request.taskRequests?.length > 0) {
-            return 'Báo cáo, đánh giá';
-        }
-        return 'Nhập xuất kho';
-    };
-
     const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
     const createdBy = users.find((user) => user.userId === request.createdByUserId);
     const approvedBy = users.find((user) => user.userId === request.approvedById);

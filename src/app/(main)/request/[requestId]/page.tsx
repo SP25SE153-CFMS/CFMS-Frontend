@@ -59,22 +59,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
-
-export const getRequestTitle = (requestDetail: RequestResponse) => {
-    if (requestDetail.taskRequests?.length > 0) {
-        return requestDetail.taskRequests[0].title;
-    }
-    if (requestDetail.inventoryRequests?.length > 0) {
-        const inventory = requestDetail.inventoryRequests[0];
-        if (inventory.wareTo?.farm?.farmName) {
-            return inventory.wareTo.farm.farmName;
-        }
-        if (inventory.wareFrom?.farm?.farmName) {
-            return inventory.wareFrom.farm.farmName;
-        }
-    }
-    return 'Phiếu yêu cầu';
-};
+import { getRequestTitle } from '@/lib/helper';
 
 export default function RequestDetailPage() {
     const router = useRouter();
