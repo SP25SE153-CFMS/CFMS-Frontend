@@ -270,10 +270,7 @@ export default function Page() {
                                             >
                                                 <div className="flex size-8 items-center justify-center rounded-sm border">
                                                     <Image
-                                                        src={
-                                                            farmByFarmCode?.imageUrl ||
-                                                            'example.com'
-                                                        }
+                                                        src={farmByFarmCode?.imageUrl || ''}
                                                         alt={farmByFarmCode?.farmCode || ''}
                                                         width={20}
                                                         height={20}
@@ -558,7 +555,7 @@ export default function Page() {
                                         >
                                             <div className="flex size-8 items-center justify-center rounded-sm border">
                                                 <Image
-                                                    src={farmByFarmCode?.imageUrl || 'example.com'}
+                                                    src={farmByFarmCode?.imageUrl || ''}
                                                     alt={farmByFarmCode?.farmCode || ''}
                                                     width={20}
                                                     height={20}
