@@ -87,7 +87,14 @@ export default function Notification() {
         refetch,
     } = useQuery({
         queryKey: ['notifications'],
-        queryFn: () => getNotificationForCurrentUser(),
+        queryFn: async () => {
+            const notifications = await getNotificationForCurrentUser();
+            // Sort notifications by newest first
+            return notifications.sort(
+                (a, b) =>
+                    new Date(b.createdWhen ?? 0).getTime() - new Date(a.createdWhen ?? 0).getTime(),
+            );
+        },
     });
 
     // SignalR connection
