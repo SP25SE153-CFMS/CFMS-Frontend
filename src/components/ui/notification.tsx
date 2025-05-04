@@ -362,9 +362,16 @@ export default function Notification() {
                                     <div className="flex gap-3">
                                         <Avatar className="h-10 w-10 rounded-full object-cover">
                                             <AvatarImage
-                                                src={convertToThumbnailUrl(
-                                                    notification.createdByUser?.avatar || '',
-                                                )}
+                                                src={
+                                                    notification.createdByUser?.fullName
+                                                        ?.toLowerCase()
+                                                        ?.includes('sys')
+                                                        ? '/assets/logo/logo.png'
+                                                        : convertToThumbnailUrl(
+                                                              notification.createdByUser?.avatar ||
+                                                                  '',
+                                                          )
+                                                }
                                                 alt={notification.createdByUser?.fullName || ''}
                                                 className="rounded-sm object-contain"
                                             />
