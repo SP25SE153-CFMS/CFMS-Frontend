@@ -49,7 +49,7 @@ export default function RequestDetail() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [batchNumber, setBatchNumber] = useState<number>(1);
     const [showBatchList, setShowBatchList] = useState(false);
-    const [openedBatchIndex, setOpenedBatchIndex] = useState<number | null>(null);
+    // const [openedBatchIndex, setOpenedBatchIndex] = useState<number | null>(null);
 
     const { data: requestDetail, isLoading: isLoadingRequest } = useQuery({
         queryKey: ['requestDetail', requestId],
@@ -99,7 +99,7 @@ export default function RequestDetail() {
                 wareFromId: subCate.subCategoryName === 'EXPORT' ? request?.wareFromId || '' : '',
                 wareToId: subCate.subCategoryName === 'IMPORT' ? request?.wareToId || '' : '',
                 receiptTypeId: requestDetail.requestTypeId,
-                batchNumber: (request.inventoryReceipts.length || 0) +1,
+                batchNumber: (request.inventoryReceipts.length || 0) + 1,
                 receiptDetails:
                     request?.inventoryRequestDetails.map((d) => ({
                         resourceId: d.resourceId,
@@ -208,6 +208,7 @@ export default function RequestDetail() {
                         return (
                             <div key={request.requestId} className="space-y-6">
                                 {(subCategoryName === 'IMPORT' || subCategoryName === 'EXPORT') && (
+                                    // Thông tin phiếu
                                     <Card>
                                         <CardHeader className="pb-2">
                                             <CardTitle className="text-lg flex items-center gap-2">
@@ -281,6 +282,91 @@ export default function RequestDetail() {
                                     </Card>
                                 )}
 
+                                {/* Danh sách số lô */}
+                                <div className="space-y-4">
+                                    <div
+                                        className="flex items-center gap-2 bg-gray-50 border-2 rounded-[5px] px-4 py-3 cursor-pointer hover:text-blue-600 transition-colors"
+                                        onClick={() => setShowBatchList(!showBatchList)}
+                                    >
+                                        <h3 className="font-medium">
+                                            Danh sách số lô ({request.inventoryReceipts.length})
+                                        </h3>
+                                        {showBatchList ? (
+                                            <ChevronUp className="h-4 w-4" />
+                                        ) : (
+                                            <ChevronDown className="h-4 w-4" />
+                                        )}
+                                    </div>
+
+                                    {showBatchList && (
+                                        <div className="space-y-4 border rounded-lg p-4">
+                                            {request.inventoryReceipts.length > 0 ? (
+                                                <div className="space-y-3">
+                                                    {matchedReceipt.map((receipt) => (
+                                                        <div
+                                                            key={receipt.inventoryReceiptId}
+                                                            className="border-b pb-3 last:border-b-0 last:pb-0"
+                                                        >
+                                                            <p className="font-medium text-blue-600">
+                                                                Số lô: {receipt.batchNumber}
+                                                            </p>
+                                                            <div className="pl-4 mt-2 space-y-1">
+                                                                {receipt.inventoryReceiptDetails.map(
+                                                                    (receiptD) => (
+                                                                        <div
+                                                                            key={
+                                                                                receiptD.inventoryReceiptDetailId
+                                                                            }
+                                                                            className="text-sm"
+                                                                        >
+                                                                            <p className="flex justify-between">
+                                                                                <span className="text-gray-600">
+                                                                                    Số lượng:
+                                                                                </span>
+                                                                                <span className="font-medium">
+                                                                                    {
+                                                                                        receiptD.actualQuantity
+                                                                                    }
+                                                                                </span>
+                                                                            </p>
+                                                                            <p className="flex justify-between">
+                                                                                <span className="text-gray-600">
+                                                                                    Ngày nhập:
+                                                                                </span>
+                                                                                <span className="font-medium">
+                                                                                    {dayjs(
+                                                                                        receiptD.actualDate,
+                                                                                    ).format(
+                                                                                        'DD/MM/YYYY',
+                                                                                    )}
+                                                                                </span>
+                                                                            </p>
+                                                                            <p className="flex justify-between">
+                                                                                <span className="text-gray-600">
+                                                                                    Ghi chú:
+                                                                                </span>
+                                                                                <span className="font-medium">
+                                                                                    {receiptD.note ||
+                                                                                        'Không có ghi chú'}
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                    ),
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <div className="text-gray-500 italic text-center py-2">
+                                                    <p>Chưa có lô hàng nào.</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Chi tiết phiếu */}
                                 <div className="space-y-4">
                                     <h2 className="text-xl font-semibold flex items-center gap-2">
                                         <Clipboard className="h-5 w-5 text-blue-600" />
@@ -308,126 +394,14 @@ export default function RequestDetail() {
 
                                             <CardContent className="pt-4">
                                                 <div className="grid md:grid-cols-2 gap-6">
-                                                    {/* Left Column - Batch List */}
                                                     <div className="space-y-4">
-                                                        <div
-                                                            className="flex items-center gap-2 bg-gray-50 border-2 rounded-[5px] px-4 py-3 cursor-pointer hover:text-blue-600 transition-colors"
-                                                            onClick={() =>
-                                                                setOpenedBatchIndex(
-                                                                    openedBatchIndex === index
-                                                                        ? null
-                                                                        : index,
-                                                                )
-                                                            }
-                                                        >
-                                                            <h3 className="font-medium">
-                                                                Danh sách số lô (
-                                                                {request.inventoryReceipts.length})
-                                                            </h3>
-                                                            {openedBatchIndex === index ? (
-                                                                <ChevronUp className="h-4 w-4" />
-                                                            ) : (
-                                                                <ChevronDown className="h-4 w-4" />
-                                                            )}
-                                                        </div>
-
-                                                        {openedBatchIndex === index && (
-                                                            <div className="space-y-4 border rounded-lg p-4">
-                                                                {request.inventoryReceipts.length >
-                                                                0 ? (
-                                                                    <div className="space-y-3">
-                                                                        {matchedReceipt.map(
-                                                                            (receipt) => (
-                                                                                <div
-                                                                                    key={
-                                                                                        receipt.inventoryReceiptId
-                                                                                    }
-                                                                                    className="border-b pb-3 last:border-b-0 last:pb-0"
-                                                                                >
-                                                                                    <p className="font-medium text-blue-600">
-                                                                                        Số lô:{' '}
-                                                                                        {
-                                                                                            receipt.batchNumber
-                                                                                        }
-                                                                                    </p>
-                                                                                    <div className="pl-4 mt-2 space-y-1">
-                                                                                        {receipt.inventoryReceiptDetails
-                                                                                            .filter(
-                                                                                                (
-                                                                                                    receiptD,
-                                                                                                ) =>
-                                                                                                    receiptD.resourceId ===
-                                                                                                    detail.resourceId,
-                                                                                            )
-                                                                                            .map(
-                                                                                                (
-                                                                                                    receiptD,
-                                                                                                ) => (
-                                                                                                    <div
-                                                                                                        key={
-                                                                                                            receiptD.inventoryReceiptDetailId
-                                                                                                        }
-                                                                                                        className="text-sm"
-                                                                                                    >
-                                                                                                        <p className="flex justify-between">
-                                                                                                            <span className="text-gray-600">
-                                                                                                                Số
-                                                                                                                lượng:
-                                                                                                            </span>
-                                                                                                            <span className="font-medium">
-                                                                                                                {
-                                                                                                                    receiptD.actualQuantity
-                                                                                                                }
-                                                                                                            </span>
-                                                                                                        </p>
-                                                                                                        <p className="flex justify-between">
-                                                                                                            <span className="text-gray-600">
-                                                                                                                Ngày
-                                                                                                                nhập:
-                                                                                                            </span>
-                                                                                                            <span className="font-medium">
-                                                                                                                {dayjs(
-                                                                                                                    receiptD.actualDate,
-                                                                                                                ).format(
-                                                                                                                    'DD/MM/YYYY',
-                                                                                                                )}
-                                                                                                            </span>
-                                                                                                        </p>
-                                                                                                        <p className="flex justify-between">
-                                                                                                            <span className="text-gray-600">
-                                                                                                                Ghi
-                                                                                                                chú:
-                                                                                                            </span>
-                                                                                                            <span className="font-medium">
-                                                                                                                {receiptD.note ||
-                                                                                                                    'Không có ghi chú'}
-                                                                                                            </span>
-                                                                                                        </p>
-                                                                                                    </div>
-                                                                                                ),
-                                                                                            )}
-                                                                                    </div>
-                                                                                </div>
-                                                                            ),
-                                                                        )}
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="text-gray-500 italic text-center py-2">
-                                                                        <p>Chưa có lô hàng nào.</p>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        )}
-                                                    </div>
-
-                                                    {/* Right Column - Product Info and Inputs */}
-                                                    <div className="space-y-4">
+                                                        {/* Left Column - Product Info */}
                                                         <div>
                                                             <ResourceCard
                                                                 resourceId={detail.resourceId}
                                                             />
                                                         </div>
-
+                                                        {/* Right Column - Inputs */}
                                                         <div className="space-y-4">
                                                             <div className="grid grid-cols-2 gap-4">
                                                                 <FormField
