@@ -11,10 +11,10 @@ import { Separator } from '@/components/ui/separator';
 
 type ResourceCardProps = {
     resourceId: string;
-    onViewDetails?: (id: string) => void;
+    // onViewDetails?: (id: string) => void;
 };
 
-export default function ResourceCard({ resourceId, onViewDetails }: ResourceCardProps) {
+export default function ResourceCard({ resourceId }: ResourceCardProps) {
     const {
         data: resource,
         isLoading,
@@ -26,7 +26,7 @@ export default function ResourceCard({ resourceId, onViewDetails }: ResourceCard
 
     if (isLoading) {
         return (
-            <Card className="w-full max-w-md">
+            <Card className="w-full h-full">
                 <CardHeader className="pb-2">
                     <Skeleton className="h-6 w-3/4" />
                 </CardHeader>
@@ -41,7 +41,7 @@ export default function ResourceCard({ resourceId, onViewDetails }: ResourceCard
 
     if (error || !resource) {
         return (
-            <Card className="w-full max-w-md border-destructive/20">
+            <Card className="w-full h-full border-destructive/20">
                 <CardHeader className="pb-2">
                     <CardTitle className="flex items-center text-destructive">
                         <AlertCircle className="mr-2 h-5 w-5" />
@@ -79,7 +79,7 @@ export default function ResourceCard({ resourceId, onViewDetails }: ResourceCard
     };
 
     return (
-        <Card className="w-full transition-all duration-200 hover:shadow-md">
+        <Card className="w-full h-full transition-all duration-200 hover:shadow-md">
             <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                     <CardTitle className="text-lg flex items-center">

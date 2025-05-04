@@ -1,10 +1,11 @@
 import { getSubBySubId } from '@/services/category.service';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
+import { Input } from '../ui/input';
 
 type SubCateDisplayProps = {
     id: string;
-    mode: 'badge' | 'input' | 'description';
+    mode: 'badge' | 'input' | 'description' | 'title';
 };
 
 export default function SubCateDisplay({ id, mode }: SubCateDisplayProps) {
@@ -64,6 +65,8 @@ export default function SubCateDisplay({ id, mode }: SubCateDisplayProps) {
         );
     } else if (mode === 'description') {
         return <span className="text-sm">{subDesc}</span>;
+    } else if (mode === 'title') {
+        return <span className="text-sm font-medium">{subCate.description}</span>;
     }
 }
 

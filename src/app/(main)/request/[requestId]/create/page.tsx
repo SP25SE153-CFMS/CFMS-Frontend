@@ -47,7 +47,6 @@ export default function RequestDetail() {
     const router = useRouter();
     const { requestId }: { requestId: string } = useParams();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [batchNumber, setBatchNumber] = useState<number>(1);
     const [showBatchList, setShowBatchList] = useState(false);
     // const [openedBatchIndex, setOpenedBatchIndex] = useState<number | null>(null);
 
@@ -168,51 +167,53 @@ export default function RequestDetail() {
     }
 
     const getReceiptIcon = () => {
-        if (subCategoryName === 'IMPORT') return <Clipboard className="h-5 w-5 text-green-600" />;
-        if (subCategoryName === 'EXPORT') return <Clipboard className="h-5 w-5 text-amber-600" />;
-        return <Clipboard className="h-5 w-5 text-blue-600" />;
+        if (subCategoryName === 'IMPORT')
+            return <ArrowDownToLine className="h-5 w-5 text-emerald-600" />;
+        if (subCategoryName === 'EXPORT')
+            return <ArrowUpFromLine className="h-5 w-5 text-amber-600" />;
+        return <Clipboard className="h-5 w-5 text-sky-600" />;
+    };
+
+    const formatDate = (date: string) => {
+        return dayjs(date).format('DD/MM/YYYY HH:mm');
     };
 
     return (
-        <div className="container mx-auto p-6 space-y-6">
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <Button variant="outline" size="icon" onClick={() => router.back()}>
+        <div className="container mx-auto p-6 space-y-6 max-w-5xl">
+            <div className="flex items-center justify-between bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center gap-3">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => router.back()}
+                        className="hover:bg-slate-100"
+                    >
                         <ArrowLeft className="h-4 w-4" />
                     </Button>
                     <h1 className="text-2xl font-bold flex items-center gap-2">
                         {getReceiptIcon()}
-                        Tạo phiếu <span>{subCate?.description?.toLowerCase()}</span>
+                        <span className="bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">
+                            Tạo phiếu {subCate?.description?.toLowerCase()}
+                        </span>
                     </h1>
                 </div>
-                {/* <Badge variant="outline" className="flex items-center gap-1 px-3 py-1">
-                    <Calendar className="h-4 w-4" />
-                    <span>{formatDate(requestDetail.createdDate)}</span>
-                </Badge> */}
             </div>
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-6">
                     {requestDetail.inventoryRequests.map((request) => {
-                        // const receipt = receipts?.find(
-                        //     (r) => r.inventoryRequestId === request.inventoryRequestId,
-                        // );
                         const matchedReceipt =
                             receipts?.filter(
                                 (r) => r.inventoryRequestId === request.inventoryRequestId,
                             ) || [];
-                        // Lọc danh sách lô tương ứng resource hiện tại
 
-                        // console.log('Receipt: ', matchedReceipt);
-                        // console.log('So lo: ', request.inventoryReceipts.length);
                         return (
                             <div key={request.requestId} className="space-y-6">
                                 {(subCategoryName === 'IMPORT' || subCategoryName === 'EXPORT') && (
-                                    // Thông tin phiếu
-                                    <Card>
-                                        <CardHeader className="pb-2">
-                                            <CardTitle className="text-lg flex items-center gap-2">
-                                                <Info className="h-5 w-5 text-blue-500" />
+                                    <Card className="shadow-sm border-slate-200 overflow-hidden">
+                                        <CardHeader className="pb-2 bg-gradient-to-r from-slate-50 to-white border-b">
+                                            <CardTitle className="text-lg flex items-center gap-2 text-slate-800">
+                                                <Info className="h-5 w-5 text-sky-500" />
                                                 {subCategoryName === 'IMPORT'
                                                     ? 'Thông tin phiếu nhập'
                                                     : 'Thông tin phiếu xuất'}
@@ -220,19 +221,19 @@ export default function RequestDetail() {
                                         </CardHeader>
                                         <CardContent className="space-y-5 p-5">
                                             {/* Request Type Section */}
-                                            <div className="rounded-lg bg-white p-3">
+                                            <div className="rounded-lg p-4 border border-slate-100">
                                                 <div className="flex items-center justify-between">
-                                                    <span className="text-sm font-medium text-gray-700">
+                                                    <span className="text-sm font-medium text-slate-700">
                                                         Loại phiếu:
                                                     </span>
                                                     <SubCateDisplay
                                                         id={requestDetail.requestTypeId}
-                                                        mode="badge"
+                                                        mode="title"
                                                     />
                                                 </div>
                                             </div>
 
-                                            <div className="flex items-center justify-between p-3">
+                                            <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-slate-100">
                                                 <FormField
                                                     control={form.control}
                                                     name={
@@ -245,7 +246,7 @@ export default function RequestDetail() {
                                                             {/* Ẩn input id để submit */}
                                                             <input type="hidden" {...field} />
                                                             {/* Hiển thị tên kho */}
-                                                            <FormLabel className="text-sm font-medium text-gray-700 m-0">
+                                                            <FormLabel className="text-sm font-medium text-slate-700 m-0">
                                                                 {subCategoryName === 'IMPORT'
                                                                     ? 'Kho nhập:'
                                                                     : 'Kho xuất:'}
@@ -259,7 +260,7 @@ export default function RequestDetail() {
                                                                               ?.warehouseName || ''
                                                                 }
                                                                 readOnly
-                                                                className="w-64 rounded-md border-gray-200 bg-gray-50 text-sm font-medium text-gray-700 focus:border-gray-300 focus:ring-0"
+                                                                className="w-64 rounded-md border-slate-200 bg-slate-50 text-sm font-medium text-slate-700 focus:border-slate-300 focus:ring-0"
                                                                 tabIndex={-1}
                                                             />
                                                         </>
@@ -285,55 +286,61 @@ export default function RequestDetail() {
                                 {/* Danh sách số lô */}
                                 <div className="space-y-4">
                                     <div
-                                        className="flex items-center gap-2 bg-gray-50 border-2 rounded-[5px] px-4 py-3 cursor-pointer hover:text-blue-600 transition-colors"
+                                        className="flex items-center gap-2 bg-white border-2 border-slate-200 rounded-lg px-4 py-3 cursor-pointer hover:text-sky-600 transition-colors shadow-sm"
                                         onClick={() => setShowBatchList(!showBatchList)}
                                     >
+                                        <Layers className="h-5 w-5 text-slate-600" />
                                         <h3 className="font-medium">
                                             Danh sách số lô ({request.inventoryReceipts.length})
                                         </h3>
                                         {showBatchList ? (
-                                            <ChevronUp className="h-4 w-4" />
+                                            <ChevronUp className="h-4 w-4 ml-auto" />
                                         ) : (
-                                            <ChevronDown className="h-4 w-4" />
+                                            <ChevronDown className="h-4 w-4 ml-auto" />
                                         )}
                                     </div>
 
                                     {showBatchList && (
-                                        <div className="space-y-4 border rounded-lg p-4">
+                                        <div className="space-y-4 border rounded-lg p-5 bg-white shadow-sm">
                                             {request.inventoryReceipts.length > 0 ? (
-                                                <div className="space-y-3">
+                                                <div className="space-y-4">
                                                     {matchedReceipt.map((receipt) => (
                                                         <div
                                                             key={receipt.inventoryReceiptId}
-                                                            className="border-b pb-3 last:border-b-0 last:pb-0"
+                                                            className="border-b pb-4 last:border-b-0 last:pb-0"
                                                         >
-                                                            <p className="font-medium text-blue-600">
-                                                                Số lô: {receipt.batchNumber}
+                                                            <p className="font-medium text-sky-600 flex items-center gap-2 mb-2">
+                                                                <Badge
+                                                                    variant="outline"
+                                                                    className="bg-sky-50 text-sky-600 border-sky-200 px-3 py-1"
+                                                                >
+                                                                    Số lô: {receipt.batchNumber}
+                                                                </Badge>
                                                             </p>
-                                                            <div className="pl-4 mt-2 space-y-1">
+                                                            <div className="pl-4 mt-3 space-y-2">
                                                                 {receipt.inventoryReceiptDetails.map(
                                                                     (receiptD) => (
                                                                         <div
                                                                             key={
                                                                                 receiptD.inventoryReceiptDetailId
                                                                             }
-                                                                            className="text-sm"
+                                                                            className="text-sm bg-slate-50 rounded-lg p-3 border border-slate-100"
                                                                         >
-                                                                            <p className="flex justify-between">
-                                                                                <span className="text-gray-600">
+                                                                            <p className="flex justify-between mb-1">
+                                                                                <span className="text-slate-600">
                                                                                     Số lượng:
                                                                                 </span>
-                                                                                <span className="font-medium">
+                                                                                <span className="font-medium text-slate-800">
                                                                                     {
                                                                                         receiptD.actualQuantity
                                                                                     }
                                                                                 </span>
                                                                             </p>
-                                                                            <p className="flex justify-between">
-                                                                                <span className="text-gray-600">
+                                                                            <p className="flex justify-between mb-1">
+                                                                                <span className="text-slate-600">
                                                                                     Ngày nhập:
                                                                                 </span>
-                                                                                <span className="font-medium">
+                                                                                <span className="font-medium text-slate-800">
                                                                                     {dayjs(
                                                                                         receiptD.actualDate,
                                                                                     ).format(
@@ -342,10 +349,10 @@ export default function RequestDetail() {
                                                                                 </span>
                                                                             </p>
                                                                             <p className="flex justify-between">
-                                                                                <span className="text-gray-600">
+                                                                                <span className="text-slate-600">
                                                                                     Ghi chú:
                                                                                 </span>
-                                                                                <span className="font-medium">
+                                                                                <span className="font-medium text-slate-800">
                                                                                     {receiptD.note ||
                                                                                         'Không có ghi chú'}
                                                                                 </span>
@@ -358,7 +365,7 @@ export default function RequestDetail() {
                                                     ))}
                                                 </div>
                                             ) : (
-                                                <div className="text-gray-500 italic text-center py-2">
+                                                <div className="text-slate-500 italic text-center py-6 bg-slate-50 rounded-lg border border-dashed border-slate-200">
                                                     <p>Chưa có lô hàng nào.</p>
                                                 </div>
                                             )}
@@ -368,48 +375,48 @@ export default function RequestDetail() {
 
                                 {/* Chi tiết phiếu */}
                                 <div className="space-y-4">
-                                    <h2 className="text-xl font-semibold flex items-center gap-2">
-                                        <Clipboard className="h-5 w-5 text-blue-600" />
+                                    <h2 className="text-xl font-semibold flex items-center gap-2 px-1 py-2 border-b border-slate-200">
+                                        <Clipboard className="h-5 w-5 text-sky-600" />
                                         Chi tiết phiếu
                                     </h2>
 
                                     {request.inventoryRequestDetails.map((detail, index) => (
                                         <Card
                                             key={detail.inventoryRequestDetailId}
-                                            className="overflow-hidden"
+                                            className="overflow-hidden shadow-sm border-slate-200 hover:shadow-md transition-shadow duration-300"
                                         >
-                                            <CardHeader className="bg-muted/50 pb-2">
+                                            <CardHeader className="bg-gradient-to-r from-slate-50 to-white pb-2 border-b">
                                                 <div className="flex justify-between items-center">
-                                                    <CardTitle className="text-base flex items-center gap-2">
+                                                    <CardTitle className="text-base flex items-center gap-2 text-slate-800">
                                                         <span>Sản phẩm {index + 1}</span>
                                                     </CardTitle>
                                                     <Badge
                                                         variant="outline"
-                                                        className="bg-blue-50 text-blue-700"
+                                                        className="bg-sky-50 text-sky-700 border-sky-200 px-3 py-1"
                                                     >
                                                         Số lượng yêu cầu: {detail.expectedQuantity}
                                                     </Badge>
                                                 </div>
                                             </CardHeader>
 
-                                            <CardContent className="pt-4">
-                                                <div className="grid md:grid-cols-2 gap-6">
-                                                    <div className="space-y-4">
-                                                        {/* Left Column - Product Info */}
-                                                        <div>
-                                                            <ResourceCard
-                                                                resourceId={detail.resourceId}
-                                                            />
-                                                        </div>
-                                                        {/* Right Column - Inputs */}
-                                                        <div className="space-y-4">
-                                                            <div className="grid grid-cols-2 gap-4">
+                                            <CardContent className="pt-5">
+                                                <div className="grid grid-cols-2 gap-6">
+                                                    {/* Left Column - Product Info */}
+                                                    <div className="space-y-4 ">
+                                                        <ResourceCard
+                                                            resourceId={detail.resourceId}
+                                                        />
+                                                    </div>
+                                                    {/* Right Column - Inputs */}
+                                                    <div className="space-y-4 ">
+                                                        <div className="rounded-xl border bg-card text-card-foreground shadow p-6 h-full">
+                                                            <div className="grid grid-cols-2 gap-4 pb-2">
                                                                 <FormField
                                                                     control={form.control}
                                                                     name={`receiptDetails.${index}.actualQuantity`}
                                                                     render={({ field }) => (
                                                                         <FormItem>
-                                                                            <FormLabel>
+                                                                            <FormLabel className="text-slate-700">
                                                                                 Số lượng thực tế
                                                                             </FormLabel>
                                                                             <FormControl>
@@ -418,7 +425,7 @@ export default function RequestDetail() {
                                                                                     min={0}
                                                                                     {...field}
                                                                                     placeholder="Nhập số lượng"
-                                                                                    className="focus:ring-2 focus:ring-blue-500"
+                                                                                    className="focus:ring-2 focus:ring-sky-500 border-slate-300"
                                                                                     value={
                                                                                         field.value
                                                                                     }
@@ -445,7 +452,9 @@ export default function RequestDetail() {
                                                                 />
 
                                                                 <FormItem>
-                                                                    <FormLabel>Đơn vị</FormLabel>
+                                                                    <FormLabel className="text-slate-700">
+                                                                        Đơn vị
+                                                                    </FormLabel>
                                                                     <SubCateDisplay
                                                                         id={detail.unitId}
                                                                         mode="input"
@@ -458,14 +467,15 @@ export default function RequestDetail() {
                                                                 name={`receiptDetails.${index}.note`}
                                                                 render={({ field }) => (
                                                                     <FormItem>
-                                                                        <FormLabel className="flex items-center gap-1">
-                                                                            <NoteText className="h-4 w-4" />
+                                                                        <FormLabel className="flex items-center gap-1 text-slate-700">
+                                                                            <NoteText className="h-4 w-4 text-slate-600" />
                                                                             Ghi chú
                                                                         </FormLabel>
                                                                         <FormControl>
                                                                             <Input
                                                                                 {...field}
                                                                                 placeholder="Nhập ghi chú nếu có"
+                                                                                className="border-slate-300"
                                                                             />
                                                                         </FormControl>
                                                                     </FormItem>
@@ -482,19 +492,24 @@ export default function RequestDetail() {
                         );
                     })}
 
-                    <Separator />
+                    <Separator className="my-8" />
 
-                    <div className="flex justify-end gap-4">
+                    <div className="flex justify-end gap-4 sticky bottom-0 bg-white p-4 border-t rounded-b-lg shadow-lg">
                         <Button
                             type="button"
                             variant="outline"
                             onClick={() => router.back()}
                             disabled={isSubmitting}
+                            className="border-slate-300 hover:bg-slate-100 hover:text-slate-900"
                         >
-                            <XCircle className="mr-2 h-4 w-4" />
+                            <XCircle className="mr-2 h-4 w-4 text-slate-600" />
                             Hủy
                         </Button>
-                        <Button type="submit" disabled={isSubmitting}>
+                        <Button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800"
+                        >
                             {isSubmitting ? (
                                 <>
                                     <Skeleton className="h-4 w-4 rounded-full mr-2" />
