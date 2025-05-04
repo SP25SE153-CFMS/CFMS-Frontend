@@ -4,16 +4,7 @@ import type React from 'react';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
-import {
-    AlertCircle,
-    CalendarIcon,
-    ChevronRight,
-    Egg,
-    Loader2,
-    Plus,
-    SplitSquareVertical,
-    Trash2,
-} from 'lucide-react';
+import { AlertCircle, CalendarIcon, Egg, Loader2, Plus, Trash2 } from 'lucide-react';
 import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
 

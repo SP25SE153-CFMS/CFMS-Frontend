@@ -261,7 +261,7 @@ export default function RequestDetailPage() {
                     <div>
                         <h1 className="text-2xl font-bold">Chi tiết phiếu</h1>
                         <p className="text-muted-foreground text-sm">
-                            ID: {requestDetail.requestId}
+                            Đây là thông tin chi tiết về phiếu yêu cầu của bạn
                         </p>
                     </div>
                 </div>

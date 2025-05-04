@@ -65,3 +65,9 @@ export const getReceipts = async () => {
     const response = await get<Response<ReceiptResponse[]>>(endpoint);
     return response.data.data;
 };
+
+export const getReceiptById = async (id: string) => {
+    const endpoint = PREFIX + '/receipt/' + id;
+    const response = await get<Response<ReceiptResponse>>(endpoint);
+    return response.data.data;
+};

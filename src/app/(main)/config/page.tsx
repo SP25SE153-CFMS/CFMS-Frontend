@@ -9,7 +9,6 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
 import Image from '@/components/fallback-image';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
-import { getUsers } from '@/services/user.service';
 import { getConfigs } from '@/services/config.service';
 
 export default function Page() {
@@ -22,14 +21,14 @@ export default function Page() {
         queryFn: () => getConfigs(),
     });
 
-    useQuery({
-        queryKey: ['users'],
-        queryFn: async () => {
-            const users = await getUsers();
-            sessionStorage.setItem('users', JSON.stringify(users));
-            return users;
-        },
-    });
+    // useQuery({
+    //     queryKey: ['users'],
+    //     queryFn: async () => {
+    //         const users = await getUsers();
+    //         sessionStorage.setItem('users', JSON.stringify(users));
+    //         return users;
+    //     },
+    // });
 
     // Check if configs are loading
     if (isLoading) {
