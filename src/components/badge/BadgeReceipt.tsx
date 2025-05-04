@@ -96,7 +96,9 @@ export function ResourceDisplay({ id }: ResourceDisplayProps) {
             {resource?.equipment && (
                 <div className="flex justify-between mb-1">
                     <span className="text-slate-600">Tên sản phẩm:</span>
-                    <span className="font-medium text-slate-800">{resource.equipment.equipmentName}</span>
+                    <span className="font-medium text-slate-800">
+                        {resource.equipment.equipmentName}
+                    </span>
                 </div>
             )}
 
@@ -104,7 +106,29 @@ export function ResourceDisplay({ id }: ResourceDisplayProps) {
             {resource?.medicine && (
                 <div className="flex justify-between mb-1">
                     <span className="text-slate-600">Tên sản phẩm:</span>
-                    <span className="font-medium text-slate-800">{resource.medicine.medicineName}</span>
+                    <span className="font-medium text-slate-800">
+                        {resource.medicine.medicineName}
+                    </span>
+                </div>
+            )}
+
+            {/* Breeding */}
+            {resource?.breeding && (
+                <div className="flex justify-between mb-1">
+                    <span className="text-slate-600">Tên sản phẩm:</span>
+                    <span className="font-medium text-slate-800">
+                        {resource.breeding.chickenName}
+                    </span>
+                </div>
+            )}
+
+            {/* Harvest Product */}
+            {resource?.harvestProduct && (
+                <div className="flex justify-between mb-1">
+                    <span className="text-slate-600">Tên sản phẩm:</span>
+                    <span className="font-medium text-slate-800">
+                        {resource.harvestProduct.harvestProductName}
+                    </span>
                 </div>
             )}
         </div>
