@@ -45,8 +45,6 @@ export default function Page() {
         enabled: !!wId && !!rId,
     });
 
-    console.log('Harvests data: ', harvests);
-
     // Check if harvests is loading
     if (isLoading) {
         return (

@@ -25,7 +25,6 @@ import config from '@/configs';
 import { ScrollArea } from '../ui/scroll-area';
 import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
-import { Skeleton } from '../ui/skeleton';
 import { FarmResponse } from '@/utils/types/custom.type';
 import { FarmRole, farmRoleLabels } from '@/utils/enum';
 
@@ -50,21 +49,21 @@ const FarmImage = ({ src, alt, size = FARM_IMAGE_SIZE, className = '' }: FarmIma
     />
 );
 
-const FarmSkeleton = () => (
-    <div className="flex items-center gap-2">
-        <Skeleton className="h-8 w-8 rounded-lg" />
-        <div className="grid text-left text-sm gap-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[250px]" />
-        </div>
-    </div>
-);
+// const FarmSkeleton = () => (
+//     <div className="flex items-center gap-2">
+//         <Skeleton className="h-8 w-8 rounded-lg" />
+//         <div className="grid text-left text-sm gap-2">
+//             <Skeleton className="h-4 w-[250px]" />
+//             <Skeleton className="h-4 w-[250px]" />
+//         </div>
+//     </div>
+// );
 
 export function FarmSwitcher() {
     const router = useRouter();
     const { isMobile } = useSidebar();
 
-    const { data: farms, isLoading } = useQuery({
+    const { data: farms } = useQuery({
         queryKey: ['farms'],
         queryFn: () => getFarmsForCurrentUser(),
         staleTime: 5 * 60 * 1000, // 5 minutes
@@ -116,16 +115,18 @@ export function FarmSwitcher() {
     );
 
     const renderActiveFarm = useMemo(() => {
-        if (!activeFarm) return <FarmSkeleton />;
+        const farm =
+            (JSON.parse(sessionStorage.getItem('activeFarm') || '{}') as Farm) || activeFarm;
+        // if (!activeFarm) return <FarmSkeleton />;
 
         return (
             <>
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground">
-                    <FarmImage src={activeFarm.imageUrl} alt={activeFarm.farmCode} />
+                    <FarmImage src={farm.imageUrl} alt={farm.farmCode} />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{activeFarm.farmName}</span>
-                    <span className="truncate text-xs">{activeFarm.farmCode}</span>
+                    <span className="truncate font-semibold">{farm.farmName}</span>
+                    <span className="truncate text-xs">{farm.farmCode}</span>
                 </div>
             </>
         );
@@ -140,7 +141,7 @@ export function FarmSwitcher() {
                             size="lg"
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         >
-                            {isLoading ? <FarmSkeleton /> : renderActiveFarm}
+                            {renderActiveFarm}
                             <ChevronsUpDown className="ml-auto" />
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>

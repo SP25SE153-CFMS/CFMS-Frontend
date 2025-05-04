@@ -29,10 +29,12 @@ import {
     BarChart,
     Phone,
     Globe,
+    FileText,
+    Code,
+    Ruler,
 } from 'lucide-react';
 import Image from '@/components/fallback-image';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import config from '@/configs';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { enrollToFarm, getFarms, getFarmsForCurrentUser } from '@/services/farm.service';
@@ -56,9 +58,8 @@ import {
 import { FarmRole, farmRoleConfigs } from '@/utils/enum';
 import InfoItem from '@/components/info-item';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
-
-// Dynamically import the map component with no SSR
-const FarmMapWithNoSSR = dynamic(() => import('@/components/map/farm-map'), { ssr: false });
+import { GoogleMapComponent } from '@/components/map/google-map';
+import { FarmResponse } from '@/utils/types/custom.type';
 
 export default function Page() {
     // userFarms: Farms for the current user
@@ -478,11 +479,23 @@ export default function Page() {
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-3 h-full">
                                 <div className="md:col-span-2 h-full">
-                                    <FarmMapWithNoSSR farms={filteredFarms} />
+                                    <GoogleMapComponent
+                                        markers={filteredFarms?.map((farm) => ({
+                                            id: farm.farmId,
+                                            position: {
+                                                lat: farm.latitude,
+                                                lng: farm.longitude,
+                                            },
+                                            title: farm.farmName,
+                                            info: <MarkerInfo farm={farm} />,
+                                        }))}
+                                        height={500}
+                                        className="mb-8"
+                                    />
                                 </div>
 
                                 <ScrollArea className="h-[30rem]">
-                                    <div className="px-4 overflow-auto h-full border-l border-red-500">
+                                    <div className="px-4 overflow-auto h-full">
                                         <div className="space-y-2">
                                             {filteredFarms.map((farm) => (
                                                 <FarmCard farm={farm} key={farm.farmId} />
@@ -651,3 +664,47 @@ export default function Page() {
         </div>
     );
 }
+
+const MarkerInfo = ({ farm }: { farm: FarmResponse }) => {
+    return (
+        <div className="flex flex-col">
+            <InfoItem
+                label="Tên trang trại"
+                value={farm?.farmName || 'Không có tên trang trại'}
+                icon={<FileText size={16} />}
+            />
+
+            <InfoItem
+                label="Mã trang trại"
+                value={farm?.farmCode || 'Không có mã trang trại'}
+                icon={<Code size={16} />}
+            />
+
+            <InfoItem
+                label="Địa chỉ"
+                value={farm?.address || 'Không có địa chỉ'}
+                icon={<MapPin size={16} />}
+            />
+
+            <InfoItem
+                label="Diện tích"
+                value={`${farm?.area || 0} m²`}
+                icon={<Ruler size={16} />}
+            />
+
+            <InfoItem label="Quy mô" value={`${farm?.scale} đơn vị`} icon={<Sprout size={16} />} />
+
+            <InfoItem
+                label="Số điện thoại"
+                value={farm?.phoneNumber || 'Không có số điện thoại'}
+                icon={<Phone size={16} />}
+            />
+
+            <InfoItem
+                label="Website"
+                value={farm?.website || 'Không có website'}
+                icon={<Globe size={16} />}
+            />
+        </div>
+    );
+};
