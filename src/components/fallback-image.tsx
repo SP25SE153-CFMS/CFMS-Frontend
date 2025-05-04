@@ -66,6 +66,12 @@ function Image({
     const [isLoading, setIsLoading] = useState(true);
     const dialogContentRef = useRef<HTMLDivElement>(null);
 
+    // Update image source when src prop changes
+    useEffect(() => {
+        setImgSrc(src);
+        setError(false);
+    }, [src]);
+
     // Reset states when preview is opened - memoized to prevent recreation on every render
     useEffect(() => {
         if (isPreviewOpen) {

@@ -68,7 +68,7 @@ export default function SubCategoryForm({
         mutationFn: defaultValues ? updateSubCategory : addSubCategory,
         onSuccess: () => {
             closeDialog();
-            queryClient.invalidateQueries({ queryKey: ['categories'] });
+            queryClient.invalidateQueries({ queryKey: ['category', categoryId] });
             toast.success(
                 defaultValues ? 'Cập nhật danh mục con thành công' : 'Thêm danh mục con thành công',
             );

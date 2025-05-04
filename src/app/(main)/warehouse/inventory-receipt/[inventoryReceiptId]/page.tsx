@@ -4,7 +4,7 @@ import SubCateDisplay from '@/components/badge/BadgeReceipt';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { getReceipts } from '@/services/request.service';
+import { getReceiptById } from '@/services/request.service';
 import { getResources } from '@/services/resource.service';
 import type { User } from '@/utils/schemas/user.schema';
 import { useQuery } from '@tanstack/react-query';
@@ -25,12 +25,10 @@ import {
 export default function InventoryDetail() {
     const { inventoryReceiptId }: { inventoryReceiptId: string } = useParams();
 
-    const { data: receipts, isLoading: isLoadingReceipts } = useQuery({
+    const { data: receipt, isLoading: isLoadingReceipts } = useQuery({
         queryKey: ['receipts'],
-        queryFn: () => getReceipts(),
+        queryFn: () => getReceiptById(inventoryReceiptId),
     });
-
-    const receipt = receipts?.find((r) => r.inventoryReceiptId === inventoryReceiptId);
 
     const { data: resources, isLoading: isLoadingResources } = useQuery({
         queryKey: ['resources'],

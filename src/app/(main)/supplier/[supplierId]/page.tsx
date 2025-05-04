@@ -35,6 +35,7 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
+    DialogTrigger,
 } from '@/components/ui/dialog';
 import AddResourceSupplier from '@/components/forms/add-resource-supplier.form';
 
@@ -87,21 +88,30 @@ export default function ResourceSuppliers() {
             <div className="flex flex-col items-center justify-center h-[calc(100vh-120px)] w-full text-muted-foreground">
                 <ClipboardListIcon className="w-12 h-12 mb-2 opacity-50" />
                 <p className="text-lg font-medium mb-4">Không có dữ liệu</p>
-                {/* <Dialog open={open} onOpenChange={setOpen}>
+                <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger asChild>
-                        <Button variant="outline">
+                        <Button variant="outline" className="mt-4">
                             <Plus className="w-4 h-4" />
                             Thêm mặt hàng
                         </Button>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent className="max-w-4xl">
                         <DialogHeader>
-                            <DialogTitle>Thêm mặt hàng</DialogTitle>
-                            <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
+                            <DialogTitle className="text-xl font-semibold">
+                                Tạo hàng hóa
+                            </DialogTitle>
+                            <DialogDescription>Nhập đầy đủ các thông tin dưới.</DialogDescription>
                         </DialogHeader>
-                        <ResourceSupplierForm closeDialog={() => setOpen(false)} />
+                        <ScrollArea className="max-h-[70vh]">
+                            <div className="p-1">
+                                <AddResourceSupplier
+                                    closeModal={closeModal}
+                                    supplierId={supplierId}
+                                />
+                            </div>
+                        </ScrollArea>
                     </DialogContent>
-                </Dialog> */}
+                </Dialog>
             </div>
         );
     }

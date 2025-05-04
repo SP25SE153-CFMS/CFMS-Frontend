@@ -8,6 +8,7 @@ const SIGN_IN_ROUTE = '/sign-in';
 const SIGN_UP_ROUTE = '/sign-up';
 const FORGOT_PASSWORD_ROUTE = '/forgot-password';
 const INPUT_OTP_ROUTE = '/forgot-password/input-OTP';
+const RESET_PASSWORD = '/reset-password';
 
 // eslint-disable-next-line no-unused-vars
 export function middleware(request: NextRequest) {
@@ -39,9 +40,14 @@ export function middleware(request: NextRequest) {
         pathname !== '/' &&
         pathname !== SIGN_UP_ROUTE &&
         pathname !== FORGOT_PASSWORD_ROUTE &&
-        pathname !== INPUT_OTP_ROUTE
+        pathname !== INPUT_OTP_ROUTE &&
+        pathname !== RESET_PASSWORD
     ) {
         return NextResponse.redirect(new URL(SIGN_IN_ROUTE, request.url));
+    }
+
+    if (pathname === RESET_PASSWORD) {
+        return NextResponse.next();
     }
 
     // If user has an access token but no farm ID and is not on the farm selection page,

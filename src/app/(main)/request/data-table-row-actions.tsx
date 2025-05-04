@@ -9,7 +9,6 @@ import {
 import config from '@/configs';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Row } from '@tanstack/react-table';
-import { useRouter } from 'next/navigation';
 
 interface Props<T> {
     row: Row<T>;
@@ -17,8 +16,6 @@ interface Props<T> {
 
 // eslint-disable-next-line no-unused-vars
 export function DataTableRowActions<T>({ row }: Props<T>) {
-    const router = useRouter();
-
     return (
         <>
             <DropdownMenu>
@@ -33,7 +30,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                         onClick={() => {
-                            (`${config.routes.request}/${row.getValue('requestId')}`);
+                            `${config.routes.request}/${row.getValue('requestId')}`;
                         }}
                     >
                         Chi tiết

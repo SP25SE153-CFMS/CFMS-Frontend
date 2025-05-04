@@ -52,6 +52,12 @@ export const SignUpRequestSchema = z
         //     message:
         //         'Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt',
         // }),
+
+        confirmPassword: z
+            .string()
+            .trim()
+            .min(8, { message: 'Mật khẩu phải có ít nhất 8 ký tự' })
+            .max(100, { message: 'Mật khẩu không được vượt quá 100 ký tự' }),
     })
     .strict();
 

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, AlertCircle, CheckCircle, Loader2, Smartphone } from 'lucide-react';
+import { ArrowLeft, AlertCircle, CheckCircle, Loader2, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,25 +25,27 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import config from '@/configs';
+import { forgotPassword } from '@/services/auth.service';
+import toast from 'react-hot-toast';
+import { deleteCookie } from 'cookies-next';
 
 export default function ForgotPasswordPage() {
     const router = useRouter();
-    const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [phoneError, setPhoneError] = useState<string | null>(null);
+    const [emailError, setEmailError] = useState<string | null>(null);
 
-    // Alert dialog states
     const [showErrorDialog, setShowErrorDialog] = useState(false);
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const validatePhone = (phone: string) => {
-        const phoneRegex = /^[0-9]{10,11}$/; // Chỉ nhận 10-11 số
-        if (!phone) {
-            return 'Số điện thoại không được để trống';
+    const validateEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email) {
+            return 'Email không được để trống';
         }
-        if (!phoneRegex.test(phone)) {
-            return 'Số điện thoại không hợp lệ';
+        if (!emailRegex.test(email)) {
+            return 'Email không hợp lệ';
         }
         return null;
     };
@@ -51,45 +53,35 @@ export default function ForgotPasswordPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Validate số điện thoại
-        const phoneValidationError = validatePhone(phone);
-        if (phoneValidationError) {
-            setPhoneError(phoneValidationError);
+        // Remove data from cookies
+        deleteCookie(config.cookies.accessToken);
+        deleteCookie(config.cookies.refreshToken);
+        deleteCookie(config.cookies.farmId);
+
+        const emailValidationError = validateEmail(email);
+        if (emailValidationError) {
+            setEmailError(emailValidationError);
             return;
         }
 
-        setPhoneError(null);
+        setEmailError(null);
         setIsLoading(true);
 
         try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-
-            // In a real application, you would call your API here
-            // const response = await fetch('/api/reset-password', {
-            //   method: 'POST',
-            //   headers: { 'Content-Type': 'application/json' },
-            //   body: JSON.stringify({ phone }),
-            // })
-
-            // if (!response.ok) {
-            //   const data = await response.json()
-            //   throw new Error(data.error || 'Có lỗi xảy ra khi gửi yêu cầu đặt lại mật khẩu')
-            // }
+            const response = await forgotPassword(email);
+            sessionStorage.setItem('email', email);
+            toast.success(response.message);
 
             setShowSuccessDialog(true);
-
-            // Chờ 1 giây xong chuyển trang
             setTimeout(() => {
                 setShowSuccessDialog(false);
                 router.push(config.routes.inputOTP);
-                // console.log('Chuyển đến trang nhập OTP');
             }, 1000);
-        } catch (err) {
+        } catch (err: any) {
+            console.error(err);
+            // toast(err?.response?.data?.message, { icon: '⚠️' });
             setErrorMessage(
-                err instanceof Error
-                    ? err.message
-                    : 'Có lỗi xảy ra khi gửi yêu cầu đặt lại mật khẩu',
+                err?.response?.data?.message || 'Có lỗi xảy ra khi gửi yêu cầu đặt lại mật khẩu',
             );
             setShowErrorDialog(true);
         } finally {
@@ -111,33 +103,33 @@ export default function ForgotPasswordPage() {
                             <ArrowLeft className="h-4 w-4" />
                         </Button>
                         <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-                            <Smartphone className="h-4 w-4 text-primary-foreground" />
+                            <Mail className="h-4 w-4 text-primary-foreground" />
                         </div>
                     </div>
                     <CardTitle className="text-2xl text-center">Quên mật khẩu</CardTitle>
                     <CardDescription className="text-center">
-                        Vui lòng nhập số điện thoại đăng ký của bạn để nhận mã OTP.
+                        Vui lòng nhập địa chỉ email của bạn để nhận mã OTP.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="phone">Số điện thoại</Label>
+                            <Label htmlFor="email">Email</Label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <Smartphone className="h-4 w-4 text-muted-foreground" />
+                                    <Mail className="h-4 w-4 text-muted-foreground" />
                                 </div>
                                 <Input
-                                    id="phone"
-                                    type="tel"
-                                    placeholder="Nhập số điện thoại"
-                                    className={`pl-10 ${phoneError ? 'border-red-500' : ''}`}
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
+                                    id="email"
+                                    type="email"
+                                    placeholder="Nhập địa chỉ email"
+                                    className={`pl-10 ${emailError ? 'border-red-500' : ''}`}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     disabled={isLoading}
                                 />
                             </div>
-                            {phoneError && <p className="text-sm text-red-500">{phoneError}</p>}
+                            {emailError && <p className="text-sm text-red-500">{emailError}</p>}
                         </div>
 
                         <Button type="submit" className="w-full" disabled={isLoading}>
@@ -166,7 +158,7 @@ export default function ForgotPasswordPage() {
             <AlertDialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2 text-red-600">
+                        <AlertDialogTitle className="flex items-center gap-2 text-orange-600">
                             <AlertCircle className="h-5 w-5" />
                             Lỗi
                         </AlertDialogTitle>
@@ -189,8 +181,8 @@ export default function ForgotPasswordPage() {
                             Thành công
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                            Chúng tôi đã gửi mã OTP đến số điện thoại của bạn. Vui lòng kiểm tra tin
-                            nhắn để tiếp tục đặt lại mật khẩu.
+                            Chúng tôi đã gửi mã OTP đến địa chỉ email của bạn. Vui lòng kiểm tra hộp
+                            thư để tiếp tục đặt lại mật khẩu.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                 </AlertDialogContent>

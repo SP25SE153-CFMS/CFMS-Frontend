@@ -13,13 +13,14 @@ import {
     AlertCircle,
     ArrowDownToLine,
     ArrowUpFromLine,
-    Clock,
     NotebookTextIcon as NoteText,
     Images,
     Loader2,
     PackageCheck,
     Tag,
     Clipboard,
+    CheckCheck,
+    X,
 } from 'lucide-react';
 import {
     Card,
@@ -32,7 +33,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { approveRequest, getRequestById } from '@/services/request.service';
@@ -42,32 +42,43 @@ import { RequestResponse, ResourceResponse } from '@/utils/types/custom.type';
 import { convertToThumbnailUrl, formatDate } from '@/utils/functions';
 import { DATE_TIME_FORMAT } from '@/utils/constants/date.constant';
 import toast from 'react-hot-toast';
-import { RequestStatus } from '@/utils/enum/status.enum';
+import {
+    RequestStatus,
+    requestStatusColor,
+    requestStatusIcon,
+    requestStatusLabels,
+} from '@/utils/enum/status.enum';
 import config from '@/configs';
-import CreateReceipt from './create/page';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { getRequestTitle } from '@/lib/helper';
 
 export default function RequestDetailPage() {
     const router = useRouter();
     const { requestId }: { requestId: string } = useParams();
 
+    const [notes, setNotes] = useState<string>('');
     const [resourceSpecs, setResourceSpecs] = useState<{ [key: string]: ResourceResponse }>({});
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
 
     const { data: requestDetail, isLoading } = useQuery({
         queryKey: ['requestDetail', requestId],
         queryFn: () => getRequestById(requestId),
     });
 
-    console.log('Detail cua request: ', requestDetail);
-
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: ({ requestId, isApprove }: { requestId: string; isApprove: RequestStatus }) =>
-            approveRequest(requestId, isApprove),
-        onSuccess: () => {
-            toast.success('Xử lý phiếu thành công');
+        mutationFn: (status: RequestStatus) => approveRequest(requestId, status, notes),
+        onSuccess: (response) => {
+            toast.success(response.message);
             queryClient.invalidateQueries({ queryKey: ['requestDetail', requestId] });
         },
         onError: (error: any) => {
@@ -77,7 +88,7 @@ export default function RequestDetailPage() {
     });
 
     const handleApproveRequest = async (status: RequestStatus) => {
-        await mutation.mutateAsync({ requestId, isApprove: status });
+        await mutation.mutateAsync(status);
     };
 
     useEffect(() => {
@@ -103,43 +114,9 @@ export default function RequestDetailPage() {
         }
     };
 
-    const getStatusColor = (status: number) => {
-        switch (status) {
-            case 0:
-                return 'yellow';
-            case 1:
-                return 'green';
-            case 2:
-                return 'red';
-            default:
-                return 'gray';
-        }
-    };
-
-    const getStatusText = (status: number) => {
-        switch (status) {
-            case 0:
-                return 'Chờ duyệt';
-            case 1:
-                return 'Đã duyệt';
-            case 2:
-                return 'Từ chối';
-            default:
-                return 'Không xác định';
-        }
-    };
-
     const getStatusIcon = (status: number) => {
-        switch (status) {
-            case 0:
-                return <Clock className="h-3.5 w-3.5 mr-1.5" />;
-            case 1:
-                return <PackageCheck className="h-3.5 w-3.5 mr-1.5" />;
-            case 2:
-                return <AlertCircle className="h-3.5 w-3.5 mr-1.5" />;
-            default:
-                return <Info className="h-3.5 w-3.5 mr-1.5" />;
-        }
+        const Icon = requestStatusIcon[status];
+        return <Icon className="h-3.5 w-3.5 mr-1.5" />;
     };
 
     const getPriorityText = (priority: number) => {
@@ -153,22 +130,6 @@ export default function RequestDetailPage() {
             default:
                 return { text: 'Không xác định', color: 'gray' };
         }
-    };
-
-    const getRequestTitle = (requestDetail: RequestResponse) => {
-        if (requestDetail.taskRequests?.length > 0) {
-            return requestDetail.taskRequests[0].title;
-        }
-        if (requestDetail.inventoryRequests?.length > 0) {
-            const inventory = requestDetail.inventoryRequests[0];
-            if (inventory.wareTo?.farm?.farmName) {
-                return inventory.wareTo.farm.farmName;
-            }
-            if (inventory.wareFrom?.farm?.farmName) {
-                return inventory.wareFrom.farm.farmName;
-            }
-        }
-        return 'Phiếu yêu cầu';
     };
 
     const getRequestType = (requestDetail: RequestResponse) => {
@@ -300,7 +261,7 @@ export default function RequestDetailPage() {
                     <div>
                         <h1 className="text-2xl font-bold">Chi tiết phiếu</h1>
                         <p className="text-muted-foreground text-sm">
-                            ID: {requestDetail.requestId}
+                            Đây là thông tin chi tiết về phiếu yêu cầu của bạn
                         </p>
                     </div>
                 </div>
@@ -309,17 +270,17 @@ export default function RequestDetailPage() {
                     variant="outline"
                     className={cn('px-3 py-1.5 text-sm font-medium', {
                         'bg-yellow-500/10 text-yellow-500 border-yellow-500/20':
-                            getStatusColor(requestDetail.status) === 'yellow',
+                            requestStatusColor[requestDetail.status] === 'yellow',
                         'bg-green-500/10 text-green-500 border-green-500/20':
-                            getStatusColor(requestDetail.status) === 'green',
+                            requestStatusColor[requestDetail.status] === 'green',
                         'bg-red-500/10 text-red-500 border-red-500/20':
-                            getStatusColor(requestDetail.status) === 'red',
+                            requestStatusColor[requestDetail.status] === 'red',
                         'bg-gray-500/10 text-gray-500 border-gray-500/20':
-                            getStatusColor(requestDetail.status) === 'gray',
+                            requestStatusColor[requestDetail.status] === 'gray',
                     })}
                 >
                     {getStatusIcon(requestDetail.status)}
-                    {getStatusText(requestDetail.status)}
+                    {requestStatusLabels[requestDetail.status]}
                 </Badge>
             </div>
 
@@ -469,44 +430,15 @@ export default function RequestDetailPage() {
                                     <CardContent className="pt-6">
                                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                             {images.map((url, index) => (
-                                                <Dialog
+                                                <Image
                                                     key={index}
-                                                    open={
-                                                        isImageDialogOpen &&
-                                                        currentImageIndex === index
-                                                    }
-                                                    onOpenChange={(open) => {
-                                                        setIsImageDialogOpen(open);
-                                                        if (!open) setCurrentImageIndex(0);
-                                                    }}
-                                                >
-                                                    <DialogTrigger asChild>
-                                                        <div
-                                                            className="relative aspect-square rounded-md overflow-hidden border border-muted cursor-pointer hover:opacity-90 transition-opacity"
-                                                            onClick={() => {
-                                                                setCurrentImageIndex(index);
-                                                                setIsImageDialogOpen(true);
-                                                            }}
-                                                        >
-                                                            <Image
-                                                                src={convertToThumbnailUrl(url)}
-                                                                alt={`Hình ảnh ${index + 1}`}
-                                                                fill
-                                                                className="object-cover"
-                                                            />
-                                                        </div>
-                                                    </DialogTrigger>
-                                                    <DialogContent className="max-w-4xl p-0 overflow-hidden">
-                                                        <div className="relative w-full h-[80vh]">
-                                                            <Image
-                                                                src={convertToThumbnailUrl(url)}
-                                                                alt={`Hình ảnh ${index + 1}`}
-                                                                fill
-                                                                className="object-contain"
-                                                            />
-                                                        </div>
-                                                    </DialogContent>
-                                                </Dialog>
+                                                    src={convertToThumbnailUrl(url)}
+                                                    alt={`Hình ảnh ${index + 1}`}
+                                                    width={200}
+                                                    height={200}
+                                                    preview
+                                                    className="object-cover mx-auto"
+                                                />
                                             ))}
                                         </div>
                                     </CardContent>
@@ -772,23 +704,25 @@ export default function RequestDetailPage() {
                         <CardHeader
                             className={cn('pb-4', {
                                 'bg-yellow-500/10':
-                                    getStatusColor(requestDetail.status) === 'yellow',
-                                'bg-green-500/10': getStatusColor(requestDetail.status) === 'green',
-                                'bg-red-500/10': getStatusColor(requestDetail.status) === 'red',
-                                'bg-gray-500/10': getStatusColor(requestDetail.status) === 'gray',
+                                    requestStatusColor[requestDetail.status] === 'yellow',
+                                'bg-green-500/10':
+                                    requestStatusColor[requestDetail.status] === 'green',
+                                'bg-red-500/10': requestStatusColor[requestDetail.status] === 'red',
+                                'bg-gray-500/10':
+                                    requestStatusColor[requestDetail.status] === 'gray',
                             })}
                         >
                             <div className="flex items-center gap-2">
                                 <div
                                     className={cn('h-3 w-3 rounded-full', {
                                         'bg-yellow-500':
-                                            getStatusColor(requestDetail.status) === 'yellow',
+                                            requestStatusColor[requestDetail.status] === 'yellow',
                                         'bg-green-500':
-                                            getStatusColor(requestDetail.status) === 'green',
+                                            requestStatusColor[requestDetail.status] === 'green',
                                         'bg-red-500':
-                                            getStatusColor(requestDetail.status) === 'red',
+                                            requestStatusColor[requestDetail.status] === 'red',
                                         'bg-gray-500':
-                                            getStatusColor(requestDetail.status) === 'gray',
+                                            requestStatusColor[requestDetail.status] === 'gray',
                                     })}
                                 />
                                 <CardTitle className="text-lg font-semibold">
@@ -803,17 +737,17 @@ export default function RequestDetailPage() {
                                     variant="outline"
                                     className={cn('px-3 py-1 text-sm', {
                                         'bg-yellow-500/10 text-yellow-500 border-yellow-500/20':
-                                            getStatusColor(requestDetail.status) === 'yellow',
+                                            requestStatusColor[requestDetail.status] === 'yellow',
                                         'bg-green-500/10 text-green-500 border-green-500/20':
-                                            getStatusColor(requestDetail.status) === 'green',
+                                            requestStatusColor[requestDetail.status] === 'green',
                                         'bg-red-500/10 text-red-500 border-red-500/20':
-                                            getStatusColor(requestDetail.status) === 'red',
+                                            requestStatusColor[requestDetail.status] === 'red',
                                         'bg-gray-500/10 text-gray-500 border-gray-500/20':
-                                            getStatusColor(requestDetail.status) === 'gray',
+                                            requestStatusColor[requestDetail.status] === 'gray',
                                     })}
                                 >
                                     {getStatusIcon(requestDetail.status)}
-                                    {getStatusText(requestDetail.status)}
+                                    {requestStatusLabels[requestDetail.status]}
                                 </Badge>
                             </div>
 
@@ -895,71 +829,95 @@ export default function RequestDetailPage() {
                     </Card>
 
                     {/* Quick Actions Card */}
-                    <Card className="border-none shadow-md">
-                        <CardHeader className="bg-primary/5 pb-4">
-                            <div className="flex items-center gap-2">
-                                <Info className="h-5 w-5 text-primary" />
-                                <CardTitle className="text-lg font-semibold">
-                                    Thao tác nhanh
-                                </CardTitle>
-                            </div>
-                        </CardHeader>
-                        <CardContent className="pt-6">
-                            <div className="space-y-3">
-                                {/* <Button className="w-full justify-start" variant="outline">
+                    {requestDetail.status !== RequestStatus.REJECTED && (
+                        <Card className="border-none shadow-md">
+                            <CardHeader className="bg-primary/5 pb-4">
+                                <div className="flex items-center gap-2">
+                                    <Info className="h-5 w-5 text-primary" />
+                                    <CardTitle className="text-lg font-semibold">
+                                        Thao tác nhanh
+                                    </CardTitle>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="pt-6">
+                                <div className="space-y-3">
+                                    {/* <Button className="w-full justify-start" variant="outline">
                                     <Package className="h-4 w-4 mr-2" />
                                     Xem lịch sử phiếu
                                 </Button> */}
 
-                                {requestDetail.status === 1 && (
-                                    <Button
-                                        className="w-full justify-start"
-                                        variant="outline"
-                                        onClick={handleCreateInventoryReceipt}
-                                    >
-                                        <FileText className="h-4 w-4 mr-2" />
-                                        Tạo phiếu nhập/xuất
-                                    </Button>
-                                )}
-
-                                {requestDetail.status === 0 && (
-                                    <>
+                                    {requestDetail.status === RequestStatus.APPROVED && (
                                         <Button
                                             className="w-full justify-start"
-                                            variant="default"
-                                            onClick={() =>
-                                                handleApproveRequest(RequestStatus.APPROVED)
-                                            }
-                                            disabled={mutation.isPending}
+                                            variant="outline"
+                                            onClick={handleCreateInventoryReceipt}
                                         >
-                                            {mutation.isPending ? (
-                                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                            ) : (
-                                                <PackageCheck className="h-4 w-4 mr-2" />
-                                            )}
-                                            Duyệt phiếu
+                                            <FileText className="h-4 w-4 mr-2" />
+                                            Tạo phiếu nhập/xuất
                                         </Button>
+                                    )}
 
-                                        <Button
-                                            className="w-full justify-start"
-                                            variant="destructive"
-                                            onClick={() =>
-                                                handleApproveRequest(RequestStatus.REJECTED)
-                                            }
-                                            disabled={mutation.isPending}
-                                        >
-                                            {mutation.isPending ? (
-                                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                            ) : (
-                                                <AlertCircle className="h-4 w-4 mr-2" />
-                                            )}
-                                            Từ chối phiếu
-                                        </Button>
-                                    </>
-                                )}
-                            </div>
-                        </CardContent>
-                    </Card>
+                                    {requestDetail.status === RequestStatus.PENDING && (
+                                        <Dialog>
+                                            <DialogTrigger asChild>
+                                                <Button
+                                                    className="w-full justify-start"
+                                                    variant="outline"
+                                                    disabled={mutation.isPending}
+                                                >
+                                                    {mutation.isPending ? (
+                                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                    ) : (
+                                                        <PackageCheck className="h-4 w-4 mr-2" />
+                                                    )}
+                                                    Duyệt/Từ chối phiếu
+                                                </Button>
+                                            </DialogTrigger>
+                                            <DialogContent>
+                                                <DialogHeader>
+                                                    <DialogTitle>Lý do</DialogTitle>
+                                                    <DialogDescription>
+                                                        Hãy nhập lý do tại sao bạn muốn duyệt hay từ
+                                                        chối
+                                                    </DialogDescription>
+                                                </DialogHeader>
+                                                <Textarea
+                                                    id="notes"
+                                                    onChange={(e) => setNotes(e.target.value)}
+                                                />
+                                                <DialogFooter>
+                                                    <Button
+                                                        variant="outline"
+                                                        onClick={() =>
+                                                            handleApproveRequest(
+                                                                RequestStatus.APPROVED,
+                                                            )
+                                                        }
+                                                        className="text-green-500 hover:bg-green-500 hover:text-white"
+                                                    >
+                                                        <CheckCheck className="w-4 h-4" />
+                                                        Duyệt
+                                                    </Button>
+                                                    <Button
+                                                        variant="outline"
+                                                        onClick={() =>
+                                                            handleApproveRequest(
+                                                                RequestStatus.REJECTED,
+                                                            )
+                                                        }
+                                                        className="text-red-500 hover:bg-red-500 hover:text-white"
+                                                    >
+                                                        <X className="w-4 h-4" />
+                                                        Từ chối
+                                                    </Button>
+                                                </DialogFooter>
+                                            </DialogContent>
+                                        </Dialog>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
                 </div>
             </div>
         </div>

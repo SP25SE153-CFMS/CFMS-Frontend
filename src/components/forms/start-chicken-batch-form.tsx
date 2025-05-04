@@ -1,6 +1,10 @@
+'use client';
+
+import type React from 'react';
+
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { AlertCircle, CalendarIcon, Loader2, Plus, Trash2 } from 'lucide-react';
+import { AlertCircle, CalendarIcon, Egg, Loader2, Plus, Trash2 } from 'lucide-react';
 import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
 
@@ -11,7 +15,7 @@ import { getChickenTypes } from '@/services/category.service';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getGrowthStages } from '@/services/growth-stage.service';
 import { startChickenBatch } from '@/services/chicken-batch.service';
-import {
+import type {
     ChickenCoopResponse,
     ChickenDetailRequest,
     StartChickenBatch,
@@ -25,12 +29,15 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import { vi } from 'date-fns/locale';
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { formatDate } from '@/utils/functions';
 import Link from 'next/link';
 import config from '@/configs';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
 export default function StartChickenBatchForm({ closeDialog }: { closeDialog: () => void }) {
     const queryClient = useQueryClient();
@@ -98,33 +105,52 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
         mutation.mutate(formData);
     };
 
+    const totalQuantity = chickenDetailRequests.reduce((sum, detail) => sum + detail.quantity, 0);
+    const selectedChickenType = chickenTypes?.find(
+        (type) => type.chickenType?.subCategoryId === chickenTypeId,
+    )?.chickenType?.subCategoryName;
+
+    const filteredGrowthStages = growthStages
+        ?.filter((stage) => stage.chickenType === chickenTypeId)
+        // Remove duplicate stages
+        .filter(
+            (stage, index, self) =>
+                index === self.findIndex((s) => s.stageCode === stage.stageCode),
+        );
+
+    const isFormValid = chickenId && totalQuantity > 0;
+
     return (
-        <form className="space-y-5" onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="space-y-4 grid grid-cols-2 gap-4">
-                    {/* Chicken batch name */}
-                    <div className="*:not-first:mt-2 col-span-2">
-                        <Label htmlFor={`chickenBatchName`}>Tên lứa nuôi</Label>
+        <form className="space-y-6" onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="chickenBatchName" className="text-sm font-medium">
+                            Tên lứa nuôi
+                        </Label>
                         <Input
-                            id={`chickenBatchName`}
-                            placeholder="Lứa nuôi gà đẻ trứng"
+                            id="chickenBatchName"
+                            placeholder="Nhập tên lứa nuôi (vd: Lứa nuôi gà đẻ trứng)"
                             required
                         />
+                        <p className="text-xs text-muted-foreground">
+                            Đặt tên dễ nhận biết cho lứa nuôi
+                        </p>
                     </div>
-                    {/* Start date */}
-                    <div className="*:not-first:mt-2 grid gap-2">
-                        <Label>Ngày bắt đầu của lứa nuôi</Label>
+
+                    <div className="space-y-2">
+                        <Label className="text-sm font-medium">Ngày bắt đầu</Label>
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button
                                     variant={'outline'}
                                     className={cn(
-                                        'justify-start text-left font-normal',
+                                        'w-full justify-start text-left font-normal',
                                         !startDate && 'text-muted-foreground',
                                     )}
                                 >
                                     {formatDate(startDate.toISOString())}
-                                    <CalendarIcon />
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto p-0" align="start">
@@ -133,89 +159,60 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                                     selected={startDate}
                                     locale={vi}
                                     onSelect={(day) => setStartDate(day ?? new Date())}
-                                    disabled={(date) => date < new Date()}
                                     initialFocus
                                 />
                             </PopoverContent>
                         </Popover>
                     </div>
 
-                    {/* Chicken type */}
-                    <div className="*:not-first:mt-2 col-span-2">
-                        <Label>Loại gà</Label>
-                        {/* <Select
-                            defaultValue={chickenTypeId}
-                            onValueChange={setChickenTypeId}
-                            // disabled={!!chickenTypeId}
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder="Chọn loại gà" />
-                            </SelectTrigger>
-                            <SelectContent className="max-h-72">
-                                {chickenTypes?.map((type) => (
-                                    <SelectItem key={type.subCategoryId} value={type.subCategoryId}>
-                                        {type.subCategoryName}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select> */}
-                        <Input
-                            disabled
-                            value={
-                                chickenTypes?.find(
-                                    (type) => type.chickenType?.subCategoryId === chickenTypeId,
-                                )?.chickenType?.subCategoryName
-                            }
-                        />
+                    <div className="space-y-2">
+                        <Label className="text-sm font-medium">Loại gà</Label>
+                        <div className="relative">
+                            <Input
+                                disabled
+                                value={selectedChickenType || ''}
+                                className="bg-muted/50 text-muted-foreground"
+                            />
+                            <Egg className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        </div>
                     </div>
 
-                    {/* Growth stage */}
                     {chickenTypeId && (
                         <>
-                            <div className="*:not-first:mt-2 col-span-2">
-                                <Label>Nhóm giai đoạn phát triển</Label>
+                            <div className="space-y-2">
+                                <Label className="text-sm font-medium">
+                                    Nhóm giai đoạn phát triển
+                                </Label>
                                 <Select>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Chọn nhóm giai đoạn phát triển..." />
+                                        <SelectValue placeholder="Chọn nhóm giai đoạn phát triển" />
                                     </SelectTrigger>
                                     <SelectContent className="max-h-72">
-                                        {growthStages
-                                            // Filter stages by chicken type
-                                            ?.filter((stage) => stage.chickenType === chickenTypeId)
-                                            // Remove duplicate stages
-                                            .filter(
-                                                (stage, index, self) =>
-                                                    index ===
-                                                    self.findIndex(
-                                                        (s) => s.stageCode === stage.stageCode,
-                                                    ),
-                                            )
-                                            // Render stages
-                                            .map((stage) => (
-                                                <SelectItem
-                                                    key={stage.growthStageId}
-                                                    value={stage.growthStageId}
-                                                >
-                                                    {stage.stageCode}
-                                                </SelectItem>
-                                            ))}
-                                        {growthStages?.filter(
-                                            (stage) => stage.chickenType === chickenTypeId,
-                                        )?.length === 0 && (
-                                            <Link
-                                                href={config.routes.growthStage}
-                                                className="text-sm font-medium flex items-center p-2"
+                                        {filteredGrowthStages?.map((stage) => (
+                                            <SelectItem
+                                                key={stage.growthStageId}
+                                                value={stage.growthStageId}
                                             >
-                                                <Plus className="w-4 h-4 mr-2" />
-                                                Nhấn vào đây để tạo giai đoạn phát triển
-                                            </Link>
+                                                {stage.stageCode}
+                                            </SelectItem>
+                                        ))}
+                                        {filteredGrowthStages?.length === 0 && (
+                                            <div className="p-2">
+                                                <Link
+                                                    href={config.routes.growthStage}
+                                                    className="text-sm font-medium flex items-center p-2 rounded-md hover:bg-muted"
+                                                >
+                                                    <Plus className="w-4 h-4 mr-2" />
+                                                    Tạo giai đoạn phát triển mới
+                                                </Link>
+                                            </div>
                                         )}
                                     </SelectContent>
                                 </Select>
                             </div>
 
-                            <div className="*:not-first:mt-2 col-span-2">
-                                <Label htmlFor={`chickenBatchName`}>Giống gà</Label>
+                            <div className="space-y-2">
+                                <Label className="text-sm font-medium">Giống gà</Label>
                                 <Select defaultValue={chickenId} onValueChange={setChickenId}>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Chọn giống gà" />
@@ -230,101 +227,63 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                                             </SelectItem>
                                         ))}
                                         {chickens?.length === 0 && (
-                                            <Link
-                                                href={config.routes.ware}
-                                                className="text-sm font-medium flex items-center p-2"
-                                            >
-                                                <Plus className="w-4 h-4 mr-2" />
-                                                Nhấn vào đây để thêm giống gà
-                                            </Link>
+                                            <div className="p-2">
+                                                <Link
+                                                    href={config.routes.ware}
+                                                    className="text-sm font-medium flex items-center p-2 rounded-md hover:bg-muted"
+                                                >
+                                                    <Plus className="w-4 h-4 mr-2" />
+                                                    Thêm giống gà mới
+                                                </Link>
+                                            </div>
                                         )}
                                     </SelectContent>
                                 </Select>
-                                {/* <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" className="w-full">
-                                        Chọn giống gà
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuGroup>
-                                        {chickenTypes?.map((type) => (
-                                            <DropdownMenuSub key={type.subCategoryId}>
-                                                <DropdownMenuSubTrigger inset>
-                                                    {type.subCategoryName}
-                                                </DropdownMenuSubTrigger>
-                                                <DropdownMenuPortal>
-                                                    <DropdownMenuSubContent>
-                                                        <DropdownMenuRadioGroup
-                                                            value={chickenId}
-                                                            onValueChange={setChickenId}
-                                                        >
-                                                            {type.chickens.map((chicken) => (
-                                                                <DropdownMenuRadioItem
-                                                                    value={chicken.chickenId}
-                                                                    key={chicken.chickenId}
-                                                                >
-                                                                    {chicken.chickenName}
-                                                                </DropdownMenuRadioItem>
-                                                            ))}
-                                                        </DropdownMenuRadioGroup>
-                                                    </DropdownMenuSubContent>
-                                                </DropdownMenuPortal>
-                                            </DropdownMenuSub>
-                                        ))}
-                                    </DropdownMenuGroup>
-                                </DropdownMenuContent>
-                            </DropdownMenu> */}
                             </div>
                         </>
                     )}
 
-                    <div className="*:not-first:mt-2">
-                        <Label>Ngày nuôi tối thiểu</Label>
-                        <Input
-                            type="number"
-                            min={0}
-                            onChange={(e) =>
-                                setGrowDays({ ...growDays, min: Number(e.target.value) })
-                            }
-                        />
-                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label className="text-sm font-medium">Ngày nuôi tối thiểu</Label>
+                            <Input
+                                type="number"
+                                min={0}
+                                placeholder="0"
+                                onChange={(e) =>
+                                    setGrowDays({
+                                        ...growDays,
+                                        min: Number(e.target.value),
+                                    })
+                                }
+                            />
+                        </div>
 
-                    <div className="*:not-first:mt-2">
-                        <Label>Ngày nuôi tối đa</Label>
-                        <Input
-                            type="number"
-                            min={0}
-                            onChange={(e) =>
-                                setGrowDays({ ...growDays, max: Number(e.target.value) })
-                            }
-                        />
+                        <div className="space-y-2">
+                            <Label className="text-sm font-medium">Ngày nuôi tối đa</Label>
+                            <Input
+                                type="number"
+                                min={0}
+                                placeholder="0"
+                                onChange={(e) =>
+                                    setGrowDays({
+                                        ...growDays,
+                                        max: Number(e.target.value),
+                                    })
+                                }
+                            />
+                        </div>
                     </div>
-
-                    {/* Duration */}
-                    {/* <div className="*:not-first:mt-2">
-                    <Label>Thời lượng</Label>
-                    <div className="flex rounded-md shadow-xs">
-                        <Input
-                            className="-me-px rounded-e-none shadow-none focus-visible:z-10"
-                            placeholder="1"
-                            type="number"
-                            min={0}
-                        />
-                        <SelectNative className="text-muted-foreground hover:text-foreground w-fit rounded-s-none shadow-none bg-gray-50">
-                            {timeOptions.map((option) => (
-                                <option key={option} value={option}>
-                                    {option}
-                                </option>
-                            ))}
-                        </SelectNative>
-                    </div>
-                </div> */}
                 </div>
 
-                <div className="*:not-first:mt-2">
-                    <div className="flex justify-between items-center mb-2">
-                        <Label htmlFor={`chickenBatchName`}>Chi tiết giống gà</Label>
+                <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h3 className="text-sm font-medium">Chi tiết giống gà</h3>
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Thêm thông tin về số lượng và giới tính gà
+                            </p>
+                        </div>
                         <Button
                             type="button"
                             variant="outline"
@@ -341,107 +300,172 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                             }
                         >
                             <Plus className="w-4 h-4 mr-2" />
-                            Thêm
+                            Thêm loại
                         </Button>
                     </div>
 
-                    <div className="space-y-4 border p-4 rounded-md">
-                        {chickenDetailRequests.map((detail, index) => (
-                            <div key={index} className="grid grid-cols-5 gap-4 pt-2">
-                                <div className="col-span-2">
-                                    <Label htmlFor={`gender-${index}`}>Giới tính</Label>
-                                    <Select
-                                        value={detail.gender.toString()}
-                                        onValueChange={(value) => {
-                                            const newDetails = [...chickenDetailRequests];
-                                            newDetails[index].gender = Number.parseInt(value);
-                                            setChickenDetailRequests(newDetails);
-                                        }}
-                                        disabled={chickenDetailRequests.length >= 2}
-                                    >
-                                        <SelectTrigger id={`gender-${index}`}>
-                                            <SelectValue placeholder="Chọn giới tính" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem
-                                                value="0"
-                                                disabled={
-                                                    index > 0 &&
-                                                    chickenDetailRequests[0].gender === 0
-                                                }
+                    <Card className="border-dashed">
+                        <CardContent className="p-4 space-y-4">
+                            {chickenDetailRequests.map((detail, index) => (
+                                <div key={index} className="space-y-2">
+                                    {index > 0 && <Separator className="my-3" />}
+                                    <div className="flex justify-between items-center">
+                                        <h4 className="text-sm font-medium">
+                                            {detail.gender === 0 ? 'Gà trống' : 'Gà mái'}
+                                        </h4>
+                                        {chickenDetailRequests.length > 1 && (
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-8 px-2 text-destructive hover:text-destructive/90"
+                                                onClick={() => {
+                                                    const newDetails = [...chickenDetailRequests];
+                                                    newDetails.splice(index, 1);
+                                                    setChickenDetailRequests(newDetails);
+                                                }}
                                             >
-                                                Trống
-                                            </SelectItem>
-                                            <SelectItem
-                                                value="1"
-                                                disabled={
-                                                    index > 0 &&
-                                                    chickenDetailRequests[0].gender === 1
-                                                }
+                                                <Trash2 className="w-4 h-4 mr-1" />
+                                                Xóa
+                                            </Button>
+                                        )}
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <Label htmlFor={`gender-${index}`} className="text-xs">
+                                                Giới tính
+                                            </Label>
+                                            <Select
+                                                value={detail.gender.toString()}
+                                                onValueChange={(value) => {
+                                                    const newDetails = [...chickenDetailRequests];
+                                                    newDetails[index].gender =
+                                                        Number.parseInt(value);
+                                                    setChickenDetailRequests(newDetails);
+                                                }}
+                                                disabled={chickenDetailRequests.length >= 2}
                                             >
-                                                Mái
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                                <SelectTrigger
+                                                    id={`gender-${index}`}
+                                                    className="mt-1"
+                                                >
+                                                    <SelectValue placeholder="Chọn giới tính" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem
+                                                        value="0"
+                                                        disabled={
+                                                            index > 0 &&
+                                                            chickenDetailRequests[0].gender === 0
+                                                        }
+                                                    >
+                                                        Trống
+                                                    </SelectItem>
+                                                    <SelectItem
+                                                        value="1"
+                                                        disabled={
+                                                            index > 0 &&
+                                                            chickenDetailRequests[0].gender === 1
+                                                        }
+                                                    >
+                                                        Mái
+                                                    </SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div>
+                                            <Label
+                                                htmlFor={`quantity-${index}`}
+                                                className="text-xs"
+                                            >
+                                                Số lượng
+                                            </Label>
+                                            <Input
+                                                id={`quantity-${index}`}
+                                                type="number"
+                                                min="1"
+                                                className="mt-1"
+                                                value={detail.quantity}
+                                                onChange={(e) => {
+                                                    const newDetails = [...chickenDetailRequests];
+                                                    newDetails[index].quantity =
+                                                        Number.parseInt(e.target.value) || 0;
+                                                    setChickenDetailRequests(newDetails);
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="col-span-2">
-                                    <Label htmlFor={`quantity-${index}`}>Số lượng</Label>
-                                    <Input
-                                        id={`quantity-${index}`}
-                                        type="number"
-                                        min="1"
-                                        value={detail.quantity}
-                                        onChange={(e) => {
-                                            const newDetails = [...chickenDetailRequests];
-                                            newDetails[index].quantity =
-                                                Number.parseInt(e.target.value) || 0;
-                                            setChickenDetailRequests(newDetails);
-                                        }}
-                                    />
-                                </div>
-                                {chickenDetailRequests.length > 1 && (
-                                    <Button
-                                        type="button"
-                                        variant="destructive"
-                                        size="sm"
-                                        className="mt-6"
-                                        onClick={() => {
-                                            const newDetails = [...chickenDetailRequests];
-                                            newDetails.splice(index, 1);
-                                            setChickenDetailRequests(newDetails);
-                                        }}
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </Button>
-                                )}
-                            </div>
-                        ))}
+                            ))}
 
-                        {chickenDetailRequests.length > 0 && (
-                            <Alert>
-                                <AlertCircle className="h-4 w-4" />
-                                <AlertTitle>Lưu ý</AlertTitle>
-                                <AlertDescription>
-                                    Tổng số lượng gà:{' '}
-                                    {chickenDetailRequests.reduce(
-                                        (sum, detail) => sum + detail.quantity,
-                                        0,
+                            {totalQuantity > 0 && (
+                                <div className="flex justify-between items-center pt-2 mt-3 border-t">
+                                    <span className="text-sm font-medium">Tổng số lượng:</span>
+                                    <Badge variant="secondary" className="text-sm">
+                                        {totalQuantity} con
+                                    </Badge>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    {totalQuantity > 0 && (
+                        <Alert
+                            variant="default"
+                            className="bg-blue-50 text-blue-800 border-blue-200"
+                        >
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Thông tin lứa nuôi</AlertTitle>
+                            <AlertDescription>
+                                <ul className="text-xs space-y-1 mt-1">
+                                    <li>
+                                        • Lứa nuôi sẽ được bắt đầu từ ngày{' '}
+                                        {formatDate(startDate.toISOString())}
+                                    </li>
+                                    <li>• Tổng số lượng gà: {totalQuantity} con</li>
+                                    {growDays.min > 0 && (
+                                        <li>• Số ngày nuôi tối thiểu: {growDays.min} ngày</li>
                                     )}
-                                </AlertDescription>
-                            </Alert>
-                        )}
-                    </div>
+                                    {growDays.max > 0 && (
+                                        <li>• Số ngày nuôi tối đa: {growDays.max} ngày</li>
+                                    )}
+                                </ul>
+                            </AlertDescription>
+                        </Alert>
+                    )}
+
+                    {!chickenId && chickens?.length === 0 && (
+                        <Alert
+                            variant="default"
+                            className="bg-amber-50 text-amber-800 border-amber-200"
+                        >
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Chưa có giống gà</AlertTitle>
+                            <AlertDescription className="text-xs">
+                                Bạn cần thêm giống gà trước khi bắt đầu lứa nuôi.{' '}
+                                <Link href={config.routes.ware} className="font-medium underline">
+                                    Thêm giống gà
+                                </Link>
+                            </AlertDescription>
+                        </Alert>
+                    )}
                 </div>
             </div>
 
-            <div className="flex items-center justify-center">
+            <div className="flex justify-center">
                 <Button
                     type="submit"
-                    className="flex items-center w-xl"
-                    disabled={mutation.isPending}
+                    className="w-full max-w-xs"
+                    disabled={mutation.isPending || !isFormValid}
                 >
-                    {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                    Bắt đầu
+                    {mutation.isPending ? (
+                        <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Đang xử lý...
+                        </>
+                    ) : (
+                        'Bắt đầu lứa nuôi'
+                    )}
                 </Button>
             </div>
         </form>

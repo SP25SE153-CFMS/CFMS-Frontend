@@ -26,6 +26,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import config from '@/configs';
+import { resetPassword } from '@/services/auth.service';
+import toast from 'react-hot-toast';
 
 const FormSchema = z
     .object({
@@ -56,7 +58,13 @@ export default function ResetPasswordPage() {
     const onSubmit = async (values: z.infer<typeof FormSchema>) => {
         try {
             // Log the password (in a real app, never log passwords)
-            console.log('New password set:', values.password);
+            const response = await resetPassword({
+                email: sessionStorage.getItem('email') || '',
+                newPassword: values.password,
+                confirmPassword: values.confirmPassword,
+                otp: sessionStorage.getItem('otp') || '',
+            });
+            toast.success(response.message);
 
             // Here you would send the new password to your backend
             // Example:
@@ -67,15 +75,18 @@ export default function ResetPasswordPage() {
             // });
 
             setShowSuccessDialog(true);
+            router.push(config.routes.signIn);
 
-            setTimeout(() => {
-                setShowSuccessDialog(false);
-                // console.log('Chuyển đến trang đăng nhập');
-                router.push(config.routes.signIn);
-            }, 1000);
-        } catch (error) {
+            // setTimeout(() => {
+            //     setShowSuccessDialog(false);
+            //     router.push(config.routes.signIn);
+            //     // console.log('Chuyển đến trang đăng nhập');
+            // }, 1000);
+        } catch (error: any) {
+            console.error(error);
+            // toast(error?.response?.data?.message, { icon: '⚠️' });
             setErrorMessage(
-                error instanceof Error ? error.message : 'Có lỗi xảy ra khi đổi mật khẩu',
+                error?.response?.data?.message || 'Có lỗi xảy ra khi gửi yêu cầu đặt lại mật khẩu',
             );
             setShowErrorDialog(true);
         }
@@ -203,7 +214,7 @@ export default function ResetPasswordPage() {
             <AlertDialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2 text-red-600">
+                        <AlertDialogTitle className="flex items-center gap-2 text-orange-600">
                             <AlertCircle className="h-5 w-5" />
                             Lỗi
                         </AlertDialogTitle>

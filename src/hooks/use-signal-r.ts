@@ -1,47 +1,65 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from 'react';
 import * as signalR from '@microsoft/signalr';
-import { env } from '@/env';
 
-export interface Notification {
-    title: string;
-    message: string;
-    timestamp: string;
+interface SignalRConfig {
+    url: string;
+    accessTokenFactory?: () => string;
+    onConnected?: (connection: signalR.HubConnection) => void;
+    onDisconnected?: () => void;
+    onError?: (error: any) => void;
 }
 
-export default function useSignalR(hubUrl: string) {
+export default function useSignalR({
+    url,
+    accessTokenFactory,
+    onConnected,
+    onDisconnected,
+    onError,
+}: SignalRConfig) {
+    const [connectionState, setConnectionState] = useState<
+        'connecting' | 'connected' | 'disconnected'
+    >('connecting');
     const connectionRef = useRef<signalR.HubConnection | null>(null);
-    const [notifications, setNotifications] = useState<Notification[]>([]);
-    const [connected, setConnected] = useState(false);
 
     useEffect(() => {
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl(env.NEXT_PUBLIC_API_URL + hubUrl, {
+            .withUrl(url, {
+                accessTokenFactory,
                 withCredentials: true,
             })
             .withAutomaticReconnect()
+            .configureLogging(signalR.LogLevel.Information)
             .build();
 
-        connection.on(
-            'ReceiveNotification',
-            (title: string, message: string, timestamp: string) => {
-                setNotifications((prev) => [...prev, { title, message, timestamp }]);
-            },
-        );
-
-        connection
-            .start()
-            .then(() => {
-                setConnected(true);
-                console.log('SignalR connected for notifications');
-            })
-            .catch((err) => console.error('SignalR connection error:', err));
-
         connectionRef.current = connection;
+
+        const startConnection = async () => {
+            try {
+                await connection.start();
+                setConnectionState('connected');
+                onConnected?.(connection);
+            } catch (error) {
+                setConnectionState('disconnected');
+                onError?.(error);
+            }
+        };
+
+        connection.onclose(() => {
+            setConnectionState('disconnected');
+            onDisconnected?.();
+        });
+
+        startConnection();
 
         return () => {
             connection.stop();
         };
-    }, [hubUrl]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [url]);
 
-    return { notifications, connected };
+    return {
+        connection: connectionRef.current,
+        connectionState,
+    };
 }

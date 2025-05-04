@@ -128,7 +128,7 @@ function MobileAppDialog({
     onClose: () => void;
 }) {
     // In a real app, you would generate this URL dynamically based on the farm
-    const url = `https://yourfarmapp.com/download?farmCode=${farm.farmCode}`;
+    const url = `https://qrco.de/bfwsGt`;
 
     return (
         <Dialog open={open} onOpenChange={onClose}>

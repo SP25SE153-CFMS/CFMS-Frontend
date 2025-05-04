@@ -1,7 +1,6 @@
 'use client';
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { getFoods } from '@/services/food.service';
 import { getNutritionPlanById } from '@/services/nutrition-plan.service';
 import { getWeightUnit } from '@/utils/functions/category.function';
 import { useQuery } from '@tanstack/react-query';
@@ -9,6 +8,8 @@ import { Utensils, Info } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { NutritionPlanDetailResponse } from '@/utils/types/custom.type';
+import { formatTime } from '@/utils/functions';
 
 interface CardNutritionPlanProps {
     nutritionPlanId: string;
@@ -16,19 +17,11 @@ interface CardNutritionPlanProps {
 
 export default function CardNutritionPlan({ nutritionPlanId }: CardNutritionPlanProps) {
     // Get nutrition plans
-    const { data: nutritionPlan, isLoading: isLoadingPlan } = useQuery({
+    const { data: nutritionPlan, isLoading } = useQuery({
         queryKey: ['nutritionPlan', nutritionPlanId],
         queryFn: () => getNutritionPlanById(nutritionPlanId),
         enabled: !!nutritionPlanId,
     });
-
-    // Get all foods
-    const { data: foods, isLoading: isLoadingFoods } = useQuery({
-        queryKey: ['foods'],
-        queryFn: () => getFoods(),
-    });
-
-    const isLoading = isLoadingPlan || isLoadingFoods;
 
     if (isLoading) {
         return <NutritionCardSkeleton />;
@@ -78,36 +71,83 @@ export default function CardNutritionPlan({ nutritionPlanId }: CardNutritionPlan
 
                         {nutritionPlan?.nutritionPlanDetails?.length > 0 ? (
                             <div className="grid gap-3">
-                                {nutritionPlan.nutritionPlanDetails.map((detail, index) => {
-                                    const food = foods?.find(
-                                        (food) => food.foodId === detail.foodId,
-                                    );
-                                    const unit = getWeightUnit(detail.unitId);
+                                {nutritionPlan.nutritionPlanDetails.map(
+                                    (detail: NutritionPlanDetailResponse, index) => {
+                                        const unit = getWeightUnit(detail.unitId);
+
+                                        return (
+                                            <div
+                                                key={index}
+                                                className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-md bg-muted/50 hover:bg-muted transition-colors"
+                                            >
+                                                <div className="flex items-center mb-2 sm:mb-0">
+                                                    <Utensils className="h-4 w-4 mr-2 text-primary" />
+                                                    <span className="font-medium">
+                                                        {detail?.food?.foodName || 'Không xác định'}
+                                                    </span>
+                                                    {detail?.food?.foodCode && (
+                                                        <span className="ml-1 text-xs text-muted-foreground">
+                                                            ({detail.food.foodCode})
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <Badge
+                                                    variant="outline"
+                                                    className="self-start sm:self-auto"
+                                                >
+                                                    {detail.foodWeight || 0} {unit || '-'}
+                                                </Badge>
+                                            </div>
+                                        );
+                                    },
+                                )}
+                            </div>
+                        ) : (
+                            <p className="text-sm text-muted-foreground text-center py-2">
+                                Không có chi tiết chế độ dinh dưỡng
+                            </p>
+                        )}
+                    </div>
+
+                    <Separator />
+
+                    <div className="space-y-3">
+                        <h4 className="text-sm font-medium text-muted-foreground">Lịch cho ăn:</h4>
+
+                        {nutritionPlan?.feedSessions?.length > 0 ? (
+                            <div className="grid gap-3">
+                                {nutritionPlan.feedSessions.map((session, index) => {
+                                    const unit = getWeightUnit(session.unitId);
 
                                     return (
                                         <div
                                             key={index}
                                             className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-md bg-muted/50 hover:bg-muted transition-colors"
                                         >
-                                            <div className="flex items-center mb-2 sm:mb-0">
+                                            <div className="flex flex-col sm:flex-row sm:items-center mb-2 sm:mb-0">
                                                 <Utensils className="h-4 w-4 mr-2 text-primary" />
-                                                <span className="font-medium">
-                                                    {food?.foodName || 'Không xác định'}
-                                                </span>
+                                                <div>
+                                                    <span className="font-medium block">
+                                                        {`${formatTime(session?.startTime)} - ${formatTime(session?.endTime)}`}
+                                                    </span>
+                                                    <span className="text-sm text-muted-foreground block">
+                                                        {session?.note || 'Không có ghi chú'}
+                                                    </span>
+                                                </div>
                                             </div>
                                             <Badge
                                                 variant="outline"
                                                 className="self-start sm:self-auto"
                                             >
-                                                {detail.foodWeight || 0} {unit || '-'}
+                                                {session.feedAmount || 0} {unit || '-'}
                                             </Badge>
                                         </div>
                                     );
                                 })}
                             </div>
                         ) : (
-                            <p className="text-sm text-muted-foreground py-2">
-                                Không có chi tiết chế độ dinh dưỡng
+                            <p className="text-sm text-muted-foreground text-center py-2">
+                                Không có lịch cho ăn
                             </p>
                         )}
                     </div>

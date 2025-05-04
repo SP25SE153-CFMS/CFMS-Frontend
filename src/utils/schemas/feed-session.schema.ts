@@ -6,14 +6,10 @@ export const FeedSessionSchema = z.object({
     // feedingTime: z
     //     .string()
     //     .datetime({ message: 'Thời gian cho ăn không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
-    startTime: z
-        .string()
-        .datetime({ message: 'Thời gian bắt đầu không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
-    endTime: z
-        .string()
-        .datetime({
-            message: 'Thời gian kết thúc không hợp lệ, phải là định dạng ngày giờ hợp lệ',
-        }),
+    startTime: z.string().time({ message: 'Thời gian bắt đầu không hợp lệ' }),
+    endTime: z.string().time({
+        message: 'Thời gian kết thúc không hợp lệ',
+    }),
     feedAmount: z.coerce.number().positive({ message: 'Lượng thức ăn phải là số dương' }),
     unitId: z.string().uuid({ message: 'ID đơn vị không hợp lệ' }),
     note: z.string().optional(),

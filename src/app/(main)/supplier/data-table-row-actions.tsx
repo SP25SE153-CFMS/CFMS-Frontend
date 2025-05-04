@@ -8,13 +8,7 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -44,7 +38,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [update, setUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
-    const supplierId = (row.original as Supplier).supplierId;
+    // const supplierId = (row.original as Supplier).supplierId;
 
     const queryClient = useQueryClient();
 

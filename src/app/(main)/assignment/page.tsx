@@ -43,7 +43,7 @@ export default function Home() {
         },
     });
 
-    const { data: shifts } = useQuery({
+    const { data: shifts, isLoading: isShiftLoading } = useQuery({
         queryKey: ['shifts'],
         queryFn: () => getShifts(),
     });
@@ -80,7 +80,7 @@ export default function Home() {
     const shiftEvents = (shifts || []).map(mapShiftToShiftEvent);
 
     // Check if assignments is loading
-    if (isTasksLoading) {
+    if (isTasksLoading || isShiftLoading) {
         return (
             <div className="flex flex-col items-center justify-center h-[75vh] gap-4">
                 <LoadingSpinner />

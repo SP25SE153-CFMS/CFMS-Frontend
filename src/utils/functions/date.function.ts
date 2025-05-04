@@ -17,12 +17,43 @@ export function weekDayFormat(value: number) {
     return days[value];
 }
 
+/**
+ * Converts a date string to a formatted date string.
+ *
+ * @param dateStr - A date string like '2025-04-24T02:34:25.071863'
+ * @param format - The format to use for the output. Default is 'DD/MM/YYYY'.
+ * @example
+ * console.log(formatDate('2025-04-24T02:34:25.071863')); // '24/04/2025'
+ * console.log(formatDate('2025-04-24T02:34:25.071863', 'YYYY-MM-DD')); // '2025-04-24'
+ *
+ * @returns {string} The formatted date string.
+ */
 export function formatDate(dateStr: string | any, format = DATE_FORMAT) {
     if (!dateStr) return '';
 
     const date = new Date(dateStr);
     const formattedDate = dayjs(date).format(format);
     return capitalizeFirstLetter(formattedDate);
+}
+
+/**
+ * Converts a numeric string representing a time to its formatted string.
+ *
+ * @param {string} timeStr - A string representing the time.
+ * @param {string} _format - The format to use for the output. Default is 'HH:mm'.
+ * @returns {string} The formatted time string.
+ *
+ * @example
+ * console.log(formatTime('2023-01-01T10:00:00Z')); // '10:00'
+ * console.log(formatTime('2023-01-01T10:00:00Z', 'hh:mm A')); // '10:00 AM'
+ */
+export function formatTime(timeStr: string | any) {
+    if (!timeStr) return '';
+
+    // const time = dayjs(timeStr);
+    // const formattedTime = time.format(format);
+    const formattedTime = timeStr.split(':').slice(0, 2).join(':');
+    return formattedTime;
 }
 
 /**
