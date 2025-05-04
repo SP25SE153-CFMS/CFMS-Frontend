@@ -7,15 +7,18 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
 import Image from '@/components/fallback-image';
 import { Button } from '@/components/ui/button';
-import { getReceipts } from '@/services/request.service';
+import { getReceiptsByFarmId } from '@/services/request.service';
 import { getUsers } from '@/services/user.service';
 import { useMemo } from 'react';
 import { User } from '@/utils/schemas/user.schema';
+import { getCookie } from 'cookies-next';
 
 export default function InventoryReceipt() {
+    const farmId = getCookie('farmId') ?? '';
+
     const { data: receipts, isLoading } = useQuery({
-        queryKey: ['receipts'],
-        queryFn: () => getReceipts(),
+        queryKey: ['receipts', farmId],
+        queryFn: () => getReceiptsByFarmId(farmId),
     });
 
     useQuery({

@@ -22,7 +22,7 @@ import {
     CreateInventoryReceiptSchema,
 } from '@/utils/schemas/inventory-receipt.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
     AlertCircle,
     ArrowLeft,
@@ -42,6 +42,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Badge } from '@/components/ui/badge';
 import dayjs from 'dayjs';
+import { createInventoryReceipt } from '@/services/inventory-receipt.service';
 
 export default function RequestDetail() {
     const router = useRouter();
@@ -110,11 +111,19 @@ export default function RequestDetail() {
         }
     }, [requestDetail, subCate]);
 
-    const onSubmit = (data: CreateInventoryReceipt) => {
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: createInventoryReceipt,
+        onSuccess: () => {
+            
+        }
+    })
+
+    const onSubmit = async (values: CreateInventoryReceipt) => {
         setIsSubmitting(true);
-        console.log('Form data:', data);
-        // Here you would submit the data to your API
-        setTimeout(() => {
+        // console.log('Form data:', data);
+        await setTimeout(() => {
             setIsSubmitting(false);
             // Show success message or redirect
         }, 1500);
