@@ -1,24 +1,15 @@
 import { UserIcon, Calendar } from 'lucide-react';
 import { formatDate } from '@/utils/functions';
-import { cn } from '@/lib/utils';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { User } from '@/utils/schemas/user.schema';
 import { Badge } from '@/components/ui/badge';
-import { requestStatusBadge, requestStatusLabels } from '@/utils/enum/status.enum';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import config from '@/configs';
 import { RequestResponse } from '@/utils/types/custom.type';
+import { getRequestTitle, getRequestType } from '@/lib/helper';
 
 export default function RequestCard({ request }: { request: RequestResponse }) {
-    const getRequestType = (request: RequestResponse) => {
-        if (!request) return 'Phiếu khác';
-        if (request.taskRequests?.length > 0) {
-            return 'Báo cáo, đánh giá';
-        }
-        return 'Nhập xuất kho';
-    };
-
     const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
     const createdBy = users.find((user) => user.userId === request.createdByUserId);
     const approvedBy = users.find((user) => user.userId === request.approvedById);
@@ -30,18 +21,21 @@ export default function RequestCard({ request }: { request: RequestResponse }) {
             className="overflow-hidden hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] border-muted/80 group mb-4"
         >
             <CardHeader className="pb-2 bg-muted/20">
-                <div className="flex justify-between items-start">
-                    <Badge variant="outline" className="bg-background/80">
+                <div className="flex justify-between items-center gap-2 min-h-10 ">
+                    <strong className="font-semibold line-clamp-2 max-w-40 my-auto text-sm">
+                        {getRequestTitle(request)}
+                    </strong>
+                    <Badge variant="outline" className="text-xs bg-background/80 font-medium">
                         {requestType}
                     </Badge>
-                    <Badge
+                    {/* <Badge
                         className={cn(
                             requestStatusBadge[request.status],
                             'hover:bg-inherit text-xs font-medium px-3 py-1',
                         )}
                     >
                         {requestStatusLabels[request.status] || 'Chưa xác định'}
-                    </Badge>
+                    </Badge> */}
                 </div>
             </CardHeader>
             <CardContent className="pt-4 pb-2">
@@ -75,7 +69,7 @@ export default function RequestCard({ request }: { request: RequestResponse }) {
                         <span className="flex flex-col">
                             <span className="text-muted-foreground text-xs">Ngày duyệt:</span>
                             <span className="font-medium">
-                                {formatDate(request.approvedAt) || 'Chưa duyệt'}
+                                {formatDate(request.approvedAt) || '-'}
                             </span>
                         </span>
                     </div>
@@ -85,9 +79,7 @@ export default function RequestCard({ request }: { request: RequestResponse }) {
                         </div>
                         <span className="flex flex-col">
                             <span className="text-muted-foreground text-xs">Người duyệt:</span>
-                            <span className="font-medium">
-                                {approvedBy?.fullName || 'Chưa duyệt'}
-                            </span>
+                            <span className="font-medium">{approvedBy?.fullName || '-'}</span>
                         </span>
                     </div>
                 </div>

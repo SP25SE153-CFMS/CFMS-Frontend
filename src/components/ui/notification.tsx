@@ -1,7 +1,5 @@
 'use client';
 
-import type React from 'react';
-
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -63,6 +61,8 @@ import { acceptInvitation, rejectInvitation } from '@/services/farm.service';
 import InfoItem from '../info-item';
 import dayjs from 'dayjs';
 import { userStatusLabels, userStatusVariant } from '@/utils/enum/status.enum';
+import { useSignalR } from '@/hooks';
+import { env } from '@/env';
 
 function Dot({ className }: { className?: string }) {
     return (
@@ -89,19 +89,34 @@ export default function Notification() {
         queryKey: ['notifications'],
         queryFn: () => getNotificationForCurrentUser(),
     });
-    // const [notifications, setNotifications] = useState<NotificationResponse[]>();
 
-    // const { notifications: noties, connected } = useSignalR('/noti');
-    // console.log(noties, connected);
+    // SignalR connection
+    useSignalR({
+        url: env.NEXT_PUBLIC_API_URL + '/noti',
+        onConnected: (connection) => {
+            connection.on('SendMessage', (message: any) => {
+                console.log('Received message:', message);
+                // Refetch notifications when a new message is received
+                refetch();
 
-    // useEffect(() => {
-    //     setNotifications(
-    //         notis?.map((noti) => ({
-    //             ...noti,
-    //             notificationType: 'INVITATION',
-    //         })),
-    //     );
-    // }, [notis]);
+                // Save the original title
+                const originalTitle = document.title;
+
+                // Function to toggle the title
+                let toggle = true;
+                const interval = setInterval(() => {
+                    document.title = toggle ? '🔔 Bạn có thông báo mới! | CFMS' : originalTitle;
+                    toggle = !toggle;
+                }, 3000);
+
+                // Stop toggling after a certain duration (e.g., 15 seconds)
+                setTimeout(() => {
+                    clearInterval(interval);
+                    document.title = originalTitle; // Reset to the original title
+                }, 15000);
+            });
+        },
+    });
 
     const [open, setOpen] = useState(false);
     const [deleteAllDialogOpen, setDeleteAllDialogOpen] = useState(false);
@@ -347,9 +362,16 @@ export default function Notification() {
                                     <div className="flex gap-3">
                                         <Avatar className="h-10 w-10 rounded-full object-cover">
                                             <AvatarImage
-                                                src={convertToThumbnailUrl(
-                                                    notification.createdByUser?.avatar || '',
-                                                )}
+                                                src={
+                                                    notification.createdByUser?.fullName
+                                                        ?.toLowerCase()
+                                                        ?.includes('sys')
+                                                        ? '/assets/logo/logo.png'
+                                                        : convertToThumbnailUrl(
+                                                              notification.createdByUser?.avatar ||
+                                                                  '',
+                                                          )
+                                                }
                                                 alt={notification.createdByUser?.fullName || ''}
                                                 className="rounded-sm object-contain"
                                             />

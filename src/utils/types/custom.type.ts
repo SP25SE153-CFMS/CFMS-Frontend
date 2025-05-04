@@ -12,7 +12,7 @@ import { FeedLog } from '../schemas/feed-log.schema';
 import { Food } from '../schemas/food.schema';
 import { GrowthBatch } from '../schemas/growth-batch.schema';
 import { GrowthStage } from '../schemas/growth-stage.schema';
-import { HealthLog } from '../schemas/health-log.schema';
+import { CreateHealthLog, HealthLog } from '../schemas/health-log.schema';
 import { Medicine } from '../schemas/medicine.schema';
 import { Notification } from '../schemas/notification.schema';
 import { QuantityLog } from '../schemas/quantity-log.schema';
@@ -70,11 +70,22 @@ export type GrowthBatchResponse = GrowthBatch & {
     growthStage: GrowthStageResponse;
 };
 
+export type QuantityLogDetails = {
+    quantityLogDetailId: string;
+    quantityLogId: string;
+    quantity: number;
+    gender: ChickenGender;
+};
+
+export type QuantityLogResponse = QuantityLog & {
+    quantityLogDetails: QuantityLogDetails[];
+};
+
 export type ChickenBatchResponse = ChickenBatch &
     DashboardChickenBatch & {
         vaccineLogs: VaccinationLog[];
         healthLogs: HealthLog[];
-        quantityLogs: QuantityLog[];
+        quantityLogs: QuantityLogResponse[];
         feedLogs: FeedLog[];
         chicken: ChickenResponse;
         growthBatches: GrowthBatchResponse[];
@@ -219,8 +230,12 @@ export type NotificationResponse = (Notification & EntityAudit) & {
     user: User;
 };
 
+export type NutritionPlanDetailResponse = NutritionPlanDetail & {
+    food: Food;
+};
+
 export type NutritionPlanResponse = NutritionPlan & {
-    nutritionPlanDetails: NutritionPlanDetail[];
+    nutritionPlanDetails: NutritionPlanDetailResponse[];
     feedSessions: FeedSession[];
 };
 
@@ -320,3 +335,19 @@ export type ReceiptResponse = InventoryReceipt &
         wareTo: WarehouseResponse;
         // resourceTypeId: string;
     };
+
+export type ResetPasswordRequest = {
+    email: string;
+    newPassword?: string;
+    confirmPassword?: string;
+    otp: string;
+};
+
+export type HealthLogDetails = {
+    criteriaId: string;
+    result: string;
+};
+
+export type HealthLogRequest = CreateHealthLog & {
+    healthLogDetails: HealthLogDetails[];
+};

@@ -11,7 +11,7 @@ import {
     FileText,
     Info,
     InfoIcon,
-    Split,
+    SplitSquareVertical,
     Sprout,
     Tag,
     TrendingUp,
@@ -51,6 +51,7 @@ import { GrowthStageResponse } from '@/utils/types/custom.type';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { calculateDuration } from '@/utils/functions';
 import ExportChickenForm from '@/components/forms/export-chicken-form';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function Page() {
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
@@ -114,6 +115,11 @@ export default function Page() {
             value: `${chickenBatch.quantityLogs?.reduce((acc, curr) => acc + curr.quantity, 0) ?? 0} con`,
         },
     ];
+
+    const remainingQuantity = chickenBatch?.chickenDetails.reduce(
+        (acc, curr) => acc + curr.quantity,
+        0,
+    );
 
     return (
         <div>
@@ -190,12 +196,16 @@ export default function Page() {
                             {isReadyToExport && (
                                 <Dialog open={openExport} onOpenChange={setOpenExport}>
                                     <DialogTrigger asChild>
-                                        <Button variant="outline" className="w-full gap-2">
+                                        <Button
+                                            variant="outline"
+                                            className="w-full gap-2"
+                                            disabled={remainingQuantity === 0}
+                                        >
                                             <ExternalLink size={16} />
                                             Xuất chuồng
                                         </Button>
                                     </DialogTrigger>
-                                    <DialogContent className="max-w-3xl">
+                                    <DialogContent className="max-w-4xl">
                                         <DialogHeader>
                                             <DialogTitle>Xuất chuồng</DialogTitle>
                                             <DialogDescription>
@@ -210,21 +220,30 @@ export default function Page() {
                             )}
                             <Dialog open={openSplit} onOpenChange={setOpenSplit}>
                                 <DialogTrigger asChild>
-                                    <Button variant="default" className="w-full gap-2">
-                                        <Split size={16} />
+                                    <Button
+                                        variant="default"
+                                        className="w-full gap-2"
+                                        disabled={remainingQuantity === 0}
+                                    >
+                                        <SplitSquareVertical size={16} />
                                         Tách lứa nuôi
                                     </Button>
                                 </DialogTrigger>
                                 <DialogContent className="max-w-4xl">
                                     <DialogHeader>
-                                        <DialogTitle>Tách lứa nuôi</DialogTitle>
+                                        <DialogTitle className="flex">
+                                            <SplitSquareVertical className="w-5 h-5 mr-2 text-primary" />
+                                            Tách lứa nuôi
+                                        </DialogTitle>
                                         <DialogDescription>
                                             Hãy nhập các thông tin dưới đây để tách lứa nuôi
                                         </DialogDescription>
                                     </DialogHeader>
-                                    <SplitChickenBatchForm
-                                        closeDialog={() => setOpenSplit(false)}
-                                    />
+                                    <ScrollArea className="max-h-[600px]">
+                                        <SplitChickenBatchForm
+                                            closeDialog={() => setOpenSplit(false)}
+                                        />
+                                    </ScrollArea>
                                 </DialogContent>
                             </Dialog>
                         </CardFooter>
@@ -261,12 +280,7 @@ export default function Page() {
                                 <InfoItem
                                     icon={<Egg className="h-4 w-4" />}
                                     label="Số lượng còn lại"
-                                    value={
-                                        chickenBatch?.chickenDetails.reduce(
-                                            (acc, curr) => acc + curr.quantity,
-                                            0,
-                                        ) + ' con'
-                                    }
+                                    value={remainingQuantity + ' con'}
                                 />
 
                                 <InfoItem
@@ -403,13 +417,13 @@ export default function Page() {
                 onStepClick={(step) => setCurrentGrowthStage(sortedGrowthBatches[step].growthStage)}
                 className="mb-4 max-w-3xl mx-auto"
             />
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 my-6">
-                <div>
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 my-6">
+                <div className="lg:col-span-2">
                     <CardNutritionPlan
                         nutritionPlanId={currentGrowthStage?.nutritionPlanId ?? ''}
                     />
                 </div>
-                <div className="col-span-2">
+                <div className="lg:col-span-3">
                     <Chart />
                 </div>
             </div>

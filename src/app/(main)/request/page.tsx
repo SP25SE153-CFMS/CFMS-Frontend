@@ -20,13 +20,13 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import type { RequestResponse } from '@/utils/types/custom.type';
 import { Input } from '@/components/ui/input';
 import { mapEnumToValues } from '@/utils/functions/enum.function';
 import { DataTable } from '@/components/table/data-table';
 import { columns as tableColumns } from './columns';
 import RequestCard from './request-card';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { getRequestType } from '@/lib/helper';
 
 export default function Page() {
     // State for filtering
@@ -38,14 +38,6 @@ export default function Page() {
         queryKey: ['requests'],
         queryFn: () => getRequests(),
     });
-
-    const getRequestType = (request: RequestResponse) => {
-        if (!request) return 'Phiếu khác';
-        if (request.taskRequests?.length > 0) {
-            return 'Báo cáo, đánh giá';
-        }
-        return 'Nhập xuất kho';
-    };
 
     const requestTypes = useMemo(() => {
         const types = Array.from(

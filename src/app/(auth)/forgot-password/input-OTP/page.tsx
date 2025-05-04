@@ -20,15 +20,18 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertCircle, CheckCircle, KeyRound, RefreshCw } from 'lucide-react';
+import { AlertCircle, CheckCircle, KeyRound, Loader2, RefreshCw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import config from '@/configs';
+import { useQueryParams } from '@/hooks';
+import { forgotPassword, resetPassword } from '@/services/auth.service';
+import toast from 'react-hot-toast';
 
 const FormSchema = z.object({
-    pin: z.string().min(6, { message: 'Mã OTP phải có 6 số' }),
+    otp: z.string().min(6, { message: 'Mã OTP phải có 6 số' }),
 });
 
 export default function InputOTPForm() {
@@ -36,13 +39,16 @@ export default function InputOTPForm() {
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
     const [showErrorDialog, setShowErrorDialog] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const [timeLeft, setTimeLeft] = useState(60);
+    const [timeLeft, setTimeLeft] = useState(5 * 60); // 5 minutes
     const [isResendDisabled, setIsResendDisabled] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const { otp, email } = useQueryParams();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            pin: '',
+            otp: '',
         },
     });
 
@@ -60,6 +66,14 @@ export default function InputOTPForm() {
         return () => clearTimeout(timer);
     }, [timeLeft]);
 
+    useEffect(() => {
+        if (otp) {
+            form.setValue('otp', otp);
+            form.handleSubmit(onSubmit)();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [otp, form, router, email]);
+
     // Format time as MM:SS
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -68,17 +82,34 @@ export default function InputOTPForm() {
     };
 
     // Resend OTP function
-    const handleResendOTP = () => {
-        console.log('Resending OTP...');
-        setTimeLeft(60);
-        setIsResendDisabled(true);
+    const handleResendOTP = async () => {
+        try {
+            const email = sessionStorage.getItem('email') || '';
+            const response = await forgotPassword(email);
+            setTimeLeft(60);
+            setIsResendDisabled(true);
+            toast.success(response.message || 'Yêu cầu gửi lại mã OTP thành công');
+        } catch (error: any) {
+            console.error('Error resending OTP:', error);
+            toast(
+                error?.response?.data?.message ||
+                    'Có lỗi xảy ra khi gửi lại mã OTP, vui lòng thử lại',
+                { icon: '⚠️' },
+            );
+        }
     };
 
     // Hàm submit
-    const onSubmit = (values: z.infer<typeof FormSchema>) => {
+    const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+        setIsLoading(true);
         try {
-            // Log the OTP value
-            console.log('OTP submitted:', values.pin);
+            const response = await resetPassword({
+                email: sessionStorage.getItem('email') || email,
+                otp: values.otp,
+            });
+            sessionStorage.setItem('otp', values.otp);
+            sessionStorage.setItem('email', sessionStorage.getItem('email') || email);
+            toast.success(response.message || 'Xác thực thành công');
 
             setShowSuccessDialog(true);
 
@@ -87,11 +118,14 @@ export default function InputOTPForm() {
                 // console.log('Chuyển đến trang đổi mật khẩu');
                 router.push(config.routes.resetPassword);
             }, 1000);
-        } catch (error) {
+        } catch (error: any) {
+            console.error(error);
             setErrorMessage(
-                error instanceof Error ? error.message : 'Có lỗi xảy ra khi gửi mã OTP',
+                error?.response?.data?.message || 'Có lỗi xảy ra khi gửi yêu cầu đặt lại mật khẩu',
             );
             setShowErrorDialog(true);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -111,10 +145,24 @@ export default function InputOTPForm() {
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-6"
+                            onKeyDown={(e) => {
+                                // Allow only numbers, backspace, and arrow keys
+                                if (
+                                    !/[0-9]/.test(e.key) && // Allow digits
+                                    e.key !== 'Backspace' && // Allow backspace
+                                    e.key !== 'ArrowLeft' && // Allow left arrow
+                                    e.key !== 'ArrowRight' // Allow right arrow
+                                ) {
+                                    e.preventDefault();
+                                }
+                            }}
+                        >
                             <FormField
                                 control={form.control}
-                                name="pin"
+                                name="otp"
                                 render={({ field }) => (
                                     <FormItem className="space-y-3">
                                         <FormControl>
@@ -145,6 +193,9 @@ export default function InputOTPForm() {
                                                             <InputOTPSlot
                                                                 index={5}
                                                                 className="h-12 w-12 text-lg"
+                                                                onKeyDown={() => {
+                                                                    form.handleSubmit(onSubmit)();
+                                                                }}
                                                             />
                                                         </InputOTPGroup>
                                                     </div>
@@ -157,7 +208,8 @@ export default function InputOTPForm() {
                                     </FormItem>
                                 )}
                             />
-                            <Button type="submit" className="w-full">
+                            <Button type="submit" className="w-full" disabled={isLoading}>
+                                {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                                 Xác nhận
                             </Button>
                         </form>
@@ -198,7 +250,7 @@ export default function InputOTPForm() {
             <AlertDialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2 text-red-600">
+                        <AlertDialogTitle className="flex items-center gap-2 text-orange-600">
                             <AlertCircle className="h-5 w-5" />
                             Lỗi xác thực
                         </AlertDialogTitle>

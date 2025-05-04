@@ -1,18 +1,20 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Table, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { getRequestById } from '@/services/request.service';
 import { formatDate } from '@/utils/functions';
 import { useQuery } from '@tanstack/react-query';
-import { AlertCircle, ArrowDownToLine, ArrowLeft, ArrowUpFromLine, Calendar, Clipboard, Info, NotebookTextIcon as NoteText } from 'lucide-react';
+import {
+    AlertCircle,
+    ArrowDownToLine,
+    ArrowLeft,
+    ArrowUpFromLine,
+    Calendar,
+    Clipboard,
+    Info,
+    NotebookTextIcon as NoteText,
+} from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 
 export default function RequestDetail() {

@@ -25,6 +25,7 @@ export default function SignUp() {
             phoneNumber: '',
             mail: '',
             password: '',
+            confirmPassword: '',
         },
     });
 
@@ -46,6 +47,10 @@ export default function SignUp() {
         },
     });
     const onSubmit = (data: SignUpRequest) => {
+        if (data.password !== data.confirmPassword) {
+            toast('Mật khẩu không khớp', { icon: '⚠️' });
+            return;
+        }
         // Remove old access token, refresh token
         deleteCookie(config.cookies.accessToken);
         deleteCookie(config.cookies.refreshToken);
@@ -77,9 +82,9 @@ export default function SignUp() {
                         Mừng quay lại !
                     </p>
 
-                    <p className="text-center text-[19px] text-primary-sub-text dark:text-primary-sub-text/90 not-italic font-bold leading-[normal]">
+                    {/* <p className="text-center text-[19px] text-primary-sub-text dark:text-primary-sub-text/90 not-italic font-bold leading-[normal]">
                         Hãy đăng ký vào tài khoản của bạn
-                    </p>
+                    </p> */}
 
                     <Form {...form}>
                         <form
@@ -154,9 +159,27 @@ export default function SignUp() {
                                 )}
                             />
 
-                            <p className="w-[425px] text-primary-sub-text dark:text-primary-sub-text/90 text-right text-[19px] not-italic font-medium leading-[normal]">
+                            {/* Password */}
+                            <FormField
+                                control={form.control}
+                                name="confirmPassword"
+                                render={({ field }) => (
+                                    <FormItem className="w-full">
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                type="password"
+                                                placeholder="Nhập lại mật khẩu"
+                                                className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl px-[19px]"
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* <p className="w-[425px] text-primary-sub-text dark:text-primary-sub-text/90 text-right text-[19px] not-italic font-medium leading-[normal]">
                                 Quên mật khẩu?
-                            </p>
+                            </p> */}
 
                             <Button
                                 type="submit"
