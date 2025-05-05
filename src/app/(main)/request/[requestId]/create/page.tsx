@@ -138,12 +138,6 @@ export default function RequestDetail() {
         },
     });
 
-    // const handleBatchNumberList = () => {
-    //     setShowBatchList(!showBatchList);
-    //     const receiptId = receipts?.filter((r) => r.inventoryReceiptId) || [];
-    //     console.log(receiptId);
-    // }
-
     const onSubmit = async (data: CreateInventoryReceipt) => {
         const requestDetails = requestDetail?.inventoryRequests[0].inventoryRequestDetails;
 

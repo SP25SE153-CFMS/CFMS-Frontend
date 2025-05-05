@@ -6,7 +6,7 @@ import { getResourceById } from '@/services/resource.service';
 
 type SubCateDisplayProps = {
     id: string;
-    mode: 'badge' | 'input' | 'description' | 'title';
+    mode: 'badge' | 'input' | 'description' | 'title' | 'material';
 };
 
 type ResourceDisplayProps = {
@@ -50,6 +50,12 @@ export default function SubCateDisplay({ id, mode }: SubCateDisplayProps) {
                     Đang tải mô tả...
                 </p>
             ),
+            material: (
+                <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    <span>Đang tải...</span>
+                </span>
+            ),
         };
 
         return loadingContent[mode];
@@ -71,6 +77,7 @@ export default function SubCateDisplay({ id, mode }: SubCateDisplayProps) {
             ),
             title: <span className="text-sm font-medium text-gray-500">Không xác định</span>,
             description: <span className="text-sm italic text-gray-500">Không có mô tả</span>,
+            material: <span className="text-sm font-medium text-gray-500">Không xác định</span>,
         };
 
         return fallbackContent[mode];
@@ -96,6 +103,8 @@ export default function SubCateDisplay({ id, mode }: SubCateDisplayProps) {
         return <span className="text-sm">{subDesc}</span>;
     } else if (mode === 'title') {
         return <span className="text-sm font-medium">{subCate.description}</span>;
+    } else if (mode === 'material') {
+        return <span className="text-sm">{subCate.subCategoryName}</span>;
     }
 }
 

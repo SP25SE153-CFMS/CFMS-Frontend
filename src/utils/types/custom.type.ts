@@ -335,6 +335,7 @@ export type ReceiptResponse = InventoryReceipt &
         wareFrom: WarehouseResponse;
         wareTo: WarehouseResponse;
         batchNumber: number;
+        userId: string;
     };
 
 export type ResetPasswordRequest = {

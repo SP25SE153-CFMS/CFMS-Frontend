@@ -21,6 +21,8 @@ import {
     Wrench,
     AlertCircle,
 } from 'lucide-react';
+import { getSubBySubId } from '@/services/category.service';
+import { getWareById } from '@/services/warehouse.service';
 
 export default function InventoryDetail() {
     const { inventoryReceiptId }: { inventoryReceiptId: string } = useParams();
@@ -35,11 +37,31 @@ export default function InventoryDetail() {
         queryFn: () => getResources(),
     });
 
+    const { data: subCate } = useQuery({
+        queryKey: ['subCate', receipt?.receiptTypeId],
+        queryFn: () => getSubBySubId(receipt?.receiptTypeId as string),
+        enabled: !!receipt?.receiptTypeId,
+    });
+
+    const subCateName = subCate?.subCategoryName;
+
+    const warehouseId = subCateName === 'IMPORT' ? receipt?.wareToId : receipt?.wareFromId;
+
+    const { data: ware } = useQuery({
+        queryKey: ['ware', warehouseId],
+        queryFn: () => getWareById(warehouseId as string),
+        enabled: !!warehouseId,
+    });
+
+    // const getWareById = (id: string) => {
+    //     const ware
+    // }
+
     const createdByName = useMemo(() => {
         if (!receipt) return '';
 
         const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
-        const createdBy = users.find((user) => user.userId === receipt.createdByUserId);
+        const createdBy = users.find((user) => user.userId === receipt.userId);
 
         return createdBy?.fullName || '';
     }, [receipt]);
@@ -68,6 +90,11 @@ export default function InventoryDetail() {
             </div>
         );
     }
+
+    const getWareType = () => {
+        if (subCateName === 'IMPORT') return <p className="text-sm text-gray-500">Kho nhập</p>;
+        if (subCateName === 'EXPORT') return <p className="text-sm text-gray-500">Kho xuất</p>;
+    };
 
     return (
         <div className="container mx-auto max-w-5xl py-6">
@@ -168,6 +195,7 @@ export default function InventoryDetail() {
                                                         </div>
                                                         <Separator />
                                                         <div className="space-y-2">
+                                                            {/* Tên */}
                                                             <div className="grid grid-cols-[120px_1fr] items-center">
                                                                 <span className="text-sm text-gray-500">
                                                                     Tên:
@@ -176,6 +204,8 @@ export default function InventoryDetail() {
                                                                     {resource.food.foodName}
                                                                 </span>
                                                             </div>
+
+                                                            {/* Số lượng */}
                                                             <div className="grid grid-cols-[120px_1fr] items-center">
                                                                 <span className="text-sm text-gray-500">
                                                                     Số lượng:
@@ -184,6 +214,8 @@ export default function InventoryDetail() {
                                                                     {detail.actualQuantity}
                                                                 </span>
                                                             </div>
+
+                                                            {/* Loại phiếu */}
                                                             <div className="grid grid-cols-[120px_1fr] items-center">
                                                                 <span className="text-sm text-gray-500">
                                                                     Loại phiếu:
@@ -191,9 +223,17 @@ export default function InventoryDetail() {
                                                                 <div>
                                                                     <SubCateDisplay
                                                                         id={resource.resourceTypeId}
-                                                                        mode="badge"
+                                                                        mode="title"
                                                                     />
                                                                 </div>
+                                                            </div>
+
+                                                            {/* Kho */}
+                                                            <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                {getWareType()}
+                                                                <p className="text-sm font-medium">
+                                                                    {ware?.warehouseName}
+                                                                </p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -274,7 +314,7 @@ export default function InventoryDetail() {
                                                 <div className="rounded-lg border bg-white p-4">
                                                     <div className="flex items-center justify-between">
                                                         <h4 className="font-medium">
-                                                            Thông tin thiết bị
+                                                            Thông tin cơ bản
                                                         </h4>
                                                         <Badge
                                                             variant="outline"
@@ -285,6 +325,27 @@ export default function InventoryDetail() {
                                                     </div>
                                                     <Separator className="my-3" />
                                                     <div className="space-y-2">
+                                                        {/* Tên */}
+                                                        <div className="grid grid-cols-[120px_1fr] items-center">
+                                                            <span className="text-sm text-gray-500">
+                                                                Tên:
+                                                            </span>
+                                                            <span className="text-sm font-medium">
+                                                                {resource.equipment.equipmentName}
+                                                            </span>
+                                                        </div>
+
+                                                        {/* Số lượng */}
+                                                        <div className="grid grid-cols-[120px_1fr] items-center">
+                                                            <span className="text-sm text-gray-500">
+                                                                Số lượng:
+                                                            </span>
+                                                            <span className="text-sm">
+                                                                {detail.actualQuantity}
+                                                            </span>
+                                                        </div>
+
+                                                        {/* Loại phiếu */}
                                                         <div className="grid grid-cols-[120px_1fr] items-center">
                                                             <span className="text-sm text-gray-500">
                                                                 Loại phiếu:
@@ -296,26 +357,68 @@ export default function InventoryDetail() {
                                                                 />
                                                             </div>
                                                         </div>
-                                                        <div className="grid grid-cols-[120px_1fr] items-center">
-                                                            <span className="text-sm text-gray-500">
-                                                                Quy cách tính:
-                                                            </span>
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-sm">
-                                                                    {resource.packageSize}
-                                                                </span>
 
-                                                                <SubCateDisplay
-                                                                    id={resource.unitId}
-                                                                    mode="input"
-                                                                />
-                                                                <span className="text-sm text-gray-400">
-                                                                    /
-                                                                </span>
-                                                                <SubCateDisplay
-                                                                    id={resource.packageId}
-                                                                    mode="input"
-                                                                />
+                                                        {/* Kho */}
+                                                        <div className="grid grid-cols-[120px_1fr] items-center">
+                                                            {getWareType()}
+                                                            <p className="text-sm font-medium">
+                                                                {ware?.warehouseName}
+                                                            </p>
+                                                        </div>
+
+                                                        <div className="space-y-3 rounded-lg border bg-white p-4">
+                                                            <h4 className="font-medium">
+                                                                Thông tin chi tiết
+                                                            </h4>
+                                                            <Separator className="my-3" />
+                                                            <div className="space-y-2">
+                                                                <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                    <span className="text-sm text-gray-500">
+                                                                        Quy cách tính:
+                                                                    </span>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className="text-sm">
+                                                                            {resource.packageSize}
+                                                                        </span>
+
+                                                                        <SubCateDisplay
+                                                                            id={resource.unitId}
+                                                                            mode="input"
+                                                                        />
+                                                                        <span className="text-sm text-gray-400">
+                                                                            /
+                                                                        </span>
+                                                                        <SubCateDisplay
+                                                                            id={resource.packageId}
+                                                                            mode="input"
+                                                                        />
+                                                                    </div>
+
+                                                                    <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                        <span className="text-sm text-gray-500">
+                                                                            Ngày mua:
+                                                                        </span>
+                                                                        <span className="text-sm">
+                                                                            {dayjs(
+                                                                                resource.equipment
+                                                                                    .purchaseDate,
+                                                                            ).format('DD/MM/YYYY')}
+                                                                        </span>
+                                                                    </div>
+
+                                                                    <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                        <span className="text-sm text-gray-500 ">
+                                                                            Chất liệu:
+                                                                        </span>
+                                                                        <SubCateDisplay
+                                                                            id={
+                                                                                resource.equipment
+                                                                                    .materialId
+                                                                            }
+                                                                            mode="material"
+                                                                        />
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -335,7 +438,7 @@ export default function InventoryDetail() {
                                                 <div className="rounded-lg border bg-white p-4">
                                                     <div className="flex items-center justify-between">
                                                         <h4 className="font-medium">
-                                                            Thông tin thuốc
+                                                            Thông tin cơ bản
                                                         </h4>
                                                         <Badge
                                                             variant="outline"
@@ -346,6 +449,27 @@ export default function InventoryDetail() {
                                                     </div>
                                                     <Separator className="my-3" />
                                                     <div className="space-y-2">
+                                                        {/* Tên */}
+                                                        <div className="grid grid-cols-[120px_1fr] items-center">
+                                                            <span className="text-sm text-gray-500">
+                                                                Tên:
+                                                            </span>
+                                                            <span className="text-sm font-medium">
+                                                                {resource.medicine.medicineName}
+                                                            </span>
+                                                        </div>
+
+                                                        {/* Số lượng */}
+                                                        <div className="grid grid-cols-[120px_1fr] items-center">
+                                                            <span className="text-sm text-gray-500">
+                                                                Số lượng:
+                                                            </span>
+                                                            <span className="text-sm">
+                                                                {detail.actualQuantity}
+                                                            </span>
+                                                        </div>
+
+                                                        {/* Loại phiếu */}
                                                         <div className="grid grid-cols-[120px_1fr] items-center">
                                                             <span className="text-sm text-gray-500">
                                                                 Loại phiếu:
@@ -357,25 +481,75 @@ export default function InventoryDetail() {
                                                                 />
                                                             </div>
                                                         </div>
+
+                                                        {/* Kho */}
                                                         <div className="grid grid-cols-[120px_1fr] items-center">
-                                                            <span className="text-sm text-gray-500">
-                                                                Quy cách tính:
-                                                            </span>
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-sm">
-                                                                    {resource.packageSize}
-                                                                </span>
-                                                                <SubCateDisplay
-                                                                    id={resource.unitId}
-                                                                    mode="input"
-                                                                />
-                                                                <span className="text-sm text-gray-400">
-                                                                    /
-                                                                </span>
-                                                                <SubCateDisplay
-                                                                    id={resource.packageId}
-                                                                    mode="input"
-                                                                />
+                                                            {getWareType()}
+                                                            <p className="text-sm font-medium">
+                                                                {ware?.warehouseName}
+                                                            </p>
+                                                        </div>
+
+                                                        <div className="space-y-3 rounded-lg border bg-white p-4">
+                                                            <h4 className="font-medium">
+                                                                Thông tin chi tiết
+                                                            </h4>
+                                                            <Separator className="my-3" />
+                                                            <div className="space-y-2">
+                                                                <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                    <span className="text-sm text-gray-500">
+                                                                        Quy cách tính:
+                                                                    </span>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className="text-sm">
+                                                                            {resource.packageSize}
+                                                                        </span>
+                                                                        <SubCateDisplay
+                                                                            id={resource.unitId}
+                                                                            mode="input"
+                                                                        />
+                                                                        <span className="text-sm text-gray-400">
+                                                                            /
+                                                                        </span>
+                                                                        <SubCateDisplay
+                                                                            id={resource.packageId}
+                                                                            mode="input"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                    <span className="text-sm text-gray-500">
+                                                                        Ngày SX:
+                                                                    </span>
+                                                                    <span className="text-sm">
+                                                                        {dayjs(
+                                                                            resource.medicine
+                                                                                .productionDate,
+                                                                        ).format('DD/MM/YYYY')}
+                                                                    </span>
+                                                                </div>
+
+                                                                <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                    <span className="text-sm text-gray-500">
+                                                                        Hạn SD:
+                                                                    </span>
+                                                                    <span className="text-sm">
+                                                                        {dayjs(
+                                                                            resource.medicine
+                                                                                .expiryDate,
+                                                                        ).format('DD/MM/YYYY')}
+                                                                    </span>
+                                                                </div>
+
+                                                                <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                    <span className="text-sm text-gray-500 ">
+                                                                        Cách sử dụng:
+                                                                    </span>
+                                                                    <span className="text-sm">
+                                                                        {resource.medicine.usage}
+                                                                    </span>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
