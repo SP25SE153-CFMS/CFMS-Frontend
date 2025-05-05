@@ -25,6 +25,7 @@ import {
 import { getSubBySubId } from '@/services/category.service';
 import { getWareById } from '@/services/warehouse.service';
 import { Button } from '@/components/ui/button';
+import config from '@/configs';
 
 export default function InventoryDetail() {
     const router = useRouter();
@@ -99,6 +100,10 @@ export default function InventoryDetail() {
         if (subCateName === 'EXPORT') return <p className="text-sm text-gray-500">Kho xuất</p>;
     };
 
+    const handleCreateStockReceipt = () => {
+        router.push(`${config.routes.inventoryReceipt}/${inventoryReceiptId}/create`)
+    }
+
     return (
         <div className="container mx-auto max-w-5xl py-6">
             <div className="mb-8 space-y-4">
@@ -136,7 +141,6 @@ export default function InventoryDetail() {
 
                 <Separator />
             </div>
-
             <div className="mb-6">
                 <h2 className="mb-4 text-lg font-semibold">Danh sách chi tiết phiếu</h2>
 
@@ -576,17 +580,18 @@ export default function InventoryDetail() {
                     })}
                 </div>
             </div>
+            <Separator />
+            <div className="flex justify-end gap-4 bottom-0 bg-white p-4 ">
+                <Button
+                    className="border-slate-300 hover:bg-slate-100 hover:text-slate-900 rounded-b-lg shadow-lg"
+                    variant="outline"
+                    onClick={handleCreateStockReceipt}
+                >
+                    <FileText className="h-4 w-4 mr-2" />
+                    Tạo đơn hàng
+                </Button>
+            </div>
         </div>
     );
 }
 
-{
-    /* <Button
-                                            className="w-full justify-start"
-                                            variant="outline"
-                                            onClick={handleCreateInventoryReceipt}
-                                        >
-                                            <FileText className="h-4 w-4 mr-2" />
-                                            Tạo phiếu nhập/xuất
-                                        </Button> */
-}
