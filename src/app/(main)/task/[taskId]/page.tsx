@@ -9,10 +9,12 @@ import {
     FileText,
     Home,
     Info,
+    Notebook,
     Pencil,
     Plus,
     Type,
     Users,
+    X,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -27,7 +29,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { getTaskById } from '@/services/task.service';
+import { cancelTask, getTaskById } from '@/services/task.service';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import Image from '@/components/fallback-image';
@@ -99,6 +101,21 @@ export default function TaskDetail() {
                 </Card>
             </div>
         );
+    }
+
+    async function handleCancelTask(taskId: string): Promise<void> {
+        if (!confirm('Bạn có chắc chắn muốn hủy công việc này?')) {
+            return;
+        }
+
+        try {
+            await cancelTask(taskId);
+            alert('Công việc đã được hủy thành công.');
+            router.push(config.routes.task); // Redirect to the task list page
+        } catch (error) {
+            console.error('Error cancelling task:', error);
+            alert('Đã xảy ra lỗi khi hủy công việc. Vui lòng thử lại.');
+        }
     }
 
     // const getResourceName = (taskRes: TaskResourceResponse) => {
@@ -325,6 +342,13 @@ export default function TaskDetail() {
                                             Chỉnh sửa
                                         </Button>
                                     </Link>
+                                    <Button
+                                        variant="destructive"
+                                        onClick={() => handleCancelTask(taskId)}
+                                    >
+                                        <X className="h-4 w-4" />
+                                        Hủy
+                                    </Button>
                                 </div>
                             )}
                             {task.status === TaskStatus.COMPLETED && (
@@ -457,6 +481,11 @@ export default function TaskDetail() {
                             )}
                         </CardHeader>
                         <CardContent className="pt-4">
+                            <InfoItem
+                                label="Ghi chú"
+                                value={task.assignments?.[0]?.note || ''}
+                                icon={<Notebook size={16} />}
+                            />
                             {task.assignments && task.assignments.length ? (
                                 <div className="bg-white dark:bg-slate-800 rounded-lg border overflow-hidden">
                                     <Table>
@@ -468,9 +497,9 @@ export default function TaskDetail() {
                                                 <TableHead className="dark:text-slate-200">
                                                     Ngày giao
                                                 </TableHead>
-                                                <TableHead className="dark:text-slate-200">
+                                                {/* <TableHead className="dark:text-slate-200">
                                                     Ghi chú
-                                                </TableHead>
+                                                </TableHead> */}
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
@@ -504,9 +533,9 @@ export default function TaskDetail() {
                                                               )
                                                             : '-'}
                                                     </TableCell>
-                                                    <TableCell className="dark:text-slate-300">
+                                                    {/* <TableCell className="dark:text-slate-300">
                                                         {assignment.note ?? 'Không có'}
-                                                    </TableCell>
+                                                    </TableCell> */}
                                                 </TableRow>
                                             ))}
                                         </TableBody>

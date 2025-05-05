@@ -35,13 +35,18 @@ export default function UpdateTaskPage() {
         taskResources:
             task?.taskResources?.map((item) => ({
                 resourceId: item.resourceId,
-                quantity: Number(item.specQuantity.split(' ')[0]),
+                suppliedQuantity: Number(item.specQuantity.split(' ')[0]),
+                consumedQuantity: 0,
             })) || [],
         description: task?.description || '',
         taskId: taskId,
         assignedTos: task?.assignments || [],
         shiftId: '',
         shiftName: task?.shiftSchedule?.shiftName || '',
+        note: task?.assignments?.[0]?.note || '',
+        assignedDate: task?.assignments?.[0]?.assignedDate
+            ? new Date(task?.assignments?.[0]?.assignedDate)
+            : new Date(),
     };
 
     if (isLoading) {

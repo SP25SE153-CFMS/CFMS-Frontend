@@ -62,7 +62,7 @@ import {
 
 import { cn } from '@/lib/utils';
 import { CategoryType } from '@/utils/enum/category.enum';
-import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { getSubCategoryByCategoryType, getTaskType } from '@/utils/functions/category.function';
 import { ResourceResponse } from '@/utils/types/custom.type';
 import { getShifts } from '@/services/shift.service';
 import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
@@ -72,7 +72,6 @@ import { updateTask } from '@/services/task.service';
 import { formatDate } from '@/utils/functions';
 import dayjs from 'dayjs';
 import { AssignmentRoleStatus, TaskStatus } from '@/utils/enum/status.enum';
-import { LOCATION_TYPES } from '@/utils/enum/location-type.enum';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
@@ -175,13 +174,10 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
             shiftId: '',
             locationType: '',
             locationId: '',
-            taskResources: [
-                {
-                    resourceId: '',
-                    quantity: 0,
-                },
-            ],
+            taskResources: [],
             assignedTos: [],
+            assignedDate: new Date(),
+            note: '',
             ...defaultValues,
         },
     });
@@ -196,6 +192,7 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
         try {
             values.startWorkDate = dayjs(values.startWorkDate).format('YYYY-MM-DD');
             values.endWorkDate = dayjs(values.endWorkDate).format('YYYY-MM-DD');
+            values.assignedDate = dayjs(values.assignedDate).format('YYYY-MM-DD');
             values.isHavest = values.isHavest ? 1 : 0;
             values.farmId = getCookie(config.cookies.farmId) ?? '';
             values.assignedTos = assignedMembers.map((member) => ({
@@ -256,7 +253,7 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
                     const employee = farmEmployees?.find((emp) => emp.userId === id);
                     return {
                         assignedToId: id,
-                        status: 1, // Default to "Nhân viên" (Employee)
+                        status: AssignmentRoleStatus.EMPLOYEE, // Default to "Nhân viên" (Employee)
                         assignedTo: employee?.user.fullName || '',
                     };
                 });
@@ -553,8 +550,8 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
         [defaultValues?.shiftName, form.control, shifts],
     );
 
-    const renderLocationSection = useMemo(
-        () => (
+    const renderLocationSection = useMemo(() => {
+        return (
             <div className="space-y-6 pt-4">
                 <div className="flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-primary" />
@@ -584,11 +581,24 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {LOCATION_TYPES.map((type) => (
-                                            <SelectItem key={type.value} value={type.value}>
-                                                {type.label}
+                                        {/* {LOCATION_TYPES.map((type) => (
+                                                <SelectItem key={type.value} value={type.value}>
+                                                    {type.label}
+                                                </SelectItem>
+                                            ))} */}
+                                        <SelectItem key="COOP" value="COOP">
+                                            Chuồng nuôi
+                                        </SelectItem>
+                                        {(getTaskType(form.getValues('taskTypeId'))?.includes(
+                                            'dọn dẹp',
+                                        ) ||
+                                            getTaskType(form.getValues('taskTypeId'))?.includes(
+                                                'khác',
+                                            )) && (
+                                            <SelectItem key="WARE" value="WARE">
+                                                Nhà kho
                                             </SelectItem>
-                                        ))}
+                                        )}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -684,9 +694,9 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
                     />
                 </div>
             </div>
-        ),
-        [breedingAreas, form.control, getCoopName, locationType, warehouses],
-    );
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [breedingAreas, form, form.watch('taskTypeId'), getCoopName, locationType, warehouses]);
 
     const renderResourcesSection = useMemo(
         () => (
@@ -707,7 +717,8 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
                             onClick={() =>
                                 append({
                                     resourceId: '',
-                                    quantity: 0,
+                                    suppliedQuantity: 0,
+                                    consumedQuantity: 0,
                                 })
                             }
                             className="flex items-center gap-1"
@@ -801,7 +812,7 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
                                     <div className="md:col-span-3">
                                         <FormField
                                             control={form.control}
-                                            name={`taskResources.${index}.quantity`}
+                                            name={`taskResources.${index}.suppliedQuantity`}
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel className="text-sm">
@@ -850,6 +861,56 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
                     <h3 className="text-lg font-medium">Phân công</h3>
                 </div>
                 <Separator />
+
+                {/* Assigned Date */}
+                <FormField
+                    control={form.control}
+                    name="assignedDate"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Ngày phân công</FormLabel>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <FormControl>
+                                        <Button
+                                            variant={'outline'}
+                                            className={cn('w-full pl-3 text-left font-normal')}
+                                        >
+                                            {formatDate(field.value)}
+                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        </Button>
+                                    </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent align="start">
+                                    <Calendar
+                                        mode="single"
+                                        selected={field.value ? new Date(field.value) : new Date()}
+                                        onSelect={field.onChange}
+                                        initialFocus
+                                        disabled={(date) => date < new Date()}
+                                        locale={vi}
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                {/* Note */}
+                <FormField
+                    control={form.control}
+                    name="note"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Ghi chú</FormLabel>
+                            <FormControl>
+                                <Textarea placeholder="Nhập ghi chú" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
                 <FormField
                     control={form.control}

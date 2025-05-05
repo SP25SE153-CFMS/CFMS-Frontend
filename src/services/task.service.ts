@@ -46,3 +46,8 @@ export const deleteTask = async (id: string) => {
     const response = await remove<Response<string>>(endpoint);
     return response.data;
 };
+
+export const cancelTask = async (taskId: string) => {
+    // TODO: Implement cancel task
+    console.log('Cancel task ' + taskId);
+};

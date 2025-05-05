@@ -37,7 +37,8 @@ export const CreateTaskSchema = TaskSchema.omit({ taskId: true }).extend({
     taskResources: z.array(
         z.object({
             resourceId: z.string().uuid(),
-            quantity: z.coerce.number().int().min(0),
+            suppliedQuantity: z.coerce.number().int().default(0),
+            consumedQuantity: z.coerce.number().int().default(0),
         }),
     ),
 });
@@ -60,11 +61,14 @@ export const UpdateTaskSchema = TaskSchema.extend({
     taskResources: z.array(
         z.object({
             resourceId: z.string().uuid(),
-            quantity: z.coerce.number().int().min(0),
+            suppliedQuantity: z.coerce.number().int().default(0),
+            consumedQuantity: z.coerce.number().int().default(0),
         }),
     ),
     assignedTos: z.array(z.object({})).optional(),
     shiftName: z.string().optional(),
+    assignedDate: z.date().optional(),
+    note: z.string().optional(),
 });
 
 export type UpdateTask = z.infer<typeof UpdateTaskSchema>;

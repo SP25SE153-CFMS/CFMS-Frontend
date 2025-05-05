@@ -65,7 +65,7 @@ export default function Page() {
         <div className="flex items-center justify-center px-[56px] py-[24px] min-h-screen bg-background transition-colors duration-300">
             <div className="flex size-min justify-center items-center gap-x-[32px] shrink-0 overflow-hidden">
                 {/* Left Panel */}
-                <div className="flex flex-col w-1/2 relative items-start self-stretch columns-xl content-center px-[47px] pt-[49px] rounded-[34px] bg-gradient-to-br from-primary to-primary/80 dark:from-primary/90 dark:to-primary/70">
+                <div className="hidden lg:flex flex-col w-1/2 relative items-start self-stretch columns-xl content-center px-[47px] pt-[49px] rounded-[34px] bg-gradient-to-br from-primary to-primary/80 dark:from-primary/90 dark:to-primary/70">
                     <h2 className="text-center text-[48px] text-white not-italic font-bold leading-[normal]">
                         Hệ Thống Quản Lý Trang Trại Gà Với CFMS
                     </h2>
@@ -84,7 +84,7 @@ export default function Page() {
                 </div>
 
                 {/* Right Panel */}
-                <div className="flex flex-col w-1/2 py-[10px] px-[42px] gap-y-[27px] gap-x-[34px] justify-center items-center content-center self-stretch bg-background dark:bg-background">
+                <div className="flex flex-col w-full lg:w-1/2 py-[10px] px-[42px] gap-y-[27px] gap-x-[34px] justify-center items-center content-center self-stretch bg-background dark:bg-background">
                     <p className="text-[26px] text-center font-bold not-italic leading-[normal] whitespace-nowrap text-foreground">
                         Hệ Thống Quản Lý <span className="text-primary">Trang Trại Gà</span>
                     </p>

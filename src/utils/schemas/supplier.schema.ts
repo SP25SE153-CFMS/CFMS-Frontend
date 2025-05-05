@@ -10,7 +10,10 @@ export const SupplierSchema = z.object({
         .trim()
         // .regex(/^[0-9]{10,11}$/, { message: 'Điền số điện thoại' }),
         .optional(),
-    bankAccount: z.string(),
+    bankAccount: z
+        .string()
+        .regex(/^\d{8,20}$/, { message: 'Số tài khoản ngân hàng không hợp lệ' })
+        .trim(),
     status: z.number().int().default(1),
 });
 

@@ -64,7 +64,7 @@ import {
 
 import { cn } from '@/lib/utils';
 import { CategoryType } from '@/utils/enum/category.enum';
-import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { getSubCategoryByCategoryType, getTaskType } from '@/utils/functions/category.function';
 import { ResourceResponse } from '@/utils/types/custom.type';
 import { getShifts } from '@/services/shift.service';
 import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
@@ -75,7 +75,6 @@ import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { formatDate } from '@/utils/functions';
 import dayjs from 'dayjs';
 import { TaskStatus } from '@/utils/enum/status.enum';
-import { LOCATION_TYPES } from '@/utils/enum/location-type.enum';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 
@@ -147,12 +146,7 @@ export function CreateTaskForm() {
             shiftIds: [],
             locationType: '',
             locationId: '',
-            taskResources: [
-                {
-                    resourceId: '',
-                    quantity: 0,
-                },
-            ],
+            taskResources: [],
         },
     });
 
@@ -719,8 +713,8 @@ export function CreateTaskForm() {
         [form.control, shifts, selectedDates, isFrequencyAssigned],
     );
 
-    const renderLocationSection = useMemo(
-        () => (
+    const renderLocationSection = useMemo(() => {
+        return (
             <div className="space-y-6 pt-4">
                 <div className="flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-primary" />
@@ -750,11 +744,24 @@ export function CreateTaskForm() {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {LOCATION_TYPES.map((type) => (
+                                        {/* {LOCATION_TYPES.map((type) => (
                                             <SelectItem key={type.value} value={type.value}>
                                                 {type.label}
                                             </SelectItem>
-                                        ))}
+                                        ))} */}
+                                        <SelectItem key="COOP" value="COOP">
+                                            Chuồng nuôi
+                                        </SelectItem>
+                                        {(getTaskType(form.getValues('taskTypeId'))?.includes(
+                                            'dọn dẹp',
+                                        ) ||
+                                            getTaskType(form.getValues('taskTypeId'))?.includes(
+                                                'khác',
+                                            )) && (
+                                            <SelectItem key="WARE" value="WARE">
+                                                Nhà kho
+                                            </SelectItem>
+                                        )}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -850,9 +857,9 @@ export function CreateTaskForm() {
                     />
                 </div>
             </div>
-        ),
-        [breedingAreas, form.control, getCoopName, locationType, warehouses],
-    );
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [breedingAreas, form, form.watch('taskTypeId'), getCoopName, locationType, warehouses]);
 
     const renderResourcesSection = useMemo(
         () => (
@@ -873,7 +880,8 @@ export function CreateTaskForm() {
                             onClick={() =>
                                 append({
                                     resourceId: '',
-                                    quantity: 0,
+                                    suppliedQuantity: 0,
+                                    consumedQuantity: 0,
                                 })
                             }
                             className="flex items-center gap-1"
@@ -967,7 +975,7 @@ export function CreateTaskForm() {
                                     <div className="md:col-span-3">
                                         <FormField
                                             control={form.control}
-                                            name={`taskResources.${index}.quantity`}
+                                            name={`taskResources.${index}.suppliedQuantity`}
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel className="text-sm">

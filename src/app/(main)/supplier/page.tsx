@@ -9,7 +9,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Plus } from 'lucide-react';
+import { House, Plus } from 'lucide-react';
 import { columns } from './columns';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import SupplierForm from '@/components/forms/supplier-form';
@@ -20,6 +20,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
 import Image from '@/components/fallback-image';
 import { getCookie } from 'cookies-next';
+import { Separator } from '@/components/ui/separator';
 
 export default function Supplier() {
     const [openDialog, setOpenDialog] = useState(false);
@@ -62,29 +63,36 @@ export default function Supplier() {
 
     return (
         <div className="flex flex-col gap-y-5">
-            <h1 className="text-2xl font-bold tracking-tight">Danh sách nhà cung cấp</h1>
+            <div className="flex justify-between items-center">
+                <div className="flex flex-col">
+                    <div className="flex items-center gap-3 mb-2">
+                        <House className="h-6 w-6 text-muted-foreground" />
+                        <h1 className="text-2xl font-bold tracking-tight">
+                            Danh sách nhà cung cấp
+                        </h1>
+                    </div>
 
-            <div className="flex relative gap-x-4 items-center">
-                <div className="absolute right-0 mb-3">
-                    <Button onClick={open}>
-                        <span>Tạo</span> <Plus size={18} />
-                    </Button>
-
-                    <Dialog open={openDialog} onOpenChange={onOpenChange}>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle className="font-semibold">
-                                    Thêm nhà cung cấp
-                                </DialogTitle>
-                                <DialogDescription>Nhập đầy đủ thông tin dưới.</DialogDescription>
-                            </DialogHeader>
-                            <ScrollArea className="max-h-[600px]">
-                                <SupplierForm closeDialog={closeDialog} />
-                            </ScrollArea>
-                        </DialogContent>
-                    </Dialog>
+                    <p className="text-muted-foreground">
+                        Danh sách tất cả các nhà cung cấp trong trang trại
+                    </p>
                 </div>
+
+                <Button onClick={open}>
+                    <span>Thêm</span> <Plus size={18} />
+                </Button>
+                <Dialog open={openDialog} onOpenChange={onOpenChange}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className="font-semibold">Thêm nhà cung cấp</DialogTitle>
+                            <DialogDescription>Nhập đầy đủ thông tin dưới.</DialogDescription>
+                        </DialogHeader>
+                        <ScrollArea className="max-h-[600px]">
+                            <SupplierForm closeDialog={closeDialog} />
+                        </ScrollArea>
+                    </DialogContent>
+                </Dialog>
             </div>
+            <Separator className="mb-6" />
 
             <DataTable data={suppliers} columns={columns} />
         </div>

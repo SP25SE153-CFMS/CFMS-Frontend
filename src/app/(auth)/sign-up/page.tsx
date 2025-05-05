@@ -73,7 +73,8 @@ export default function SignUp() {
     return (
         <div className="flex min-h-screen w-full items-center justify-center px-[56px] py-[25px] bg-background transition-colors duration-300">
             <div className="flex w-[1040px] h-[720px] justify-center items-center content-center gap-[32px] shrink-0 overflow-hidden">
-                <div className="flex flex-col w-1/2 relative items-center self-stretch columns-xl px-[42px] py-[10px] gap-y-[27px] gap-x-[34px] bg-background">
+                {/* Left Panel */}
+                <div className="flex flex-col w-full lg:w-1/2 relative items-center self-stretch columns-xl px-[42px] py-[10px] gap-y-[27px] gap-x-[34px] bg-background">
                     <p className="text-center text-[26px] not-italic font-bold leading-[normal] whitespace-nowrap text-foreground">
                         Hệ Thống Quản Lý <span className="text-primary">Trang Trại Gà</span>
                     </p>
@@ -96,7 +97,7 @@ export default function SignUp() {
                                 control={form.control}
                                 name="fullname"
                                 render={({ field }) => (
-                                    <FormItem className="w-full">
+                                    <FormItem>
                                         <Input
                                             {...field}
                                             type="text"
@@ -112,7 +113,7 @@ export default function SignUp() {
                                 control={form.control}
                                 name="phoneNumber"
                                 render={({ field }) => (
-                                    <FormItem className="w-full">
+                                    <FormItem>
                                         <Input
                                             {...field}
                                             type="number"
@@ -128,7 +129,7 @@ export default function SignUp() {
                                 control={form.control}
                                 name="mail"
                                 render={({ field }) => (
-                                    <FormItem className="w-full">
+                                    <FormItem>
                                         <FormControl>
                                             <Input
                                                 {...field}
@@ -146,7 +147,7 @@ export default function SignUp() {
                                 control={form.control}
                                 name="password"
                                 render={({ field }) => (
-                                    <FormItem className="w-full">
+                                    <FormItem>
                                         <FormControl>
                                             <Input
                                                 {...field}
@@ -164,7 +165,7 @@ export default function SignUp() {
                                 control={form.control}
                                 name="confirmPassword"
                                 render={({ field }) => (
-                                    <FormItem className="w-full">
+                                    <FormItem>
                                         <FormControl>
                                             <Input
                                                 {...field}
@@ -204,7 +205,8 @@ export default function SignUp() {
                         </Link>
                     </p>
                 </div>
-                <div className="flex flex-col w-1/2 relative items-start self-stretch columns-xl px-[47px] py-[49px] rounded-[34px] bg-primary dark:bg-primary/90">
+                {/* Right Panel */}
+                <div className="hidden lg:flex flex-col w-1/2 relative items-start self-stretch columns-xl px-[47px] py-[49px] rounded-[34px] bg-primary dark:bg-primary/90">
                     <h2 className="text-center text-[48px] text-white not-italic font-bold leading-[normal]">
                         Hệ Thống Quản Lý Trang Trại Gà Với CFMS
                     </h2>

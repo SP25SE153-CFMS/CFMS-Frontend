@@ -101,7 +101,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
         mutationFn: defaultValues ? updateAssignment : createAssignment,
         onSuccess: () => {
             closeDialog();
-            queryClient.invalidateQueries({ queryKey: ['assignments'] });
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
             queryClient.invalidateQueries({ queryKey: ['task', taskId] });
             toast.success(
                 defaultValues ? 'Cập nhật phân công thành công' : 'Tạo phân công thành công',
@@ -183,7 +183,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                 const employee = farmEmployees?.find((emp) => emp.userId === id);
                 return {
                     assignedToId: id,
-                    status: 1, // Default to "Nhân viên" (Employee)
+                    status: AssignmentRoleStatus.EMPLOYEE, // Default to "Nhân viên" (Employee)
                     name: employee?.user.fullName || 'Unknown',
                 };
             });
