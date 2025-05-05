@@ -95,7 +95,7 @@ export function GoogleMapComponent({
                         onUnmount={onUnmount}
                         options={{
                             fullscreenControl: true,
-                            streetViewControl: true,
+                            streetViewControl: false,
                             mapTypeControl: true,
                             zoomControl: true,
                         }}

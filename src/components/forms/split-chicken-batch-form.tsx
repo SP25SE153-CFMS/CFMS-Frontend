@@ -94,6 +94,13 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (growDays.min > growDays.max) {
+            toast('Số ngày nuôi tối thiểu phải nhỏ hơn số ngày nuôi tối đa', {
+                icon: '⚠️',
+            });
+            return;
+        }
+
         const formData: SplitChickenBatch = {
             parentBatchId: chickenBatchId,
             chickenBatchName: (e.target as HTMLFormElement).chickenBatchName.value,
@@ -122,7 +129,7 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
             if (!currentQuantityInForm) return '';
             if (!detail) return `Không tồn tại ${chickenGenderLabels[gender]?.toLowerCase()}`;
             if (currentQuantityInForm?.quantity > detail.quantity) {
-                return `Số lượng ${chickenGenderLabels[detail.gender]?.toLowerCase()} không được vượt quá ${detail.quantity}`;
+                return `Số lượng ${chickenGenderLabels[detail.gender]?.toLowerCase()} không được vượt quá ${detail.quantity} con`;
             }
             return '';
         },

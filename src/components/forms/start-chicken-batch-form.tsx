@@ -90,6 +90,13 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (growDays.min > growDays.max) {
+            toast('Số ngày nuôi tối thiểu phải nhỏ hơn số ngày nuôi tối đa', {
+                icon: '⚠️',
+            });
+            return;
+        }
+
         const formData: StartChickenBatch = {
             chickenCoopId,
             chickenBatchName: (e.target as HTMLFormElement).chickenBatchName.value,
@@ -106,6 +113,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
     };
 
     const totalQuantity = chickenDetailRequests.reduce((sum, detail) => sum + detail.quantity, 0);
+
     const selectedChickenType = chickenTypes?.find(
         (type) => type.chickenType?.subCategoryId === chickenTypeId,
     )?.chickenType?.subCategoryName;
@@ -122,7 +130,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
 
     return (
         <form className="space-y-6" onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-1">
                 <div className="space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="chickenBatchName" className="text-sm font-medium">

@@ -32,7 +32,7 @@ export function AppSidebar({ ...props }) {
 
     return (
         <Sidebar collapsible="icon" {...props}>
-            <SidebarHeader>
+            <SidebarHeader className="min-h-16">
                 <FarmSwitcher />
             </SidebarHeader>
             <SidebarContent>

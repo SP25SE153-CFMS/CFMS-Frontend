@@ -60,6 +60,8 @@ import InfoItem from '@/components/info-item';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { GoogleMapComponent } from '@/components/map/google-map';
 import { FarmResponse } from '@/utils/types/custom.type';
+import { getAreaUnits } from '@/services/category.service';
+import { SubCategory } from '@/utils/schemas/sub-category.schema';
 
 export default function Page() {
     // userFarms: Farms for the current user
@@ -76,6 +78,12 @@ export default function Page() {
     const { data: farmsForSearch } = useQuery({
         queryKey: ['allFarms'],
         queryFn: getFarms,
+    });
+
+    // Get all area units
+    const { data: areaUnits } = useQuery({
+        queryKey: ['areaUnits'],
+        queryFn: () => getAreaUnits(),
     });
 
     // Farm code for employee to join
@@ -487,7 +495,12 @@ export default function Page() {
                                                 lng: farm.longitude,
                                             },
                                             title: farm.farmName,
-                                            info: <MarkerInfo farm={farm} />,
+                                            info: (
+                                                <MarkerInfo
+                                                    farm={farm}
+                                                    areaUnits={areaUnits || []}
+                                                />
+                                            ),
                                         }))}
                                         height={500}
                                         className="mb-8"
@@ -665,7 +678,13 @@ export default function Page() {
     );
 }
 
-const MarkerInfo = ({ farm }: { farm: FarmResponse }) => {
+const MarkerInfo = ({ farm, areaUnits }: { farm: FarmResponse; areaUnits: SubCategory[] }) => {
+    const unit = useMemo(() => {
+        if (!areaUnits) return '';
+        const areaUnit = areaUnits.find((unit) => unit.subCategoryId === farm.areaUnitId);
+        return areaUnit?.subCategoryName || '';
+    }, [areaUnits, farm.areaUnitId]);
+
     return (
         <div className="flex flex-col">
             <InfoItem
@@ -688,11 +707,15 @@ const MarkerInfo = ({ farm }: { farm: FarmResponse }) => {
 
             <InfoItem
                 label="Diện tích"
-                value={`${farm?.area || 0} m²`}
+                value={`${farm?.area || 0} ${unit}`}
                 icon={<Ruler size={16} />}
             />
 
-            <InfoItem label="Quy mô" value={`${farm?.scale} đơn vị`} icon={<Sprout size={16} />} />
+            <InfoItem
+                label="Quy mô"
+                value={`${scaleLabels[farm?.scale]}`}
+                icon={<Sprout size={16} />}
+            />
 
             <InfoItem
                 label="Số điện thoại"
