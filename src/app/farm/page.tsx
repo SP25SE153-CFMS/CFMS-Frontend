@@ -681,7 +681,7 @@ export default function Page() {
 const MarkerInfo = ({ farm, areaUnits }: { farm: FarmResponse; areaUnits: SubCategory[] }) => {
     const unit = useMemo(() => {
         if (!areaUnits) return '';
-        const areaUnit = areaUnits.find((unit) => unit.subCategoryId === farm.areaUnitId);
+        const areaUnit = areaUnits?.find((unit) => unit.subCategoryId === farm.areaUnitId);
         return areaUnit?.subCategoryName || '';
     }, [areaUnits, farm.areaUnitId]);
 

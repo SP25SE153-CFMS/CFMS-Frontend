@@ -918,7 +918,7 @@ export function CreateTaskForm() {
                                                         defaultValue={field.value}
                                                     >
                                                         <FormControl>
-                                                            <SelectTrigger className="h-9 mt-1">
+                                                            <SelectTrigger className="h-auto mt-1">
                                                                 <SelectValue placeholder="Chọn vật phẩm" />
                                                             </SelectTrigger>
                                                         </FormControl>

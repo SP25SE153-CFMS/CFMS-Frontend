@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
     BellIcon,
@@ -19,6 +19,11 @@ import {
     Activity,
     X,
     Send,
+    Globe,
+    Sprout,
+    Ruler,
+    Code,
+    FileText,
 } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
@@ -57,12 +62,13 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { NotificationResponse } from '@/utils/types/custom.type';
-import { acceptInvitation, rejectInvitation } from '@/services/farm.service';
+import { acceptInvitation, getFarms, rejectInvitation } from '@/services/farm.service';
 import InfoItem from '../info-item';
 import dayjs from 'dayjs';
-import { userStatusLabels, userStatusVariant } from '@/utils/enum/status.enum';
+import { scaleLabels, userStatusLabels, userStatusVariant } from '@/utils/enum/status.enum';
 import { useSignalR } from '@/hooks';
 import { env } from '@/env';
+import { getAreaUnits } from '@/services/category.service';
 
 function Dot({ className }: { className?: string }) {
     return (
@@ -95,6 +101,17 @@ export default function Notification() {
                     new Date(b.createdWhen ?? 0).getTime() - new Date(a.createdWhen ?? 0).getTime(),
             );
         },
+    });
+
+    const { data: allFarms } = useQuery({
+        queryKey: ['allFarms'],
+        queryFn: getFarms,
+    });
+
+    // Get all area units
+    const { data: areaUnits } = useQuery({
+        queryKey: ['areaUnits'],
+        queryFn: () => getAreaUnits(),
     });
 
     // SignalR connection
@@ -137,6 +154,23 @@ export default function Notification() {
     // Count unread notifications (note: checking !isRead since true means it has been read)
     const unreadCount = notifications?.filter((n) => !n.isRead).length || 0;
     const totalCount = notifications?.length || 0;
+
+    const farm = useMemo(() => {
+        const farmCodeMatch = currentNotification?.content?.match(/trang trại (\w+)\s*\(/i);
+        if (farmCodeMatch && farmCodeMatch[1]) {
+            const farmCode = farmCodeMatch[1];
+            return allFarms?.find((farm) => farm.farmCode === farmCode);
+        } else {
+            return null;
+        }
+    }, [allFarms, notifications]);
+
+    const unit = useMemo(() => {
+        if (!areaUnits) return '';
+        const areaUnit = areaUnits?.find((unit) => unit.subCategoryId === farm?.areaUnitId);
+        console.log(areaUnit);
+        return areaUnit?.subCategoryName || '';
+    }, [areaUnits, farm]);
 
     const queryClient = useQueryClient();
 
@@ -462,83 +496,148 @@ export default function Notification() {
                                 'Vui lòng nhập mã trang trại để xác nhận tham gia.'}
                         </DialogDescription>
                     </DialogHeader>
-                    {currentNotification?.createdByUser && (
-                        <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4 shadow-md">
-                            {/* <div className="flex justify-between items-center mb-4">
+                    {/* Dialog for enroll farm */}
+                    {currentNotification?.notificationType === NotificationTypeEnum.ENROLL_FARM &&
+                        currentNotification?.createdByUser && (
+                            <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4 shadow-md">
+                                {/* <div className="flex justify-between items-center mb-4">
                                 <h3 className="font-bold pl-3 text-lg relative before:content-[''] before:absolute before:top-[3px] before:left-0 before:w-[4px] before:h-full before:bg-primary inline-block">
                                     Thông tin chi tiết
                                 </h3>
                             </div> */}
 
-                            <InfoItem
-                                label="Họ và tên"
-                                value={currentNotification.createdByUser?.fullName}
-                                icon={<Tag size={16} />}
-                            />
+                                <InfoItem
+                                    label="Họ và tên"
+                                    value={currentNotification.createdByUser?.fullName}
+                                    icon={<Tag size={16} />}
+                                />
 
-                            <InfoItem
-                                label="Số điện thoại"
-                                value={currentNotification.createdByUser?.phoneNumber || 'Không có'}
-                                icon={<Phone size={16} />}
-                            />
+                                <InfoItem
+                                    label="Số điện thoại"
+                                    value={
+                                        currentNotification.createdByUser?.phoneNumber || 'Không có'
+                                    }
+                                    icon={<Phone size={16} />}
+                                />
 
-                            <InfoItem
-                                label="Email"
-                                value={currentNotification.createdByUser?.mail}
-                                icon={<Mail size={16} />}
-                            />
+                                <InfoItem
+                                    label="Email"
+                                    value={currentNotification.createdByUser?.mail}
+                                    icon={<Mail size={16} />}
+                                />
 
-                            <InfoItem
-                                label="Ngày sinh"
-                                value={
-                                    currentNotification.createdByUser?.dateOfBirth
-                                        ? dayjs(
-                                              currentNotification.createdByUser?.dateOfBirth,
-                                          ).format('DD/MM/YYYY')
-                                        : 'Không có'
-                                }
-                                icon={<Calendar size={16} />}
-                            />
+                                <InfoItem
+                                    label="Ngày sinh"
+                                    value={
+                                        currentNotification.createdByUser?.dateOfBirth
+                                            ? dayjs(
+                                                  currentNotification.createdByUser?.dateOfBirth,
+                                              ).format('DD/MM/YYYY')
+                                            : 'Không có'
+                                    }
+                                    icon={<Calendar size={16} />}
+                                />
 
-                            <InfoItem
-                                label="Địa chỉ"
-                                value={currentNotification.createdByUser?.address || 'Không có'}
-                                icon={<MapPin size={16} />}
-                            />
+                                <InfoItem
+                                    label="Địa chỉ"
+                                    value={currentNotification.createdByUser?.address || 'Không có'}
+                                    icon={<MapPin size={16} />}
+                                />
 
-                            <InfoItem
-                                label="CCCD"
-                                value={currentNotification.createdByUser?.cccd || 'Không có'}
-                                icon={<IdCard size={16} />}
-                            />
+                                <InfoItem
+                                    label="CCCD"
+                                    value={currentNotification.createdByUser?.cccd || 'Không có'}
+                                    icon={<IdCard size={16} />}
+                                />
 
-                            <InfoItem
-                                label="Trạng thái"
-                                value={
-                                    <Badge
-                                        variant={
-                                            userStatusVariant[
-                                                currentNotification.createdByUser?.status
-                                            ]
-                                        }
-                                    >
-                                        {
-                                            userStatusLabels[
-                                                currentNotification.createdByUser?.status
-                                            ]
-                                        }
-                                    </Badge>
-                                }
-                                icon={<Activity size={16} />}
-                            />
+                                <InfoItem
+                                    label="Trạng thái"
+                                    value={
+                                        <Badge
+                                            variant={
+                                                userStatusVariant[
+                                                    currentNotification.createdByUser?.status
+                                                ]
+                                            }
+                                        >
+                                            {
+                                                userStatusLabels[
+                                                    currentNotification.createdByUser?.status
+                                                ]
+                                            }
+                                        </Badge>
+                                    }
+                                    icon={<Activity size={16} />}
+                                />
 
-                            {/* <InfoItem
+                                {/* <InfoItem
                                 label="Vai trò hệ thống"
                                 value={`Vai trò ${currentNotification.createdByUser?.systemRole}`}
                                 icon={<User size={16} />}
                             /> */}
-                        </div>
-                    )}
+                            </div>
+                        )}
+
+                    {/* Dialog for invite farm */}
+                    {currentNotification?.notificationType === NotificationTypeEnum.INVITE_FARM &&
+                        currentNotification?.createdByUser &&
+                        farm && (
+                            <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4 shadow-md">
+                                {/* <div className="flex justify-between items-center mb-4">
+                                <h3 className="font-bold pl-3 text-lg relative before:content-[''] before:absolute before:top-[3px] before:left-0 before:w-[4px] before:h-full before:bg-primary inline-block">
+                                    Thông tin chi tiết
+                                </h3>
+                            </div> */}
+
+                                <InfoItem
+                                    label="Tên trang trại"
+                                    value={farm?.farmName || 'Không có tên trang trại'}
+                                    icon={<FileText size={16} />}
+                                />
+
+                                <InfoItem
+                                    label="Mã trang trại"
+                                    value={farm?.farmCode || 'Không có mã trang trại'}
+                                    icon={<Code size={16} />}
+                                />
+
+                                <InfoItem
+                                    label="Địa chỉ"
+                                    value={farm?.address || 'Không có địa chỉ'}
+                                    icon={<MapPin size={16} />}
+                                />
+
+                                <InfoItem
+                                    label="Diện tích"
+                                    value={`${farm?.area || 0} ${unit}`}
+                                    icon={<Ruler size={16} />}
+                                />
+
+                                <InfoItem
+                                    label="Quy mô"
+                                    value={`${scaleLabels[farm?.scale]}`}
+                                    icon={<Sprout size={16} />}
+                                />
+
+                                <InfoItem
+                                    label="Số điện thoại"
+                                    value={farm?.phoneNumber || 'Không có số điện thoại'}
+                                    icon={<Phone size={16} />}
+                                />
+
+                                <InfoItem
+                                    label="Website"
+                                    value={farm?.website || 'Không có website'}
+                                    icon={<Globe size={16} />}
+                                />
+
+                                {/* <InfoItem
+                                label="Vai trò hệ thống"
+                                value={`Vai trò ${currentNotification.createdByUser?.systemRole}`}
+                                icon={<User size={16} />}
+                            /> */}
+                            </div>
+                        )}
                     <DialogFooter className="sm:justify-between">
                         <Button
                             type="button"
