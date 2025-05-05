@@ -6,6 +6,7 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import dayjs from 'dayjs';
 import { TaskLog } from '@/utils/schemas/task-log.schema';
 import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
+import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<TaskLog>[] = [
     {
@@ -45,22 +46,38 @@ export const columns: ColumnDef<TaskLog>[] = [
             return <div>{coop?.chickenCoopName || '-'}</div>;
         },
     },
+    // {
+    //     accessorKey: 'type',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Loại công việc" />,
+    //     cell: ({ row }) => <div>{row.getValue('type')}</div>,
+    // },
+    // {
+    //     accessorKey: 'startDate',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày bắt đầu" />,
+    //     cell: ({ row }) => <div>{dayjs(row.getValue('startDate')).format('DD/MM/YYYY')}</div>,
+    // },
     {
-        accessorKey: 'type',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại công việc" />,
-        cell: ({ row }) => <div>{row.getValue('type')}</div>,
-    },
-    {
-        accessorKey: 'startDate',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày bắt đầu" />,
-        cell: ({ row }) => <div>{dayjs(row.getValue('startDate')).format('DD/MM/YYYY')}</div>,
-    },
-    {
-        accessorKey: 'endDate',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày kết thúc" />,
+        accessorKey: 'completedAt',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày hoàn thành" />,
         cell: ({ row }) => {
-            const endDate = row.getValue('endDate') as Date;
-            return <div>{endDate ? dayjs(endDate).format('DD/MM/YYYY') : '-'}</div>;
+            const completedAt = row.getValue('completedAt') as Date;
+            return (
+                <div>
+                    {completedAt ? dayjs(completedAt).format('DD/MM/YYYY') : 'Chưa hoàn thành'}
+                </div>
+            );
         },
+    },
+    {
+        accessorKey: 'note',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Ghi chú" />,
+        cell: ({ row }) => {
+            const note = row.getValue('note') as string;
+            return <div>{note ? note : 'Không có ghi chú'}</div>;
+        },
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => <DataTableRowActions row={row} />,
     },
 ];

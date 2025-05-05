@@ -211,6 +211,15 @@ export type ShiftScheduleResponse = {
     endTime: string;
 };
 
+export type FeedLogFromTask = {
+    resourceId: string;
+    resourceName: string;
+    resourceCode: string;
+    unitSpecification: string;
+    actualQuantity: number;
+    note: string;
+};
+
 export type TaskResponse = Task & {
     assignments: AssignmentForTaskResponse[];
     startWorkDate: string;
@@ -219,6 +228,7 @@ export type TaskResponse = Task & {
     taskResources: TaskResourceResponse[];
     taskType: SubCategory;
     taskLocation: TaskLocationResponse;
+    feedLogs: FeedLogFromTask[];
 };
 
 export type ChickenDetailRequest = {
@@ -350,4 +360,8 @@ export type HealthLogDetails = {
 
 export type HealthLogRequest = CreateHealthLog & {
     healthLogDetails: HealthLogDetails[];
+};
+
+export type TaskLogResponse = TaskLog & {
+    task: TaskResponse;
 };

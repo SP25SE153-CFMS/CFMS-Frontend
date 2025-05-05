@@ -35,7 +35,7 @@ import { getEmployeesByFarmId } from '@/services/farm.service';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { Textarea } from '../ui/textarea';
-import { TaskStatus } from '@/utils/enum/status.enum';
+import { AssignmentRoleStatus, TaskStatus } from '@/utils/enum/status.enum';
 import { vi } from 'date-fns/locale';
 import { formatDate } from '@/utils/functions';
 import MultipleSelector from '../ui/multiselect';
@@ -102,6 +102,7 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
         onSuccess: () => {
             closeDialog();
             queryClient.invalidateQueries({ queryKey: ['assignments'] });
+            queryClient.invalidateQueries({ queryKey: ['task', taskId] });
             toast.success(
                 defaultValues ? 'Cập nhật phân công thành công' : 'Tạo phân công thành công',
             );
@@ -120,7 +121,9 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
 
     // Validate team leader count
     useEffect(() => {
-        const teamLeaderCount = assignedMembers.filter((member) => member.status === 0).length;
+        const teamLeaderCount = assignedMembers.filter(
+            (member) => member.status === AssignmentRoleStatus.TEAM_LEADER,
+        ).length;
 
         // if (assignedMembers.length > 0 && teamLeaderCount === 0) {
         //     setTeamLeaderError('Vui lòng chỉ định một Đội trưởng cho nhóm');
@@ -138,7 +141,9 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
     // Form submit handler
     async function onSubmit(values: any) {
         // Validate team leader count before submission
-        const teamLeaderCount = assignedMembers.filter((member) => member.status === 0).length;
+        const teamLeaderCount = assignedMembers.filter(
+            (member) => member.status === AssignmentRoleStatus.TEAM_LEADER,
+        ).length;
 
         if (teamLeaderCount !== 1) {
             if (teamLeaderCount === 0) {
@@ -197,13 +202,16 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
     };
 
     // Handle changing a member's role
-    const handleChangeRole = (memberId: string, newRole: number) => {
-        // If changing to Team Leader (status 0), first reset all other members to Employee (status 1)
-        if (newRole === 0) {
+    const handleChangeRole = (memberId: string, newRole: AssignmentRoleStatus) => {
+        // If changing to Team Leader (status 1), first reset all other members to Employee (status 0)
+        if (newRole === AssignmentRoleStatus.TEAM_LEADER) {
             setAssignedMembers((prev) =>
                 prev.map((member) => ({
                     ...member,
-                    status: member.assignedToId === memberId ? 0 : 1,
+                    status:
+                        member.assignedToId === memberId
+                            ? AssignmentRoleStatus.TEAM_LEADER
+                            : AssignmentRoleStatus.EMPLOYEE,
                 })),
             );
         } else {
@@ -392,8 +400,13 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                 <div className="flex justify-between items-center">
                                     <h3 className="text-sm font-medium">Vai trò trong nhóm</h3>
                                     <Badge variant="outline" className="bg-muted text-xs">
-                                        {assignedMembers.filter((m) => m.status === 0).length} / 1
-                                        Đội trưởng
+                                        {
+                                            assignedMembers.filter(
+                                                (m) =>
+                                                    m.status === AssignmentRoleStatus.TEAM_LEADER,
+                                            ).length
+                                        }{' '}
+                                        / 1 Đội trưởng
                                     </Badge>
                                 </div>
 
@@ -417,32 +430,46 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
                                             <div className="flex items-center gap-2">
                                                 <Badge
                                                     variant={
-                                                        member.status === 0 ? 'default' : 'outline'
+                                                        member.status ===
+                                                        AssignmentRoleStatus.TEAM_LEADER
+                                                            ? 'default'
+                                                            : 'outline'
                                                     }
                                                     className={cn(
                                                         'cursor-pointer hover:bg-primary/90',
-                                                        member.status === 0
+                                                        member.status ===
+                                                            AssignmentRoleStatus.TEAM_LEADER
                                                             ? 'bg-primary'
                                                             : 'bg-muted hover:text-primary-foreground',
                                                     )}
                                                     onClick={() =>
-                                                        handleChangeRole(member.assignedToId, 0)
+                                                        handleChangeRole(
+                                                            member.assignedToId,
+                                                            AssignmentRoleStatus.TEAM_LEADER,
+                                                        )
                                                     }
                                                 >
                                                     Đội trưởng
                                                 </Badge>
                                                 <Badge
                                                     variant={
-                                                        member.status === 1 ? 'default' : 'outline'
+                                                        member.status ===
+                                                        AssignmentRoleStatus.EMPLOYEE
+                                                            ? 'default'
+                                                            : 'outline'
                                                     }
                                                     className={cn(
                                                         'cursor-pointer hover:bg-primary/90',
-                                                        member.status === 1
+                                                        member.status ===
+                                                            AssignmentRoleStatus.EMPLOYEE
                                                             ? 'bg-primary'
                                                             : 'bg-muted hover:text-primary-foreground',
                                                     )}
                                                     onClick={() =>
-                                                        handleChangeRole(member.assignedToId, 1)
+                                                        handleChangeRole(
+                                                            member.assignedToId,
+                                                            AssignmentRoleStatus.EMPLOYEE,
+                                                        )
                                                     }
                                                 >
                                                     Nhân viên
