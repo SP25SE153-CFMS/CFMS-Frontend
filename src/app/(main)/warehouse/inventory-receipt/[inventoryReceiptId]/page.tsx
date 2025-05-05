@@ -32,7 +32,7 @@ export default function InventoryDetail() {
     const { inventoryReceiptId }: { inventoryReceiptId: string } = useParams();
 
     const { data: receipt, isLoading: isLoadingReceipts } = useQuery({
-        queryKey: ['receipts'],
+        queryKey: ['receipt'],
         queryFn: () => getReceiptById(inventoryReceiptId),
     });
 
@@ -101,8 +101,8 @@ export default function InventoryDetail() {
     };
 
     const handleCreateStockReceipt = () => {
-        router.push(`${config.routes.inventoryReceipt}/${inventoryReceiptId}/create`)
-    }
+        router.push(`${config.routes.inventoryReceipt}/${inventoryReceiptId}/create`);
+    };
 
     return (
         <div className="container mx-auto max-w-5xl py-6">
@@ -594,4 +594,3 @@ export default function InventoryDetail() {
         </div>
     );
 }
-
