@@ -1,7 +1,7 @@
 'use client';
 
 import SubCateDisplay from '@/components/badge/BadgeReceipt';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { getReceiptById } from '@/services/request.service';
@@ -9,7 +9,7 @@ import { getResources } from '@/services/resource.service';
 import type { User } from '@/utils/schemas/user.schema';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import {
     Calendar,
@@ -20,11 +20,14 @@ import {
     Stethoscope,
     Wrench,
     AlertCircle,
+    ArrowLeft,
 } from 'lucide-react';
 import { getSubBySubId } from '@/services/category.service';
 import { getWareById } from '@/services/warehouse.service';
+import { Button } from '@/components/ui/button';
 
 export default function InventoryDetail() {
+    const router = useRouter();
     const { inventoryReceiptId }: { inventoryReceiptId: string } = useParams();
 
     const { data: receipt, isLoading: isLoadingReceipts } = useQuery({
@@ -100,10 +103,20 @@ export default function InventoryDetail() {
         <div className="container mx-auto max-w-5xl py-6">
             <div className="mb-8 space-y-4">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <h1 className="text-2xl font-bold tracking-tight">
-                        Chi tiết phiếu: {''}
-                        {receipt.receiptCodeNumber}
-                    </h1>
+                    <div className="flex items-center">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => router.back()}
+                            className="hover:bg-slate-100"
+                        >
+                            <ArrowLeft className="h-4 w-4" />
+                        </Button>
+                        <h1 className="text-2xl font-bold tracking-tight">
+                            Chi tiết phiếu: {''}
+                            {receipt.receiptCodeNumber}
+                        </h1>
+                    </div>
                     <Badge
                         variant="outline"
                         className="w-fit border-2 px-3 py-1.5 text-sm font-medium"
@@ -565,4 +578,15 @@ export default function InventoryDetail() {
             </div>
         </div>
     );
+}
+
+{
+    /* <Button
+                                            className="w-full justify-start"
+                                            variant="outline"
+                                            onClick={handleCreateInventoryReceipt}
+                                        >
+                                            <FileText className="h-4 w-4 mr-2" />
+                                            Tạo phiếu nhập/xuất
+                                        </Button> */
 }

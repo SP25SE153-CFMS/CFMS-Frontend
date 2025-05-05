@@ -39,6 +39,7 @@ import { TaskRequest } from '../schemas/task-request.schema';
 import { InventoryRequest } from '../schemas/inventory-request.schema';
 import { InventoryRequestDetail } from '../schemas/inventory-request-detail.schema';
 import { Farm } from '../schemas/farm.schema';
+import { StockReceiptDetail } from '../schemas/stock-receipt-detail.schema';
 
 export type EntityAudit = {
     isDeleted: boolean;
@@ -353,3 +354,5 @@ export type HealthLogDetails = {
 export type HealthLogRequest = CreateHealthLog & {
     healthLogDetails: HealthLogDetails[];
 };
+
+export type StockReceipt = StockReceipt[] & StockReceiptDetail[];

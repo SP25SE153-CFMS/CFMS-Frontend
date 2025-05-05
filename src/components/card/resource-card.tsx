@@ -68,6 +68,8 @@ export default function ResourceCard({ resourceId }: ResourceCardProps) {
         if (resource.food) return 'Thực phẩm';
         if (resource.equipment) return 'Thiết bị';
         if (resource.medicine) return 'Thuốc';
+        // if (resource.breeding) return 'Giống gà';
+        // if (resource.harvestProduct) return 'Thu hoạch';
         return 'Sản phẩm';
     };
 
@@ -141,6 +143,23 @@ export default function ResourceCard({ resourceId }: ResourceCardProps) {
                         </div>
                     </div>
                 )}
+
+                {/* {resource.breeding && (
+                    <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm font-medium text-muted-foreground">
+                                Mã giống:
+                            </span>
+                            <span className="font-medium">{resource.breeding.chickenCode}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm font-medium text-muted-foreground">
+                                Tên giống gà:
+                            </span>
+                            <span>{resource.breeding.chickenName}</span>
+                        </div>
+                    </div>
+                )} */}
             </CardContent>
 
             <Separator />
