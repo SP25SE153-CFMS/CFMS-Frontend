@@ -36,7 +36,7 @@ export const getWareStockByResourceTypeId = async (wareId: string, resourceTypeI
 };
 
 export const getWareStockByResourceId = async (resourceId: string) => {
-    const endpoint = `${PREFIX}/warestocks/${resourceId}`;
+    const endpoint = `${PREFIX}/warestock/${resourceId}`;
     // const response = await get<Response<WareStockResponse[] | ResourceResponse[]>>(endpoint);
     const response = await get<Response<ResourceResponse>>(endpoint);
     return response.data.data;

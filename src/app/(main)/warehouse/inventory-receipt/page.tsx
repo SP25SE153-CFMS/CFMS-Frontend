@@ -21,27 +21,27 @@ export default function InventoryReceipt() {
         queryFn: () => getReceiptsByFarmId(farmId),
     });
 
-    useQuery({
-        queryKey: ['users'],
-        queryFn: async () => {
-            const users = await getUsers();
-            sessionStorage.setItem('users', JSON.stringify(users));
-            return users;
-        },
-    });
+    // useQuery({
+    //     queryKey: ['users'],
+    //     queryFn: async () => {
+    //         const users = await getUsers();
+    //         sessionStorage.setItem('users', JSON.stringify(users));
+    //         return users;
+    //     },
+    // });
 
-    const filteredReceipt = useMemo(() => {
-        if (!receipts) return [];
+    // const filteredReceipt = useMemo(() => {
+    //     if (!receipts) return [];
 
-        const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
+    //     const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
 
-        return receipts.filter((receipt) => {
-            const createdBy = users.find((user) => user.userId === receipt.createdByUserId);
-            return !!createdBy;
-        });
-    }, [receipts]);
+    //     return receipts.filter((receipt) => {
+    //         const createdBy = users.find((user) => user.userId === receipt.createdByUserId);
+    //         return !!createdBy;
+    //     });
+    // }, [receipts]);
 
-    // console.log('Toan bo receipt: ', receipts);
+    console.log('Toan bo receipt: ', receipts);
 
     if (isLoading) {
         return (
@@ -73,7 +73,8 @@ export default function InventoryReceipt() {
                 <p className="text-muted-foreground">Danh sách tất cả phiếu nhập/xuất nội bộ</p>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={filteredReceipt} columns={columns} />
+                <DataTable data={receipts} columns={columns} />
+                {/* <DataTable data={filteredReceipt} columns={columns} /> */}
             </div>
         </div>
     );

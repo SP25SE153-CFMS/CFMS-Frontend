@@ -2,7 +2,6 @@ import { Request } from '@/utils/schemas/request.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 import {
-    InventoryReceiptRequest,
     ReceiptResponse,
     RequestResponse,
 } from '@/utils/types/custom.type';

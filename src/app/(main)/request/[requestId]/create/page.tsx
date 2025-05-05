@@ -24,7 +24,6 @@ import {
 import {
     type CreateInventoryReceipt,
     CreateInventoryReceiptSchema,
-    InventoryReceipt,
 } from '@/utils/schemas/inventory-receipt.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -49,42 +48,29 @@ import { Badge } from '@/components/ui/badge';
 import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
 import { onError } from '@/utils/functions/form.function';
-import { getResources } from '@/services/resource.service';
-import { ReceiptResponse } from '@/utils/types/custom.type';
-
-// function getTotalActualQuantity(resourceId: string, inventoryReceipts: ReceiptResponse[]) {
-//     let total = 0;
-//     inventoryReceipts.forEach((receipt) => {
-//         receipt.inventoryReceiptDetails.forEach((detail) => {
-//             if (detail.resourceId === resourceId) {
-//                 total += detail.actualQuantity;
-//             }
-//         });
-//     });
-//     return total;
-// }
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 export default function RequestDetail() {
     const router = useRouter();
     const { requestId }: { requestId: string } = useParams();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showBatchList, setShowBatchList] = useState(false);
-    // const [openedBatchIndex, setOpenedBatchIndex] = useState<number | null>(null);
 
     const { data: requestDetail, isLoading: isLoadingRequest } = useQuery({
         queryKey: ['requestDetail', requestId],
         queryFn: () => getRequestById(requestId),
     });
 
+    const { data: receipts, isLoading: isLoadingReceipts } = useQuery({
+        queryKey: ['receipts'],
+        queryFn: () => getReceipts(),
+    });
+    console.log('Receipts:', receipts);
+
     const { data: subCate, isLoading: isLoadingSubCate } = useQuery({
         queryKey: ['subCate', requestDetail?.requestTypeId],
         queryFn: () => getSubBySubId(requestDetail?.requestTypeId as string),
         enabled: !!requestDetail?.requestTypeId,
-    });
-
-    const { data: receipts } = useQuery({
-        queryKey: ['receipts'],
-        queryFn: () => getReceipts(),
     });
 
     const subCategoryName = subCate?.subCategoryName;
@@ -119,10 +105,12 @@ export default function RequestDetail() {
                     subCate.subCategoryName === 'EXPORT'
                         ? (request?.wareFromId ?? undefined)
                         : undefined,
+
                 wareToId:
                     subCate.subCategoryName === 'IMPORT'
                         ? (request?.wareToId ?? undefined)
                         : undefined,
+
                 receiptTypeId: requestDetail.requestTypeId,
                 batchNumber: (request.inventoryReceipts.length || 0) + 1,
                 receiptDetails:
@@ -150,15 +138,53 @@ export default function RequestDetail() {
         },
     });
 
+    // const handleBatchNumberList = () => {
+    //     setShowBatchList(!showBatchList);
+    //     const receiptId = receipts?.filter((r) => r.inventoryReceiptId) || [];
+    //     console.log(receiptId);
+    // }
+
     const onSubmit = async (data: CreateInventoryReceipt) => {
+        const requestDetails = requestDetail?.inventoryRequests[0].inventoryRequestDetails;
+
+        // Kiểm tra actualQuantity không vượt quá expectedQuantity
+        const hasInvalidQuantity = data.receiptDetails.some((detail) => {
+            const expected =
+                requestDetails?.find((d) => d.resourceId === detail.resourceId)?.expectedQuantity ||
+                0;
+            return detail.actualQuantity > expected;
+        });
+
+        if (hasInvalidQuantity) {
+            toast.error('Số lượng thực tế không được vượt quá số lượng yêu cầu');
+            return;
+        }
+
         setIsSubmitting(true);
-        // console.log('Form data:', data);
-        await mutation.mutateAsync(data);
-        // setTimeout(() => {
-        //     setIsSubmitting(false);
-        //     // Show success message or redirect
-        // }, 1500);
+
+        // Làm sạch payload
+        const cleanPayload: CreateInventoryReceipt = {
+            ...data,
+            wareFromId: data.wareFromId || undefined,
+            wareToId: data.wareToId || undefined,
+            receiptDetails: data.receiptDetails.map((d) => ({
+                ...d,
+                note: d.note?.trim() || '',
+            })),
+        };
+
+        await mutation.mutateAsync(cleanPayload);
+        setIsSubmitting(false);
     };
+
+    if (isLoadingReceipts) {
+        return (
+            <div className="flex flex-col items-center justify-center h-[75vh] gap-4">
+                <LoadingSpinner />
+                <p className="text-muted-foreground animate-pulse">Đang tải dữ liệu...</p>
+            </div>
+        );
+    }
 
     if (isLoadingRequest || isLoadingSubCate) {
         return (
@@ -274,7 +300,11 @@ export default function RequestDetail() {
                                                     render={({ field }) => (
                                                         <>
                                                             {/* Ẩn input id để submit */}
-                                                            <input type="hidden" {...field} />
+                                                            <input
+                                                                type="hidden"
+                                                                {...field}
+                                                                value={field.value ?? ''}
+                                                            />
                                                             {/* Hiển thị tên kho */}
                                                             <FormLabel className="text-sm font-medium text-slate-700 m-0">
                                                                 {subCategoryName === 'IMPORT'
@@ -335,19 +365,30 @@ export default function RequestDetail() {
                                             {request.inventoryReceipts.length > 0 ? (
                                                 <div className="space-y-4">
                                                     {matchedReceipt.map((receipt) => {
+                                                        const matchedId =
+                                                            request.inventoryReceipts.find(
+                                                                (r) =>
+                                                                    r.inventoryReceiptId ===
+                                                                    receipt.inventoryReceiptId,
+                                                            );
+                                                        const matchedCode =
+                                                            matchedId?.receiptCodeNumber;
+                                                        console.log('Code: ', matchedCode);
                                                         return (
                                                             <div
                                                                 key={receipt.inventoryReceiptId}
                                                                 className="border-b pb-4 last:border-b-0 last:pb-0"
                                                             >
-                                                                <p className="font-medium text-sky-600 flex items-center gap-2 mb-2">
+                                                                <p className="font-medium text-sky-600 flex items-center gap-2">
                                                                     <Badge
                                                                         variant="outline"
                                                                         className="bg-sky-50 text-sky-600 border-sky-200 px-3 py-1"
                                                                     >
                                                                         Số lô: {receipt.batchNumber}
                                                                     </Badge>
+                                                                    <p>{matchedCode}</p>
                                                                 </p>
+
                                                                 <div className="pl-4 mt-3 space-y-2">
                                                                     {receipt.inventoryReceiptDetails.map(
                                                                         (receiptD) => {
@@ -416,26 +457,26 @@ export default function RequestDetail() {
                                 </div>
 
                                 {/* Chi tiết phiếu */}
-                                <div className="space-y-4">
-                                    <h2 className="text-xl font-semibold flex items-center gap-2 px-1 py-2 border-b border-slate-200">
-                                        <Clipboard className="h-5 w-5 text-sky-600" />
-                                        Chi tiết phiếu
-                                    </h2>
 
-                                    {request.inventoryRequestDetails.map((detail, index) => {
-                                        const totalActualQuantity = matchedReceipt
-                                            .flatMap((receipt) => receipt.inventoryReceiptDetails)
-                                            .filter((d) => d.resourceId === detail.resourceId)
-                                            .reduce((sum, d) => sum + d.actualQuantity, 0);
+                                {request.inventoryRequestDetails.map((detail, index) => {
+                                    const totalActualQuantity = matchedReceipt
+                                        .flatMap((receipt) => receipt.inventoryReceiptDetails)
+                                        .filter((d) => d.resourceId === detail.resourceId)
+                                        .reduce((sum, d) => sum + d.actualQuantity, 0);
 
-                                        const isDisabled =
-                                            totalActualQuantity >= detail.expectedQuantity;
-                                        // console.log('Total: ', isDisabled);
-                                        return (
-                                            <Card
-                                                key={detail.inventoryRequestDetailId}
-                                                className="overflow-hidden shadow-sm border-slate-200 hover:shadow-md transition-shadow duration-300"
-                                            >
+                                    const isDisabled =
+                                        totalActualQuantity >= detail.expectedQuantity;
+                                    return (
+                                        <div
+                                            className="space-y-4"
+                                            key={detail.inventoryRequestDetailId}
+                                        >
+                                            <h2 className="text-xl font-semibold flex items-center gap-2 px-1 py-2 border-b border-slate-200">
+                                                <Clipboard className="h-5 w-5 text-sky-600" />
+                                                Chi tiết phiếu
+                                            </h2>
+
+                                            <Card className="overflow-hidden shadow-sm border-slate-200 hover:shadow-md transition-shadow duration-300">
                                                 <CardHeader className="bg-gradient-to-r from-slate-50 to-white pb-2 border-b">
                                                     <div className="flex justify-between items-center">
                                                         <CardTitle className="text-base flex items-center gap-2 text-slate-800">
@@ -545,9 +586,9 @@ export default function RequestDetail() {
                                                     </div>
                                                 </CardContent>
                                             </Card>
-                                        );
-                                    })}
-                                </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         );
                     })}

@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import { DataTableRowActions } from './data-table-row-actions';
 import { User } from '@/utils/schemas/user.schema';
 import { getRequestType } from '@/utils/functions/category.function';
+import { getWareById } from '@/services/warehouse.service';
 
 export const columns: ColumnDef<InventoryReceipt>[] = [
     {
@@ -54,42 +55,19 @@ export const columns: ColumnDef<InventoryReceipt>[] = [
         cell: ({ row }) => <div>{String(row.getValue('receiptCodeNumber')).toUpperCase()}</div>,
     },
     // {
-    //     accessorKey: 'subcategoryName',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Danh mục" />,
-    //     cell: ({ row }) => <div>{row.getValue('subcategoryName')}</div>,
+    //     accessorKey: 'createdByUserId',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Tạo bởi" />,
+    //     cell: ({ row }) => {
+    //         const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
+    //         const createBy = users.find((user) => user.userId === row.getValue('createdByUserId'));
+    //         return <span>{createBy?.fullName ?? '-'}</span>;
+    //     },
     // },
-    {
-        accessorKey: 'createdByUserId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tạo bởi" />,
-        cell: ({ row }) => {
-            const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
-            const createBy = users.find((user) => user.userId === row.getValue('createdByUserId'));
-            return <span>{createBy?.fullName ?? '-'}</span>;
-        },
-    },
     {
         accessorKey: 'batchNumber',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Số lô" />,
         cell: ({ row }) => <div>{row.getValue('batchNumber')}</div>,
     },
-    {
-        accessorKey: 'createdWhen',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày tạo phiếu" />,
-        cell: ({ row }) => {
-            const date = new Date(row.getValue('createdWhen'));
-            return <div>{dayjs(date).format('DD/MM/YYYY')}</div>;
-        },
-    },
-    // {
-    //     accessorKey: 'status',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
-    //     cell: ({ row }) => {
-    //         const status = row.getValue('status') as string;
-    //         return (
-    //             <Badge variant={receiptStatusVariant[status]}>{receiptStatusLabels[status]}</Badge>
-    //         );
-    //     },
-    // },
     {
         id: 'action',
         cell: ({ row }) => <DataTableRowActions row={row} />,

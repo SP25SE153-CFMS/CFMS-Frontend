@@ -87,7 +87,7 @@ export default function SubCateDisplay({ id, mode }: SubCateDisplayProps) {
     } else if (mode === 'input') {
         return (
             <Input
-                readOnly
+                disabled
                 className="focus:ring-2 focus:ring-blue-500"
                 value={subCate.subCategoryName}
             />
