@@ -1734,7 +1734,7 @@ export const flockNutritions: FlockNutrition[] = [
 export const inventoryReceipts: InventoryReceipt[] = [
     {
         inventoryReceiptId: '550e8400-e29b-41d4-a716-446655440000',
-        inventoryCode: 'INV1234567890',
+        receiptCodeNumber: 'INV1234567890',
         inventoryRequestId: '660e8400-e29b-41d4-a716-446655440001',
         receiptTypeId: '770e8400-e29b-41d4-a716-446655440002',
         subcategoryName: 'Nhập',
@@ -1746,7 +1746,7 @@ export const inventoryReceipts: InventoryReceipt[] = [
     },
     {
         inventoryReceiptId: '550e8400-e29b-41d4-a716-446655440088',
-        inventoryCode: 'INV1234567888',
+        receiptCodeNumber: 'INV1234567888',
         inventoryRequestId: '660e8400-e29b-41d4-a716-446655440001',
         receiptTypeId: '770e8400-e29b-41d4-a716-446655440002',
         subcategoryName: 'Nhập',
@@ -1758,7 +1758,7 @@ export const inventoryReceipts: InventoryReceipt[] = [
     },
     {
         inventoryReceiptId: '660e8400-e29b-41d4-a716-446655440006',
-        inventoryCode: 'INV0987654321',
+        receiptCodeNumber: 'INV0987654321',
         inventoryRequestId: '770e8400-e29b-41d4-a716-446655440007',
         receiptTypeId: '880e8400-e29b-41d4-a716-446655440008',
         subcategoryName: 'Xuất',
