@@ -68,7 +68,7 @@ export default function InventoryDetail() {
         const createdBy = users?.find((user) => user.userId === receipt.userId);
 
         return createdBy?.fullName || '';
-    }, [receipt]);
+    }, [receipt, users]);
 
     if (isLoadingReceipts || isLoadingResources) {
         return (

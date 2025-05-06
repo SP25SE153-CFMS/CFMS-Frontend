@@ -1,5 +1,5 @@
 import { CreateStockReceipt } from '@/utils/schemas/stock-receipt.schema';
-import { get, post, put, remove } from '@/utils/functions/axios.function';
+import { post, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 
 const PREFIX = '/api/StockReceipt';

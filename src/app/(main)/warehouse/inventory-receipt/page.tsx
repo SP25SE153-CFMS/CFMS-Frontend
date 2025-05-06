@@ -18,7 +18,7 @@ export default function InventoryReceipt() {
         queryFn: () => getReceiptsByFarmId(farmId),
     });
 
-    console.log('Toan bo receipt: ', receipts);
+    // console.log('Toan bo receipt: ', receipts);
 
     if (isLoading) {
         return (
