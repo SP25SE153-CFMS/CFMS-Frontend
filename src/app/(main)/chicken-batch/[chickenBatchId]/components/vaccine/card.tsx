@@ -14,7 +14,7 @@ export default function CardVaccineLog({ vaccineLogs }: { vaccineLogs: Vaccinati
                     <div>
                         <h2 className="text-xl font-bold tracking-tight">Lịch sử tiêm phòng</h2>
                         <p className="text-muted-foreground">
-                            Danh sách lịch sử tiêm phòng của đàn gà
+                            Danh sách lịch sử tiêm phòng của lứa nuôi
                         </p>
                     </div>
                     <div className="flex gap-2">

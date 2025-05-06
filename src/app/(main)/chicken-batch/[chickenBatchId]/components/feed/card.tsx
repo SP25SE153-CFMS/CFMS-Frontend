@@ -13,7 +13,9 @@ export default function CardFeedLog({ feedLogs }: { feedLogs: FeedLog[] }) {
                 <div className="flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                     <div>
                         <h2 className="text-xl font-bold tracking-tight">Nhật ký cho ăn</h2>
-                        <p className="text-muted-foreground">Danh sách nhật ký cho ăn của đàn gà</p>
+                        <p className="text-muted-foreground">
+                            Danh sách nhật ký cho ăn của lứa nuôi
+                        </p>
                     </div>
                     <div className="flex gap-2">
                         <Button

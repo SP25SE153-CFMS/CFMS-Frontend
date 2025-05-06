@@ -25,7 +25,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { wareStatusLabels, wareStatusVariant } from '@/utils/enum/status.enum';
 import { getWareByFarmId } from '@/services/warehouse.service';
-import type { WareStockResponse } from '@/utils/types/custom.type';
+import type { WarehouseResponse } from '@/utils/types/custom.type';
 import config from '@/configs';
 import {
     Dialog,
@@ -41,14 +41,14 @@ import InfoItem from '@/components/info-item';
 
 export default function Ware() {
     const [open, setOpen] = useState(false);
-    const [updateWare, setUpdateWare] = useState<WareStockResponse | undefined>(undefined);
+    const [updateWare, setUpdateWare] = useState<WarehouseResponse | undefined>(undefined);
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
 
     const router = useRouter();
     const farmId = getCookie(config.cookies.farmId) ?? '';
 
-    const { data: wares = [], isLoading } = useQuery<WareStockResponse[]>({
+    const { data: wares = [], isLoading } = useQuery({
         queryKey: ['wares', farmId],
         queryFn: async () => {
             const wares = await getWareByFarmId(farmId as string);

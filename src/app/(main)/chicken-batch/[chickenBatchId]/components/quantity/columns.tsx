@@ -35,17 +35,17 @@ export const columns: ColumnDef<QuantityLog>[] = [
     },
     {
         accessorKey: 'logDate',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày Nhật Ký" />,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày nhật ký" />,
         cell: ({ row }) => <div>{dayjs(row.getValue('logDate')).format('DD/MM/YYYY')}</div>,
     },
     {
         accessorKey: 'quantity',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Số Lượng" />,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng" />,
         cell: ({ row }) => <div>{row.getValue('quantity') + ' con'}</div>,
     },
     {
         accessorKey: 'logType',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại Nhật Ký" />,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại" />,
         cell: ({ row }) => {
             const logType = row.getValue('logType') as number;
             return <div>{quantityLogStatusLabels[logType]}</div>;
@@ -53,7 +53,7 @@ export const columns: ColumnDef<QuantityLog>[] = [
     },
     {
         accessorKey: 'notes',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ghi Chú" />,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Ghi chú" />,
         cell: ({ row }) => <div>{row.getValue('notes') || 'Không có ghi chú'}</div>,
     },
     // {

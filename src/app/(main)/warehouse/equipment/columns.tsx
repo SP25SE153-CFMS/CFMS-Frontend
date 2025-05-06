@@ -6,6 +6,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { DataTableRowActions } from './data-table-row-actions';
 import { WareStockResponse } from '@/utils/types/custom.type';
+import Link from 'next/link';
+import config from '@/configs';
 
 export const columns: ColumnDef<WareStockResponse>[] = [
     {
@@ -89,6 +91,25 @@ export const columns: ColumnDef<WareStockResponse>[] = [
         accessorKey: 'unitSpecification',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Quy cách tính" />,
         cell: ({ row }) => <div>{row.getValue('unitSpecification')}</div>,
+    },
+    {
+        accessorKey: 'currentSupplierId', // Ensure the data exists in the row
+        header: () => null, // No header
+        cell: () => null, // Hidden cell
+    },
+    {
+        accessorKey: 'currentSupplierName',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Nhà cung cấp" />,
+        cell: ({ row }) => {
+            const currentSupplierId = row.getValue('currentSupplierId') as string;
+            return currentSupplierId ? (
+                <Link href={`${config.routes.supplier}/${currentSupplierId}`}>
+                    {row.getValue('currentSupplierName')}
+                </Link>
+            ) : (
+                <div className="text-muted-foreground">Chưa có nhà cung cấp</div>
+            );
+        },
     },
     {
         id: 'actions',

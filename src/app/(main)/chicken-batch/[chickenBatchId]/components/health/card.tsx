@@ -30,7 +30,7 @@ export default function CardHealthLog({ healthLogs }: { healthLogs: HealthLog[] 
                     <div>
                         <h2 className="text-xl font-bold tracking-tight">Nhật ký sức khỏe</h2>
                         <p className="text-muted-foreground">
-                            Danh sách nhật ký sức khỏe của đàn gà
+                            Danh sách nhật ký sức khỏe của lứa nuôi
                         </p>
                     </div>
                     <div className="flex gap-2">

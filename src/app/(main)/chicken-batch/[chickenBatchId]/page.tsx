@@ -4,6 +4,7 @@ import {
     AlertCircle,
     BarChart3,
     Calendar,
+    ChevronLeft,
     ClipboardList,
     Database,
     Egg,
@@ -17,7 +18,7 @@ import {
     TrendingUp,
     Type,
 } from 'lucide-react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -57,6 +58,7 @@ import { getCookie } from 'cookies-next';
 import config from '@/configs';
 
 export default function Page() {
+    const router = useRouter();
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
 
     const [openSplit, setOpenSplit] = useState(false);
@@ -142,6 +144,11 @@ export default function Page() {
                     Thông tin lứa nuôi
                     <span className="text-primary ml-2">{chickenBatch.chickenBatchName}</span>
                 </h1>
+
+                <Button variant="outline" onClick={() => router.push(config.routes.task)}>
+                    <ChevronLeft className="h-4 w-4" />
+                    Quay lại
+                </Button>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 my-6">
                 <div className="flex flex-col gap-4">
@@ -373,7 +380,7 @@ export default function Page() {
                                     Chỉ số kỹ thuật
                                 </h2>
                                 <p className="text-muted-foreground text-sm">
-                                    Theo dõi các chỉ số kỹ thuật quan trọng của chuồng nuôi
+                                    Theo dõi các chỉ số kỹ thuật quan trọng của lứa nuôi
                                 </p>
                             </div>
                             <div className="flex flex-wrap justify-between">

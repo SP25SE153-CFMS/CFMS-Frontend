@@ -8,7 +8,7 @@ const routes = {
     farmRegister: '/farm/register',
     breadingArea: '/breeding-area',
     chickenCoop: '/chicken-coop',
-    equipment: '/equipment',
+    equipment: '/warehouse/equipment',
     flock: '/flock',
     request: '/request',
     createRequest: '/request/create',
