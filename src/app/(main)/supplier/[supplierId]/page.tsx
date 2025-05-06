@@ -153,7 +153,7 @@ export default function ResourceSuppliers() {
 
             <Tabs defaultValue="all" className="w-full flex-1 flex flex-col">
                 <TabsList
-                    className={`mb-4 w-full grid ${
+                    className={`mb-4 w-full grid! ${
                         // Calculate grid columns based on visible tabs
                         `grid-cols-${
                             1 + // All tab
@@ -165,31 +165,31 @@ export default function ResourceSuppliers() {
                         }`
                     } h-auto p-1`}
                 >
-                    <TabsTrigger value="all" className="text-sm py-2">
+                    <TabsTrigger value="all" className="text-sm py-2 flex flex-1">
                         Tất cả ({resources.length})
                     </TabsTrigger>
                     {foodResources.length > 0 && (
-                        <TabsTrigger value="food" className="text-sm py-2">
+                        <TabsTrigger value="food" className="text-sm py-2 flex flex-1">
                             Thực phẩm ({foodResources.length})
                         </TabsTrigger>
                     )}
                     {medicineResources.length > 0 && (
-                        <TabsTrigger value="medicine" className="text-sm py-2">
+                        <TabsTrigger value="medicine" className="text-sm py-2 flex flex-1">
                             Dược phẩm ({medicineResources.length})
                         </TabsTrigger>
                     )}
                     {equipmentResources.length > 0 && (
-                        <TabsTrigger value="equipment" className="text-sm py-2">
+                        <TabsTrigger value="equipment" className="text-sm py-2 flex flex-1">
                             Thiết bị ({equipmentResources.length})
                         </TabsTrigger>
                     )}
                     {breedingResources.length > 0 && (
-                        <TabsTrigger value="breeding" className="text-sm py-2">
+                        <TabsTrigger value="breeding" className="text-sm py-2 flex flex-1">
                             Giống gà ({breedingResources.length})
                         </TabsTrigger>
                     )}
                     {otherResources.length > 0 && (
-                        <TabsTrigger value="other" className="text-sm py-2">
+                        <TabsTrigger value="other" className="text-sm py-2 flex flex-1">
                             Khác ({otherResources.length})
                         </TabsTrigger>
                     )}
