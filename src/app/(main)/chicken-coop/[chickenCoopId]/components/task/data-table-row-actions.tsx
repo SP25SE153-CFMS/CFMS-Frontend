@@ -99,7 +99,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                             label="Ngày kết thúc"
                             value={
                                 task?.endWorkDate
-                                    ? dayjs(task.endWorkDate).format('DD/MM/YYYY HH:mm:ss')
+                                    ? dayjs(task.endWorkDate).format('DD/MM/YYYY HH:mm')
                                     : 'Không có ngày kết thúc'
                             }
                             icon={<Calendar size={16} />}

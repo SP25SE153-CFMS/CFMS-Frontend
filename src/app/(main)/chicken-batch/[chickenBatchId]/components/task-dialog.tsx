@@ -34,10 +34,6 @@ export default function TaskDialog({ open, onOpenChange, taskId }: TaskDialogPro
         }
     }, [taskId]);
 
-    if (!task) {
-        return <h1>Không tìm thấy công việc</h1>;
-    }
-
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
@@ -47,55 +43,61 @@ export default function TaskDialog({ open, onOpenChange, taskId }: TaskDialogPro
                         Dưới đây là các thông tin chi tiết của công việc.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="flex flex-col">
-                    <InfoItem
-                        label="Tên công việc"
-                        value={task?.taskName || 'Không có tên công việc'}
-                        icon={<FileText size={16} />}
-                    />
+                {task ? (
+                    <div className="flex flex-col">
+                        <InfoItem
+                            label="Tên công việc"
+                            value={task?.taskName || 'Không có tên công việc'}
+                            icon={<FileText size={16} />}
+                        />
 
-                    <InfoItem
-                        label="Loại công việc"
-                        value={getTaskType(task?.taskTypeId) || 'Không có'}
-                        icon={<Type size={16} />}
-                    />
+                        <InfoItem
+                            label="Loại công việc"
+                            value={getTaskType(task?.taskTypeId) || 'Không có'}
+                            icon={<Type size={16} />}
+                        />
 
-                    <InfoItem
-                        label="Mô tả"
-                        value={task?.description || 'Không có mô tả'}
-                        icon={<Info size={16} />}
-                    />
+                        <InfoItem
+                            label="Mô tả"
+                            value={task?.description || 'Không có mô tả'}
+                            icon={<Info size={16} />}
+                        />
 
-                    <InfoItem
-                        label="Trạng thái"
-                        value={taskStatusLabels[task?.status] || 'Không có'}
-                        icon={<Clock size={16} />}
-                    />
+                        <InfoItem
+                            label="Trạng thái"
+                            value={taskStatusLabels[task?.status] || 'Không có'}
+                            icon={<Clock size={16} />}
+                        />
 
-                    <InfoItem
-                        label="Ngày bắt đầu"
-                        value={
-                            task?.startWorkDate
-                                ? dayjs(task.startWorkDate).format('DD/MM/YYYY')
-                                : 'Không có ngày bắt đầu'
-                        }
-                        icon={<Calendar size={16} />}
-                    />
+                        <InfoItem
+                            label="Ngày bắt đầu"
+                            value={
+                                task?.startWorkDate
+                                    ? dayjs(task.startWorkDate).format('DD/MM/YYYY HH:mm')
+                                    : 'Không có ngày bắt đầu'
+                            }
+                            icon={<Calendar size={16} />}
+                        />
 
-                    <InfoItem
-                        label="Ngày kết thúc"
-                        value={
-                            task?.endWorkDate
-                                ? dayjs(task.endWorkDate).format('DD/MM/YYYY HH:mm:ss')
-                                : 'Không có ngày kết thúc'
-                        }
-                        icon={<Calendar size={16} />}
-                    />
+                        <InfoItem
+                            label="Ngày kết thúc"
+                            value={
+                                task?.endWorkDate
+                                    ? dayjs(task.endWorkDate).format('DD/MM/YYYY HH:mm')
+                                    : 'Không có ngày kết thúc'
+                            }
+                            icon={<Calendar size={16} />}
+                        />
 
-                    <Link href={`${config.routes.task}/${task?.taskId}`} className="mt-4">
-                        <Button className="w-full">Xem chi tiết</Button>
-                    </Link>
-                </div>
+                        <Link href={`${config.routes.task}/${task?.taskId}`} className="mt-4">
+                            <Button className="w-full">Xem chi tiết</Button>
+                        </Link>
+                    </div>
+                ) : (
+                    <div className="flex items-center justify-center h-20 text-sm text-muted-foreground">
+                        Không tìm thấy công việc
+                    </div>
+                )}
             </DialogContent>
         </Dialog>
     );

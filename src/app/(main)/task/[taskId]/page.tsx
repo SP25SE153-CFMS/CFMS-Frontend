@@ -483,7 +483,7 @@ export default function TaskDetail() {
                         <CardContent className="pt-4">
                             <InfoItem
                                 label="Ghi chú"
-                                value={task.assignments?.[0]?.note || ''}
+                                value={task.assignments?.[0]?.note || 'Không có ghi chú'}
                                 icon={<Notebook size={16} />}
                             />
                             {task.assignments && task.assignments.length ? (

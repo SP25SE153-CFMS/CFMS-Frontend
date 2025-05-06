@@ -6,6 +6,9 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import { FeedLog } from '@/utils/schemas/feed-log.schema';
 import { DataTableRowActions } from './data-table-row-actions';
 import dayjs from 'dayjs';
+import { useQuery } from '@tanstack/react-query';
+import { getUnits } from '@/services/category.service';
+import { getWeightUnit } from '@/utils/functions/category.function';
 
 export const columns: ColumnDef<FeedLog>[] = [
     {
@@ -34,7 +37,7 @@ export const columns: ColumnDef<FeedLog>[] = [
     },
     {
         accessorKey: 'feedingDate',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày Cho Ăn" />,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày cho ăn" />,
         cell: ({ row }) => (
             <div>{dayjs(row.getValue('feedingDate')).format('DD/MM/YYYY HH:mm')}</div>
         ),
@@ -42,18 +45,27 @@ export const columns: ColumnDef<FeedLog>[] = [
     {
         accessorKey: 'actualFeedAmount',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Lượng Thức Ăn Thực Tế" />
+            <DataTableColumnHeader column={column} title="Lượng thức ăn thực tế" />
         ),
-        cell: ({ row }) => <div>{row.getValue('actualFeedAmount')}</div>,
+        cell: ({ row }) => {
+            const actualFeedAmount = row.getValue('actualFeedAmount') as number;
+            const unitId = row.getValue('unitId') as string;
+
+            return (
+                <div>
+                    {actualFeedAmount} {getWeightUnit(unitId)}
+                </div>
+            );
+        },
     },
     {
-        accessorKey: 'unitId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Đơn Vị" />,
-        cell: ({ row }) => <div>{row.getValue('unitId')}</div>,
+        accessorKey: 'unitId', // Ensure the data exists in the row
+        header: () => null, // No header
+        cell: () => null, // Hidden cell
     },
     {
         accessorKey: 'note',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ghi Chú" />,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Ghi chú" />,
         cell: ({ row }) => <div>{row.getValue('note') || 'Không có ghi chú'}</div>,
     },
     {

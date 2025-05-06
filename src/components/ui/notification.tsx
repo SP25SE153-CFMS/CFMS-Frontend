@@ -168,7 +168,6 @@ export default function Notification() {
     const unit = useMemo(() => {
         if (!areaUnits) return '';
         const areaUnit = areaUnits?.find((unit) => unit.subCategoryId === farm?.areaUnitId);
-        console.log(areaUnit);
         return areaUnit?.subCategoryName || '';
     }, [areaUnits, farm]);
 
