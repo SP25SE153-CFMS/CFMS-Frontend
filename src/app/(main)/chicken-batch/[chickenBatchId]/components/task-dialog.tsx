@@ -11,10 +11,11 @@ import { useEffect, useState } from 'react';
 import { Calendar, Clock, FileText, Info, Type } from 'lucide-react';
 import { getTaskType } from '@/utils/functions/category.function';
 import dayjs from 'dayjs';
-import { taskStatusLabels } from '@/utils/enum/status.enum';
+import { taskStatusLabels, taskStatusVariant } from '@/utils/enum/status.enum';
 import Link from 'next/link';
 import config from '@/configs';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 interface TaskDialogProps {
     open: boolean;
@@ -65,7 +66,11 @@ export default function TaskDialog({ open, onOpenChange, taskId }: TaskDialogPro
 
                         <InfoItem
                             label="Trạng thái"
-                            value={taskStatusLabels[task?.status] || 'Không có'}
+                            value={
+                                <Badge variant={taskStatusVariant[task?.status]}>
+                                    {taskStatusLabels[task?.status]}
+                                </Badge>
+                            }
                             icon={<Clock size={16} />}
                         />
 
