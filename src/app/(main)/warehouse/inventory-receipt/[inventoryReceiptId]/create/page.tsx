@@ -17,8 +17,8 @@ import {
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+    CreateStockReceipt,
     CreateStockReceiptSchema,
-    type CreateStockReceipt,
 } from '@/utils/schemas/stock-receipt.schema';
 import { Button } from '@/components/ui/button';
 import { getWareByFarmId } from '@/services/warehouse.service';
@@ -31,7 +31,7 @@ import { onError } from '@/utils/functions/form.function';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
-export default function CreateStockReceipt() {
+export default function StockReceiptCreate() {
     const router = useRouter();
     const farmId = getCookie('farmId') ?? '';
     const [unitLabels, setUnitLabels] = useState<Record<number, string | null>>({});

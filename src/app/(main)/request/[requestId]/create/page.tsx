@@ -122,7 +122,7 @@ export default function RequestDetail() {
                     })) || [],
             });
         }
-    }, [requestDetail, subCate]);
+    }, [requestDetail, subCate, form, requestId]);
 
     const queryClient = useQueryClient();
 
