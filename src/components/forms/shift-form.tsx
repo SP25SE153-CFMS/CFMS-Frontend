@@ -62,6 +62,12 @@ export default function ShiftForm({ defaultValues, closeDialog }: ShiftFormProps
 
     // Form submit handler
     async function onSubmit(values: Shift) {
+        const storedShifts: Shift[] = JSON.parse(sessionStorage.getItem('shifts') || '[]');
+        const duplicaeShift = storedShifts?.find((shift) => shift.shiftName === values.shiftName);
+        if (duplicaeShift) {
+            toast('Tên ca làm việc đã tồn tại', { icon: '⚠️' });
+            return;
+        }
         mutation.mutate(values);
     }
 
