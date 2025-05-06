@@ -1,17 +1,12 @@
 'use client';
 
-import SubCateDisplay, { ResourceDisplay } from '@/components/badge/BadgeReceipt';
 import InfoItem from '@/components/info-item';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { getReceiptById } from '@/services/request.service';
-import { getResources } from '@/services/resource.service';
 import { useQuery } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
-import { ArrowLeft, House, Info } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
-import { getSuppliersByFarmId } from '@/services/supplier.service';
+import { ArrowLeft, CheckCircle2, House, XCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import {
     Select,
     SelectContent,
@@ -21,7 +16,6 @@ import {
 } from '@/components/ui/select';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     CreateStockReceiptSchema,
     type CreateStockReceipt,
@@ -30,11 +24,18 @@ import { Button } from '@/components/ui/button';
 import { getWareByFarmId, getWarestockResourceByFarm } from '@/services/warehouse.service';
 import SelectCate from '@/components/select/category-select';
 import SelectResources from '@/components/select/resources-select';
+import { useState } from 'react';
+import { Supplier } from '@/utils/schemas/supplier.schema';
+import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
+import { onError } from '@/utils/functions/form.function';
 
 export default function CreateStockReceipt() {
     const router = useRouter();
     const farmId = getCookie('farmId') ?? '';
-    const { inventoryReceiptId }: { inventoryReceiptId: string } = useParams();
+    const [unitLabels, setUnitLabels] = useState<Record<number, string | null>>({});
+    const [supplierOptionsMap, setSupplierOptionsMap] = useState<Record<number, Supplier[]>>({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { data: wares } = useQuery({
         queryKey: ['wares', farmId],
@@ -42,16 +43,6 @@ export default function CreateStockReceipt() {
         enabled: !!farmId,
     });
     // console.log('Ware by farm: ', wares);
-
-    const { data: resources } = useQuery({
-        queryKey: ['resources'],
-        queryFn: () => getWarestockResourceByFarm('all'),
-    });
-
-    // const { data: suppliers } = useQuery({
-    //     queryKey: ['suppliers', farmId],
-    //     queryFn: () => getSuppliersByFarmId(farmId),
-    // });
 
     const form = useForm<CreateStockReceipt>({
         resolver: zodResolver(CreateStockReceiptSchema),
@@ -78,6 +69,7 @@ export default function CreateStockReceipt() {
 
     const onSubmit = (values: CreateStockReceipt) => {
         console.log('Form Submitted:', values);
+        setIsSubmitting(false);
         // TODO: Gọi API tạo phiếu nhập tại đây
     };
 
@@ -111,7 +103,7 @@ export default function CreateStockReceipt() {
             </div>
 
             <Form {...form}>
-                <form>
+                <form onSubmit={form.handleSubmit(onSubmit, onError)}>
                     <div>
                         <div className="space-y-2">
                             <FormLabel>Chọn loại: </FormLabel>
@@ -159,6 +151,7 @@ export default function CreateStockReceipt() {
                                             `stockReceiptDetails.${index}.toWareId`,
                                         );
                                         const receiptTypeId = form.watch('receiptTypeId'); // từ SelectCate
+
                                         // console.log('Ware id truyền vào: ', wareId);
                                         // console.log('Receipt id truyền vào: ', receiptTypeId);
                                         return (
@@ -170,6 +163,23 @@ export default function CreateStockReceipt() {
                                                     onSelect={(resourceId) => {
                                                         // console.log('Resource Id: ', resourceId);
                                                         resourceField.onChange(resourceId);
+                                                        // Reset lại supplier khi chọn lại resource mới
+                                                        form.setValue(
+                                                            `stockReceiptDetails.${index}.supplierId`,
+                                                            '',
+                                                        );
+                                                    }}
+                                                    onUnitChange={(unit) => {
+                                                        setUnitLabels((prev) => ({
+                                                            ...prev,
+                                                            [index]: unit,
+                                                        })); // chỉ hiển thị đơn vị
+                                                    }}
+                                                    onSupplierOptionsChange={(suppliers) => {
+                                                        setSupplierOptionsMap((prev) => ({
+                                                            ...prev,
+                                                            [index]: suppliers,
+                                                        }));
                                                     }}
                                                 />
                                             </FormItem>
@@ -204,10 +214,70 @@ export default function CreateStockReceipt() {
                                     )}
                                 />
                                 {/* Unit */}
-
+                                <div>
+                                    <FormLabel>Đơn vị: </FormLabel>
+                                    {unitLabels[index] ? unitLabels[index] : ''}
+                                </div>
                                 {/* Nhà cung cấp */}
+                                <FormItem>
+                                    <FormLabel>Nhà cung cấp:</FormLabel>
+                                    <Select
+                                        onValueChange={(val) => {
+                                            form.setValue(
+                                                `stockReceiptDetails.${index}.supplierId`,
+                                                val,
+                                            );
+                                        }}
+                                        value={form.watch(
+                                            `stockReceiptDetails.${index}.supplierId`,
+                                        )}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Chọn nhà cung cấp..." />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {supplierOptionsMap[index]?.map((s) => (
+                                                <SelectItem key={s.supplierId} value={s.supplierId}>
+                                                    {s.supplierName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormItem>
                             </div>
                         ))}
+                    </div>
+
+                    <Separator className="my-8" />
+
+                    <div className="flex justify-end gap-4  bottom-0 bg-white p-4 rounded-b-lg shadow-lg">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => router.back()}
+                            disabled={isSubmitting}
+                            className="border-slate-300 hover:bg-slate-100 hover:text-slate-900"
+                        >
+                            <XCircle className="mr-2 h-4 w-4 text-slate-600" />
+                            Hủy
+                        </Button>
+                        <Button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800"
+                        >
+                            {isSubmitting ? (
+                                <>
+                                    <Skeleton className="h-4 w-4 rounded-full mr-2" />
+                                    Đang xử lý...
+                                </>
+                            ) : (
+                                <>
+                                    <CheckCircle2 className="mr-2 h-4 w-4" />
+                                    Tạo đơn
+                                </>
+                            )}
+                        </Button>
                     </div>
                 </form>
             </Form>

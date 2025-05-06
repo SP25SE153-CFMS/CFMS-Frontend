@@ -40,6 +40,7 @@ import { InventoryRequest } from '../schemas/inventory-request.schema';
 import { InventoryRequestDetail } from '../schemas/inventory-request-detail.schema';
 import { Farm } from '../schemas/farm.schema';
 import { StockReceiptDetail } from '../schemas/stock-receipt-detail.schema';
+import { Supplier } from '../schemas/supplier.schema';
 
 export type EntityAudit = {
     isDeleted: boolean;
@@ -262,6 +263,7 @@ export type WareStockResponse = Warehouse &
         resourceTypeName: string;
         resourceId: string;
         disease: string;
+        suppliersName: Supplier[];
     };
 
 export type WarestockResourceByType = Food &
