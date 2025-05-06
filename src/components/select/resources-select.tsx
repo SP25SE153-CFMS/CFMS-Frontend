@@ -55,12 +55,6 @@ export default function SelectResources({
 
     return (
         <div className="space-y-2">
-            <label
-                htmlFor="resource-select"
-                className="text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
-                Tài nguyên
-            </label>
             <div className="relative">
                 <Select onValueChange={handleSelectResource}>
                     <SelectTrigger

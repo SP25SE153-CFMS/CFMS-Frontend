@@ -4,11 +4,9 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import { Checkbox } from '@/components/ui/checkbox';
 import { InventoryReceipt } from '@/utils/schemas/inventory-receipt.schema';
 import { ColumnDef } from '@tanstack/react-table';
-import dayjs from 'dayjs';
+
 import { DataTableRowActions } from './data-table-row-actions';
-import { User } from '@/utils/schemas/user.schema';
 import { getRequestType } from '@/utils/functions/category.function';
-import { getWareById } from '@/services/warehouse.service';
 
 export const columns: ColumnDef<InventoryReceipt>[] = [
     {
@@ -54,15 +52,6 @@ export const columns: ColumnDef<InventoryReceipt>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mã phiếu" />,
         cell: ({ row }) => <div>{String(row.getValue('receiptCodeNumber')).toUpperCase()}</div>,
     },
-    // {
-    //     accessorKey: 'createdByUserId',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Tạo bởi" />,
-    //     cell: ({ row }) => {
-    //         const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
-    //         const createBy = users.find((user) => user.userId === row.getValue('createdByUserId'));
-    //         return <span>{createBy?.fullName ?? '-'}</span>;
-    //     },
-    // },
     {
         accessorKey: 'batchNumber',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Số lô" />,

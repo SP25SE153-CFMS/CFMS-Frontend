@@ -1,12 +1,11 @@
 'use client';
 
 import SubCateDisplay from '@/components/badge/BadgeReceipt';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent,  CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { getReceiptById } from '@/services/request.service';
 import { getResources } from '@/services/resource.service';
-import type { User } from '@/utils/schemas/user.schema';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useParams, useRouter } from 'next/navigation';
