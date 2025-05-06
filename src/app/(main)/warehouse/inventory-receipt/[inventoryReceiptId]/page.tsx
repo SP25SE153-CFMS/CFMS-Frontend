@@ -24,7 +24,6 @@ import {
 import { getSubBySubId } from '@/services/category.service';
 import { getWareById } from '@/services/warehouse.service';
 import { Button } from '@/components/ui/button';
-import config from '@/configs';
 import { getUsers } from '@/services/user.service';
 
 export default function InventoryDetail() {
@@ -99,10 +98,6 @@ export default function InventoryDetail() {
     const getWareType = () => {
         if (subCateName === 'IMPORT') return <p className="text-sm text-gray-500">Kho nhập</p>;
         if (subCateName === 'EXPORT') return <p className="text-sm text-gray-500">Kho xuất</p>;
-    };
-
-    const handleCreateStockReceipt = () => {
-        router.push(`${config.routes.inventoryReceipt}/${inventoryReceiptId}/create`);
     };
 
     return (
@@ -581,17 +576,7 @@ export default function InventoryDetail() {
                     })}
                 </div>
             </div>
-            <Separator />
-            <div className="flex justify-end gap-4 bottom-0 bg-white p-4 ">
-                <Button
-                    className="border-slate-300 hover:bg-slate-100 hover:text-slate-900 rounded-b-lg shadow-lg"
-                    variant="outline"
-                    onClick={handleCreateStockReceipt}
-                >
-                    <FileText className="h-4 w-4 mr-2" />
-                    Tạo đơn hàng
-                </Button>
-            </div>
+           
         </div>
     );
 }

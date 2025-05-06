@@ -589,7 +589,7 @@ export default function RequestDetail() {
 
                     <Separator className="my-8" />
 
-                    <div className="flex justify-end gap-4 sticky bottom-0 bg-white p-4 border-t rounded-b-lg shadow-lg">
+                    <div className="flex justify-end gap-4 sticky bottom-0 bg-white p-4 rounded-b-lg shadow-lg">
                         <Button
                             type="button"
                             variant="outline"

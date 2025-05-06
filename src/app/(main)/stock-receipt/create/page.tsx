@@ -1,35 +1,28 @@
 'use client';
 
-import InfoItem from '@/components/info-item';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { useQuery } from '@tanstack/react-query';
-import { getCookie } from 'cookies-next';
-import { ArrowLeft, CheckCircle2, HomeIcon as House, Plus, Trash2, XCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-    CreateStockReceipt,
-    CreateStockReceiptSchema,
-} from '@/utils/schemas/stock-receipt.schema';
-import { Button } from '@/components/ui/button';
-import { getWareByFarmId } from '@/services/warehouse.service';
-import SelectCate from '@/components/select/category-select';
-import SelectResources from '@/components/select/resources-select';
-import { useState } from 'react';
-import type { Supplier } from '@/utils/schemas/supplier.schema';
-import { Skeleton } from '@/components/ui/skeleton';
-import { onError } from '@/utils/functions/form.function';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import InfoItem from "@/components/info-item";
+import SelectCate from "@/components/select/category-select";
+import SelectResources from "@/components/select/resources-select";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getWareByFarmId } from "@/services/warehouse.service";
+import { onError } from "@/utils/functions/form.function";
+import { CreateStockReceipt, CreateStockReceiptSchema } from "@/utils/schemas/stock-receipt.schema";
+import { Supplier } from "@/utils/schemas/supplier.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
+import { getCookie } from "cookies-next";
+import { ArrowLeft, CheckCircle2, House, Plus, Trash2, XCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+
+
 
 export default function StockReceiptCreate() {
     const router = useRouter();

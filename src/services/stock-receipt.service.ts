@@ -4,17 +4,17 @@ import { Response } from '@/utils/types';
 
 const PREFIX = '/api/StockReceipt';
 
-export const getStockReceiptById = async (id: string) => {
-    const endpoint = PREFIX + '/' + id;
-    // const response = await get<Response<>>(endpoint);
-    // return response.data.data;
-};
+// export const getStockReceiptById = async (id: string) => {
+//     const endpoint = PREFIX + '/' + id;
+//     const response = await get<Response<>>(endpoint);
+//     return response.data.data;
+// };
 
-export const getStockReceiptByFarmId = async (farmId: string) => {
-    const endpoint = PREFIX + '/Farm/' + farmId;
-    // const response = await get<Response<>>(endpoint);
-    // return response.data.data;
-};
+// export const getStockReceiptByFarmId = async (farmId: string) => {
+//     const endpoint = PREFIX + '/Farm/' + farmId;
+//     const response = await get<Response<>>(endpoint);
+//     return response.data.data;
+// };
 
 export const createStockReceipt = async (body: CreateStockReceipt) => {
     const endpoint = PREFIX;
