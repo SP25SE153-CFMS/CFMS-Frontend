@@ -6,8 +6,6 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import { FeedLog } from '@/utils/schemas/feed-log.schema';
 import { DataTableRowActions } from './data-table-row-actions';
 import dayjs from 'dayjs';
-import { useQuery } from '@tanstack/react-query';
-import { getUnits } from '@/services/category.service';
 import { getWeightUnit } from '@/utils/functions/category.function';
 
 export const columns: ColumnDef<FeedLog>[] = [
