@@ -16,6 +16,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getFarmById } from '@/services/farm.service';
 import { getWareByFarmId } from '@/services/warehouse.service';
 import { onError } from '@/utils/functions/form.function';
 import { CreateStockReceipt, CreateStockReceiptSchema } from '@/utils/schemas/stock-receipt.schema';
@@ -38,6 +39,12 @@ export default function StockReceiptCreate() {
     const { data: wares, isLoading: waresLoading } = useQuery({
         queryKey: ['wares', farmId],
         queryFn: () => getWareByFarmId(farmId),
+        enabled: !!farmId,
+    });
+
+    const { data: farm } = useQuery({
+        queryKey: ['farm', farmId],
+        queryFn: () => getFarmById(farmId),
         enabled: !!farmId,
     });
 
@@ -91,10 +98,7 @@ export default function StockReceiptCreate() {
                 <div className="flex items-center">
                     <InfoItem
                         label="Trang trại"
-                        value={
-                            JSON.parse(sessionStorage.getItem('activeFarm') || '{}')?.farmName ||
-                            '-'
-                        }
+                        value={farm?.farmName}
                         icon={<House size={16} className="text-emerald-600" />}
                         className="bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2 shadow-sm"
                     />
