@@ -1,9 +1,13 @@
+'use client';
+
 import { getWareStockByResourceTypeId } from '@/services/warehouse.service';
 import { useQuery } from '@tanstack/react-query';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { getSubBySubId } from '@/services/category.service';
 import { useState } from 'react';
-import { Supplier } from '@/utils/schemas/supplier.schema';
+import type { Supplier } from '@/utils/schemas/supplier.schema';
+import { Loader2, Package } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 type SelectResourcesProps = {
     wareId: string;
@@ -50,54 +54,90 @@ export default function SelectResources({
     };
 
     return (
-        <div>
-            <Select onValueChange={handleSelectResource}>
-                <SelectTrigger>
-                    <SelectValue placeholder="Chọn tài nguyên.." />
-                </SelectTrigger>
-                <SelectContent>
-                    {resources?.map((r) => {
-                        const resourceId = r.resourceId;
+        <div className="space-y-2">
+            <label
+                htmlFor="resource-select"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+                Tài nguyên
+            </label>
+            <div className="relative">
+                <Select onValueChange={handleSelectResource}>
+                    <SelectTrigger
+                        id="resource-select"
+                        className={cn(
+                            'w-full transition-all duration-200 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary/20',
+                            'hover:border-primary/50 dark:hover:border-primary/50',
+                            'h-10 px-3 py-2',
+                        )}
+                    >
+                        <div className="flex items-center gap-2">
+                            {isLoadingSupplier ? (
+                                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                            ) : (
+                                <Package className="h-4 w-4 text-muted-foreground" />
+                            )}
+                            <SelectValue
+                                placeholder={
+                                    isLoadingSupplier ? 'Đang tải...' : 'Chọn tài nguyên..'
+                                }
+                                className="text-sm"
+                            />
+                        </div>
+                    </SelectTrigger>
+                    <SelectContent
+                        className="max-h-[300px] overflow-y-auto border-gray-200 dark:border-gray-700 shadow-lg"
+                        position="popper"
+                        align="start"
+                        sideOffset={4}
+                    >
+                        {resources.length === 0 && !isLoadingSupplier ? (
+                            <div className="py-6 text-center text-sm text-muted-foreground">
+                                Không có tài nguyên nào
+                            </div>
+                        ) : (
+                            resources?.map((r) => {
+                                const resourceId = r.resourceId;
+                                let displayName = '(Không xác định loại)';
 
-                        if (subName === 'food') {
-                            return (
-                                <SelectItem key={resourceId} value={resourceId}>
-                                    {r.foodName}
-                                </SelectItem>
-                            );
-                        }
-                        if (subName === 'equipment') {
-                            return (
-                                <SelectItem key={resourceId} value={resourceId}>
-                                    {r.equipmentName}
-                                </SelectItem>
-                            );
-                        }
+                                if (subName === 'food') {
+                                    displayName = r.foodName;
+                                } else if (subName === 'equipment') {
+                                    displayName = r.equipmentName;
+                                } else if (subName === 'medicine') {
+                                    displayName = r.medicineName;
+                                } else if (subName === 'breeding') {
+                                    displayName = r.chickenName;
+                                }
 
-                        if (subName === 'medicine') {
-                            return (
-                                <SelectItem key={resourceId} value={resourceId}>
-                                    {r.medicineName}
-                                </SelectItem>
-                            );
-                        }
-
-                        if (subName === 'breeding') {
-                            return (
-                                <SelectItem key={resourceId} value={resourceId}>
-                                    {r.chickenName}
-                                </SelectItem>
-                            );
-                        }
-
-                        return (
-                            <SelectItem key={resourceId} value={resourceId}>
-                                (Không xác định loại)
-                            </SelectItem>
-                        );
-                    })}
-                </SelectContent>
-            </Select>
+                                return (
+                                    <SelectItem
+                                        key={resourceId}
+                                        value={resourceId}
+                                        className="cursor-pointer hover:bg-muted/50 focus:bg-muted/50 py-2"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-medium">{displayName}</span>
+                                            {r.unitSpecification && (
+                                                <span className="text-xs text-muted-foreground">
+                                                    ({r.unitSpecification})
+                                                </span>
+                                            )}
+                                        </div>
+                                    </SelectItem>
+                                );
+                            })
+                        )}
+                    </SelectContent>
+                </Select>
+                {selectedResource && (
+                    <div className="mt-1 text-xs text-muted-foreground">
+                        {selectedResource.unitSpecification && (
+                            <span>Đơn vị: {selectedResource.unitSpecification}</span>
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

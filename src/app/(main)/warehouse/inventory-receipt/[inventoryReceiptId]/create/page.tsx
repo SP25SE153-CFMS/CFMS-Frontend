@@ -156,7 +156,6 @@ export default function CreateStockReceipt() {
                                         // console.log('Receipt id truyền vào: ', receiptTypeId);
                                         return (
                                             <FormItem>
-                                                <FormLabel>Tài nguyên</FormLabel>
                                                 <SelectResources
                                                     wareId={wareId}
                                                     resourceTypeId={receiptTypeId}
