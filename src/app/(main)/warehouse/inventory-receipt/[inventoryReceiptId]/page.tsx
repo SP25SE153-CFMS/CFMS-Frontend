@@ -26,6 +26,7 @@ import { getSubBySubId } from '@/services/category.service';
 import { getWareById } from '@/services/warehouse.service';
 import { Button } from '@/components/ui/button';
 import config from '@/configs';
+import { getUsers } from '@/services/user.service';
 
 export default function InventoryDetail() {
     const router = useRouter();
@@ -40,11 +41,17 @@ export default function InventoryDetail() {
         queryKey: ['resources'],
         queryFn: () => getResources(),
     });
+    // console.log("Resource: ",resources);
 
     const { data: subCate } = useQuery({
         queryKey: ['subCate', receipt?.receiptTypeId],
         queryFn: () => getSubBySubId(receipt?.receiptTypeId as string),
         enabled: !!receipt?.receiptTypeId,
+    });
+
+    const { data: users } = useQuery({
+        queryKey: ['users'],
+        queryFn: () => getUsers(),
     });
 
     const subCateName = subCate?.subCategoryName;
@@ -57,15 +64,10 @@ export default function InventoryDetail() {
         enabled: !!warehouseId,
     });
 
-    // const getWareById = (id: string) => {
-    //     const ware
-    // }
-
     const createdByName = useMemo(() => {
         if (!receipt) return '';
 
-        const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
-        const createdBy = users.find((user) => user.userId === receipt.userId);
+        const createdBy = users?.find((user) => user.userId === receipt.userId);
 
         return createdBy?.fullName || '';
     }, [receipt]);

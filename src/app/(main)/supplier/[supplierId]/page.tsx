@@ -153,7 +153,7 @@ export default function ResourceSuppliers() {
 
             <Tabs defaultValue="all" className="w-full flex-1 flex flex-col">
                 <TabsList
-                    className={`mb-4 mx-auto w-fit grid ${
+                    className={`mb-4 w-full grid ${
                         // Calculate grid columns based on visible tabs
                         `grid-cols-${
                             1 + // All tab
@@ -165,21 +165,21 @@ export default function ResourceSuppliers() {
                         }`
                     } h-auto p-1`}
                 >
-                    <TabsTrigger value="all" className="text-sm py-2 px-16">
+                    <TabsTrigger value="all" className="text-sm py-2">
                         Tất cả ({resources.length})
                     </TabsTrigger>
                     {foodResources.length > 0 && (
-                        <TabsTrigger value="food" className="text-sm py-2 px-16">
+                        <TabsTrigger value="food" className="text-sm py-2">
                             Thực phẩm ({foodResources.length})
                         </TabsTrigger>
                     )}
                     {medicineResources.length > 0 && (
-                        <TabsTrigger value="medicine" className="text-sm py-2 px-16">
+                        <TabsTrigger value="medicine" className="text-sm py-2">
                             Dược phẩm ({medicineResources.length})
                         </TabsTrigger>
                     )}
                     {equipmentResources.length > 0 && (
-                        <TabsTrigger value="equipment" className="text-sm py-2 px-16">
+                        <TabsTrigger value="equipment" className="text-sm py-2">
                             Thiết bị ({equipmentResources.length})
                         </TabsTrigger>
                     )}
@@ -189,7 +189,7 @@ export default function ResourceSuppliers() {
                         </TabsTrigger>
                     )}
                     {otherResources.length > 0 && (
-                        <TabsTrigger value="other" className="text-sm py-2 px-16">
+                        <TabsTrigger value="other" className="text-sm py-2">
                             Khác ({otherResources.length})
                         </TabsTrigger>
                     )}
