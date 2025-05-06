@@ -59,7 +59,6 @@ import {
     Trash2,
     Users,
 } from 'lucide-react';
-
 import { cn } from '@/lib/utils';
 import { CategoryType } from '@/utils/enum/category.enum';
 import { getSubCategoryByCategoryType, getTaskType } from '@/utils/functions/category.function';
