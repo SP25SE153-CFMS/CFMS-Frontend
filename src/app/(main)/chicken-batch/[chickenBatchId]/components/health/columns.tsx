@@ -35,16 +35,14 @@ export const columns: ColumnDef<HealthLog>[] = [
     {
         accessorKey: 'startDate',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày Bắt Đầu" />,
-        cell: ({ row }) => <div>{dayjs(row.getValue('startDate')).format('DD/MM/YYYY HH:mm')}</div>,
+        cell: ({ row }) => <div>{dayjs(row.getValue('startDate')).format('DD/MM/YYYY')}</div>,
     },
     {
         accessorKey: 'endDate',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày Kết Thúc" />,
         cell: ({ row }) => {
             const endDate = row.getValue('endDate') as string | null;
-            return (
-                <div>{endDate ? dayjs(endDate).format('DD/MM/YYYY HH:mm') : 'Chưa kết thúc'}</div>
-            );
+            return <div>{endDate ? dayjs(endDate).format('DD/MM/YYYY') : 'Chưa kết thúc'}</div>;
         },
     },
     {
@@ -59,11 +57,11 @@ export const columns: ColumnDef<HealthLog>[] = [
         ),
         cell: ({ row }) => <div>{dayjs(row.getValue('checkedAt')).format('DD/MM/YYYY HH:mm')}</div>,
     },
-    {
-        accessorKey: 'location',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Vị Trí" />,
-        cell: ({ row }) => <div>{row.getValue('location') || 'Không có vị trí'}</div>,
-    },
+    // {
+    //     accessorKey: 'location',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Vị Trí" />,
+    //     cell: ({ row }) => <div>{row.getValue('location') || 'Không có vị trí'}</div>,
+    // },
     {
         id: 'actions',
         cell: ({ row }) => <DataTableRowActions row={row} />,

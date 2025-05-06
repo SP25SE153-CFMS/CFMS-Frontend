@@ -38,10 +38,10 @@ export const columns: ColumnDef<SystemConfig>[] = [
         header: () => null,
         cell: () => null,
     },
-    {
-        accessorKey: 'settingName',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tên cấu hình" />,
-    },
+    // {
+    //     accessorKey: 'settingName',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Tên cấu hình" />,
+    // },
     {
         accessorKey: 'settingValue',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Giá trị" />,

@@ -6,7 +6,7 @@ import { Download } from 'lucide-react';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { VaccinationLog } from '@/utils/schemas/vaccine.schema';
 
-export default function CardVaccinationLog({ vaccineLogs }: { vaccineLogs: VaccinationLog[] }) {
+export default function CardVaccineLog({ vaccineLogs }: { vaccineLogs: VaccinationLog[] }) {
     return (
         <div>
             <Card className="p-6 mb-4">

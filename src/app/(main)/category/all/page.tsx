@@ -10,12 +10,23 @@ import { getCategories } from '@/services/category.service';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
+import { useState } from 'react';
+import { Input } from '@/components/ui/input';
 
 export default function Page() {
     const { data: categories, isLoading } = useQuery({
         queryKey: ['categories'],
         queryFn: () => getCategories(),
     });
+
+    const [searchQuery, setSearchQuery] = useState('');
+
+    // Filter categories based on the search query
+    const filteredCategories = categories?.filter(
+        (category) =>
+            category.categoryName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            category.categoryType.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
 
     // Check if categories is loading
     if (isLoading) {
@@ -56,6 +67,12 @@ export default function Page() {
                     </p>
                 </div>
                 <div className="flex gap-2">
+                    <Input
+                        placeholder="Tìm kiếm danh mục theo tên, loại..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-72"
+                    />
                     <Button
                         variant="outline"
                         className="space-x-1"
@@ -66,7 +83,7 @@ export default function Page() {
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={categories} columns={columns} />
+                <DataTable data={filteredCategories || []} columns={columns} />
             </div>
         </div>
     );

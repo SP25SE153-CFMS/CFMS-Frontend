@@ -79,6 +79,7 @@ export type QuantityLogDetails = {
 
 export type QuantityLogResponse = QuantityLog & {
     quantityLogDetails: QuantityLogDetails[];
+    taskId: string;
 };
 
 export type ChickenBatchResponse = ChickenBatch &
@@ -364,4 +365,9 @@ export type HealthLogRequest = CreateHealthLog & {
 
 export type TaskLogResponse = TaskLog & {
     task: TaskResponse;
+};
+
+export type HealthLogResponse = HealthLog & {
+    healthLogDetails: HealthLogDetails[];
+    taskId: string;
 };

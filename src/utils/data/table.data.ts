@@ -1311,6 +1311,7 @@ export const vaccinationLogs: VaccinationLog[] = [
         updatedAt: new Date(),
         vaccineId: vaccines[0].vaccineId,
         flockId: flocks[0].flockId,
+        taskId: '',
     },
     {
         vLogId: 'a1b2c3d4-e5f6-4789-9abc-def123456702',
@@ -1324,6 +1325,7 @@ export const vaccinationLogs: VaccinationLog[] = [
         updatedAt: new Date(),
         vaccineId: vaccines[1].vaccineId,
         flockId: flocks[1].flockId,
+        taskId: '',
     },
     {
         vLogId: 'a1b2c3d4-e5f6-4789-9abc-def123456703',
@@ -1337,6 +1339,7 @@ export const vaccinationLogs: VaccinationLog[] = [
         updatedAt: new Date(),
         vaccineId: vaccines[2].vaccineId,
         flockId: flocks[2].flockId,
+        taskId: '',
     },
     {
         vLogId: 'a1b2c3d4-e5f6-4789-9abc-def123456704',
@@ -1350,6 +1353,7 @@ export const vaccinationLogs: VaccinationLog[] = [
         updatedAt: new Date(),
         vaccineId: vaccines[1].vaccineId,
         flockId: flocks[3].flockId,
+        taskId: '',
     },
     {
         vLogId: 'a1b2c3d4-e5f6-4789-9abc-def123456705',
@@ -1363,6 +1367,7 @@ export const vaccinationLogs: VaccinationLog[] = [
         updatedAt: new Date(),
         vaccineId: vaccines[0].vaccineId,
         flockId: flocks[4].flockId,
+        taskId: '',
     },
 ];
 

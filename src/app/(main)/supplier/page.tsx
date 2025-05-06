@@ -81,7 +81,7 @@ export default function Supplier() {
                     <span>Thêm</span> <Plus size={18} />
                 </Button>
                 <Dialog open={openDialog} onOpenChange={onOpenChange}>
-                    <DialogContent>
+                    <DialogContent className="max-w-xl">
                         <DialogHeader>
                             <DialogTitle className="font-semibold">Thêm nhà cung cấp</DialogTitle>
                             <DialogDescription>Nhập đầy đủ thông tin dưới.</DialogDescription>

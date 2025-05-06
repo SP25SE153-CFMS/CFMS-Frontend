@@ -24,7 +24,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { chickenBatchStatusLabels, chickenBatchStatusVariant } from '@/utils/enum/status.enum';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import CardVaccinationLog from './components/vaccine/card';
+import CardVaccineLog from './components/vaccine/card';
 import { getChickenBatchById } from '@/services/chicken-batch.service';
 import { useQuery } from '@tanstack/react-query';
 import CardNutritionPlan from './components/nutrition/card';
@@ -52,6 +52,9 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { calculateDuration } from '@/utils/functions';
 import ExportChickenForm from '@/components/forms/export-chicken-form';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { getTasksByFarmId } from '@/services/task.service';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
 
 export default function Page() {
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
@@ -67,6 +70,17 @@ export default function Page() {
             return data;
         },
         enabled: !!chickenBatchId,
+    });
+
+    const farmId = getCookie(config.cookies.farmId) as string;
+
+    useQuery({
+        queryKey: ['tasks'],
+        queryFn: async () => {
+            const tasks = await getTasksByFarmId(farmId);
+            sessionStorage.setItem('tasks', JSON.stringify(tasks));
+            return tasks;
+        },
     });
 
     const chicken = chickenBatch?.chicken;
@@ -391,7 +405,7 @@ export default function Page() {
                             <TabsTrigger value="feed">Lịch sử cho ăn</TabsTrigger>
                         </TabsList>
                         <TabsContent value="vaccine">
-                            <CardVaccinationLog vaccineLogs={chickenBatch?.vaccineLogs} />
+                            <CardVaccineLog vaccineLogs={chickenBatch?.vaccineLogs} />
                         </TabsContent>
                         <TabsContent value="health">
                             <CardHealthLog healthLogs={chickenBatch?.healthLogs} />

@@ -34,12 +34,14 @@ import { quantityLogStatusLabels } from '@/utils/enum/status.enum';
 import { QuantityLogResponse } from '@/utils/types/custom.type';
 import { chickenGenderLabels } from '@/utils/enum/gender.enum';
 import { formatDate } from '@/utils/functions';
+import TaskDialog from '../task-dialog';
 
 interface Props<T> {
     row: Row<T>;
 }
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
+    const [openTask, setOpenTask] = useState(false);
     const [openDetails, setOpenDetails] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
@@ -65,9 +67,12 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         <span className="sr-only">Mở menu</span>
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[160px]">
+                <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => setOpenTask(true)}>
+                        Xem công việc
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpenDetails(true)}>
-                        Xem chi tiết
+                        Xem chi tiết nhật ký
                     </DropdownMenuItem>
                     {/* <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                         Cập nhật
@@ -79,21 +84,8 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Update Dialog */}
-            {/* <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Cập nhật lịch sử số lượng</DialogTitle>
-                        <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
-                    </DialogHeader>
-                    <ScrollArea className="max-h-[600px]">
-                        <VaccinationLogForm
-                            closeDialog={() => setOpenUpdate(false)}
-                            defaultValues={row.original as VaccinationLog}
-                        />
-                    </ScrollArea>
-                </DialogContent>
-            </Dialog> */}
+            {/* Task Dialog */}
+            <TaskDialog open={openTask} onOpenChange={setOpenTask} taskId={quantityLog.taskId} />
 
             {/* Details Dialog */}
             <Dialog open={openDetails} onOpenChange={setOpenDetails}>

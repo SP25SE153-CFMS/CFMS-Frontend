@@ -4,7 +4,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { VaccinationLog } from '@/utils/schemas/vaccine.schema';
-import { vaccines } from '@/utils/data/table.data';
 import { DataTableRowActions } from './data-table-row-actions';
 import {
     VaccinationLogStatus,
@@ -47,25 +46,25 @@ export const columns: ColumnDef<VaccinationLog>[] = [
     //         return <div>{flock?.name || 'Không xác định'}</div>;
     //     },
     // },
-    {
-        accessorKey: 'vaccineId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Vắc-xin" />,
-        cell: ({ row }) => {
-            const vaccineId = row.getValue('vaccineId');
-            const vaccine = vaccines.find((vaccine) => vaccine.vaccineId === vaccineId);
-            return <div>{vaccine?.name || 'Không xác định'}</div>;
-        },
-    },
-    {
-        accessorKey: 'dosage',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Liều lượng" />,
-        cell: ({ row }) => <div>{row.getValue('dosage')}</div>,
-    },
-    {
-        accessorKey: 'quantity',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng" />,
-        cell: ({ row }) => <div>{row.getValue('quantity')}</div>,
-    },
+    // {
+    //     accessorKey: 'vaccineId',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Vắc-xin" />,
+    //     cell: ({ row }) => {
+    //         const vaccineId = row.getValue('vaccineId');
+    //         const vaccine = vaccines.find((vaccine) => vaccine.vaccineId === vaccineId);
+    //         return <div>{vaccine?.name || 'Không xác định'}</div>;
+    //     },
+    // },
+    // {
+    //     accessorKey: 'dosage',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Liều lượng" />,
+    //     cell: ({ row }) => <div>{row.getValue('dosage')}</div>,
+    // },
+    // {
+    //     accessorKey: 'quantity',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng" />,
+    //     cell: ({ row }) => <div>{row.getValue('quantity')}</div>,
+    // },
     {
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
@@ -82,6 +81,11 @@ export const columns: ColumnDef<VaccinationLog>[] = [
         accessorKey: 'reaction',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Phản ứng" />,
         cell: ({ row }) => <div>{row.getValue('reaction') || 'Không có'}</div>,
+    },
+    {
+        accessorKey: 'notes',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Ghi chú" />,
+        cell: ({ row }) => <div>{row.getValue('notes') || 'Không có ghi chú'}</div>,
     },
     // {
     //     accessorKey: 'createdAt',

@@ -6,6 +6,7 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Trash } from 'lucide-react';
@@ -21,12 +22,14 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { FeedLog } from '@/utils/schemas/feed-log.schema';
 import { deleteFeedLog } from '@/services/feed-log.service';
+import TaskDialog from '../task-dialog';
 
 interface Props<T> {
     row: Row<T>;
 }
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
+    const [openTask, setOpenTask] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
     const feedLog = row.original as FeedLog;
@@ -52,31 +55,18 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    {/* <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
-                        Cập nhật
+                    <DropdownMenuItem onClick={() => setOpenTask(true)}>
+                        Xem công việc
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator /> */}
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
                         Xóa <Trash size={16} className="ml-auto" />
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Update Dialog */}
-            {/* <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Cập nhật lịch cho ăn</DialogTitle>
-                        <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
-                    </DialogHeader>
-                    <ScrollArea className="max-h-[600px]">
-                        <VaccinationLogForm
-                            closeDialog={() => setOpenUpdate(false)}
-                            defaultValues={row.original as VaccinationLog}
-                        />
-                    </ScrollArea>
-                </DialogContent>
-            </Dialog> */}
+            {/* Task Dialog */}
+            <TaskDialog open={openTask} onOpenChange={setOpenTask} taskId={feedLog.taskId} />
 
             {/* Delete Confirmation Dialog */}
             <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>

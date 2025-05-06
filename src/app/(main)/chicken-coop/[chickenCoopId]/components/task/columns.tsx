@@ -5,8 +5,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import dayjs from 'dayjs';
 import { TaskLog } from '@/utils/schemas/task-log.schema';
-import { ChickenCoop } from '@/utils/schemas/chicken-coop.schema';
 import { DataTableRowActions } from './data-table-row-actions';
+import { TaskResponse } from '@/utils/types/custom.type';
 
 export const columns: ColumnDef<TaskLog>[] = [
     {
@@ -33,19 +33,19 @@ export const columns: ColumnDef<TaskLog>[] = [
         enableSorting: false,
         enableHiding: false,
     },
-    {
-        accessorKey: 'chickenCoopId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Chuồng gà" />,
-        cell: ({ row }) => {
-            const chickenCoops: ChickenCoop[] = JSON.parse(
-                sessionStorage.getItem('chickenCoops') || '[]',
-            );
-            const coop = chickenCoops.find(
-                (coop) => coop.chickenCoopId === row.getValue('chickenCoopId'),
-            );
-            return <div>{coop?.chickenCoopName || '-'}</div>;
-        },
-    },
+    // {
+    //     accessorKey: 'chickenCoopId',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Chuồng gà" />,
+    //     cell: ({ row }) => {
+    //         const chickenCoops: ChickenCoop[] = JSON.parse(
+    //             sessionStorage.getItem('chickenCoops') || '[]',
+    //         );
+    //         const coop = chickenCoops.find(
+    //             (coop) => coop.chickenCoopId === row.getValue('chickenCoopId'),
+    //         );
+    //         return <div>{coop?.chickenCoopName || '-'}</div>;
+    //     },
+    // },
     // {
     //     accessorKey: 'type',
     //     header: ({ column }) => <DataTableColumnHeader column={column} title="Loại công việc" />,
@@ -56,6 +56,14 @@ export const columns: ColumnDef<TaskLog>[] = [
     //     header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày bắt đầu" />,
     //     cell: ({ row }) => <div>{dayjs(row.getValue('startDate')).format('DD/MM/YYYY')}</div>,
     // },
+    {
+        accessorKey: 'task',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Tên công việc" />,
+        cell: ({ row }) => {
+            const task = row.getValue('task') as TaskResponse;
+            return <div>{task?.taskName || ''}</div>;
+        },
+    },
     {
         accessorKey: 'completedAt',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày hoàn thành" />,
