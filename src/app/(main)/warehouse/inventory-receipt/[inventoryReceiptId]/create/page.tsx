@@ -117,7 +117,7 @@ export default function CreateStockReceipt() {
                             <FormLabel>Chọn loại: </FormLabel>
                             <SelectCate
                                 onSelect={(subCategoryId) => {
-                                    console.log('Selected subCategoryId:', subCategoryId);
+                                    // console.log('Selected subCategoryId:', subCategoryId);
                                     form.setValue('receiptTypeId', subCategoryId);
                                 }}
                             />
@@ -159,8 +159,8 @@ export default function CreateStockReceipt() {
                                             `stockReceiptDetails.${index}.toWareId`,
                                         );
                                         const receiptTypeId = form.watch('receiptTypeId'); // từ SelectCate
-                                        console.log('Ware id truyền vào: ', wareId);
-                                        console.log('Receipt id truyền vào: ', receiptTypeId);
+                                        // console.log('Ware id truyền vào: ', wareId);
+                                        // console.log('Receipt id truyền vào: ', receiptTypeId);
                                         return (
                                             <FormItem>
                                                 <FormLabel>Tài nguyên</FormLabel>
@@ -168,7 +168,7 @@ export default function CreateStockReceipt() {
                                                     wareId={wareId}
                                                     resourceTypeId={receiptTypeId}
                                                     onSelect={(resourceId) => {
-                                                        console.log('Resource Id: ', resourceId);
+                                                        // console.log('Resource Id: ', resourceId);
                                                         resourceField.onChange(resourceId);
                                                     }}
                                                 />
@@ -176,6 +176,36 @@ export default function CreateStockReceipt() {
                                         );
                                     }}
                                 />
+                                {/* Số lượng */}
+                                <FormField
+                                    control={form.control}
+                                    name={`stockReceiptDetails.${index}.quantity`}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Số lượng: </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    min={0}
+                                                    placeholder="Nhập số lượng..."
+                                                    {...field}
+                                                    value={field.value}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        field.onChange(
+                                                            value === ''
+                                                                ? undefined
+                                                                : Number(value),
+                                                        );
+                                                    }}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                {/* Unit */}
+
+                                {/* Nhà cung cấp */}
                             </div>
                         ))}
                     </div>
