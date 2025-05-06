@@ -94,7 +94,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <DialogHeader>
                         <DialogTitle>Chi tiết nhật ký</DialogTitle>
                         <DialogDescription>
-                            Dưới đây là các thông tin chi tiết của nhật ký sức khở.
+                            Dưới đây là các thông tin chi tiết của nhật ký sức khỏe.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex flex-col">
