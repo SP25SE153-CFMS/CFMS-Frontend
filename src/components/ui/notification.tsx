@@ -69,6 +69,7 @@ import { scaleLabels, userStatusLabels, userStatusVariant } from '@/utils/enum/s
 import { useSignalR } from '@/hooks';
 import { env } from '@/env';
 import { getAreaUnits } from '@/services/category.service';
+import DOMPurify from 'dompurify';
 
 function Dot({ className }: { className?: string }) {
     return (
@@ -397,7 +398,7 @@ export default function Notification() {
                             {notifications.map((notification) => (
                                 <div
                                     key={notification.notificationId}
-                                    className={`group relative border-b px-4 py-3 transition-colors hover:bg-accent ${!notification.isRead ? 'bg-accent/30' : ''}`}
+                                    className={`group relative border-b px-4 py-3 transition-colors hover:bg-accent ${!notification.isRead ? 'bg-primary/5 hover:bg-primary/5' : ''}`}
                                 >
                                     <div className="flex gap-3">
                                         <Avatar className="h-10 w-10 rounded-full object-cover">
@@ -434,9 +435,14 @@ export default function Notification() {
                                                 <div className="font-semibold hover:underline">
                                                     {notification.notificationName}
                                                 </div>
-                                                <div className="my-1 text-muted-foreground max-w-60">
-                                                    {notification.content}
-                                                </div>
+                                                <div
+                                                    className="my-1 text-muted-foreground max-w-60"
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: DOMPurify.sanitize(
+                                                            notification.content || '',
+                                                        ),
+                                                    }}
+                                                />
                                             </button>
                                             <div className="text-xs text-muted-foreground">
                                                 {formatRelativeTime(
