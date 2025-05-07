@@ -1,6 +1,6 @@
 'use client';
 
-import { getWareStockByResourceTypeId } from '@/services/warehouse.service';
+import { getWareStockByReTypeId } from '@/services/warehouse.service';
 import { useQuery } from '@tanstack/react-query';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { getSubBySubId } from '@/services/category.service';
@@ -27,7 +27,7 @@ export default function SelectResources({
     const [selectedResource, setSelectedResource] = useState<any>(null);
     const { data: resources = [], isLoading: isLoadingSupplier } = useQuery({
         queryKey: ['resources', wareId, resourceTypeId],
-        queryFn: () => getWareStockByResourceTypeId(wareId, resourceTypeId),
+        queryFn: () => getWareStockByReTypeId(wareId, resourceTypeId),
         enabled: !!wareId && !!resourceTypeId,
     });
 

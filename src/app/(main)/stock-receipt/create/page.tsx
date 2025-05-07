@@ -216,7 +216,7 @@ export default function StockReceiptCreate() {
                                                     );
                                                     const receiptTypeId =
                                                         form.watch('receiptTypeId');
-
+                                                    console.log('W và R: ', wareId, receiptTypeId);
                                                     return (
                                                         <FormItem className="space-y-2">
                                                             <FormLabel className="text-slate-700">
