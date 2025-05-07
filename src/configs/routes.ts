@@ -43,6 +43,8 @@ const routes = {
     medicine: '/warehouse/medicines',
     config: '/config',
     commonWarehouse: '/warehouse/common',
+    stockReceipt: '/stock-receipt',
+    createStockReceipt: '/stock-receipt/create'
 };
 
 export default routes;

@@ -1,12 +1,11 @@
 'use client';
 
 import SubCateDisplay from '@/components/badge/BadgeReceipt';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent,  CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { getReceiptById } from '@/services/request.service';
 import { getResources } from '@/services/resource.service';
-import type { User } from '@/utils/schemas/user.schema';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useParams, useRouter } from 'next/navigation';
@@ -25,7 +24,7 @@ import {
 import { getSubBySubId } from '@/services/category.service';
 import { getWareById } from '@/services/warehouse.service';
 import { Button } from '@/components/ui/button';
-import config from '@/configs';
+import { getUsers } from '@/services/user.service';
 
 export default function InventoryDetail() {
     const router = useRouter();
@@ -40,11 +39,17 @@ export default function InventoryDetail() {
         queryKey: ['resources'],
         queryFn: () => getResources(),
     });
+    // console.log("Resource: ",resources);
 
     const { data: subCate } = useQuery({
         queryKey: ['subCate', receipt?.receiptTypeId],
         queryFn: () => getSubBySubId(receipt?.receiptTypeId as string),
         enabled: !!receipt?.receiptTypeId,
+    });
+
+    const { data: users } = useQuery({
+        queryKey: ['users'],
+        queryFn: () => getUsers(),
     });
 
     const subCateName = subCate?.subCategoryName;
@@ -57,18 +62,13 @@ export default function InventoryDetail() {
         enabled: !!warehouseId,
     });
 
-    // const getWareById = (id: string) => {
-    //     const ware
-    // }
-
     const createdByName = useMemo(() => {
         if (!receipt) return '';
 
-        const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
-        const createdBy = users.find((user) => user.userId === receipt.userId);
+        const createdBy = users?.find((user) => user.userId === receipt.userId);
 
         return createdBy?.fullName || '';
-    }, [receipt]);
+    }, [receipt, users]);
 
     if (isLoadingReceipts || isLoadingResources) {
         return (
@@ -98,10 +98,6 @@ export default function InventoryDetail() {
     const getWareType = () => {
         if (subCateName === 'IMPORT') return <p className="text-sm text-gray-500">Kho nhập</p>;
         if (subCateName === 'EXPORT') return <p className="text-sm text-gray-500">Kho xuất</p>;
-    };
-
-    const handleCreateStockReceipt = () => {
-        router.push(`${config.routes.inventoryReceipt}/${inventoryReceiptId}/create`);
     };
 
     return (
@@ -580,17 +576,7 @@ export default function InventoryDetail() {
                     })}
                 </div>
             </div>
-            <Separator />
-            <div className="flex justify-end gap-4 bottom-0 bg-white p-4 ">
-                <Button
-                    className="border-slate-300 hover:bg-slate-100 hover:text-slate-900 rounded-b-lg shadow-lg"
-                    variant="outline"
-                    onClick={handleCreateStockReceipt}
-                >
-                    <FileText className="h-4 w-4 mr-2" />
-                    Tạo đơn hàng
-                </Button>
-            </div>
+           
         </div>
     );
 }

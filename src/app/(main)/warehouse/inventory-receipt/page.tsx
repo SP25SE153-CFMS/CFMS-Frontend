@@ -8,9 +8,6 @@ import { Card } from '@/components/ui/card';
 import Image from '@/components/fallback-image';
 import { Button } from '@/components/ui/button';
 import { getReceiptsByFarmId } from '@/services/request.service';
-import { getUsers } from '@/services/user.service';
-import { useMemo } from 'react';
-import { User } from '@/utils/schemas/user.schema';
 import { getCookie } from 'cookies-next';
 
 export default function InventoryReceipt() {
@@ -21,27 +18,7 @@ export default function InventoryReceipt() {
         queryFn: () => getReceiptsByFarmId(farmId),
     });
 
-    // useQuery({
-    //     queryKey: ['users'],
-    //     queryFn: async () => {
-    //         const users = await getUsers();
-    //         sessionStorage.setItem('users', JSON.stringify(users));
-    //         return users;
-    //     },
-    // });
-
-    // const filteredReceipt = useMemo(() => {
-    //     if (!receipts) return [];
-
-    //     const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
-
-    //     return receipts.filter((receipt) => {
-    //         const createdBy = users.find((user) => user.userId === receipt.createdByUserId);
-    //         return !!createdBy;
-    //     });
-    // }, [receipts]);
-
-    console.log('Toan bo receipt: ', receipts);
+    // console.log('Toan bo receipt: ', receipts);
 
     if (isLoading) {
         return (

@@ -2,11 +2,10 @@
 
 import { getResourceById } from '@/services/resource.service';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Package, Pill, Apple, AlertCircle, ExternalLink } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Package, Pill, Apple, AlertCircle } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 type ResourceCardProps = {

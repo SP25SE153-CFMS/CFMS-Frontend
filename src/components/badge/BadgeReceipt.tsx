@@ -116,7 +116,7 @@ export function ResourceDisplay({ id }: ResourceDisplayProps) {
     });
 
     return (
-        <div>
+        <div >
             {/* Food */}
             {resource?.food && (
                 <div className="flex justify-between mb-1">

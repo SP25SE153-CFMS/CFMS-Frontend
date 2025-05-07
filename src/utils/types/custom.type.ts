@@ -262,10 +262,12 @@ export type WareStockResponse = Warehouse &
     Food &
     Equipment &
     Medicine &
+    Chicken &
     HarvestProduct & {
         foods?: Food;
         equipments?: Equipment;
         medicine?: Medicine;
+        breeding?: Chicken;
         specQuantity: string;
         unitSpecification: string;
         resourceTypeName: string;
