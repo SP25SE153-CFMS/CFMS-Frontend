@@ -9,6 +9,7 @@ const SIGN_UP_ROUTE = '/sign-up';
 const FORGOT_PASSWORD_ROUTE = '/forgot-password';
 const INPUT_OTP_ROUTE = '/forgot-password/input-OTP';
 const RESET_PASSWORD = '/reset-password';
+const CHECK_LOGIN_ROUTE = '/check-login';
 
 // eslint-disable-next-line no-unused-vars
 export function middleware(request: NextRequest) {
@@ -41,7 +42,8 @@ export function middleware(request: NextRequest) {
         pathname !== SIGN_UP_ROUTE &&
         pathname !== FORGOT_PASSWORD_ROUTE &&
         pathname !== INPUT_OTP_ROUTE &&
-        pathname !== RESET_PASSWORD
+        pathname !== RESET_PASSWORD &&
+        pathname !== CHECK_LOGIN_ROUTE
     ) {
         return NextResponse.redirect(new URL(SIGN_IN_ROUTE, request.url));
     }

@@ -69,7 +69,6 @@ export default function FarmSwitcher() {
     const { data: farms } = useQuery({
         queryKey: ['farms'],
         queryFn: getFarmsForCurrentUser,
-        staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
     // Determine the current farm based on cookies
@@ -97,6 +96,11 @@ export default function FarmSwitcher() {
             setActiveFarm(currentFarm);
         }
     }, [currentFarm]);
+
+    // Handle update farm in farm settings page (/settings)
+    useEffect(() => {
+        setActiveFarm(currentFarm ?? null);
+    }, [currentFarm, farms]);
 
     // Handle farm selection
     const handleFarmSelect = useCallback(
