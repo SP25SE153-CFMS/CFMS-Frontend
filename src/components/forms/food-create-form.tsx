@@ -21,6 +21,7 @@ import { cn } from '@/lib/utils';
 import { onError } from '@/utils/functions/form.function';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
+import { useEffect } from 'react';
 
 interface CreateFoodProps {
     closeModal: () => void;
@@ -33,7 +34,7 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
             foodCode: '',
             foodName: '',
             note: '',
-            wareId: '',
+            wareId: sessionStorage.getItem('wareId') ?? '',
             packageId: '',
             unitId: '',
             packageSize: 0,

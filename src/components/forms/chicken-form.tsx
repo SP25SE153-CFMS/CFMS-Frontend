@@ -83,6 +83,7 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
             ...values,
             id: values.chickenId,
         };
+        console.log("Form: ", newValues);
         mutation.mutate(defaultValues ? newValues : values);
     }
 

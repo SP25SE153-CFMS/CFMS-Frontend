@@ -34,7 +34,7 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
             unitId: '',
             packageId: '',
             packageSize: 0,
-            wareId: '',
+            wareId: sessionStorage.getItem('wareId') ?? '',
         },
     });
 
@@ -133,7 +133,7 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
                                         </SelectTrigger>
                                         <SelectContent>
                                             {getSubCategoryByCategoryType(
-                                                CategoryType.H_PACKAGE_UNIT,
+                                                CategoryType.HARVEST_TYPE,
                                             )?.map((type) => (
                                                 <SelectItem
                                                     key={type.subCategoryId}
@@ -162,6 +162,7 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
                                         min={0}
                                         placeholder="Nhập quy cách đóng gói..."
                                         {...field}
+                                        onChange={(e) => field.onChange(Number(e.target.value))}
                                     />
                                 </FormControl>
                             </FormItem>
