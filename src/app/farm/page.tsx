@@ -38,7 +38,6 @@ import Link from 'next/link';
 import config from '@/configs';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { enrollToFarm, getFarms, getFarmsForCurrentUser } from '@/services/farm.service';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { scaleLabels } from '@/utils/enum/status.enum';
@@ -59,9 +58,10 @@ import { FarmRole, farmRoleConfigs } from '@/utils/enum';
 import InfoItem from '@/components/info-item';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { GoogleMapComponent } from '@/components/map/google-map';
-import { FarmResponse } from '@/utils/types/custom.type';
+import type { FarmResponse } from '@/utils/types/custom.type';
 import { getAreaUnits } from '@/services/category.service';
-import { SubCategory } from '@/utils/schemas/sub-category.schema';
+import type { SubCategory } from '@/utils/schemas/sub-category.schema';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Page() {
     // userFarms: Farms for the current user
@@ -75,13 +75,13 @@ export default function Page() {
     });
 
     // farmsForSearch: All farms for searching
-    const { data: farmsForSearch } = useQuery({
+    const { data: farmsForSearch, isLoading: isLoadingAllFarms } = useQuery({
         queryKey: ['allFarms'],
         queryFn: getFarms,
     });
 
     // Get all area units
-    const { data: areaUnits } = useQuery({
+    const { data: areaUnits, isLoading: isLoadingAreaUnits } = useQuery({
         queryKey: ['areaUnits'],
         queryFn: () => getAreaUnits(),
     });
@@ -187,14 +187,7 @@ export default function Page() {
 
     // Check if farms is loading
     if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center h-[100vh] gap-4">
-                <LoadingSpinner />
-                <p className="text-muted-foreground animate-pulse">
-                    Đang tải dữ liệu trang trại...
-                </p>
-            </div>
-        );
+        return <FarmPageSkeleton />;
     }
 
     if (!userFarms) {
@@ -277,23 +270,30 @@ export default function Page() {
                                                 className="flex items-center gap-2 p-2 rounded-lg border-2 border-dashed border-muted-foreground/50 hover:border-primary mt-2 cursor-pointer"
                                                 onClick={() => setOpenDrawer(true)}
                                             >
-                                                <div className="flex size-8 items-center justify-center rounded-sm border">
-                                                    <Image
-                                                        src={farmByFarmCode?.imageUrl || ''}
-                                                        alt={farmByFarmCode?.farmCode || ''}
-                                                        width={20}
-                                                        height={20}
-                                                    />
-                                                </div>
-                                                <div className="gap-1 flex-1">
-                                                    <p className="font-semibold text-sm">
-                                                        {farmByFarmCode?.farmName ||
-                                                            'Không tìm thấy trang trại'}
-                                                    </p>
-                                                    <p className="text-xs text-muted-foreground">
-                                                        {farmByFarmCode?.farmCode || 'Không có mã '}
-                                                    </p>
-                                                </div>
+                                                {isLoadingAllFarms ? (
+                                                    <FarmCodeSkeleton />
+                                                ) : (
+                                                    <>
+                                                        <div className="flex size-8 items-center justify-center rounded-sm border">
+                                                            <Image
+                                                                src={farmByFarmCode?.imageUrl || ''}
+                                                                alt={farmByFarmCode?.farmCode || ''}
+                                                                width={20}
+                                                                height={20}
+                                                            />
+                                                        </div>
+                                                        <div className="gap-1 flex-1">
+                                                            <p className="font-semibold text-sm">
+                                                                {farmByFarmCode?.farmName ||
+                                                                    'Không tìm thấy trang trại'}
+                                                            </p>
+                                                            <p className="text-xs text-muted-foreground">
+                                                                {farmByFarmCode?.farmCode ||
+                                                                    'Không có mã '}
+                                                            </p>
+                                                        </div>
+                                                    </>
+                                                )}
                                             </div>
                                         )}
                                     </div>
@@ -487,24 +487,28 @@ export default function Page() {
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-3 h-full">
                                 <div className="md:col-span-2 h-full">
-                                    <GoogleMapComponent
-                                        markers={filteredFarms?.map((farm) => ({
-                                            id: farm.farmId,
-                                            position: {
-                                                lat: farm.latitude,
-                                                lng: farm.longitude,
-                                            },
-                                            title: farm.farmName,
-                                            info: (
-                                                <MarkerInfo
-                                                    farm={farm}
-                                                    areaUnits={areaUnits || []}
-                                                />
-                                            ),
-                                        }))}
-                                        height={500}
-                                        className="mb-8"
-                                    />
+                                    {isLoadingAreaUnits ? (
+                                        <MapSkeleton />
+                                    ) : (
+                                        <GoogleMapComponent
+                                            markers={filteredFarms?.map((farm) => ({
+                                                id: farm.farmId,
+                                                position: {
+                                                    lat: farm.latitude,
+                                                    lng: farm.longitude,
+                                                },
+                                                title: farm.farmName,
+                                                info: (
+                                                    <MarkerInfo
+                                                        farm={farm}
+                                                        areaUnits={areaUnits || []}
+                                                    />
+                                                ),
+                                            }))}
+                                            height={500}
+                                            className="mb-8"
+                                        />
+                                    )}
                                 </div>
 
                                 <ScrollArea className="h-[30rem]">
@@ -579,23 +583,30 @@ export default function Page() {
                                             className="flex items-center gap-2 p-2 rounded-lg border-2 border-dashed border-muted-foreground/50 hover:border-primary mt-2 cursor-pointer"
                                             onClick={() => setOpenDrawer(true)}
                                         >
-                                            <div className="flex size-8 items-center justify-center rounded-sm border">
-                                                <Image
-                                                    src={farmByFarmCode?.imageUrl || ''}
-                                                    alt={farmByFarmCode?.farmCode || ''}
-                                                    width={20}
-                                                    height={20}
-                                                />
-                                            </div>
-                                            <div className="gap-1 flex-1">
-                                                <p className="font-semibold text-sm">
-                                                    {farmByFarmCode?.farmName ||
-                                                        'Không tìm thấy trang trại'}
-                                                </p>
-                                                <p className="text-xs text-muted-foreground">
-                                                    {farmByFarmCode?.farmCode || 'Không có mã '}
-                                                </p>
-                                            </div>
+                                            {isLoadingAllFarms ? (
+                                                <FarmCodeSkeleton />
+                                            ) : (
+                                                <>
+                                                    <div className="flex size-8 items-center justify-center rounded-sm border">
+                                                        <Image
+                                                            src={farmByFarmCode?.imageUrl || ''}
+                                                            alt={farmByFarmCode?.farmCode || ''}
+                                                            width={20}
+                                                            height={20}
+                                                        />
+                                                    </div>
+                                                    <div className="gap-1 flex-1">
+                                                        <p className="font-semibold text-sm">
+                                                            {farmByFarmCode?.farmName ||
+                                                                'Không tìm thấy trang trại'}
+                                                        </p>
+                                                        <p className="text-xs text-muted-foreground">
+                                                            {farmByFarmCode?.farmCode ||
+                                                                'Không có mã '}
+                                                        </p>
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
                                     )}
                                 </div>
@@ -607,76 +618,212 @@ export default function Page() {
 
             <Drawer direction="right" open={openDrawer} onOpenChange={setOpenDrawer}>
                 <DrawerContent className="right-0 left-auto ml-auto top-0 mt-0 !w-[400px]">
-                    <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="font-bold pl-3 text-lg relative before:content-[''] before:absolute before:top-[3px] before:left-0 before:w-[4px] before:h-full before:bg-primary inline-block">
-                                Thông tin chi tiết
-                            </h3>
+                    {isLoadingAllFarms ? (
+                        <DrawerSkeleton />
+                    ) : (
+                        <div className="flex w-full p-3 relative flex-col sm:px-6 sm:py-4">
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="font-bold pl-3 text-lg relative before:content-[''] before:absolute before:top-[3px] before:left-0 before:w-[4px] before:h-full before:bg-primary inline-block">
+                                    Thông tin chi tiết
+                                </h3>
+                            </div>
+                            <InfoItem
+                                label="Tên trang trại"
+                                value={farmByFarmCode?.farmName || '-'}
+                                icon={<TrendingUp size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Mã trang trại"
+                                value={farmByFarmCode?.farmCode || '-'}
+                                icon={<KeyRound size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Địa chỉ"
+                                value={farmByFarmCode?.address || 'Không có địa chỉ'}
+                                icon={<MapPin size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Diện tích"
+                                value={`${farmByFarmCode?.area?.toLocaleString()} m²`}
+                                icon={<Sprout size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Quy mô"
+                                value={
+                                    farmByFarmCode?.scale
+                                        ? `${farmByFarmCode.scale} (quy mô)`
+                                        : 'Không xác định'
+                                }
+                                icon={<BarChart size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Số điện thoại"
+                                value={farmByFarmCode?.phoneNumber || 'Không có số điện thoại'}
+                                icon={<Phone size={16} />}
+                            />
+
+                            <InfoItem
+                                label="Website"
+                                value={
+                                    farmByFarmCode?.website ? (
+                                        <a
+                                            href={farmByFarmCode.website}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-500 underline"
+                                        >
+                                            {farmByFarmCode.website}
+                                        </a>
+                                    ) : (
+                                        'Không có website'
+                                    )
+                                }
+                                icon={<Globe size={16} />}
+                            />
                         </div>
-                        <InfoItem
-                            label="Tên trang trại"
-                            value={farmByFarmCode?.farmName || '-'}
-                            icon={<TrendingUp size={16} />}
-                        />
-
-                        <InfoItem
-                            label="Mã trang trại"
-                            value={farmByFarmCode?.farmCode || '-'}
-                            icon={<KeyRound size={16} />}
-                        />
-
-                        <InfoItem
-                            label="Địa chỉ"
-                            value={farmByFarmCode?.address || 'Không có địa chỉ'}
-                            icon={<MapPin size={16} />}
-                        />
-
-                        <InfoItem
-                            label="Diện tích"
-                            value={`${farmByFarmCode?.area?.toLocaleString()} m²`}
-                            icon={<Sprout size={16} />}
-                        />
-
-                        <InfoItem
-                            label="Quy mô"
-                            value={
-                                farmByFarmCode?.scale
-                                    ? `${farmByFarmCode.scale} (quy mô)`
-                                    : 'Không xác định'
-                            }
-                            icon={<BarChart size={16} />}
-                        />
-
-                        <InfoItem
-                            label="Số điện thoại"
-                            value={farmByFarmCode?.phoneNumber || 'Không có số điện thoại'}
-                            icon={<Phone size={16} />}
-                        />
-
-                        <InfoItem
-                            label="Website"
-                            value={
-                                farmByFarmCode?.website ? (
-                                    <a
-                                        href={farmByFarmCode.website}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-500 underline"
-                                    >
-                                        {farmByFarmCode.website}
-                                    </a>
-                                ) : (
-                                    'Không có website'
-                                )
-                            }
-                            icon={<Globe size={16} />}
-                        />
-                    </div>
+                    )}
                 </DrawerContent>
             </Drawer>
         </div>
     );
 }
+
+// Skeleton components
+const FarmPageSkeleton = () => {
+    return (
+        <div className="container mx-auto p-4 animate-pulse">
+            <div className="flex flex-col space-y-4">
+                {/* Header skeleton */}
+                <div className="flex justify-between items-center flex-wrap md:flex-nowrap gap-6">
+                    <div className="flex items-center">
+                        <Skeleton className="h-8 w-8 mr-2 rounded-full" />
+                        <Skeleton className="h-10 w-64" />
+                    </div>
+                    <div className="flex space-x-4">
+                        <Skeleton className="h-10 w-40" />
+                        <Skeleton className="h-10 w-24" />
+                        <Skeleton className="h-10 w-36" />
+                    </div>
+                </div>
+
+                {/* Filter card skeleton */}
+                <Card className="mb-4">
+                    <CardHeader className="pb-2">
+                        <div className="flex justify-between items-center">
+                            <Skeleton className="h-6 w-32" />
+                            <Skeleton className="h-8 w-24" />
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+                            {Array(4)
+                                .fill(0)
+                                .map((_, i) => (
+                                    <div key={i} className="space-y-2">
+                                        <div key={i} className="space-y-2">
+                                            <Skeleton className="h-4 w-24" />
+                                            <Skeleton className="h-10 w-full" />
+                                        </div>
+                                    </div>
+                                ))}
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Results count skeleton */}
+                <Skeleton className="h-5 w-48 mb-2" />
+
+                {/* Map and farm cards skeleton */}
+                <div className="grid grid-cols-1 md:grid-cols-3 h-full">
+                    <div className="md:col-span-2 h-full">
+                        <MapSkeleton />
+                    </div>
+
+                    <div className="h-[30rem] px-4">
+                        <div className="space-y-4">
+                            {Array(5)
+                                .fill(0)
+                                .map((_, i) => (
+                                    <Card key={i} className="w-full">
+                                        <CardContent className="p-4">
+                                            <div className="flex items-start gap-3">
+                                                <Skeleton className="h-16 w-16 rounded-md" />
+                                                <div className="flex-1 space-y-2">
+                                                    <Skeleton className="h-5 w-3/4" />
+                                                    <Skeleton className="h-4 w-1/2" />
+                                                    <div className="flex gap-2 mt-2">
+                                                        <Skeleton className="h-6 w-16 rounded-full" />
+                                                        <Skeleton className="h-6 w-16 rounded-full" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const MapSkeleton = () => {
+    return (
+        <div className="w-full h-[500px] mb-8 rounded-lg overflow-hidden relative bg-slate-100 dark:bg-slate-800">
+            <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center">
+                    <Skeleton className="h-10 w-10 rounded-full mx-auto mb-4" />
+                    <Skeleton className="h-5 w-32 mx-auto" />
+                </div>
+            </div>
+            <div className="absolute bottom-4 right-4">
+                <Skeleton className="h-8 w-8 rounded-md" />
+            </div>
+            <div className="absolute bottom-4 left-4">
+                <Skeleton className="h-24 w-32 rounded-md" />
+            </div>
+        </div>
+    );
+};
+
+const FarmCodeSkeleton = () => {
+    return (
+        <div className="flex items-center gap-2 w-full">
+            <Skeleton className="h-8 w-8 rounded-sm" />
+            <div className="flex-1 space-y-1">
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-3 w-1/2" />
+            </div>
+        </div>
+    );
+};
+
+const DrawerSkeleton = () => {
+    return (
+        <div className="flex w-full p-6 relative flex-col">
+            <div className="flex justify-between items-center mb-6">
+                <Skeleton className="h-6 w-40" />
+            </div>
+            {Array(7)
+                .fill(0)
+                .map((_, i) => (
+                    <div key={i} className="mb-4">
+                        <div className="flex items-center gap-2 mb-1">
+                            <Skeleton className="h-4 w-4 rounded-full" />
+                            <Skeleton className="h-4 w-24" />
+                        </div>
+                        <Skeleton className="h-5 w-full" />
+                    </div>
+                ))}
+        </div>
+    );
+};
 
 const MarkerInfo = ({ farm, areaUnits }: { farm: FarmResponse; areaUnits: SubCategory[] }) => {
     const unit = useMemo(() => {

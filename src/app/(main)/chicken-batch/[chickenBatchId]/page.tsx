@@ -460,7 +460,7 @@ export default function Page() {
                     />
                 </div>
                 <div className="lg:col-span-3">
-                    <Chart />
+                    <Chart chickenBatchId={chickenBatchId} />
                 </div>
             </div>
         </div>

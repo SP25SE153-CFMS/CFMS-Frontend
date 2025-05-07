@@ -378,3 +378,8 @@ export type HealthLogResponse = HealthLog & {
     healthLogDetails: HealthLogDetails[];
     taskId: string;
 };
+
+export type ChickenBatchChart = {
+    date: string;
+    totalFeed: number;
+};

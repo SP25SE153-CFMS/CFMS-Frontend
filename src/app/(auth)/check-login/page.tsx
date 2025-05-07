@@ -121,7 +121,7 @@ export default function CheckLoginPage() {
                                         Đăng nhập thành công!
                                     </h2>
                                     <p className="text-muted-foreground">
-                                        Đang chuyển hướng đến trang quản lý...
+                                        Đang chuyển hướng đến trang quản lý trang trại...
                                     </p>
                                 </>
                             )}
