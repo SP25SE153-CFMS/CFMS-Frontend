@@ -631,7 +631,7 @@ export default function RequestDetailPage() {
                                                         getUnitFromSpecification(
                                                             spec?.unitSpecification,
                                                         ) ||
-                                                        item.unit?.name ||
+                                                        item.unit?.subCategoryName ||
                                                         '';
 
                                                     return (
