@@ -41,6 +41,7 @@ import { InventoryRequestDetail } from '../schemas/inventory-request-detail.sche
 import { Farm } from '../schemas/farm.schema';
 import { Supplier } from '../schemas/supplier.schema';
 import { StockReceiptDetail } from '../schemas/stock-receipt-detail.schema';
+import { HarvestLog } from '../schemas/harvest-log.schema';
 
 export type EntityAudit = {
     isDeleted: boolean;
@@ -57,6 +58,7 @@ export type ChickenCoopResponse = ChickenCoop & {
     chickenBatches: ChickenBatch[];
     taskLogs: TaskLog[];
     coopEquipments: CoopEquipment[];
+    harvestLogs: HarvestLog[];
 };
 
 export type ChickenResponse = Chicken & {
