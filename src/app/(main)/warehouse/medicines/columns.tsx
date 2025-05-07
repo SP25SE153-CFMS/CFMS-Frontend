@@ -100,12 +100,13 @@ export const columns: ColumnDef<WareStockResponse>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Nhà cung cấp" />,
         cell: ({ row }) => {
             const currentSupplierId = row.getValue('currentSupplierId') as string;
+            const currentSupplierName = row.getValue('currentSupplierName') as string;
             return currentSupplierId ? (
                 <Link href={`${config.routes.supplier}/${currentSupplierId}`}>
-                    {row.getValue('currentSupplierName')}
+                    {currentSupplierName}
                 </Link>
             ) : (
-                <div className="text-muted-foreground">Chưa có nhà cung cấp</div>
+                <div className="text-muted-foreground"> {currentSupplierName}</div>
             );
         },
     },
