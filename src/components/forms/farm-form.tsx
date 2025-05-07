@@ -90,7 +90,7 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
             farmCode: '',
             address: '',
             area: 0,
-            areaUnitId: '',
+            areaUnitId: areaUnits?.[0]?.subCategoryId || '',
             scale: 0,
             phoneNumber: '',
             website: '',

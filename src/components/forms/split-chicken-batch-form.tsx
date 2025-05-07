@@ -33,21 +33,28 @@ import { Button } from '@/components/ui/button';
 import { vi } from 'date-fns/locale';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { formatDate } from '@/utils/functions';
-import { getChickenCoopsByBreedingAreaId } from '@/services/chicken-coop.service';
 import { Textarea } from '@/components/ui/textarea';
 import { ChickenGender, chickenGenderLabels } from '@/utils/enum/gender.enum';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
+import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
+import { LoadingSpinner } from '../ui/loading-spinner';
 
 export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: () => void }) {
     const queryClient = useQueryClient();
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
 
-    const { data: chickenCoops } = useQuery({
-        queryKey: ['chickenCoops'],
-        queryFn: () =>
-            getChickenCoopsByBreedingAreaId(sessionStorage.getItem('breedingAreaId') ?? ''),
+    const { data: breedingAreas, isLoading } = useQuery({
+        queryKey: ['breedingAreas'],
+        queryFn: async () => {
+            const breedingAreas = await getBreedingAreasByFarmId(
+                getCookie(config.cookies.farmId) ?? '',
+            );
+            return breedingAreas;
+        },
     });
 
     const { data: chickenTypes } = useQuery({
@@ -171,6 +178,15 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
         );
     }, [growthStages, chickenTypeId]);
 
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-[70vh] gap-4">
+                <LoadingSpinner />
+                <p className="text-muted-foreground animate-pulse">Đang tải dữ liệu...</p>
+            </div>
+        );
+    }
+
     return (
         <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-1">
@@ -285,11 +301,21 @@ export default function SplitChickenBatchForm({ closeDialog }: { closeDialog: ()
                                 <SelectValue placeholder="Chọn chuồng tiếp nhận" />
                             </SelectTrigger>
                             <SelectContent className="max-h-72">
-                                {chickenCoops?.map((coop) => (
-                                    <SelectItem key={coop.chickenCoopId} value={coop.chickenCoopId}>
-                                        {coop.chickenCoopName}
-                                    </SelectItem>
-                                ))}
+                                {breedingAreas
+                                    ?.flatMap((area) => area.chickenCoops)
+                                    ?.filter(
+                                        (coop) =>
+                                            coop.chickenCoopId !==
+                                            sessionStorage.getItem('chickenCoopId'),
+                                    )
+                                    ?.map((coop) => (
+                                        <SelectItem
+                                            key={coop.chickenCoopId}
+                                            value={coop.chickenCoopId}
+                                        >
+                                            {coop.chickenCoopName}
+                                        </SelectItem>
+                                    ))}
                             </SelectContent>
                         </Select>
                         <p className="text-xs text-muted-foreground">

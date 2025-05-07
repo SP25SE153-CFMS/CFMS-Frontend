@@ -62,13 +62,14 @@ export function getCriteria(criteriaId: string): string {
 }
 
 export function getUnitIdByUnitName(unitName: string): string {
-    const allCategories = JSON.parse(
-        sessionStorage.getItem('categories') ?? '[]',
-    ) as CategoryResponse[];
-    const unit = allCategories
-        ?.filter((cate) => cate.categoryType.endsWith('QUANTITY_UNIT'))
-        .map((cate) => cate.subCategories)
-        .flatMap((x) => x)
-        .find((sub) => sub.subCategoryName === unitName);
-    return unit?.subCategoryId ?? '';
+    const categoriesFromStorage = sessionStorage.getItem('categories');
+    if (!categoriesFromStorage) return '';
+
+    const allCategories = JSON.parse(categoriesFromStorage) as CategoryResponse[];
+    return (
+        allCategories
+            .filter((category) => category.categoryType.endsWith('QUANTITY_UNIT'))
+            .flatMap((category) => category.subCategories)
+            .find((subCategory) => subCategory.subCategoryName === unitName)?.subCategoryId ?? ''
+    );
 }

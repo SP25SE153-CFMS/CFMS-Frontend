@@ -2,8 +2,9 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import { Checkbox } from '@/components/ui/checkbox';
 import { ColumnDef } from '@tanstack/react-table';
 import { StockReceiptResponse } from '@/utils/types/custom.type';
-import { getRequestType } from '@/utils/functions/category.function';
 import dayjs from 'dayjs';
+import { User } from '@/utils/schemas/user.schema';
+import { SubCategory } from '@/utils/schemas/sub-category.schema';
 
 export const columns: ColumnDef<StockReceiptResponse>[] = [
     {
@@ -46,6 +47,11 @@ export const columns: ColumnDef<StockReceiptResponse>[] = [
     //     },
     // },
     {
+        accessorKey: 'stockReceiptCode',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Mã đơn hàng" />,
+        cell: ({ row }) => <div>{row.getValue('stockReceiptCode')}</div>,
+    },
+    {
         accessorKey: 'createdWhen',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày tạo" />,
         cell: ({ row }) => {
@@ -54,23 +60,20 @@ export const columns: ColumnDef<StockReceiptResponse>[] = [
         },
     },
     {
-        accessorKey: 'receiptTypeId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại phiếu" />,
+        accessorKey: 'receiptType',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại đơn hàng" />,
         cell: ({ row }) => {
-            const receiptTypeId = row.getValue('receiptTypeId') as string;
-            const receiptType = getRequestType(receiptTypeId);
-            return <span>{receiptType ?? '-'}</span>;
+            const receiptType = row.getValue('receiptType') as SubCategory;
+            return <span>{receiptType.description ?? '-'}</span>;
         },
-    },
-    {
-        accessorKey: 'stockReceiptCode',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Mã đơn hàng" />,
-        cell: ({ row }) => <div>{row.getValue('stockReceiptCode')}</div>,
     },
     {
         accessorKey: 'createdByUser',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Người tạo" />,
-        cell: ({ row }) => <div>{row.getValue('createdByUser')}</div>,
+        cell: ({ row }) => {
+            const user = row.getValue('createdByUser') as User;
+            return <div>{user?.fullName || ''}</div>;
+        },
     },
     // {
     //     id: 'action',
