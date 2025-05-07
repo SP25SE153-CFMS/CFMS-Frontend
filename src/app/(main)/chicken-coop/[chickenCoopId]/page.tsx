@@ -119,8 +119,7 @@ export default function Page() {
                             <CardEquipment coopEquipments={chickenCoop.coopEquipments} />
                         </TabsContent>
                         <TabsContent value="harvest">
-                            {/* TODO: Change to harvest props */}
-                            <CardHarvest chickenCoopId={chickenCoopId} />
+                            <CardHarvest harvestLogs={chickenCoop.harvestLogs} />
                         </TabsContent>
                     </Tabs>
                 </div>
