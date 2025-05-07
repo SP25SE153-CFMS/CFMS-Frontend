@@ -189,6 +189,7 @@ export type TaskResourceResponse = TaskResource & {
     resourceType: string;
     specQuantity: string;
     unitSpecification: string;
+    supplierId: string;
 };
 
 export type TaskLocationResponse = TaskLocation & {
@@ -289,6 +290,9 @@ export type WarestockResourceByType = Food &
         unitSpecification: string;
         supplierName: string;
         resourceId: string;
+        currentSupplierId: string;
+        currentSupplierName: string;
+        currentSupplierCode: string;
     };
 
 export type InventoryReceiptRequest = CreateInventoryReceipt & {
@@ -389,3 +393,10 @@ export type ChickenBatchChart = {
 };
 
 export type StockReceipt = StockReceipt[] & StockReceiptDetail[];
+
+export type StockReceiptResponse = EntityAudit &
+    StockReceipt & {
+        stockReceiptId: string;
+        stockReceiptDetails: StockReceiptDetail[];
+        stockReceiptCode: string;
+    };

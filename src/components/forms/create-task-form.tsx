@@ -112,6 +112,7 @@ export function CreateTaskForm() {
         // );
         // return filteredResources?.map((resource) => ({
         return resources?.map((resource) => ({
+            ...resource,
             value:
                 // resource.equipmentId ||
                 // resource.medicineId ||
@@ -125,11 +126,10 @@ export function CreateTaskForm() {
                 resource.foodName ||
                 resource.harvestProductName ||
                 resource.chickenName,
-            specQuantity: resource.specQuantity,
-            unitSpecification: resource.unitSpecification,
-            // currentSupplierId: resource.currentSupplierId || '',
         }));
     }, [resources]);
+
+    console.log(resourceOptions);
 
     const form = useForm<CreateTask>({
         resolver: zodResolver(CreateTaskSchema),
@@ -925,7 +925,20 @@ export function CreateTaskForm() {
                                                         Vật phẩm
                                                     </FormLabel>
                                                     <Select
-                                                        onValueChange={field.onChange}
+                                                        onValueChange={(value) => {
+                                                            if (value && value.includes('|')) {
+                                                                const [resourceId, supplierId] =
+                                                                    value.split('|');
+                                                                form.setValue(
+                                                                    `taskResources.${index}.resourceId`,
+                                                                    resourceId,
+                                                                );
+                                                                form.setValue(
+                                                                    `taskResources.${index}.supplierId`,
+                                                                    supplierId,
+                                                                );
+                                                            }
+                                                        }}
                                                         defaultValue={field.value}
                                                     >
                                                         <FormControl>
@@ -936,21 +949,30 @@ export function CreateTaskForm() {
                                                         <SelectContent>
                                                             {resourceOptions?.map((res) => (
                                                                 <SelectItem
-                                                                    key={res.value}
-                                                                    value={res.value}
+                                                                    key={
+                                                                        res.value +
+                                                                        '|' +
+                                                                        res.currentSupplierId
+                                                                    }
+                                                                    value={
+                                                                        res.value +
+                                                                        '|' +
+                                                                        res.currentSupplierId
+                                                                    }
                                                                 >
                                                                     <div className="flex flex-col items-start justify-between">
                                                                         {/* {getResourceName(res)} */}
                                                                         <strong>{res.label}</strong>
                                                                         <div className="text-sm text-muted-foreground mt-1">
                                                                             <p className="text-left">
-                                                                                Tồn kho:{' '}
-                                                                                {res.specQuantity}
-                                                                            </p>
-                                                                            <p className="text-left">
                                                                                 Quy cách:{' '}
                                                                                 {
                                                                                     res.unitSpecification
+                                                                                }
+                                                                            </p>
+                                                                            <p className="text-left">
+                                                                                {
+                                                                                    res.currentSupplierName
                                                                                 }
                                                                             </p>
                                                                         </div>
@@ -1029,7 +1051,7 @@ export function CreateTaskForm() {
                 </div>
             </div>
         ),
-        [fields, append, form.control, resourceOptions, remove],
+        [fields, append, form, resourceOptions, remove],
     );
 
     return (
