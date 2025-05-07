@@ -20,12 +20,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 export default function Page() {
     const router = useRouter();
 
-    // TODO: Remove hard-coded
     const form = useForm<SignInRequest>({
         resolver: zodResolver(SignInRequestSchema),
         defaultValues: {
-            mail: 'duongtruong@gmail.com',
-            password: '1',
+            mail: '',
+            password: '',
         },
     });
 

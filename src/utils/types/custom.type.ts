@@ -80,7 +80,6 @@ export type QuantityLogDetails = {
 
 export type QuantityLogResponse = QuantityLog & {
     quantityLogDetails: QuantityLogDetails[];
-    taskId: string;
 };
 
 export type ChickenBatchResponse = ChickenBatch &

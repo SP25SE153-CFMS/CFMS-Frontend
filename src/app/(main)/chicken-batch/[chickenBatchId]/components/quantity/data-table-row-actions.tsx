@@ -33,14 +33,13 @@ import { quantityLogStatusLabels } from '@/utils/enum/status.enum';
 import { QuantityLogResponse } from '@/utils/types/custom.type';
 import { ChickenGender } from '@/utils/enum/gender.enum';
 import { formatDate } from '@/utils/functions';
-import TaskDialog from '../task-dialog';
 
 interface Props<T> {
     row: Row<T>;
 }
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
-    const [openTask, setOpenTask] = useState(false);
+    // const [openTask, setOpenTask] = useState(false);
     const [openDetails, setOpenDetails] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
@@ -79,9 +78,9 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setOpenTask(true)}>
+                    {/* <DropdownMenuItem onClick={() => setOpenTask(true)}>
                         Xem công việc
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                     <DropdownMenuItem onClick={() => setOpenDetails(true)}>
                         Xem chi tiết nhật ký
                     </DropdownMenuItem>
@@ -96,7 +95,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             </DropdownMenu>
 
             {/* Task Dialog */}
-            <TaskDialog open={openTask} onOpenChange={setOpenTask} taskId={quantityLog.taskId} />
+            {/* <TaskDialog open={openTask} onOpenChange={setOpenTask} taskId={quantityLog.taskId} /> */}
 
             {/* Details Dialog */}
             <Dialog open={openDetails} onOpenChange={setOpenDetails}>
