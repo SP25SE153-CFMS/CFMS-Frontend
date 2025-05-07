@@ -60,3 +60,15 @@ export function getCriteria(criteriaId: string): string {
     const criteria = categories.find((cat) => cat.subCategoryId === criteriaId);
     return criteria?.description ?? '';
 }
+
+export function getUnitIdByUnitName(unitName: string): string {
+    const allCategories = JSON.parse(
+        sessionStorage.getItem('categories') ?? '[]',
+    ) as CategoryResponse[];
+    const unit = allCategories
+        ?.filter((cate) => cate.categoryType.endsWith('QUANTITY_UNIT'))
+        .map((cate) => cate.subCategories)
+        .flatMap((x) => x)
+        .find((sub) => sub.subCategoryName === unitName);
+    return unit?.subCategoryId ?? '';
+}

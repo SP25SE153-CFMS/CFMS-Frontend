@@ -19,11 +19,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { getFarmById } from '@/services/farm.service';
 import { createStockReceipt } from '@/services/stock-receipt.service';
 import { getWareByFarmId } from '@/services/warehouse.service';
+import { getUnitIdByUnitName } from '@/utils/functions/category.function';
 import { onError } from '@/utils/functions/form.function';
 import { CreateStockReceipt, CreateStockReceiptSchema } from '@/utils/schemas/stock-receipt.schema';
 import { Supplier } from '@/utils/schemas/supplier.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 import { ArrowLeft, CheckCircle2, House, Plus, Trash2, XCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -58,7 +59,7 @@ export default function StockReceiptCreate() {
             stockReceiptDetails: [
                 {
                     quantity: 0,
-                    unitId: undefined,
+                    unitId: null,
                     toWareId: '',
                     resourceId: '',
                     supplierId: '',
@@ -73,8 +74,6 @@ export default function StockReceiptCreate() {
         name: 'stockReceiptDetails',
     });
 
-    const queryClient = useQueryClient();
-
     const mutation = useMutation({
         mutationFn: createStockReceipt,
         onSuccess: () => {
@@ -85,7 +84,6 @@ export default function StockReceiptCreate() {
             toast.error('Tạo phiếu nhập thất bại. Vui lòng thử lại!');
             console.error('Error creating stock receipt:', error);
         },
-       
     });
 
     const onSubmit = async (values: CreateStockReceipt) => {
@@ -241,6 +239,12 @@ export default function StockReceiptCreate() {
                                                                         ...prev,
                                                                         [index]: unit,
                                                                     }));
+                                                                    form.setValue(
+                                                                        `stockReceiptDetails.${index}.unitId`,
+                                                                        getUnitIdByUnitName(
+                                                                            unit || '',
+                                                                        ),
+                                                                    );
                                                                 }}
                                                                 onSupplierOptionsChange={(
                                                                     suppliers,
