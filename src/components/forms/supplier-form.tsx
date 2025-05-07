@@ -142,11 +142,7 @@ export default function SupplierForm({ defaultValues, closeDialog }: SupplierFor
                                     <FormItem>
                                         <FormLabel className="text-base">Mã nhà cung cấp</FormLabel>
                                         <FormControl>
-                                            <Input
-                                                placeholder="Nhập mã nhà cung cấp"
-                                                readOnly
-                                                {...field}
-                                            />
+                                            <Input placeholder="Nhập mã nhà cung cấp" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

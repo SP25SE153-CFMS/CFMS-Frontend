@@ -2,7 +2,7 @@
 
 import type React from 'react';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { AlertCircle, CalendarIcon, Egg, Loader2, Plus, Trash2 } from 'lucide-react';
 import dayjs from 'dayjs';
@@ -38,6 +38,7 @@ import config from '@/configs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { getChickenType } from '@/utils/functions/category.function';
 
 export default function StartChickenBatchForm({ closeDialog }: { closeDialog: () => void }) {
     const queryClient = useQueryClient();
@@ -90,6 +91,13 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (growDays.min > growDays.max) {
+            toast('Số ngày nuôi tối thiểu phải nhỏ hơn số ngày nuôi tối đa', {
+                icon: '⚠️',
+            });
+            return;
+        }
+
         const formData: StartChickenBatch = {
             chickenCoopId,
             chickenBatchName: (e.target as HTMLFormElement).chickenBatchName.value,
@@ -106,9 +114,11 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
     };
 
     const totalQuantity = chickenDetailRequests.reduce((sum, detail) => sum + detail.quantity, 0);
-    const selectedChickenType = chickenTypes?.find(
-        (type) => type.chickenType?.subCategoryId === chickenTypeId,
-    )?.chickenType?.subCategoryName;
+
+    // TODO: Reverify this
+    // const selectedChickenType = chickenTypes?.find(
+    //     (type) => type.chickenType?.subCategoryId === chickenTypeId,
+    // )?.chickenType?.subCategoryName;
 
     const filteredGrowthStages = growthStages
         ?.filter((stage) => stage.chickenType === chickenTypeId)
@@ -120,9 +130,18 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
 
     const isFormValid = chickenId && totalQuantity > 0;
 
+    const isExceedQuantity = useMemo(() => {
+        const totalQuantity = chickenDetailRequests.reduce(
+            (sum, detail) => sum + detail.quantity,
+            0,
+        );
+        const maxQuantity = JSON.parse(sessionStorage.getItem('currentCoop') || '{}')?.maxQuantity;
+        return totalQuantity > maxQuantity;
+    }, [chickenDetailRequests]);
+
     return (
         <form className="space-y-6" onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-1">
                 <div className="space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="chickenBatchName" className="text-sm font-medium">
@@ -170,7 +189,8 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                         <div className="relative">
                             <Input
                                 disabled
-                                value={selectedChickenType || ''}
+                                // value={selectedChickenType || ''}
+                                value={getChickenType(chickenTypeId) || ''}
                                 className="bg-muted/50 text-muted-foreground"
                             />
                             <Egg className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -449,6 +469,23 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                             </AlertDescription>
                         </Alert>
                     )}
+
+                    {isExceedQuantity && (
+                        <Alert
+                            variant="destructive"
+                            className="bg-red-50 text-red-800 border-red-200"
+                        >
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Số lượng gà vượt quá sức chứa</AlertTitle>
+                            <AlertDescription className="text-xs">
+                                Tổng số lượng gà ({totalQuantity} con) vượt quá sức chứa của chuồng
+                                (
+                                {JSON.parse(sessionStorage.getItem('currentCoop') || '{}')
+                                    ?.maxQuantity ?? 0}{' '}
+                                con).
+                            </AlertDescription>
+                        </Alert>
+                    )}
                 </div>
             </div>
 
@@ -456,7 +493,7 @@ export default function StartChickenBatchForm({ closeDialog }: { closeDialog: ()
                 <Button
                     type="submit"
                     className="w-full max-w-xs"
-                    disabled={mutation.isPending || !isFormValid}
+                    disabled={mutation.isPending || !isFormValid || isExceedQuantity}
                 >
                     {mutation.isPending ? (
                         <>

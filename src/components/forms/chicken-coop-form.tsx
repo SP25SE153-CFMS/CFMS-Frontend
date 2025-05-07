@@ -21,7 +21,7 @@ import {
 } from '@/utils/schemas/chicken-coop.schema';
 import { createChickenCoop, updateChickenCoop } from '@/services/chicken-coop.service';
 import toast from 'react-hot-toast';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { SelectNative } from '../ui/select-native';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
@@ -32,6 +32,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ChickenCoopStatus } from '@/utils/enum/status.enum';
+import { getChickenTypes } from '@/services/category.service';
 
 interface ChickenCoopFormProps {
     defaultValues?: Partial<ChickenCoop>;
@@ -61,6 +62,11 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
             )?.subCategoryId,
             ...defaultValues,
         },
+    });
+
+    const { data: chickenTypes } = useQuery({
+        queryKey: ['chickenTypes'],
+        queryFn: () => getChickenTypes(),
     });
 
     // Query client
@@ -283,16 +289,16 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    {getSubCategoryByCategoryType(
-                                                        CategoryType.CHICKEN,
-                                                    )?.map((chicken) => (
-                                                        <SelectItem
-                                                            key={chicken.subCategoryId}
-                                                            value={chicken.subCategoryId}
-                                                        >
-                                                            {chicken.subCategoryName}
-                                                        </SelectItem>
-                                                    ))}
+                                                    {chickenTypes
+                                                        ?.map((type) => type?.chickenType)
+                                                        ?.map((chicken) => (
+                                                            <SelectItem
+                                                                key={chicken.subCategoryId}
+                                                                value={chicken.subCategoryId}
+                                                            >
+                                                                {chicken.subCategoryName}
+                                                            </SelectItem>
+                                                        ))}
                                                 </SelectContent>
                                             </Select>
                                         </FormControl>
@@ -388,6 +394,7 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                                 placeholder="Nhập mật độ"
                                                 type="number"
                                                 min={0}
+                                                step="any"
                                                 {...field}
                                                 onChange={handleDensityChange}
                                             />

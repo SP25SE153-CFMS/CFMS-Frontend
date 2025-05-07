@@ -1,6 +1,21 @@
 'use client';
 
-import { Box, Calendar, Clock, Crown, Egg, Home, Info, Plus, Type, Users } from 'lucide-react';
+import {
+    Box,
+    Calendar,
+    Clock,
+    Crown,
+    Egg,
+    FileText,
+    Home,
+    Info,
+    Notebook,
+    Pencil,
+    Plus,
+    Type,
+    Users,
+    X,
+} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -14,11 +29,16 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { getTaskById } from '@/services/task.service';
+import { cancelTask, getTaskById } from '@/services/task.service';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import Image from '@/components/fallback-image';
-import { TaskStatus, taskStatusLabels, taskStatusVariant } from '@/utils/enum/status.enum';
+import {
+    AssignmentRoleStatus,
+    TaskStatus,
+    taskStatusLabels,
+    taskStatusVariant,
+} from '@/utils/enum/status.enum';
 import { formatDate } from '@/utils/functions';
 import { Badge } from '@/components/ui/badge';
 import config from '@/configs';
@@ -35,6 +55,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import AssignmentForm from '@/components/forms/assignment-form';
+import Link from 'next/link';
 
 export default function TaskDetail() {
     const [open, setOpen] = useState(false);
@@ -80,6 +101,21 @@ export default function TaskDetail() {
                 </Card>
             </div>
         );
+    }
+
+    async function handleCancelTask(taskId: string): Promise<void> {
+        if (!confirm('Bạn có chắc chắn muốn hủy công việc này?')) {
+            return;
+        }
+
+        try {
+            await cancelTask(taskId);
+            alert('Công việc đã được hủy thành công.');
+            router.push(config.routes.task); // Redirect to the task list page
+        } catch (error) {
+            console.error('Error cancelling task:', error);
+            alert('Đã xảy ra lỗi khi hủy công việc. Vui lòng thử lại.');
+        }
     }
 
     // const getResourceName = (taskRes: TaskResourceResponse) => {
@@ -297,14 +333,124 @@ export default function TaskDetail() {
                             >
                                 Quay lại
                             </Button>
-                            {/* <div className="space-x-2">
-                                <Button
-                                    variant="default"
-                                    className="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700"
-                                >
-                                    Chỉnh sửa
-                                </Button>
-                            </div> */}
+                            {(task.status === TaskStatus.PENDING ||
+                                task.status === TaskStatus.ASSIGNED) && (
+                                <div className="space-x-2">
+                                    <Link href={`${config.routes.task}/${taskId}/update`}>
+                                        <Button>
+                                            <Pencil className="h-4 w-4" />
+                                            Chỉnh sửa
+                                        </Button>
+                                    </Link>
+                                    <Button
+                                        variant="destructive"
+                                        onClick={() => handleCancelTask(taskId)}
+                                    >
+                                        <X className="h-4 w-4" />
+                                        Hủy
+                                    </Button>
+                                </div>
+                            )}
+                            {task.status === TaskStatus.COMPLETED && (
+                                <div className="space-x-2">
+                                    <Dialog open={open} onOpenChange={setOpen}>
+                                        <DialogTrigger asChild>
+                                            <Button>
+                                                <FileText className="h-4 w-4" />
+                                                Xem Báo cáo
+                                            </Button>
+                                        </DialogTrigger>
+                                        <DialogContent className="sm:max-w-[800px]">
+                                            <DialogHeader className="pb-4 border-b">
+                                                <DialogTitle className="text-xl font-semibold flex items-center gap-2">
+                                                    <FileText className="h-5 w-5 text-primary" />
+                                                    Báo cáo cho ăn
+                                                </DialogTitle>
+                                            </DialogHeader>
+
+                                            <div className="py-4">
+                                                <Card className="border rounded-lg overflow-hidden">
+                                                    <div className="max-h-[400px] overflow-auto">
+                                                        <Table>
+                                                            <TableHeader className="bg-muted/50 sticky top-0">
+                                                                <TableRow>
+                                                                    <TableHead className="font-medium">
+                                                                        Tên sản phẩm
+                                                                    </TableHead>
+                                                                    <TableHead className="font-medium">
+                                                                        Mã sản phẩm
+                                                                    </TableHead>
+                                                                    <TableHead className="font-medium">
+                                                                        Quy cách tính
+                                                                    </TableHead>
+                                                                    <TableHead className="font-medium text-right">
+                                                                        Số lượng tiêu thụ
+                                                                    </TableHead>
+                                                                    <TableHead className="font-medium">
+                                                                        Ghi chú
+                                                                    </TableHead>
+                                                                </TableRow>
+                                                            </TableHeader>
+                                                            <TableBody>
+                                                                {task.feedLogs.length > 0 ? (
+                                                                    task.feedLogs.map(
+                                                                        (log, index) => (
+                                                                            <TableRow
+                                                                                key={index}
+                                                                                className="hover:bg-muted/30"
+                                                                            >
+                                                                                <TableCell className="font-medium">
+                                                                                    {
+                                                                                        log.resourceName
+                                                                                    }
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    <Badge
+                                                                                        variant="outline"
+                                                                                        className="font-mono"
+                                                                                    >
+                                                                                        {
+                                                                                            log.resourceCode
+                                                                                        }
+                                                                                    </Badge>
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {
+                                                                                        log.unitSpecification
+                                                                                    }
+                                                                                </TableCell>
+                                                                                <TableCell className="text-right">
+                                                                                    {
+                                                                                        log.actualQuantity
+                                                                                    }
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {log.note ||
+                                                                                        'Không có'}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                        ),
+                                                                    )
+                                                                ) : (
+                                                                    <TableRow>
+                                                                        <TableCell
+                                                                            colSpan={5}
+                                                                            className="text-center py-6 text-muted-foreground"
+                                                                        >
+                                                                            Không tìm thấy dữ liệu
+                                                                            phù hợp
+                                                                        </TableCell>
+                                                                    </TableRow>
+                                                                )}
+                                                            </TableBody>
+                                                        </Table>
+                                                    </div>
+                                                </Card>
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
+                                </div>
+                            )}
                         </CardFooter>
                     </Card>
                 </div>
@@ -335,6 +481,11 @@ export default function TaskDetail() {
                             )}
                         </CardHeader>
                         <CardContent className="pt-4">
+                            <InfoItem
+                                label="Ghi chú"
+                                value={task.assignments?.[0]?.note || 'Không có ghi chú'}
+                                icon={<Notebook size={16} />}
+                            />
                             {task.assignments && task.assignments.length ? (
                                 <div className="bg-white dark:bg-slate-800 rounded-lg border overflow-hidden">
                                     <Table>
@@ -346,9 +497,9 @@ export default function TaskDetail() {
                                                 <TableHead className="dark:text-slate-200">
                                                     Ngày giao
                                                 </TableHead>
-                                                <TableHead className="dark:text-slate-200">
+                                                {/* <TableHead className="dark:text-slate-200">
                                                     Ghi chú
-                                                </TableHead>
+                                                </TableHead> */}
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
@@ -360,7 +511,8 @@ export default function TaskDetail() {
                                                     <TableCell className="dark:text-slate-300">
                                                         <div className="flex items-center gap-1.5">
                                                             {assignment.assignedTo}
-                                                            {assignment.status === 0 && (
+                                                            {assignment.status ===
+                                                                AssignmentRoleStatus.TEAM_LEADER && (
                                                                 <TooltipProvider>
                                                                     <Tooltip>
                                                                         <TooltipTrigger asChild>
@@ -381,9 +533,9 @@ export default function TaskDetail() {
                                                               )
                                                             : '-'}
                                                     </TableCell>
-                                                    <TableCell className="dark:text-slate-300">
+                                                    {/* <TableCell className="dark:text-slate-300">
                                                         {assignment.note ?? 'Không có'}
-                                                    </TableCell>
+                                                    </TableCell> */}
                                                 </TableRow>
                                             ))}
                                         </TableBody>

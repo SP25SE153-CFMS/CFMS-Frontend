@@ -1,16 +1,16 @@
 import { z } from 'zod';
 
 export const InventoryReceiptSchema = z.object({
-    inventoryReceiptId: z.string().uuid({ message: 'ID phiếu nhập/xuất kho không hợp lệ' }),
-    receiptCodeNumber: z.string().length(12, { message: 'Mã code k quá 12 kí tự' }).trim(),
-    inventoryRequestId: z.string().uuid({ message: 'ID yêu cầu nhập/xuất kho không hợp lệ' }),
-    receiptTypeId: z.string().uuid({ message: 'ID loại phiếu nhập/xuất không hợp lệ' }),
+    inventoryReceiptId: z.string().uuid({ message: 'Phiếu nhập/xuất kho không hợp lệ' }),
+    receiptCodeNumber: z.string().length(12, { message: 'Mã code không quá 12 kí tự' }).trim(),
+    inventoryRequestId: z.string().uuid({ message: 'Yêu cầu nhập/xuất kho không hợp lệ' }),
+    receiptTypeId: z.string().uuid({ message: 'Loại phiếu nhập/xuất không hợp lệ' }),
     wareFromId: z
         .string()
-        .uuid({ message: 'ID kho nguồn không hợp lệ' })
+        .uuid({ message: 'Kho nguồn không hợp lệ' })
         .optional() // undefined
         .or(z.literal('')), // null
-    wareToId: z.string().uuid({ message: 'ID kho đích không hợp lệ' }).optional().or(z.literal('')),
+    wareToId: z.string().uuid({ message: 'Kho đích không hợp lệ' }).optional().or(z.literal('')),
     status: z.coerce.number().int({ message: 'Trạng thái phải là số nguyên' }),
     createdBy: z.string().uuid(),
     createDate: z.string().datetime({ message: 'Phải là ngày hợp lệ.' }),
@@ -28,12 +28,12 @@ export const CreateInventoryReceiptSchema = InventoryReceiptSchema.omit({
     status: true,
 }).extend({
     batchNumber: z.number(),
-    requestId: z.string().uuid({ message: 'ID không hợp lệ, phải là UUID' }),
+    requestId: z.string().uuid({ message: 'Phiếu yêu cầu không hợp lệ' }),
     receiptDetails: z.array(
         z.object({
-            resourceId: z.string().uuid({ message: 'ID không hợp lệ, phải là UUID' }),
+            resourceId: z.string().uuid({ message: 'Tài nguyên không hợp lệ' }),
             actualQuantity: z.number(),
-            unitId: z.string().uuid({ message: 'ID không hợp lệ, phải là UUID' }),
+            unitId: z.string().uuid({ message: 'Đơn vị không hợp lệ' }),
             note: z.string(),
         }),
     ),

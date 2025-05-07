@@ -109,14 +109,16 @@ export default function SidebarOverview({
                     </Collapsible>
 
                     {/* Farm Settings */}
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                            <Link href={config.routes.settings}>
-                                <Settings />
-                                <span>Cài đặt trang trại</span>
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
+                    {getCookie(config.cookies.farmRole) === FarmRole.OWNER?.toString() && (
+                        <SidebarMenuItem>
+                            <SidebarMenuButton asChild>
+                                <Link href={config.routes.settings}>
+                                    <Settings />
+                                    <span>Cài đặt trang trại</span>
+                                </Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    )}
 
                     {/* System Config */}
                     <SidebarMenuItem>

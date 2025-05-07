@@ -345,7 +345,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                                         setSelectedDate(newDate);
                                     }}
                                 >
-                                    <Button
+                                    {/* <Button
                                         variant="ghost"
                                         size="icon"
                                         className="h-6 w-6 absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -357,7 +357,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                                     >
                                         <Plus className="h-3 w-3" />
                                         <span className="sr-only">Giao việc</span>
-                                    </Button>
+                                    </Button> */}
 
                                     {/* Events for this day and shift */}
                                     <div className="mt-6 space-y-1 overflow-y-auto max-h-[150px]">
@@ -447,7 +447,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                         </TabsList>
                     </Tabs>
 
-                    <Button
+                    {/* <Button
                         variant="outline"
                         // size="icon"
                         onClick={() => setIsAddEventOpen(true)}
@@ -455,7 +455,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                     >
                         <Plus className="h-4 w-4" />
                         <span className="">Giao việc</span>
-                    </Button>
+                    </Button> */}
                     <Button variant="outline" size="icon" onClick={prevPeriod}>
                         <ChevronLeft className="h-4 w-4" />
                         <span className="sr-only">
@@ -531,7 +531,7 @@ export function Calendar({ events, shifts }: { events: Event[]; shifts: ShiftEve
                             <div className="text-muted-foreground p-4 text-center bg-background/50 rounded-lg">
                                 <p>Không có sự kiện nào</p>
                                 <p className="text-sm mt-1">
-                                    Nhấn &ldquo;Giao việc&rdquo; để tạo mới
+                                    Nhấn &ldquo;Tạo công việc&rdquo; để tạo mới
                                 </p>
                             </div>
                         )}

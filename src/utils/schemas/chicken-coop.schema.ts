@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { ChickenCoopStatus } from '../enum/status.enum';
 
 export const ChickenCoopSchema = z.object({
-    chickenCoopId: z.string().uuid({ message: 'ID chuồng gà không hợp lệ' }),
+    chickenCoopId: z.string().uuid({ message: 'Chuồng nuôi không hợp lệ' }),
 
     chickenCoopCode: z
         .string()
@@ -29,7 +29,7 @@ export const ChickenCoopSchema = z.object({
 
     description: z.string().trim().optional(),
 
-    purposeId: z.string().uuid({ message: 'ID mục đích không hợp lệ' }),
+    purposeId: z.string().uuid({ message: 'Mục đích không hợp lệ' }),
 
     density: z.coerce.number().min(0).positive({ message: 'Mật độ phải là số dương' }),
 

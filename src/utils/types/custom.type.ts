@@ -39,6 +39,7 @@ import { TaskRequest } from '../schemas/task-request.schema';
 import { InventoryRequest } from '../schemas/inventory-request.schema';
 import { InventoryRequestDetail } from '../schemas/inventory-request-detail.schema';
 import { Farm } from '../schemas/farm.schema';
+import { Supplier } from '../schemas/supplier.schema';
 import { StockReceiptDetail } from '../schemas/stock-receipt-detail.schema';
 
 export type EntityAudit = {
@@ -212,6 +213,15 @@ export type ShiftScheduleResponse = {
     endTime: string;
 };
 
+export type FeedLogFromTask = {
+    resourceId: string;
+    resourceName: string;
+    resourceCode: string;
+    unitSpecification: string;
+    actualQuantity: number;
+    note: string;
+};
+
 export type TaskResponse = Task & {
     assignments: AssignmentForTaskResponse[];
     startWorkDate: string;
@@ -220,6 +230,7 @@ export type TaskResponse = Task & {
     taskResources: TaskResourceResponse[];
     taskType: SubCategory;
     taskLocation: TaskLocationResponse;
+    feedLogs: FeedLogFromTask[];
 };
 
 export type ChickenDetailRequest = {
@@ -260,6 +271,11 @@ export type WareStockResponse = Warehouse &
         resourceTypeName: string;
         resourceId: string;
         disease: string;
+        currentSupplierId: string;
+        currentSupplierName: string;
+        currentSupplierCode: string;
+        supplierName: string;
+        suppliersName: Supplier[];
     };
 
 export type WarestockResourceByType = Food &
@@ -293,6 +309,7 @@ export type InventoryRequestDetailResponse = InventoryRequestDetail & {
 
 export type WarehouseResponse = Warehouse & {
     farm: Farm;
+    resourceTypeName: string;
 };
 
 export type InventoryRequestResponse = InventoryRequest & {
@@ -353,6 +370,20 @@ export type HealthLogDetails = {
 
 export type HealthLogRequest = CreateHealthLog & {
     healthLogDetails: HealthLogDetails[];
+};
+
+export type TaskLogResponse = TaskLog & {
+    task: TaskResponse;
+};
+
+export type HealthLogResponse = HealthLog & {
+    healthLogDetails: HealthLogDetails[];
+    taskId: string;
+};
+
+export type ChickenBatchChart = {
+    date: string;
+    totalFeed: number;
 };
 
 export type StockReceipt = StockReceipt[] & StockReceiptDetail[];

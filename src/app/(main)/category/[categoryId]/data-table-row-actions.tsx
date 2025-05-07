@@ -6,10 +6,10 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Trash } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
+import config from '@/configs';
 import {
     Dialog,
     DialogContent,
@@ -25,13 +25,13 @@ import {
     AlertDialogTitle,
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
+import { deleteSubCategory } from '@/services/sub-category.service';
+import { SubCategory } from '@/utils/schemas/sub-category.schema';
+import SubCategoryForm from '@/components/forms/sub-category-form';
 import toast from 'react-hot-toast';
-import { deleteFlock } from '@/services/flock.service';
-import { Flock } from '@/utils/schemas/flock.schema';
-import FlockForm from '@/components/forms/flock-form';
-import { useRouter } from 'next/navigation';
-import config from '@/configs';
 import { useQueryClient } from '@tanstack/react-query';
+import { Separator } from '@/components/ui/separator';
+import { Trash } from 'lucide-react';
 
 interface Props<T> {
     row: Row<T>;
@@ -43,11 +43,12 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openDelete, setOpenDelete] = useState(false);
 
     const queryClient = useQueryClient();
+    const { categoryId }: { categoryId: string } = useParams();
 
     const handleDelete = async () => {
-        await deleteFlock((row.original as Flock).flockId).then(() => {
-            toast.success('Xóa đàn gà thành công');
-            queryClient.invalidateQueries({ queryKey: ['flocks'] });
+        await deleteSubCategory((row.original as SubCategory).subCategoryId).then(() => {
+            toast.success('Đã xóa danh mục con');
+            queryClient.invalidateQueries({ queryKey: ['category', categoryId] });
             setOpenDelete(false);
         });
     };
@@ -64,7 +65,11 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                 <DropdownMenuContent align="end" className="w-[160px]">
                     <DropdownMenuItem
                         onClick={() =>
-                            router.push(`${config.routes.flock}/${row.getValue('flockId')}`)
+                            router.push(
+                                config.routes.category +
+                                    '/' +
+                                    (row.original as SubCategory).subCategoryId,
+                            )
                         }
                     >
                         Xem chi tiết
@@ -72,7 +77,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                         Cập nhật
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
+                    <Separator />
                     <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
                         Xóa <Trash size={16} className="ml-auto" />
                     </DropdownMenuItem>
@@ -83,13 +88,20 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
             <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Cập nhật đàn gà</DialogTitle>
+                        <DialogTitle>Cập nhật danh mục con</DialogTitle>
                         <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
                     </DialogHeader>
                     <ScrollArea className="max-h-[600px]">
-                        <FlockForm
+                        <SubCategoryForm
+                            categoryName={
+                                JSON.parse(sessionStorage.getItem('categories') || '[]').find(
+                                    (category: any) =>
+                                        category.categoryId ===
+                                        (row.original as SubCategory).categoryId,
+                                )?.categoryName || ''
+                            }
                             closeDialog={() => setOpenUpdate(false)}
-                            defaultValues={row.original as Flock}
+                            defaultValues={row.original as SubCategory}
                         />
                     </ScrollArea>
                 </DialogContent>
@@ -101,7 +113,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa đàn gà này?
+                            Bạn có chắc chắn muốn xóa danh mục con này?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="flex justify-end space-x-2">

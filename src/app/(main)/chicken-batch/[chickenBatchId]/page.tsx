@@ -4,6 +4,7 @@ import {
     AlertCircle,
     BarChart3,
     Calendar,
+    ChevronLeft,
     ClipboardList,
     Database,
     Egg,
@@ -17,14 +18,14 @@ import {
     TrendingUp,
     Type,
 } from 'lucide-react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { chickenBatchStatusLabels, chickenBatchStatusVariant } from '@/utils/enum/status.enum';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import CardVaccinationLog from './components/vaccine/card';
+import CardVaccineLog from './components/vaccine/card';
 import { getChickenBatchById } from '@/services/chicken-batch.service';
 import { useQuery } from '@tanstack/react-query';
 import CardNutritionPlan from './components/nutrition/card';
@@ -52,8 +53,12 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { calculateDuration } from '@/utils/functions';
 import ExportChickenForm from '@/components/forms/export-chicken-form';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { getTasksByFarmId } from '@/services/task.service';
+import { getCookie } from 'cookies-next';
+import config from '@/configs';
 
 export default function Page() {
+    const router = useRouter();
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
 
     const [openSplit, setOpenSplit] = useState(false);
@@ -67,6 +72,17 @@ export default function Page() {
             return data;
         },
         enabled: !!chickenBatchId,
+    });
+
+    const farmId = getCookie(config.cookies.farmId) as string;
+
+    useQuery({
+        queryKey: ['tasks'],
+        queryFn: async () => {
+            const tasks = await getTasksByFarmId(farmId);
+            sessionStorage.setItem('tasks', JSON.stringify(tasks));
+            return tasks;
+        },
     });
 
     const chicken = chickenBatch?.chicken;
@@ -128,6 +144,11 @@ export default function Page() {
                     Thông tin lứa nuôi
                     <span className="text-primary ml-2">{chickenBatch.chickenBatchName}</span>
                 </h1>
+
+                <Button variant="outline" onClick={() => router.push(config.routes.task)}>
+                    <ChevronLeft className="h-4 w-4" />
+                    Quay lại
+                </Button>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 my-6">
                 <div className="flex flex-col gap-4">
@@ -339,13 +360,28 @@ export default function Page() {
                     </Card>
                 </div>
                 <div className="col-span-2">
-                    {isReadyToExport && (
+                    {/* Alert for export chicken */}
+                    {isReadyToExport && remainingQuantity !== 0 && (
                         <Alert variant="default" className="border-blue-500/50 text-blue-600 mb-4">
                             <AlertCircle className="h-4 w-4 text-blue-600" color="blue" />
                             <AlertTitle className="font-bold">Thông báo xuất chuồng</AlertTitle>
                             <AlertDescription>
                                 Ngày nuôi đã đạt đến số ngày nuôi tối thiếu. Bạn có thể xuất chuồng
                                 nếu muốn.
+                            </AlertDescription>
+                        </Alert>
+                    )}
+
+                    {/* Alert for remaining quantity = 0 */}
+                    {remainingQuantity === 0 && (
+                        <Alert variant="default" className="border-blue-500/50 text-blue-600 mb-4">
+                            <AlertCircle className="h-4 w-4 text-blue-600" color="blue" />
+                            <AlertTitle className="font-bold">
+                                Không thể xuất chuồng/tách lứa nuôi
+                            </AlertTitle>
+                            <AlertDescription>
+                                Số lượng gà còn lại là 0. Bạn không thể xuất chuồng hoặc tách lứa
+                                nuôi.
                             </AlertDescription>
                         </Alert>
                     )}
@@ -359,7 +395,7 @@ export default function Page() {
                                     Chỉ số kỹ thuật
                                 </h2>
                                 <p className="text-muted-foreground text-sm">
-                                    Theo dõi các chỉ số kỹ thuật quan trọng của chuồng nuôi
+                                    Theo dõi các chỉ số kỹ thuật quan trọng của lứa nuôi
                                 </p>
                             </div>
                             <div className="flex flex-wrap justify-between">
@@ -391,7 +427,7 @@ export default function Page() {
                             <TabsTrigger value="feed">Lịch sử cho ăn</TabsTrigger>
                         </TabsList>
                         <TabsContent value="vaccine">
-                            <CardVaccinationLog vaccineLogs={chickenBatch?.vaccineLogs} />
+                            <CardVaccineLog vaccineLogs={chickenBatch?.vaccineLogs} />
                         </TabsContent>
                         <TabsContent value="health">
                             <CardHealthLog healthLogs={chickenBatch?.healthLogs} />
@@ -424,7 +460,7 @@ export default function Page() {
                     />
                 </div>
                 <div className="lg:col-span-3">
-                    <Chart />
+                    <Chart chickenBatchId={chickenBatchId} />
                 </div>
             </div>
         </div>

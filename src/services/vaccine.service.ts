@@ -1,15 +1,13 @@
 import { Vaccine } from '@/utils/schemas/vaccine.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
-import { vaccines } from '@/utils/data/table.data';
 
 const PREFIX = '/api/Vaccine';
 
 export const getVaccines = async () => {
-    // const endpoint = PREFIX
-    // const response = await get<Response<Vaccine[]>>(endpoint);
-    // return response.data.data;
-    return vaccines;
+    const endpoint = PREFIX;
+    const response = await get<Response<Vaccine[]>>(endpoint);
+    return response.data.data;
 };
 
 export const getVaccineById = async (id: string) => {

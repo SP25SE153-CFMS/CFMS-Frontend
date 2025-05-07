@@ -20,6 +20,8 @@ export const env = createEnv({
         // Cloudinary
         NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string(),
         NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET: z.string(),
+        // Google Maps
+        NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string(),
     },
 
     /**
@@ -38,6 +40,8 @@ export const env = createEnv({
         // Cloudinary
         NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
         NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET: process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
+        // Google Maps
+        NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     },
 
     /**

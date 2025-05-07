@@ -45,7 +45,11 @@ export default function Page() {
 
     const { data: shifts, isLoading } = useQuery({
         queryKey: ['shifts'],
-        queryFn: () => getShifts(),
+        queryFn: async () => {
+            const shifts = await getShifts();
+            sessionStorage.setItem('shifts', JSON.stringify(shifts));
+            return shifts;
+        },
     });
 
     const queryClient = useQueryClient();

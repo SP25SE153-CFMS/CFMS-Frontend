@@ -362,3 +362,8 @@ export const quantityLogStatusLabels: Record<string, string> = {
     [QuantityLogStatus.IMPORT]: 'Nhập thêm',
     [QuantityLogStatus.EXPORT]: 'Xuất chuồng',
 };
+
+export enum AssignmentRoleStatus {
+    TEAM_LEADER = 1, // Đội trưởng
+    EMPLOYEE = 0, // Nhân viên
+}

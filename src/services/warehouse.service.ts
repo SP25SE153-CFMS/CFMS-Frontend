@@ -3,6 +3,7 @@ import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 import {
     ResourceResponse,
+    WarehouseResponse,
     WarestockResourceByType,
     WareStockResponse,
 } from '@/utils/types/custom.type';
@@ -25,12 +26,18 @@ export const getWareById = async (id: string) => {
 
 export const getWareByFarmId = async (id: string) => {
     const endpoint = PREFIX + '/' + 'farmId' + '/' + id;
+    const response = await get<Response<WarehouseResponse[]>>(endpoint);
+    return response.data.data;
+};
+
+export const getWareStock = async (wareId: string, resourceTypeId: string) => {
+    const endpoint = `${PREFIX}/warestocks/${wareId}/${resourceTypeId}`;
     const response = await get<Response<WareStockResponse[]>>(endpoint);
     return response.data.data;
 };
 
 export const getWareStockByResourceTypeId = async (wareId: string, resourceTypeId: string) => {
-    const endpoint = PREFIX + '/' + 'warestocks' + '/' + wareId + '/' + resourceTypeId;
+    const endpoint = `${PREFIX}/warestock-depend-suppliers/${wareId}/${resourceTypeId}`;
     const response = await get<Response<WareStockResponse[]>>(endpoint);
     return response.data.data;
 };

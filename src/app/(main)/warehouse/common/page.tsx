@@ -3,17 +3,15 @@
 import { DataTable } from '@/components/table/data-table';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plus } from 'lucide-react';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-} from '@/components/ui/dialog';
+import { ArrowLeft } from 'lucide-react';
+// import {
+//     Dialog,
+//     DialogContent,
+//     DialogHeader,
+//     DialogTitle,
+//     DialogDescription,
+// } from '@/components/ui/dialog';
 import { useEffect, useState } from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import ChickenForm from '@/components/forms/chicken-form';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,12 +22,12 @@ import { Separator } from '@/components/ui/separator';
 import { getWareById, getWareStockByResourceTypeId } from '@/services/warehouse.service';
 
 export default function Page() {
-    const [open, setOpen] = useState(false);
+    // const [open, setOpen] = useState(false);
     const [wId, setWId] = useState('');
     const [rId, setRId] = useState('');
 
-    const openModal = () => setOpen(true);
-    const onOpenChange = (val: boolean) => setOpen(val);
+    // const openModal = () => setOpen(true);
+    // const onOpenChange = (val: boolean) => setOpen(val);
 
     useEffect(() => {
         const wId = sessionStorage.getItem('wareId') ?? '';
@@ -88,10 +86,10 @@ export default function Page() {
                     </Button>
                 </Link>
 
-                <Button onClick={openModal} className="w-full sm:w-auto">
+                {/* <Button onClick={openModal} className="w-full sm:w-auto">
                     <Plus className="mr-2 h-4 w-4" />
                     Tạo mới
-                </Button>
+                </Button> */}
             </div>
 
             <Card className="shadow-sm border-muted">
@@ -112,7 +110,7 @@ export default function Page() {
                 </CardContent>
             </Card>
 
-            <Dialog open={open} onOpenChange={onOpenChange}>
+            {/* <Dialog open={open} onOpenChange={onOpenChange}>
                 <DialogContent className="max-w-2xl">
                     <DialogHeader>
                         <DialogTitle className="text-xl font-semibold">Tạo dữ liệu</DialogTitle>
@@ -124,7 +122,7 @@ export default function Page() {
                         </div>
                     </ScrollArea>
                 </DialogContent>
-            </Dialog>
+            </Dialog> */}
         </div>
     );
 }

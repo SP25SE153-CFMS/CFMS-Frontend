@@ -1,21 +1,21 @@
 import { z } from 'zod';
 
 export const AssignmentSchema = z.object({
-    assignmentId: z.string().uuid({ message: 'ID phân công không hợp lệ' }),
+    assignmentId: z.string().uuid({ message: 'Công việc được giao là bắt buộc' }),
 
-    taskId: z.string().uuid({ message: 'ID công việc không hợp lệ' }),
+    taskId: z.string().uuid({ message: 'Công việc là bắt buộc' }),
 
-    assignedToId: z.string().uuid({ message: 'ID người được phân công không hợp lệ' }),
+    assignedToId: z.string().uuid({ message: 'Cgười được phân công là bắt buộc' }),
 
     assignedDate: z
         .string()
         .datetime({ message: 'Ngày phân công không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
 
-    // shiftScheduleId: z.string().uuid({ message: 'ID lịch ca không hợp lệ' }),
+    // shiftScheduleId: z.string().uuid({ message: 'Lịch ca là bắt buộc' }),
 
-    // taskScheduleId: z.string().uuid({ message: 'ID lịch công việc không hợp lệ' }),
+    // taskScheduleId: z.string().uuid({ message: 'Lịch công việc là bắt buộc' }),
 
-    // status: z.nativeEnum(AssignmentStatus, { message: 'Trạng thái không hợp lệ' }),
+    // status: z.nativeEnum(AssignmentStatus, { message: 'Trạng thái là bắt buộc' }),
 
     note: z.string().trim().optional(),
 });

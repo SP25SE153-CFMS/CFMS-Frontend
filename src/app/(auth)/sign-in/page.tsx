@@ -6,26 +6,25 @@ import { Input } from '@/components/ui/input';
 import config from '@/configs';
 import Image from '@/components/fallback-image';
 import Link from 'next/link';
-import { FieldErrors, useForm } from 'react-hook-form';
+import { type FieldErrors, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { setCookie, deleteCookie } from 'cookies-next';
 import { useMutation } from '@tanstack/react-query';
 import { signIn, signInGoogle } from '@/services/auth.service';
 import toast from 'react-hot-toast';
 import { IoLogoGoogle } from 'react-icons/io5';
-import { Loader2 } from 'lucide-react';
-import { SignInRequest, SignInRequestSchema } from '@/utils/schemas/auth.schema';
+import { Loader2, Mail, KeyRound } from 'lucide-react';
+import { type SignInRequest, SignInRequestSchema } from '@/utils/schemas/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 export default function Page() {
     const router = useRouter();
 
-    // TODO: Remove hard-coded
     const form = useForm<SignInRequest>({
         resolver: zodResolver(SignInRequestSchema),
         defaultValues: {
-            mail: 'duongtruong@gmail.com',
-            password: '1',
+            mail: '',
+            password: '',
         },
     });
 
@@ -65,7 +64,7 @@ export default function Page() {
         <div className="flex items-center justify-center px-[56px] py-[24px] min-h-screen bg-background transition-colors duration-300">
             <div className="flex size-min justify-center items-center gap-x-[32px] shrink-0 overflow-hidden">
                 {/* Left Panel */}
-                <div className="flex flex-col w-1/2 relative items-start self-stretch columns-xl content-center px-[47px] pt-[49px] rounded-[34px] bg-gradient-to-br from-primary to-primary/80 dark:from-primary/90 dark:to-primary/70">
+                <div className="hidden lg:flex flex-col w-1/2 relative items-start self-stretch columns-xl content-center px-[47px] pt-[49px] rounded-[34px] bg-gradient-to-br from-primary to-primary/80 dark:from-primary/90 dark:to-primary/70">
                     <h2 className="text-center text-[48px] text-white not-italic font-bold leading-[normal]">
                         Hệ Thống Quản Lý Trang Trại Gà Với CFMS
                     </h2>
@@ -84,7 +83,7 @@ export default function Page() {
                 </div>
 
                 {/* Right Panel */}
-                <div className="flex flex-col w-1/2 py-[10px] px-[42px] gap-y-[27px] gap-x-[34px] justify-center items-center content-center self-stretch bg-background dark:bg-background">
+                <div className="flex flex-col w-full lg:w-1/2 py-[10px] px-[42px] gap-y-[27px] gap-x-[34px] justify-center items-center content-center self-stretch bg-background dark:bg-background">
                     <p className="text-[26px] text-center font-bold not-italic leading-[normal] whitespace-nowrap text-foreground">
                         Hệ Thống Quản Lý <span className="text-primary">Trang Trại Gà</span>
                     </p>
@@ -105,14 +104,17 @@ export default function Page() {
                                 control={form.control}
                                 name="mail"
                                 render={({ field }) => (
-                                    <FormItem className="w-full">
+                                    <FormItem className="w-full relative">
                                         <FormControl>
-                                            <Input
-                                                {...field}
-                                                type="email"
-                                                placeholder="Email"
-                                                className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl px-[19px]"
-                                            />
+                                            <div className="relative group">
+                                                <Mail className="absolute left-[19px] top-1/2 transform -translate-y-1/2 text-primary-sub-text dark:text-primary-sub-text/90 h-5 w-5 group-hover:text-primary transition-colors duration-200" />
+                                                <Input
+                                                    {...field}
+                                                    type="email"
+                                                    placeholder="Email"
+                                                    className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl pl-[50px] pr-[19px]"
+                                                />
+                                            </div>
                                         </FormControl>
                                     </FormItem>
                                 )}
@@ -123,14 +125,17 @@ export default function Page() {
                                 control={form.control}
                                 name="password"
                                 render={({ field }) => (
-                                    <FormItem className="w-full">
+                                    <FormItem className="w-full relative">
                                         <FormControl>
-                                            <Input
-                                                {...field}
-                                                type="password"
-                                                placeholder="Mật khẩu"
-                                                className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl px-[19px]"
-                                            />
+                                            <div className="relative group">
+                                                <KeyRound className="absolute left-[19px] top-1/2 transform -translate-y-1/2 text-primary-sub-text dark:text-primary-sub-text/90 h-5 w-5 group-hover:text-primary transition-colors duration-200" />
+                                                <Input
+                                                    {...field}
+                                                    type="password"
+                                                    placeholder="Mật khẩu"
+                                                    className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl pl-[50px] pr-[19px]"
+                                                />
+                                            </div>
                                         </FormControl>
                                     </FormItem>
                                 )}

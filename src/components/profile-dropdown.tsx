@@ -22,15 +22,13 @@ import { BadgeCheck, Check, Moon, Sun } from 'lucide-react';
 import { LogOut } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getCurrentUser } from '@/services/auth.service';
-import { LoadingSpinner } from './ui/loading-spinner';
 import { convertToThumbnailUrl } from '@/utils/functions';
 import { useTheme } from '@/context/theme-context';
 import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { Skeleton } from './ui/skeleton';
 
 export function ProfileDropdown() {
-    // const router = useRouter();
-
     const {
         data: currentUser,
         isLoading,
@@ -55,7 +53,7 @@ export function ProfileDropdown() {
     }, [theme]);
 
     if (isLoading) {
-        return <LoadingSpinner className="size-8" />;
+        return <Skeleton className="w-8 h-8 rounded-full" />;
     }
 
     if (!currentUser) {

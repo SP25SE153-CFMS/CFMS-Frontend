@@ -54,3 +54,9 @@ export function getRequestType(requestTypeId: string): string {
     const requestType = categories.find((cat) => cat.subCategoryId === requestTypeId);
     return requestType?.description ?? '';
 }
+
+export function getCriteria(criteriaId: string): string {
+    const categories = getSubCategoryByCategoryType(CategoryType.CHICKEN_CRITERIA);
+    const criteria = categories.find((cat) => cat.subCategoryId === criteriaId);
+    return criteria?.description ?? '';
+}

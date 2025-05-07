@@ -18,8 +18,12 @@ import {
     type GrowthStage,
 } from '@/utils/schemas/growth-stage.schema';
 import toast from 'react-hot-toast';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createGrowthStage, updateGrowthStage } from '@/services/growth-stage.service';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+    createGrowthStage,
+    getGrowthStages,
+    updateGrowthStage,
+} from '@/services/growth-stage.service';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
@@ -29,6 +33,7 @@ import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { useState } from 'react';
 import { onError } from '@/utils/functions/form.function';
+import { LoadingSpinner } from '../ui/loading-spinner';
 
 interface GrowthStageFormProps {
     defaultValues?: Partial<GrowthStage>;
@@ -49,6 +54,17 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
             description: '',
             farmId: getCookie(config.cookies.farmId) || '',
             ...defaultValues,
+        },
+    });
+
+    const [newStageCode, setNewStageCode] = useState('');
+
+    const { data: growthStages, isLoading } = useQuery({
+        queryKey: ['growthStages'],
+        queryFn: async () => {
+            const growthStages = await getGrowthStages();
+            sessionStorage.setItem('growthStages', JSON.stringify(growthStages));
+            return growthStages;
         },
     });
 
@@ -75,6 +91,12 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
 
     // Form submit handler
     function onSubmit(values: GrowthStage) {
+        // Validate minAgeWeek < maxAgeWeek
+        if (values.minAgeWeek >= values.maxAgeWeek) {
+            toast.error('Tuổi bắt đầu phải nhỏ hơn tuổi kết thúc');
+            return;
+        }
+
         const newValues = { ...values, id: values.growthStageId };
         mutation.mutate(newValues);
     }
@@ -99,7 +121,14 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
         setNewStageCode(code);
     };
 
-    const [newStageCode, setNewStageCode] = useState('');
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-[70vh] gap-4">
+                <LoadingSpinner />
+                <p className="text-muted-foreground animate-pulse">Đang tải dữ liệu...</p>
+            </div>
+        );
+    }
 
     return (
         <Form {...form}>
@@ -117,7 +146,11 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                                         type="text"
                                         placeholder="Nhập tên giai đoạn"
                                         {...field}
-                                        // onBlur={handleGenerateCode}
+                                        onBlur={() => {
+                                            if (form.getValues('stageName')) {
+                                                handleGenerateCode(form.getValues('stageName'));
+                                            }
+                                        }}
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -130,12 +163,9 @@ export default function GrowthStageForm({ defaultValues, closeDialog }: GrowthSt
                         control={form.control}
                         name="stageCode"
                         render={({ field }) => {
-                            const growthStages = JSON.parse(
-                                sessionStorage.getItem('growthStages') || '[]',
-                            ) as GrowthStage[];
                             const uniqueGrowthStages = Array.from(
                                 new Map(
-                                    growthStages.map((stage) => [stage.stageCode, stage]),
+                                    growthStages?.map((stage) => [stage.stageCode, stage]),
                                 ).values(),
                             );
 

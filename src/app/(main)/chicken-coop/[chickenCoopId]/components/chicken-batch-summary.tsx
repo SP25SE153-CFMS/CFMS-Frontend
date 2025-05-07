@@ -51,6 +51,7 @@ import toast from 'react-hot-toast';
 import StartChickenBatchForm from '@/components/forms/start-chicken-batch-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { calculateDuration } from '@/utils/functions';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
 
 const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[] }) => {
     const [open, setOpen] = useState(false);
@@ -254,7 +255,9 @@ const ChickenBatchSummary = ({ chickenBatches }: { chickenBatches: ChickenBatch[
                                         Hãy nhập các thông tin dưới đây để bắt đầu lứa nuôi mới
                                     </DialogDescription>
                                 </DialogHeader>
-                                <StartChickenBatchForm closeDialog={() => setOpen(false)} />
+                                <ScrollArea className="max-h-[600px] overflow-auto">
+                                    <StartChickenBatchForm closeDialog={() => setOpen(false)} />
+                                </ScrollArea>
                             </DialogContent>
                         </Dialog>
                     </CardFooter>

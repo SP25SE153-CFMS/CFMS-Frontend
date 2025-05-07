@@ -10,25 +10,21 @@ import { Card } from '@/components/ui/card';
 import Image from '@/components/fallback-image';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { getConfigs } from '@/services/config.service';
+import { useState } from 'react';
+import { Input } from '@/components/ui/input';
 
 export default function Page() {
-    // const [open, setOpen] = useState(false);
-    // const onOpenChange = (val: boolean) => setOpen(val);
-    // const openModal = () => setOpen(true);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const { data: configs, isLoading } = useQuery({
         queryKey: ['configs'],
         queryFn: () => getConfigs(),
     });
 
-    // useQuery({
-    //     queryKey: ['users'],
-    //     queryFn: async () => {
-    //         const users = await getUsers();
-    //         sessionStorage.setItem('users', JSON.stringify(users));
-    //         return users;
-    //     },
-    // });
+    // Filter configs based on the search query
+    const filteredConfigs = configs?.filter((config) =>
+        config.description?.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
 
     // Check if configs are loading
     if (isLoading) {
@@ -69,6 +65,12 @@ export default function Page() {
                     </p>
                 </div>
                 <div className="flex gap-2">
+                    <Input
+                        placeholder="Tìm kiếm cấu hình..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-64"
+                    />
                     <Button
                         variant="outline"
                         className="space-x-1"
@@ -95,7 +97,7 @@ export default function Page() {
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={configs} columns={columns} />
+                <DataTable data={filteredConfigs || []} columns={columns} />
             </div>
         </div>
     );

@@ -6,6 +6,7 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Trash } from 'lucide-react';
@@ -17,26 +18,45 @@ import {
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
 import toast from 'react-hot-toast';
-import { VaccinationLog } from '@/utils/schemas/vaccine.schema';
 import { deleteVaccinationLog } from '@/services/vaccination-log.service';
 import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
+import TaskDialog from '../task-dialog';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { getCriteria } from '@/utils/functions/category.function';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { HealthLogResponse } from '@/utils/types/custom.type';
 
 interface Props<T> {
     row: Row<T>;
 }
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
+    const [openTask, setOpenTask] = useState(false);
+    const [openDetails, setOpenDetails] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
-    const vaccinationLog = row.original as VaccinationLog;
+    const healthLog = row.original as HealthLogResponse;
 
     const queryClient = useQueryClient();
     const { chickenBatchId }: { chickenBatchId: string } = useParams();
 
     const handleDelete = async () => {
-        await deleteVaccinationLog(vaccinationLog.vLogId).then(() => {
-            toast.success('Xóa lịch sử sức khỏe thành công');
+        await deleteVaccinationLog(healthLog.healthLogId).then(() => {
+            toast.success('Xóa nhật ký sức khỏe thành công');
             queryClient.invalidateQueries({ queryKey: ['chickenBatch', chickenBatchId] });
             setOpenDelete(false);
         });
@@ -51,32 +71,65 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         <span className="sr-only">Mở menu</span>
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[160px]">
-                    {/* <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
-                        Cập nhật
+                <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => setOpenTask(true)}>
+                        Xem công việc
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator /> */}
+                    <DropdownMenuItem onClick={() => setOpenDetails(true)}>
+                        Xem chi tiết nhật ký
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
                         Xóa <Trash size={16} className="ml-auto" />
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Update Dialog */}
-            {/* <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
+            {/* Task Dialog */}
+            <TaskDialog open={openTask} onOpenChange={setOpenTask} taskId={healthLog.taskId} />
+
+            {/* Details Dialog */}
+            <Dialog open={openDetails} onOpenChange={setOpenDetails}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Cập nhật lịch sử sức khỏe</DialogTitle>
-                        <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
+                        <DialogTitle>Chi tiết nhật ký</DialogTitle>
+                        <DialogDescription>
+                            Dưới đây là các thông tin chi tiết của nhật ký sức khỏe.
+                        </DialogDescription>
                     </DialogHeader>
-                    <ScrollArea className="max-h-[600px]">
-                        <VaccinationLogForm
-                            closeDialog={() => setOpenUpdate(false)}
-                            defaultValues={row.original as VaccinationLog}
-                        />
-                    </ScrollArea>
+                    <div className="flex flex-col">
+                        <Table>
+                            <TableHeader className="bg-muted/50 sticky top-0">
+                                <TableRow>
+                                    <TableHead className="font-medium">Tiêu chí đánh giá</TableHead>
+                                    <TableHead className="font-medium">Kết quả</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {healthLog.healthLogDetails.length > 0 ? (
+                                    healthLog.healthLogDetails.map((log, index) => (
+                                        <TableRow key={index} className="hover:bg-muted/30">
+                                            <TableCell className="font-medium">
+                                                {getCriteria(log.criteriaId)}
+                                            </TableCell>
+                                            <TableCell>{log.result || 'Không có'}</TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell
+                                            colSpan={5}
+                                            className="text-center py-6 text-muted-foreground"
+                                        >
+                                            Không tìm thấy dữ liệu phù hợp
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
                 </DialogContent>
-            </Dialog> */}
+            </Dialog>
 
             {/* Delete Confirmation Dialog */}
             <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>

@@ -5,6 +5,8 @@ import { supplierStatusLabels, supplierStatusVariant } from '@/utils/enum/status
 import { Supplier } from '@/utils/schemas/supplier.schema';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTableRowActions } from './data-table-row-actions';
+import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 
 export const columns: ColumnDef<Supplier>[] = [
     {
@@ -59,7 +61,10 @@ export const columns: ColumnDef<Supplier>[] = [
     {
         accessorKey: 'bankAccount',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Số ngân hàng" />,
-        cell: ({ row }) => <div>{row.getValue('bankAccount')}</div>,
+        cell: ({ row }) => {
+            const bankAccount = row.getValue('bankAccount') as string;
+            return <BankAccountCell bankAccount={bankAccount} />;
+        },
     },
     {
         accessorKey: 'status',
@@ -81,3 +86,21 @@ export const columns: ColumnDef<Supplier>[] = [
         cell: ({ row }) => <DataTableRowActions row={row} />,
     },
 ];
+
+function BankAccountCell({ bankAccount }: { bankAccount: string }) {
+    const [isVisible, setIsVisible] = useState(false);
+    const maskedAccount = `*****${bankAccount.slice(-4)}`;
+
+    return (
+        <div className="flex items-center gap-2">
+            <span>{isVisible ? bankAccount : maskedAccount}</span>
+            <button
+                type="button"
+                onClick={() => setIsVisible(!isVisible)}
+                className="focus:outline-none"
+            >
+                {isVisible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+        </div>
+    );
+}

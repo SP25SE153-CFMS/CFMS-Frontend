@@ -1,6 +1,6 @@
 'use client';
 
-import { TaskForm } from '@/components/forms/task-form';
+import { CreateTaskForm } from '@/components/forms/create-task-form';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ClipboardList, CalendarClock } from 'lucide-react';
@@ -80,7 +80,7 @@ export default function CreateTaskPage() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <TaskForm />
+                            <CreateTaskForm />
                         </CardContent>
                     </Card>
                 </div>

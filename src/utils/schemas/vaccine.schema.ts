@@ -3,7 +3,7 @@ import { VaccinationLogStatus } from '../enum/status.enum';
 
 // Schema Vaccine
 export const VaccineSchema = z.object({
-    vaccineId: z.string().uuid('ID vắc-xin phải là UUID hợp lệ'),
+    vaccineId: z.string().uuid('Vắc-xin không hợp lệ'),
     name: z.string().min(1, 'Tên vắc-xin không được để trống'),
     notes: z.string().optional(),
     productionDate: z.coerce.date().refine((date) => !isNaN(date.getTime()), {
@@ -21,13 +21,13 @@ export const VaccineSchema = z.object({
     updatedAt: z.coerce.date().refine((date) => !isNaN(date.getTime()), {
         message: 'Ngày cập nhật không hợp lệ',
     }),
-    supplierId: z.string().uuid('ID nhà cung cấp phải là UUID hợp lệ'),
-    diseaseId: z.coerce.number().int().positive('ID bệnh phải là số nguyên dương'),
+    supplierId: z.string().uuid('Nhà cung cấp không hợp lệ'),
+    diseaseId: z.coerce.number().int().positive('Bệnh không hợp lệ'),
 });
 
 // Schema Vaccination Log
 export const VaccinationLogSchema = z.object({
-    vLogId: z.string().uuid('ID nhật ký phải là UUID hợp lệ'),
+    vLogId: z.string().uuid('Nhật ký tiêm phòng không hợp lệ'),
     vaccinationDate: z.coerce.date().refine((date) => !isNaN(date.getTime()), {
         message: 'Ngày tiêm không hợp lệ',
     }),
@@ -46,8 +46,9 @@ export const VaccinationLogSchema = z.object({
     updatedAt: z.coerce.date().refine((date) => !isNaN(date.getTime()), {
         message: 'Ngày cập nhật không hợp lệ',
     }),
-    vaccineId: z.string().uuid('ID vắc-xin phải là UUID hợp lệ'),
-    flockId: z.string().uuid({ message: 'ID vaccine không hợp lệ' }),
+    vaccineId: z.string().uuid('Vắc-xin không hợp lệ'),
+    flockId: z.string().uuid({ message: 'Đàn gà không hợp lệ' }),
+    taskId: z.string().uuid('Công việc không hợp lệ'),
 });
 
 // Export types

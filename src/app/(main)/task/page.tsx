@@ -35,6 +35,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import AssignmentForm from '@/components/forms/assignment-form';
+import { TaskResponse } from '@/utils/types/custom.type';
 
 export default function Page() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -62,14 +63,16 @@ export default function Page() {
         endHour: parseInt(shift.endTime),
     });
 
-    // TODO: Change to Task type
-    const mapTaskToEvent = (task: any): Event => ({
+    const mapTaskToEvent = (task: TaskResponse): Event => ({
         id: task.taskId,
         title: task.taskName,
         date: new Date(task.startWorkDate),
         color: assignmentBackground[task.status],
-        status: parseInt(task.status),
-        shift: shifts?.[0]?.shiftId ?? '',
+        status: task.status,
+        shift:
+            shifts?.find((shift) => shift.shiftName === task.shiftSchedule?.shiftName)?.shiftId ||
+            shifts?.[0]?.shiftId ||
+            '',
     });
 
     const events = (tasks || []).map(mapTaskToEvent);

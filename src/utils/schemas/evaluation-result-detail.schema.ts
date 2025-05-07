@@ -3,10 +3,10 @@ import { z } from 'zod';
 export const EvaluationResultDetailSchema = z.object({
     evaluationResultDetailId: z
         .string()
-        .uuid({ message: 'ID chi tiết kết quả đánh giá không hợp lệ' }),
-    evaluationResultId: z.string().uuid({ message: 'ID kết quả đánh giá không hợp lệ' }),
+        .uuid({ message: 'Chi tiết kết quả đánh giá không hợp lệ' }),
+    evaluationResultId: z.string().uuid({ message: 'Kết quả đánh giá không hợp lệ' }),
     actualValue: z.string().optional(),
-    isPass: z.boolean({ message: 'Trạng thái đạt phải là giá trị boolean' }),
+    isPass: z.boolean({ message: 'Trạng thái đạt không hợp lệ' }),
 });
 
 export type EvaluationResultDetail = z.infer<typeof EvaluationResultDetailSchema>;

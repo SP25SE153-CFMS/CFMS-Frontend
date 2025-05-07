@@ -165,31 +165,31 @@ export default function ResourceSuppliers() {
                         }`
                     } h-auto p-1`}
                 >
-                    <TabsTrigger value="all" className="text-sm py-2 px-16">
+                    <TabsTrigger value="all" className="text-sm py-2 px-12">
                         Tất cả ({resources.length})
                     </TabsTrigger>
                     {foodResources.length > 0 && (
-                        <TabsTrigger value="food" className="text-sm py-2 px-16">
+                        <TabsTrigger value="food" className="text-sm py-2 px-12">
                             Thực phẩm ({foodResources.length})
                         </TabsTrigger>
                     )}
                     {medicineResources.length > 0 && (
-                        <TabsTrigger value="medicine" className="text-sm py-2 px-16">
+                        <TabsTrigger value="medicine" className="text-sm py-2 px-12">
                             Dược phẩm ({medicineResources.length})
                         </TabsTrigger>
                     )}
                     {equipmentResources.length > 0 && (
-                        <TabsTrigger value="equipment" className="text-sm py-2 px-16">
+                        <TabsTrigger value="equipment" className="text-sm py-2 px-12">
                             Thiết bị ({equipmentResources.length})
                         </TabsTrigger>
                     )}
                     {breedingResources.length > 0 && (
-                        <TabsTrigger value="breeding" className="text-sm py-2">
+                        <TabsTrigger value="breeding" className="text-sm py-2 px-12">
                             Giống gà ({breedingResources.length})
                         </TabsTrigger>
                     )}
                     {otherResources.length > 0 && (
-                        <TabsTrigger value="other" className="text-sm py-2 px-16">
+                        <TabsTrigger value="other" className="text-sm py-2 px-12">
                             Khác ({otherResources.length})
                         </TabsTrigger>
                     )}

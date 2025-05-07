@@ -9,7 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Calendar, Notebook, Tag, Trash } from 'lucide-react';
+import { Calendar, Info, Notebook, Trash, Users } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogContent,
@@ -28,11 +28,10 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { quantityLogStatusLabels } from '@/utils/enum/status.enum';
 import { QuantityLogResponse } from '@/utils/types/custom.type';
-import { chickenGenderLabels } from '@/utils/enum/gender.enum';
+import { ChickenGender } from '@/utils/enum/gender.enum';
 import { formatDate } from '@/utils/functions';
 
 interface Props<T> {
@@ -40,6 +39,7 @@ interface Props<T> {
 }
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
+    // const [openTask, setOpenTask] = useState(false);
     const [openDetails, setOpenDetails] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
@@ -56,6 +56,18 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
         });
     };
 
+    // Calculate summary statistics
+    const totalChickens = quantityLog?.quantityLogDetails?.reduce(
+        (sum, detail) => sum + (detail.quantity || 0),
+        0,
+    );
+    const totalRoosters = quantityLog?.quantityLogDetails
+        ?.filter((detail) => detail.gender === ChickenGender.ROOSTER) // Assuming 0 is rooster based on the code
+        .reduce((sum, detail) => sum + (detail.quantity || 0), 0);
+    const totalHens = quantityLog?.quantityLogDetails
+        ?.filter((detail) => detail.gender === ChickenGender.HEN) // Assuming 1 is hen based on the code
+        .reduce((sum, detail) => sum + (detail.quantity || 0), 0);
+
     return (
         <>
             <DropdownMenu modal={false}>
@@ -65,9 +77,12 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                         <span className="sr-only">Mở menu</span>
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[160px]">
+                <DropdownMenuContent align="end">
+                    {/* <DropdownMenuItem onClick={() => setOpenTask(true)}>
+                        Xem công việc
+                    </DropdownMenuItem> */}
                     <DropdownMenuItem onClick={() => setOpenDetails(true)}>
-                        Xem chi tiết
+                        Xem chi tiết nhật ký
                     </DropdownMenuItem>
                     {/* <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                         Cập nhật
@@ -79,21 +94,8 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Update Dialog */}
-            {/* <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Cập nhật lịch sử số lượng</DialogTitle>
-                        <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
-                    </DialogHeader>
-                    <ScrollArea className="max-h-[600px]">
-                        <VaccinationLogForm
-                            closeDialog={() => setOpenUpdate(false)}
-                            defaultValues={row.original as VaccinationLog}
-                        />
-                    </ScrollArea>
-                </DialogContent>
-            </Dialog> */}
+            {/* Task Dialog */}
+            {/* <TaskDialog open={openTask} onOpenChange={setOpenTask} taskId={quantityLog.taskId} /> */}
 
             {/* Details Dialog */}
             <Dialog open={openDetails} onOpenChange={setOpenDetails}>
@@ -101,11 +103,11 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <DialogHeader>
                         <DialogTitle>Chi tiết nhật ký</DialogTitle>
                         <DialogDescription>
-                            ID: {quantityLog.quantityLogDetails[0]?.quantityLogId}
+                            Dưới đây là thông tin chi tiết về số lượng gà trong lứa
                         </DialogDescription>
                     </DialogHeader>
 
-                    <div className="grid gap-4 py-4">
+                    <div className="grid gap-4 py-2">
                         <div className="flex items-center gap-2">
                             <Calendar className="h-4 w-4 text-muted-foreground" />
                             <span className="text-sm text-muted-foreground">Ngày ghi: </span>
@@ -123,27 +125,91 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
                         <Card>
                             <CardContent className="pt-6">
-                                <div className="flex justify-between items-center mb-4">
-                                    <h3 className="text-lg font-semibold">Số lượng gà</h3>
-                                    <Badge variant="default" className="text-base">
-                                        Tổng: {quantityLog.quantity}
-                                    </Badge>
-                                </div>
-
-                                <div className="space-y-3">
-                                    {quantityLog.quantityLogDetails.map((detail, idx) => (
-                                        <div
-                                            key={idx}
-                                            className="flex items-center justify-between border-b pb-2 last:border-0"
-                                        >
-                                            <div className="flex items-center gap-2">
-                                                <Tag className="h-4 w-4 text-muted-foreground" />
-                                                <span>{chickenGenderLabels[detail.gender]}</span>
+                                {quantityLog?.quantityLogDetails?.length > 0 ? (
+                                    <div className="space-y-4">
+                                        {/* Summary Section */}
+                                        <div className="grid grid-cols-3 gap-3 mb-4">
+                                            <div className="flex flex-col items-center justify-center p-3 rounded-lg bg-primary/10 border border-primary/20">
+                                                <Users className="h-5 w-5 mb-1 text-primary" />
+                                                <span className="text-sm text-muted-foreground">
+                                                    Tổng số
+                                                </span>
+                                                <span className="text-xl font-bold">
+                                                    {totalChickens}
+                                                </span>
                                             </div>
-                                            <Badge variant="outline">{detail.quantity} con</Badge>
+
+                                            <div className="flex flex-col items-center justify-center p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                                                <div className="h-5 w-5 mb-1 text-blue-500">♂</div>
+                                                <span className="text-sm text-muted-foreground">
+                                                    Gà trống
+                                                </span>
+                                                <span className="text-xl font-bold text-blue-500">
+                                                    {totalRoosters}
+                                                </span>
+                                            </div>
+
+                                            <div className="flex flex-col items-center justify-center p-3 rounded-lg bg-pink-500/10 border border-pink-500/20">
+                                                <div className="h-5 w-5 mb-1 text-pink-500">♀</div>
+                                                <span className="text-sm text-muted-foreground">
+                                                    Gà mái
+                                                </span>
+                                                <span className="text-xl font-bold text-pink-500">
+                                                    {totalHens}
+                                                </span>
+                                            </div>
                                         </div>
-                                    ))}
-                                </div>
+
+                                        {/* Visualization */}
+                                        <div className="relative h-6 bg-muted rounded-full overflow-hidden mb-4">
+                                            {totalChickens > 0 && (
+                                                <>
+                                                    <div
+                                                        className="absolute h-full bg-blue-500 transition-all duration-500"
+                                                        style={{
+                                                            width: `${(totalRoosters / totalChickens) * 100}%`,
+                                                        }}
+                                                    />
+                                                    <div
+                                                        className="absolute h-full bg-pink-500 transition-all duration-500"
+                                                        style={{
+                                                            width: `${(totalHens / totalChickens) * 100}%`,
+                                                            left: `${(totalRoosters / totalChickens) * 100}%`,
+                                                        }}
+                                                    />
+                                                </>
+                                            )}
+                                        </div>
+                                        <div className="flex justify-between text-xs text-muted-foreground mb-4">
+                                            <span>
+                                                Gà trống:{' '}
+                                                {Math.round(
+                                                    (totalRoosters / totalChickens) * 100,
+                                                ) || 0}
+                                                %
+                                            </span>
+                                            <span>
+                                                Gà mái:{' '}
+                                                {Math.round((totalHens / totalChickens) * 100) || 0}
+                                                %
+                                            </span>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-center p-8">
+                                        <div className="text-center">
+                                            <div className="mx-auto h-12 w-12 rounded-full bg-muted flex items-center justify-center mb-3">
+                                                <Info className="h-6 w-6 text-muted-foreground" />
+                                            </div>
+                                            <h3 className="text-lg font-medium mb-1">
+                                                Không có thông tin chi tiết
+                                            </h3>
+                                            <p className="text-sm text-muted-foreground">
+                                                Chưa có dữ liệu về giống gà này
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
 

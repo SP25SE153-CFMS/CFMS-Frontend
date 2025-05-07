@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const EquipmentSchema = z.object({
-    equipmentId: z.string().uuid({ message: 'ID thiết bị không hợp lệ' }),
+    equipmentId: z.string().uuid({ message: 'Thiết bị không hợp lệ' }),
     equipmentCode: z
         .string()
         .trim()
