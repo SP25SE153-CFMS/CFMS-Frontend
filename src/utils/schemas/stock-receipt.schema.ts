@@ -14,11 +14,8 @@ export const CreateStockReceiptSchema = StockReceiptSchema.extend({
                 .number()
                 .int()
                 .nonnegative({ message: 'Số lượng phải là số nguyên không âm' }),
-            unitId: z
-                .string()
-                .uuid({ message: 'Đơn vị không hợp lệ' }).nullable(),
-                // .optional() // undefined
-                // .or(z.literal('')), // null,
+            // unitId: z.string().uuid({ message: 'Đơn vị không hợp lệ' }).optional(),
+            unitId: z.string().uuid({ message: 'Đơn vị không hợp lệ' }).nullable().optional(),
             toWareId: z.string().uuid({ message: 'Kho không hợp lệ' }),
             resourceId: z.string().uuid({ message: 'ID tài nguyên không hợp lệ' }),
             supplierId: z.string().uuid({ message: 'ID nhà cung cấp tài nguyên không hợp lệ' }),

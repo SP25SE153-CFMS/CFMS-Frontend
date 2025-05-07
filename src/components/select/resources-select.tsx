@@ -112,11 +112,11 @@ export default function SelectResources({
                                     >
                                         <div className="flex items-center gap-2">
                                             <span className="font-medium">{displayName}</span>
-                                            {r.unitSpecification && (
+                                            {/* {r.unitSpecification && (
                                                 <span className="text-xs text-muted-foreground">
                                                     ({r.unitSpecification})
                                                 </span>
-                                            )}
+                                            )} */}
                                         </div>
                                     </SelectItem>
                                 );
@@ -124,13 +124,13 @@ export default function SelectResources({
                         )}
                     </SelectContent>
                 </Select>
-                {selectedResource && (
+                {/* {selectedResource && (
                     <div className="mt-1 text-xs text-muted-foreground">
                         {selectedResource.unitSpecification && (
                             <span>Đơn vị: {selectedResource.unitSpecification}</span>
                         )}
                     </div>
-                )}
+                )} */}
             </div>
         </div>
     );

@@ -17,17 +17,19 @@ import {
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getFarmById } from '@/services/farm.service';
+import { createStockReceipt } from '@/services/stock-receipt.service';
 import { getWareByFarmId } from '@/services/warehouse.service';
 import { onError } from '@/utils/functions/form.function';
 import { CreateStockReceipt, CreateStockReceiptSchema } from '@/utils/schemas/stock-receipt.schema';
 import { Supplier } from '@/utils/schemas/supplier.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 import { ArrowLeft, CheckCircle2, House, Plus, Trash2, XCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 export default function StockReceiptCreate() {
     const router = useRouter();
@@ -56,7 +58,7 @@ export default function StockReceiptCreate() {
             stockReceiptDetails: [
                 {
                     quantity: 0,
-                    unitId: null,
+                    unitId: undefined,
                     toWareId: '',
                     resourceId: '',
                     supplierId: '',
@@ -71,10 +73,25 @@ export default function StockReceiptCreate() {
         name: 'stockReceiptDetails',
     });
 
-    const onSubmit = (values: CreateStockReceipt) => {
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: createStockReceipt,
+        onSuccess: () => {
+            toast.success('Tạo phiếu nhập thành công!');
+            form.reset();
+        },
+        onError: (error: any) => {
+            toast.error('Tạo phiếu nhập thất bại. Vui lòng thử lại!');
+            console.error('Error creating stock receipt:', error);
+        },
+       
+    });
+
+    const onSubmit = async (values: CreateStockReceipt) => {
         console.log('Form Submitted:', values);
+        await mutation.mutateAsync(values);
         setIsSubmitting(false);
-        // TODO: Gọi API tạo phiếu nhập tại đây
     };
 
     return (
@@ -343,7 +360,7 @@ export default function StockReceiptCreate() {
                                     onClick={() =>
                                         append({
                                             quantity: 0,
-                                            unitId: null,
+                                            unitId: undefined,
                                             toWareId: '',
                                             resourceId: '',
                                             supplierId: '',
