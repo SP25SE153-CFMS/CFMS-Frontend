@@ -127,7 +127,7 @@ export function CreateTaskForm() {
                 resource.chickenName,
             specQuantity: resource.specQuantity,
             unitSpecification: resource.unitSpecification,
-            currentSupplierId: resource.currentSupplierId || '',
+            // currentSupplierId: resource.currentSupplierId || '',
         }));
     }, [resources]);
 
@@ -240,7 +240,8 @@ export function CreateTaskForm() {
             values.endWorkDate = dayjs(values.endWorkDate).format('YYYY-MM-DD');
             values.isHavest = values.isHavest ? 1 : 0;
             values.farmId = getCookie(config.cookies.farmId) ?? '';
-            await createTask(values);
+            const response = await createTask(values);
+            toast.success(response?.message);
             router.push(config.routes.task);
             router.refresh();
         } catch (error: any) {
@@ -954,7 +955,7 @@ export function CreateTaskForm() {
                                                                             </p>
                                                                         </div>
                                                                     </div>
-                                                                    <FormField
+                                                                    {/* <FormField
                                                                         control={form.control}
                                                                         name={`taskResources.${index}.supplierId`}
                                                                         render={({ field }) => (
@@ -966,7 +967,7 @@ export function CreateTaskForm() {
                                                                                 }
                                                                             />
                                                                         )}
-                                                                    />
+                                                                    /> */}
                                                                 </SelectItem>
                                                             ))}
                                                             {resourceOptions?.length === 0 && (

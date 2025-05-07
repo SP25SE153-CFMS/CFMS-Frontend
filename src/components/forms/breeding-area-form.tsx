@@ -30,8 +30,6 @@ import { CategoryType } from '@/utils/enum/category.enum';
 import { SelectNative } from '../ui/select-native';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { generateCode } from '@/utils/functions/generate-code.function';
-import { convertArea } from '@/utils/functions/area-unit.function';
-import { useMemo } from 'react';
 import { Loader2 } from 'lucide-react';
 import { onError } from '@/utils/functions/form.function';
 
@@ -101,35 +99,33 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
         form.setValue('breedingAreaName', input);
     };
 
-    // eslint-disable-next-line no-unused-vars
-    const remainingArea = useMemo(() => {
-        const breedingAreas = queryClient.getQueryData<BreedingArea[]>(['breedingAreas']);
-        const currentFarm = farms?.find((farm) => farm.farmId === form.getValues('farmId'));
-        const currentAreaUnitId = form.getValues('areaUnitId');
+    // const remainingArea = useMemo(() => {
+    //     const breedingAreas = queryClient.getQueryData<BreedingArea[]>(['breedingAreas']);
+    //     const currentFarm = farms?.find((farm) => farm.farmId === form.getValues('farmId'));
+    //     const currentAreaUnitId = form.getValues('areaUnitId');
 
-        if (!breedingAreas || !currentFarm || !currentAreaUnitId) return 0;
+    //     if (!breedingAreas || !currentFarm || !currentAreaUnitId) return 0;
 
-        // Calculate total area used by breeding areas
-        const totalAreaForBreedingAreas = breedingAreas.reduce((acc, brArea) => {
-            if (brArea.areaUnitId === currentAreaUnitId) {
-                return acc + brArea.area;
-            }
-            const convertedArea = convertArea(brArea.area, brArea.areaUnitId, currentAreaUnitId);
-            return acc + convertedArea;
-        }, 0);
+    //     // Calculate total area used by breeding areas
+    //     const totalAreaForBreedingAreas = breedingAreas.reduce((acc, brArea) => {
+    //         if (brArea.areaUnitId === currentAreaUnitId) {
+    //             return acc + brArea.area;
+    //         }
+    //         const convertedArea = convertArea(brArea.area, brArea.areaUnitId, currentAreaUnitId);
+    //         return acc + convertedArea;
+    //     }, 0);
 
-        // Convert farm's total area to current unit
-        const convertedFarmArea = convertArea(
-            currentFarm.area,
-            currentFarm.areaUnitId,
-            currentAreaUnitId,
-        );
+    //     // Convert farm's total area to current unit
+    //     const convertedFarmArea = convertArea(
+    //         currentFarm.area,
+    //         currentFarm.areaUnitId,
+    //         currentAreaUnitId,
+    //     );
 
-        // TODO: Get total area for warehouse and convert to current unit
-        const totalAreaForWarehouse = 0;
+    //     const totalAreaForWarehouse = 0;
 
-        return convertedFarmArea - totalAreaForBreedingAreas - totalAreaForWarehouse;
-    }, [farms, form, queryClient]);
+    //     return convertedFarmArea - totalAreaForBreedingAreas - totalAreaForWarehouse;
+    // }, [farms, form, queryClient]);
 
     return (
         <Form {...form}>

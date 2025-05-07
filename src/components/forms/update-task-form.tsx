@@ -198,7 +198,8 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
                 assignedToId: member.assignedToId,
                 status: member.status,
             }));
-            await updateTask(values);
+            const response = await updateTask(values);
+            toast.success(response?.message);
             router.push(`${config.routes.task}/${values.taskId}`);
         } catch (error: any) {
             console.error('Không thể cập nhật công việc:', error);

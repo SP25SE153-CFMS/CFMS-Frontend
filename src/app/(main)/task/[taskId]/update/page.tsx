@@ -37,6 +37,9 @@ export default function UpdateTaskPage() {
                 resourceId: item.resourceId,
                 suppliedQuantity: Number(item.specQuantity.split(' ')[0]),
                 consumedQuantity: 0,
+                // TODO: Update this when supplierId is available
+                // supplierId: item.currentSupplierId || ''
+                supplierId: '',
             })) || [],
         description: task?.description || '',
         taskId: taskId,

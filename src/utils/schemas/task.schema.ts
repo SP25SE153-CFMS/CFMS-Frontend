@@ -37,7 +37,7 @@ export const CreateTaskSchema = TaskSchema.omit({ taskId: true }).extend({
     taskResources: z.array(
         z.object({
             resourceId: z.string().uuid(),
-            // supplierId: z.string().uuid(),
+            supplierId: z.string().uuid(),
             suppliedQuantity: z.coerce.number().int().default(0),
             consumedQuantity: z.coerce.number().int().default(0),
         }),
@@ -62,7 +62,7 @@ export const UpdateTaskSchema = TaskSchema.extend({
     taskResources: z.array(
         z.object({
             resourceId: z.string().uuid(),
-            // supplierId: z.string().uuid(),
+            supplierId: z.string().uuid(),
             suppliedQuantity: z.coerce.number().int().default(0),
             consumedQuantity: z.coerce.number().int().default(0),
         }),
