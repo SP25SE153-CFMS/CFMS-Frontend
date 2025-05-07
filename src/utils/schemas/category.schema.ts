@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { CategoryStatus } from '../enum/status.enum';
 export const CategorySchema = z.object({
-    categoryId: z.string().uuid({ message: 'ID danh mục không hợp lệ' }),
+    categoryId: z.string().uuid({ message: 'Danh mục không hợp lệ' }),
 
     categoryType: z.string().trim().min(1, { message: 'Loại danh mục là bắt buộc' }),
 

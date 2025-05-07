@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const HealthLogSchema = z.object({
-    healthLogId: z.string().uuid({ message: 'ID nhật ký sức khỏe không hợp lệ' }),
+    healthLogId: z.string().uuid({ message: 'Nhật ký sức khỏe không hợp lệ' }),
     startDate: z
         .string()
         .datetime({ message: 'Ngày bắt đầu không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
@@ -10,8 +10,8 @@ export const HealthLogSchema = z.object({
         .datetime({ message: 'Ngày kết thúc không hợp lệ, phải là định dạng ngày giờ hợp lệ' })
         .nullable(),
     notes: z.string().optional(),
-    chickenBatchId: z.string().uuid({ message: 'ID lô gà không hợp lệ' }),
-    taskId: z.string().uuid({ message: 'ID công việc không hợp lệ' }),
+    chickenBatchId: z.string().uuid({ message: 'Lứa nuôi không hợp lệ' }),
+    taskId: z.string().uuid({ message: 'Công việc không hợp lệ' }),
     // checkedAt: z.string().datetime({
     //     message: 'Thời gian kiểm tra không hợp lệ, phải là định dạng ngày giờ hợp lệ',
     // }),

@@ -127,6 +127,7 @@ export function CreateTaskForm() {
                 resource.chickenName,
             specQuantity: resource.specQuantity,
             unitSpecification: resource.unitSpecification,
+            currentSupplierId: resource.currentSupplierId || '',
         }));
     }, [resources]);
 
@@ -880,6 +881,7 @@ export function CreateTaskForm() {
                             onClick={() =>
                                 append({
                                     resourceId: '',
+                                    supplierId: '',
                                     suppliedQuantity: 0,
                                     consumedQuantity: 0,
                                 })
@@ -952,6 +954,19 @@ export function CreateTaskForm() {
                                                                             </p>
                                                                         </div>
                                                                     </div>
+                                                                    <FormField
+                                                                        control={form.control}
+                                                                        name={`taskResources.${index}.supplierId`}
+                                                                        render={({ field }) => (
+                                                                            <Input
+                                                                                type="hidden"
+                                                                                {...field}
+                                                                                value={
+                                                                                    res.currentSupplierId
+                                                                                }
+                                                                            />
+                                                                        )}
+                                                                    />
                                                                 </SelectItem>
                                                             ))}
                                                             {resourceOptions?.length === 0 && (

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const FarmSchema = z.object({
-    farmId: z.string().uuid({ message: 'ID trang trại không hợp lệ' }),
+    farmId: z.string().uuid({ message: 'Trang trại không hợp lệ' }),
     farmName: z
         .string()
         .min(1, { message: 'Tên trang trại là bắt buộc' })

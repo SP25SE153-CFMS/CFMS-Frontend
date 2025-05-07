@@ -716,6 +716,7 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
                             onClick={() =>
                                 append({
                                     resourceId: '',
+                                    supplierId: '',
                                     suppliedQuantity: 0,
                                     consumedQuantity: 0,
                                 })

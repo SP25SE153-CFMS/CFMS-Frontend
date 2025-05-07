@@ -16,7 +16,7 @@ export const GrowthStageSchema = z.object({
     description: z.string().optional(),
     farmId: z.string().uuid({ message: 'Trang trại không hợp lệ' }),
     // TODO: Verify if this field is correct
-    // nutritionPlanId: z.string().uuid({ message: 'ID kế hoạch dinh dưỡng không hợp lệ' }).optional(),
+    // nutritionPlanId: z.string().uuid({ message: 'Chế độ dinh dưỡng không hợp lệ' }).optional(),
 });
 
 export type GrowthStage = z.infer<typeof GrowthStageSchema>;
