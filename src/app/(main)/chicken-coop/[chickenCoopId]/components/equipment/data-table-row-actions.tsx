@@ -47,7 +47,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
         const coopEquipmentId = (row.original as CoopEquipment).coopEquipmentId;
         await deleteCoopEquipment(chickenCoopId, coopEquipmentId).then(() => {
             toast.success('Đã xóa thiết bị chuồng nuôi');
-            queryClient.invalidateQueries({ queryKey: ['coopEquipments'] });
+            queryClient.invalidateQueries({ queryKey: ['chickenCoop', chickenCoopId] });
             setOpenDelete(false);
         });
     };

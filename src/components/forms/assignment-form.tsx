@@ -90,7 +90,10 @@ export default function AssignmentForm({ defaultValues, closeDialog }: Assignmen
 
     const { data: farmEmployees, isLoading: isEmployeesLoading } = useQuery({
         queryKey: ['farmEmployees'],
-        queryFn: () => getEmployeesByFarmId(getCookie(config.cookies.farmId) ?? ''),
+        queryFn: async () => {
+            const employees = await getEmployeesByFarmId(getCookie(config.cookies.farmId) ?? '');
+            return employees?.filter((emp) => emp.userId !== sessionStorage.getItem('userId'));
+        },
     });
 
     // Query client

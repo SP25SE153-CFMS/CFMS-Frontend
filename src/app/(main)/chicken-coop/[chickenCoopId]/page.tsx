@@ -20,7 +20,10 @@ export default function Page() {
     const { chickenCoopId }: { chickenCoopId: string } = useParams();
     const { data: chickenCoop } = useQuery({
         queryKey: ['chickenCoop', chickenCoopId],
-        queryFn: () => getChickenCoopById(chickenCoopId),
+        queryFn: async () => {
+            sessionStorage.setItem('chickenCoopId', chickenCoopId);
+            return await getChickenCoopById(chickenCoopId);
+        },
     });
 
     useQuery({
@@ -113,13 +116,13 @@ export default function Page() {
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent value="task">
-                            <CardTask taskLogs={chickenCoop.taskLogs} />
+                            <CardTask taskLogs={chickenCoop?.taskLogs || []} />
                         </TabsContent>
                         <TabsContent value="equipment">
-                            <CardEquipment coopEquipments={chickenCoop.coopEquipments} />
+                            <CardEquipment coopEquipments={chickenCoop?.coopEquipments || []} />
                         </TabsContent>
                         <TabsContent value="harvest">
-                            <CardHarvest harvestLogs={chickenCoop.harvestLogs} />
+                            <CardHarvest harvestLogs={chickenCoop?.harvestLogs || []} />
                         </TabsContent>
                     </Tabs>
                 </div>

@@ -16,6 +16,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+import config from '@/configs';
 import { getFarmById } from '@/services/farm.service';
 import { createStockReceipt } from '@/services/stock-receipt.service';
 import { getWareByFarmId } from '@/services/warehouse.service';
@@ -78,6 +79,7 @@ export default function StockReceiptCreate() {
         mutationFn: createStockReceipt,
         onSuccess: () => {
             toast.success('Tạo phiếu nhập thành công!');
+            router.push(config.routes.stockReceipt);
             form.reset();
         },
         onError: (error: any) => {

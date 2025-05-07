@@ -309,9 +309,8 @@ export type DashboardChickenBatch = {
 };
 
 export type InventoryRequestDetailResponse = InventoryRequestDetail & {
-    unit: {
-        name: string;
-    };
+    unit: SubCategory;
+    unitId: string;
     resource: ResourceResponse;
 };
 
