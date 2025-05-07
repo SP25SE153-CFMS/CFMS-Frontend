@@ -16,7 +16,9 @@ import SidebarNavigation from './sidebar-navigation';
 import SidebarOverview from './sidebar-overview';
 import { getCategories } from '@/services/category.service';
 import { useQuery } from '@tanstack/react-query';
-import { FarmSwitcher } from './farm-switcher';
+import dynamic from 'next/dynamic';
+
+const FarmSwitcher = dynamic(() => import('./farm-switcher'), { ssr: false });
 
 export function AppSidebar({ ...props }) {
     const { data: categories, isLoading } = useQuery({
@@ -30,7 +32,7 @@ export function AppSidebar({ ...props }) {
 
     return (
         <Sidebar collapsible="icon" {...props}>
-            <SidebarHeader>
+            <SidebarHeader className="min-h-16">
                 <FarmSwitcher />
             </SidebarHeader>
             <SidebarContent>

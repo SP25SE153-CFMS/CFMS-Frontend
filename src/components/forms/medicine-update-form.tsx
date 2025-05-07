@@ -1,7 +1,7 @@
 import { updateMedicine } from '@/services/medicine.service';
 import { Medicine, MedicineSchema } from '@/utils/schemas/medicine.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -9,11 +9,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { SubCategory } from '@/utils/schemas/sub-category.schema';
-import { getSubDisease } from '@/services/category.service';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { Loader2 } from 'lucide-react';
 import { onError } from '@/utils/functions/form.function';
+import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { CategoryType } from '@/utils/enum/category.enum';
 
 interface UpdateMedicineProps {
     medicine: Medicine;
@@ -62,11 +62,6 @@ export default function UpdateMedicineForm({ medicine, closeModal }: UpdateMedic
         console.log('Medicine update submit: ', formattedData);
         await mutation.mutateAsync(formattedData);
     };
-
-    const { data: subDisease = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subDisease'],
-        queryFn: () => getSubDisease(),
-    });
 
     const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
         const input = e.target.value;
@@ -145,14 +140,17 @@ export default function UpdateMedicineForm({ medicine, closeModal }: UpdateMedic
                                         <SelectTrigger>
                                             <SelectValue
                                                 placeholder={
-                                                    subDisease.find(
-                                                        (d) => d.subCategoryId === field.value,
-                                                    )?.subCategoryName || 'Chọn chất liệu'
+                                                    getSubCategoryByCategoryType(
+                                                        CategoryType.DISEASE,
+                                                    )?.find((d) => d.subCategoryId === field.value)
+                                                        ?.subCategoryName || 'Chọn chất liệu'
                                                 }
                                             />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {subDisease.map((d) => (
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.DISEASE,
+                                            )?.map((d) => (
                                                 <SelectItem
                                                     key={d.subCategoryId}
                                                     value={d.subCategoryId}

@@ -25,9 +25,9 @@ import config from '@/configs';
 import { ScrollArea } from '../ui/scroll-area';
 import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
-import { Skeleton } from '../ui/skeleton';
 import { FarmResponse } from '@/utils/types/custom.type';
 import { FarmRole, farmRoleLabels } from '@/utils/enum';
+import { Skeleton } from '../ui/skeleton';
 
 const FARM_IMAGE_SIZE = 24;
 const DEFAULT_IMAGE = '/no-data.jpg';
@@ -46,7 +46,7 @@ const FarmImage = ({ src, alt, size = FARM_IMAGE_SIZE, className = '' }: FarmIma
         width={size}
         height={size}
         className={`rounded-md object-cover ${className}`}
-        priority={true}
+        priority
     />
 );
 
@@ -60,54 +60,66 @@ const FarmSkeleton = () => (
     </div>
 );
 
-export function FarmSwitcher() {
+export default function FarmSwitcher() {
     const router = useRouter();
     const { isMobile } = useSidebar();
-
-    const { data: farms, isLoading } = useQuery({
-        queryKey: ['farms'],
-        queryFn: () => getFarmsForCurrentUser(),
-        staleTime: 5 * 60 * 1000, // 5 minutes
-    });
-
-    const currentFarm = useMemo(() => {
-        return farms?.find((farm) => farm.farmId === getCookie(config.cookies.farmId));
-    }, [farms]);
-
-    const [activeFarm, setActiveFarm] = useState<Farm | null>(currentFarm ?? null);
-
-    useEffect(() => {
-        // if (!farms && !activeFarm) {
-        //     router.push(config.routes.farm);
-        //     return;
-        // }
-        const newActiveFarm = farms?.find(
-            (farm) => farm.farmId === getCookie(config.cookies.farmId),
-        );
-        if (newActiveFarm) {
-            setActiveFarm(newActiveFarm);
-        }
-    }, [activeFarm, farms, router]);
-
     const queryClient = useQueryClient();
 
+    // Fetch farms for the current user
+    const { data: farms } = useQuery({
+        queryKey: ['farms'],
+        queryFn: getFarmsForCurrentUser,
+    });
+
+    // Determine the current farm based on cookies
+    const currentFarm = useMemo(() => {
+        const farmId = getCookie(config.cookies.farmId);
+        return farms?.find((farm) => farm.farmId === farmId);
+    }, [farms]);
+
+    // State for the active farm
+    const [activeFarm, setActiveFarm] = useState<Farm | null>(currentFarm ?? null);
+
+    // Sync active farm with session storage or fallback to current farm
+    useEffect(() => {
+        const storedFarm = (() => {
+            try {
+                return JSON.parse(sessionStorage.getItem('activeFarm') || '{}') as Farm;
+            } catch {
+                return {} as Farm;
+            }
+        })();
+
+        if (Object.keys(storedFarm).length > 0) {
+            setActiveFarm(storedFarm);
+        } else if (currentFarm) {
+            setActiveFarm(currentFarm);
+        }
+    }, [currentFarm]);
+
+    // Handle update farm in farm settings page (/settings)
+    useEffect(() => {
+        setActiveFarm(currentFarm ?? null);
+    }, [currentFarm, farms]);
+
+    // Handle farm selection
     const handleFarmSelect = useCallback(
         (farm: FarmResponse) => {
             setActiveFarm(farm);
             try {
                 sessionStorage.setItem('activeFarm', JSON.stringify(farm));
                 setCookie(config.cookies.farmId, farm.farmId);
-                // Invalidate queries 'farms' to refetch data
-                queryClient.invalidateQueries({ queryKey: ['farms'] });
-                // Invalidate all queries to refetch data
-                queryClient.invalidateQueries();
-                queryClient.invalidateQueries({ queryKey: ['*'] });
                 setCookie(config.cookies.farmRole, farm.farmRole);
-                if (farm.farmRole === FarmRole.OWNER) {
-                    router.push(`${config.routes.dashboard}?farmCode=${farm.farmCode}`);
-                } else if (farm.farmRole === FarmRole.MANAGER) {
-                    router.push(`${config.routes.welcome}?farmCode=${farm.farmCode}`);
-                }
+
+                // Invalidate queries to refetch data
+                queryClient.invalidateQueries();
+
+                // Redirect based on farm role
+                const route =
+                    farm.farmRole === FarmRole.OWNER
+                        ? `${config.routes.dashboard}?farmCode=${farm.farmCode}`
+                        : `${config.routes.welcome}?farmCode=${farm.farmCode}`;
+                router.push(route);
             } catch (error) {
                 console.error('Error setting active farm:', error);
             }
@@ -115,6 +127,7 @@ export function FarmSwitcher() {
         [queryClient, router],
     );
 
+    // Render the active farm
     const renderActiveFarm = useMemo(() => {
         if (!activeFarm) return <FarmSkeleton />;
 
@@ -140,7 +153,7 @@ export function FarmSwitcher() {
                             size="lg"
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         >
-                            {isLoading ? <FarmSkeleton /> : renderActiveFarm}
+                            {renderActiveFarm}
                             <ChevronsUpDown className="ml-auto" />
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>

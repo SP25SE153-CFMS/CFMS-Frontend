@@ -59,7 +59,7 @@ export default function Dashboard() {
                             Giải pháp toàn diện giúp bạn quản lý trang trại gà hiệu quả, tăng năng
                             suất và tối ưu hóa lợi nhuận.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex flex-row gap-4">
                             <Link href={config.routes.breadingArea}>
                                 <Button className="bg-primary hover:opacity-90 text-white px-8 py-6 text-lg">
                                     Bắt đầu ngay

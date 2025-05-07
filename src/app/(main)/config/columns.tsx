@@ -33,22 +33,22 @@ export const columns: ColumnDef<SystemConfig>[] = [
         enableSorting: false,
         enableHiding: false,
     },
+    // {
+    //     accessorKey: 'systemConfigId',
+    //     header: () => null,
+    //     cell: () => null,
+    // },
+    // {
+    //     accessorKey: 'settingName',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Tên cấu hình" />,
+    // },
     {
-        accessorKey: 'systemConfigId',
-        header: () => null,
-        cell: () => null,
-    },
-    {
-        accessorKey: 'settingName',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tên cấu hình" />,
+        accessorKey: 'description',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Mô tả" />,
     },
     {
         accessorKey: 'settingValue',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Giá trị" />,
-    },
-    {
-        accessorKey: 'description',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Mô tả" />,
     },
     {
         accessorKey: 'effectedDateFrom',

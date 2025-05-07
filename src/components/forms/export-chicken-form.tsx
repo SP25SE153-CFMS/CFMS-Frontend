@@ -109,7 +109,7 @@ export default function ExportChickenForm({ defaultValues, closeDialog }: Export
             if (!currentQuantityInForm) return '';
             if (!detail) return `Không tồn tại ${chickenGenderLabels[gender]?.toLowerCase()}`;
             if (currentQuantityInForm?.quantity > detail.quantity) {
-                return `Số lượng ${chickenGenderLabels[detail.gender]?.toLowerCase()} không được vượt quá ${detail.quantity}`;
+                return `Số lượng ${chickenGenderLabels[detail.gender]?.toLowerCase()} không được vượt quá ${detail.quantity} con`;
             }
             return '';
         },

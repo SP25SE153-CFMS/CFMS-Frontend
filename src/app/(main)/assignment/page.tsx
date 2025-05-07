@@ -16,6 +16,7 @@ import { getEmployeesByFarmId } from '@/services/farm.service';
 import { getCookie } from 'cookies-next';
 import { getShifts } from '@/services/shift.service';
 import { Shift } from '@/utils/schemas/shift.schema';
+import { TaskResponse } from '@/utils/types/custom.type';
 
 export default function Home() {
     const farmId = getCookie('farmId') ?? '';
@@ -66,13 +67,12 @@ export default function Home() {
         endHour: parseInt(shift.endTime),
     });
 
-    // TODO: Change to Task type
-    const mapTaskToEvent = (task: any): Event => ({
+    const mapTaskToEvent = (task: TaskResponse): Event => ({
         id: task.taskId,
         title: task.taskName,
         date: new Date(task.startWorkDate),
         color: assignmentBackground[task.status],
-        status: parseInt(task.status),
+        status: task.status,
         shift: shifts?.[0]?.shiftId ?? '',
     });
 

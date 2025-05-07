@@ -2,11 +2,11 @@ import { z } from 'zod';
 import { CommonStatus } from '../enum/status.enum';
 
 export const ChickenSchema = z.object({
-    chickenId: z.string().uuid({ message: 'ID gà không hợp lệ' }),
+    chickenId: z.string().uuid({ message: 'Giống gà không hợp lệ' }),
 
-    chickenCode: z.string().trim().min(1, { message: 'Mã gà là bắt buộc' }),
+    chickenCode: z.string().trim().min(1, { message: 'Mã giống gà là bắt buộc' }),
 
-    chickenName: z.string().trim().min(1, { message: 'Tên gà là bắt buộc' }),
+    chickenName: z.string().trim().min(1, { message: 'Tên giống gà là bắt buộc' }),
 
     // totalQuantity: z.coerce.number().int({ message: 'Tổng số lượng phải là số nguyên' }),
 
@@ -14,7 +14,7 @@ export const ChickenSchema = z.object({
 
     status: z.nativeEnum(CommonStatus, { message: 'Trạng thái không hợp lệ' }),
 
-    chickenTypeId: z.string().uuid({ message: 'ID loại không hợp lệ' }),
+    chickenTypeId: z.string().uuid({ message: 'Loại gà không hợp lệ' }),
 
     // createdDate: z
     //     .string()

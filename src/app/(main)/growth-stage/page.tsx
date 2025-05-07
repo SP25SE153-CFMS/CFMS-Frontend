@@ -345,6 +345,11 @@ export default function Page() {
                                                 </TimelineItem>
                                             ))}
                                         </Timeline>
+                                        {/* <Stepper
+                                            steps={timeline.stages.map((stage) => stage.title)}
+                                            activeStep={0}
+                                            visitStep={0}
+                                        /> */}
                                     </CardContent>
                                 </Card>
                             ))}

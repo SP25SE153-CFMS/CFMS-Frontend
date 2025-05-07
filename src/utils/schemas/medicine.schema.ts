@@ -1,13 +1,13 @@
 import { z } from 'zod';
 
 export const MedicineSchema = z.object({
-    medicineId: z.string().uuid({ message: 'ID thuốc không hợp lệ' }),
+    medicineId: z.string().uuid({ message: 'Thuốc không hợp lệ' }),
     medicineCode: z.string().min(1, { message: 'Mã thuốc không được để trống' }),
     medicineName: z.string().min(1, { message: 'Tên thuốc không được để trống' }),
     usage: z.string().optional(),
     dosageForm: z.string().optional(),
     storageCondition: z.string().optional(),
-    diseaseId: z.string().uuid({ message: 'ID bệnh không hợp lệ' }),
+    diseaseId: z.string().uuid({ message: 'Bệnh không hợp lệ' }),
     productionDate: z.string({
         message: 'Ngày sản xuất không hợp lệ, phải là định dạng ngày giờ hợp lệ',
     }),

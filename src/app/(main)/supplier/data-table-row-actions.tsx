@@ -91,7 +91,7 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
 
             {/* Cập nhật */}
             <Dialog open={update} onOpenChange={setUpdate}>
-                <DialogContent>
+                <DialogContent className="max-w-xl">
                     <ScrollArea>
                         <SupplierForm
                             closeDialog={() => setUpdate(false)}

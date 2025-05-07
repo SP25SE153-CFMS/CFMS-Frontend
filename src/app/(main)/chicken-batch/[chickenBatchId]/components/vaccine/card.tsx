@@ -6,7 +6,7 @@ import { Download } from 'lucide-react';
 import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { VaccinationLog } from '@/utils/schemas/vaccine.schema';
 
-export default function CardVaccinationLog({ vaccineLogs }: { vaccineLogs: VaccinationLog[] }) {
+export default function CardVaccineLog({ vaccineLogs }: { vaccineLogs: VaccinationLog[] }) {
     return (
         <div>
             <Card className="p-6 mb-4">
@@ -14,7 +14,7 @@ export default function CardVaccinationLog({ vaccineLogs }: { vaccineLogs: Vacci
                     <div>
                         <h2 className="text-xl font-bold tracking-tight">Lịch sử tiêm phòng</h2>
                         <p className="text-muted-foreground">
-                            Danh sách lịch sử tiêm phòng của đàn gà
+                            Danh sách lịch sử tiêm phòng của lứa nuôi
                         </p>
                     </div>
                     <div className="flex gap-2">

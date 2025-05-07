@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const FlockSchema = z.object({
-    flockId: z.string().uuid({ message: 'ID chuồng gà không hợp lệ' }),
+    flockId: z.string().uuid({ message: 'Đàn gà không hợp lệ' }),
     quantity: z.coerce.number().int().min(0, 'Số lượng phải lớn hơn hoặc bằng 0'),
     name: z.string().min(1, 'Tên là bắt buộc').max(255, 'Tên không được dài quá 255 ký tự'),
     startDate: z.string().refine((date) => !isNaN(Date.parse(date)), {

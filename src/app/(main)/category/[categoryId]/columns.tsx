@@ -82,4 +82,8 @@ export const columns: ColumnDef<SubCategory>[] = [
             </div>
         ),
     },
+    // {
+    //     id: 'actions',
+    //     cell: ({ row }) => <DataTableRowActions row={row} />,
+    // },
 ];

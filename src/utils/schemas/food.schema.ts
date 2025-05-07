@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const FoodSchema = z.object({
-    foodId: z.string().uuid({ message: 'ID thức ăn không hợp lệ' }),
+    foodId: z.string().uuid({ message: 'Thức ăn không hợp lệ' }),
     foodCode: z.string().min(1, { message: 'Mã thức ăn là bắt buộc' }),
     foodName: z.string().min(1, { message: 'Tên thức ăn là bắt buộc' }),
     note: z.string().optional(),

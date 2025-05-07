@@ -12,9 +12,11 @@ export default function CardQuantityLog({ quantityLogs }: { quantityLogs: Quanti
             <Card className="p-6 mb-4">
                 <div className="flex flex-wrap items-center justify-between gap-x-4 space-y-2">
                     <div>
-                        <h2 className="text-xl font-bold tracking-tight">Nhật ký số lượng</h2>
+                        <h2 className="text-xl font-bold tracking-tight">
+                            Nhật ký số lượng gà thay đổi
+                        </h2>
                         <p className="text-muted-foreground">
-                            Danh sách nhật ký số lượng của đàn gà
+                            Danh sách nhật ký số lượng gà thay đổi trong lứa nuôi
                         </p>
                     </div>
                     <div className="flex gap-2">

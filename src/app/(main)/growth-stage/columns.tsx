@@ -53,7 +53,7 @@ export const columns: ColumnDef<GrowthStage>[] = [
         accessorKey: 'description',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Mô tả" />,
         cell: ({ row }) => (
-            <div className="max-w-[200px] text-left cursor-default">
+            <div className=" text-left cursor-default">
                 {row.getValue('description') || 'Không có mô tả'}
             </div>
         ),
@@ -112,11 +112,14 @@ export const columns: ColumnDef<GrowthStage>[] = [
                 (plan) => plan.nutritionPlanId === nutritionPlanId,
             );
             return nutritionPlan ? (
-                <Link href={`${config.routes.nutritionPlan}/${nutritionPlanId}`}>
+                <Link
+                    href={`${config.routes.nutritionPlan}/${nutritionPlanId}`}
+                    className="max-w-[200px]"
+                >
                     {nutritionPlan?.name ?? 'Không có'}
                 </Link>
             ) : (
-                <div>Không có</div>
+                <div className="text-muted-foreground">Không có</div>
             );
         },
     },

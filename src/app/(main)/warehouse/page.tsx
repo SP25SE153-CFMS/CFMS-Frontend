@@ -5,15 +5,17 @@ import { useQuery } from '@tanstack/react-query';
 import Image from '@/components/fallback-image';
 import { getCookie } from 'cookies-next';
 import {
-    Info,
     ArrowRight,
-    Wheat,
     BriefcaseMedical,
     Wrench,
     Warehouse,
     Plus,
     Origami,
     Apple,
+    FileText,
+    Package,
+    Scale,
+    Egg,
 } from 'lucide-react';
 
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
@@ -23,7 +25,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { wareStatusLabels, wareStatusVariant } from '@/utils/enum/status.enum';
 import { getWareByFarmId } from '@/services/warehouse.service';
-import type { WareStockResponse } from '@/utils/types/custom.type';
+import type { WarehouseResponse } from '@/utils/types/custom.type';
 import config from '@/configs';
 import {
     Dialog,
@@ -35,16 +37,18 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import WarehouseForm from '@/components/forms/warehouse-form';
 import { useState } from 'react';
+import InfoItem from '@/components/info-item';
 
 export default function Ware() {
     const [open, setOpen] = useState(false);
+    const [updateWare, setUpdateWare] = useState<WarehouseResponse | undefined>(undefined);
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
 
     const router = useRouter();
     const farmId = getCookie(config.cookies.farmId) ?? '';
 
-    const { data: wares = [], isLoading } = useQuery<WareStockResponse[]>({
+    const { data: wares = [], isLoading } = useQuery({
         queryKey: ['wares', farmId],
         queryFn: async () => {
             const wares = await getWareByFarmId(farmId as string);
@@ -116,10 +120,12 @@ export default function Ware() {
         resourceTypeName: string,
         wareId: string,
         resourceTypeId: string,
+        warehouseName: string,
     ) => {
         // Lưu vào sessionStorage
         sessionStorage.setItem('wareId', wareId);
         sessionStorage.setItem('resourceTypeId', resourceTypeId);
+        sessionStorage.setItem('warehouseName', warehouseName);
 
         // Chuyển route như cũ
         let route = '';
@@ -157,7 +163,7 @@ export default function Ware() {
             case 'Con giống':
                 return <Origami className="w-5 h-5 text-red-600" />;
             case 'Sản phẩm thu hoạch':
-                return <Wheat className="w-5 h-5 text-green-600" />;
+                return <Egg className="w-5 h-5 text-yellow-400" />;
             default:
                 return <Warehouse className="w-5 h-5 text-slate-600" />;
         }
@@ -174,17 +180,6 @@ export default function Ware() {
                 <Button className="space-x-1" onClick={openModal}>
                     <span>Tạo kho</span> <Plus size={18} />
                 </Button>
-                <Dialog open={open} onOpenChange={onOpenChange}>
-                    <DialogContent className="max-w-2xl">
-                        <DialogHeader>
-                            <DialogTitle>Tạo kho mới</DialogTitle>
-                            <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
-                        </DialogHeader>
-                        <ScrollArea className="max-h-[600px]">
-                            <WarehouseForm closeDialog={() => setOpen(false)} />
-                        </ScrollArea>
-                    </DialogContent>
-                </Dialog>
             </div>
             <Separator className="mb-6" />
 
@@ -212,7 +207,22 @@ export default function Ware() {
                         </CardHeader>
                         <Separator />
                         <CardContent className="pt-4 flex-grow">
-                            <div className="flex items-start gap-3 text-muted-foreground mb-4">
+                            <InfoItem
+                                label="Mô tả"
+                                value={ware.description || 'Không có mô tả'}
+                                icon={<FileText size={16} />}
+                            />
+                            <InfoItem
+                                label="Số lượng"
+                                value={`${ware.currentQuantity < 0 ? 0 : ware.currentQuantity}/${ware.maxQuantity < 0 ? 0 : ware.maxQuantity}`}
+                                icon={<Package size={16} />}
+                            />
+                            <InfoItem
+                                label="Sức chứa"
+                                value={`${ware.currentWeight < 0 ? 0 : ware.currentWeight}/${ware.maxWeight < 0 ? 0 : ware.maxWeight}`}
+                                icon={<Scale size={16} />}
+                            />
+                            {/* <div className="flex items-start gap-3 text-muted-foreground mb-4">
                                 <Info
                                     size={18}
                                     className="mt-0.5 shrink-0 text-muted-foreground/70"
@@ -224,18 +234,34 @@ export default function Ware() {
                             <div className="text-sm font-medium text-muted-foreground mt-2">
                                 Loại:{' '}
                                 <span className="text-foreground">{ware.resourceTypeName}</span>
-                            </div>
+                            </div> */}
                         </CardContent>
-                        <CardFooter className="pt-2 pb-4 bg-muted/10">
+                        <CardFooter className="pt-2 pb-4 bg-muted/10 gap-4">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="w-full"
+                                onClick={() => {
+                                    setUpdateWare(ware);
+                                    openModal();
+                                }}
+                            >
+                                <Wrench
+                                    size={16}
+                                    className="transition-transform group-hover:translate-x-1"
+                                />
+                                Cập nhật
+                            </Button>
                             <Button
                                 variant="default"
                                 size="sm"
-                                className="w-full gap-1 group"
+                                className="w-full"
                                 onClick={() =>
                                     navigateResourceType(
                                         ware.resourceTypeName,
                                         ware.wareId,
                                         ware.resourceTypeId,
+                                        ware.warehouseName,
                                     )
                                 }
                             >
@@ -249,6 +275,21 @@ export default function Ware() {
                     </Card>
                 ))}
             </div>
+
+            <Dialog open={open} onOpenChange={onOpenChange}>
+                <DialogContent className="max-w-2xl">
+                    <DialogHeader>
+                        <DialogTitle>{updateWare ? 'Cập nhật' : 'Tạo'} kho</DialogTitle>
+                        <DialogDescription>Hãy nhập các thông tin dưới đây.</DialogDescription>
+                    </DialogHeader>
+                    <ScrollArea className="max-h-[600px]">
+                        <WarehouseForm
+                            closeDialog={() => setOpen(false)}
+                            defaultValues={updateWare}
+                        />
+                    </ScrollArea>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

@@ -21,9 +21,11 @@ import { downloadCSV } from '@/utils/functions/download-csv.function';
 import { getCategoryById } from '@/services/category.service';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useQuery } from '@tanstack/react-query';
+import { Input } from '@/components/ui/input';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
@@ -34,6 +36,12 @@ export default function Page() {
         queryKey: ['category', categoryId],
         queryFn: () => getCategoryById(categoryId),
     });
+
+    const filteredSubCategories = category?.subCategories?.filter(
+        (subCategory) =>
+            subCategory.subCategoryName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            subCategory.description?.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
 
     if (isLoading) {
         return (
@@ -72,6 +80,12 @@ export default function Page() {
                     </p>
                 </div>
                 <div className="flex gap-2">
+                    <Input
+                        placeholder="Tìm kiếm theo tên, mô tả..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-64"
+                    />
                     <Button
                         variant="outline"
                         className="space-x-1"
@@ -106,7 +120,7 @@ export default function Page() {
                 </div>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={category.subCategories} columns={columns} />
+                <DataTable data={filteredSubCategories || []} columns={columns} />
             </div>
         </div>
     );

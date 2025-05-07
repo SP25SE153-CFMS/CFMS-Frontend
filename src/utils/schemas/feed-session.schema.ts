@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 export const FeedSessionSchema = z.object({
-    feedSessionId: z.string().uuid({ message: 'ID phiên cho ăn không hợp lệ' }),
-    nutritionPlanId: z.string().uuid({ message: 'ID chế độ dinh dưỡng không hợp lệ' }),
+    feedSessionId: z.string().uuid({ message: 'Lịch cho ăn không hợp lệ' }),
+    nutritionPlanId: z.string().uuid({ message: 'Chế độ dinh dưỡng không hợp lệ' }),
     // feedingTime: z
     //     .string()
     //     .datetime({ message: 'Thời gian cho ăn không hợp lệ, phải là định dạng ngày giờ hợp lệ' }),
@@ -11,7 +11,7 @@ export const FeedSessionSchema = z.object({
         message: 'Thời gian kết thúc không hợp lệ',
     }),
     feedAmount: z.coerce.number().positive({ message: 'Lượng thức ăn phải là số dương' }),
-    unitId: z.string().uuid({ message: 'ID đơn vị không hợp lệ' }),
+    unitId: z.string().uuid({ message: 'Đơn vị không hợp lệ' }),
     note: z.string().optional(),
 });
 

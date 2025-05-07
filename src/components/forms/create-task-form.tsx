@@ -9,7 +9,7 @@ import { addDays } from 'date-fns';
 import { vi } from 'date-fns/locale';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateTask, CreateTaskSchema, Task } from '@/utils/schemas/task.schema';
+import { CreateTask, CreateTaskSchema } from '@/utils/schemas/task.schema';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -64,7 +64,7 @@ import {
 
 import { cn } from '@/lib/utils';
 import { CategoryType } from '@/utils/enum/category.enum';
-import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { getSubCategoryByCategoryType, getTaskType } from '@/utils/functions/category.function';
 import { ResourceResponse } from '@/utils/types/custom.type';
 import { getShifts } from '@/services/shift.service';
 import { getBreedingAreasByFarmId } from '@/services/breeding-area.service';
@@ -75,11 +75,10 @@ import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { formatDate } from '@/utils/functions';
 import dayjs from 'dayjs';
 import { TaskStatus } from '@/utils/enum/status.enum';
-import { LOCATION_TYPES } from '@/utils/enum/location-type.enum';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 
-export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
+export function CreateTaskForm() {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [locationType, setLocationType] = useState<string>('');
@@ -128,6 +127,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                 resource.chickenName,
             specQuantity: resource.specQuantity,
             unitSpecification: resource.unitSpecification,
+            // currentSupplierId: resource.currentSupplierId || '',
         }));
     }, [resources]);
 
@@ -147,13 +147,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
             shiftIds: [],
             locationType: '',
             locationId: '',
-            taskResources: [
-                {
-                    resourceId: '',
-                    quantity: 0,
-                },
-            ],
-            ...defaultValues,
+            taskResources: [],
         },
     });
 
@@ -246,7 +240,8 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
             values.endWorkDate = dayjs(values.endWorkDate).format('YYYY-MM-DD');
             values.isHavest = values.isHavest ? 1 : 0;
             values.farmId = getCookie(config.cookies.farmId) ?? '';
-            await createTask(values);
+            const response = await createTask(values);
+            toast.success(response?.message);
             router.push(config.routes.task);
             router.refresh();
         } catch (error: any) {
@@ -451,7 +446,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                         />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                        <FormLabel>Là công việc giao tuần tự</FormLabel>
+                        <FormLabel>Giao tuần tự</FormLabel>
                         <FormDescription>
                             Đánh dấu nếu công việc này liên quan đến giao tuần tự.
                         </FormDescription>
@@ -720,8 +715,8 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
         [form.control, shifts, selectedDates, isFrequencyAssigned],
     );
 
-    const renderLocationSection = useMemo(
-        () => (
+    const renderLocationSection = useMemo(() => {
+        return (
             <div className="space-y-6 pt-4">
                 <div className="flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-primary" />
@@ -751,11 +746,24 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {LOCATION_TYPES.map((type) => (
+                                        {/* {LOCATION_TYPES.map((type) => (
                                             <SelectItem key={type.value} value={type.value}>
                                                 {type.label}
                                             </SelectItem>
-                                        ))}
+                                        ))} */}
+                                        <SelectItem key="COOP" value="COOP">
+                                            Chuồng nuôi
+                                        </SelectItem>
+                                        {(getTaskType(form.getValues('taskTypeId'))?.includes(
+                                            'dọn dẹp',
+                                        ) ||
+                                            getTaskType(form.getValues('taskTypeId'))?.includes(
+                                                'khác',
+                                            )) && (
+                                            <SelectItem key="WARE" value="WARE">
+                                                Nhà kho
+                                            </SelectItem>
+                                        )}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -851,9 +859,9 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                     />
                 </div>
             </div>
-        ),
-        [breedingAreas, form.control, getCoopName, locationType, warehouses],
-    );
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [breedingAreas, form, form.watch('taskTypeId'), getCoopName, locationType, warehouses]);
 
     const renderResourcesSection = useMemo(
         () => (
@@ -874,7 +882,9 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                             onClick={() =>
                                 append({
                                     resourceId: '',
-                                    quantity: 0,
+                                    supplierId: '',
+                                    suppliedQuantity: 0,
+                                    consumedQuantity: 0,
                                 })
                             }
                             className="flex items-center gap-1"
@@ -919,7 +929,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                                         defaultValue={field.value}
                                                     >
                                                         <FormControl>
-                                                            <SelectTrigger className="h-9 mt-1">
+                                                            <SelectTrigger className="h-auto mt-1">
                                                                 <SelectValue placeholder="Chọn vật phẩm" />
                                                             </SelectTrigger>
                                                         </FormControl>
@@ -929,18 +939,35 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                                                     key={res.value}
                                                                     value={res.value}
                                                                 >
-                                                                    {/* {getResourceName(res)} */}
-                                                                    <strong>{res.label}</strong>
-                                                                    <div className="text-sm text-muted-foreground mt-1">
-                                                                        <p>
-                                                                            Tồn kho:{' '}
-                                                                            {res.specQuantity}
-                                                                        </p>
-                                                                        <p>
-                                                                            Quy cách:{' '}
-                                                                            {res.unitSpecification}
-                                                                        </p>
+                                                                    <div className="flex flex-col items-start justify-between">
+                                                                        {/* {getResourceName(res)} */}
+                                                                        <strong>{res.label}</strong>
+                                                                        <div className="text-sm text-muted-foreground mt-1">
+                                                                            <p className="text-left">
+                                                                                Tồn kho:{' '}
+                                                                                {res.specQuantity}
+                                                                            </p>
+                                                                            <p className="text-left">
+                                                                                Quy cách:{' '}
+                                                                                {
+                                                                                    res.unitSpecification
+                                                                                }
+                                                                            </p>
+                                                                        </div>
                                                                     </div>
+                                                                    {/* <FormField
+                                                                        control={form.control}
+                                                                        name={`taskResources.${index}.supplierId`}
+                                                                        render={({ field }) => (
+                                                                            <Input
+                                                                                type="hidden"
+                                                                                {...field}
+                                                                                value={
+                                                                                    res.currentSupplierId
+                                                                                }
+                                                                            />
+                                                                        )}
+                                                                    /> */}
                                                                 </SelectItem>
                                                             ))}
                                                             {resourceOptions?.length === 0 && (
@@ -964,7 +991,7 @@ export function TaskForm({ defaultValues }: { defaultValues?: Task }) {
                                     <div className="md:col-span-3">
                                         <FormField
                                             control={form.control}
-                                            name={`taskResources.${index}.quantity`}
+                                            name={`taskResources.${index}.suppliedQuantity`}
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel className="text-sm">

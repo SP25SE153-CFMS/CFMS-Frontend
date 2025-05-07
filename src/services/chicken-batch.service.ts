@@ -2,6 +2,7 @@ import { ChickenBatch } from '@/utils/schemas/chicken-batch.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 import {
+    ChickenBatchChart,
     ChickenBatchResponse,
     ExportChicken,
     HealthLogRequest,
@@ -101,4 +102,10 @@ export const deleteHealthLog = async (chickenBatchId: string, healthLogId: strin
     const body = { batchId: chickenBatchId, healthLogId };
     const response = await put<Response<string>>(endpoint, body);
     return response.data;
+};
+
+export const getChickenBatchChart = async (chickenBatchId: string) => {
+    const endpoint = `/chicken-batch/${chickenBatchId}/chart-data`;
+    const response = await get<Response<ChickenBatchChart[]>>(endpoint);
+    return response.data.data;
 };

@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
 export const HealthLogDetailSchema = z.object({
-    healthLogDetailId: z.string().uuid({ message: 'ID chi tiết nhật ký sức khỏe không hợp lệ' }),
-    healthLogId: z.string().uuid({ message: 'ID nhật ký sức khỏe không hợp lệ' }),
-    criteriaId: z.string().uuid({ message: 'ID tiêu chí không hợp lệ' }),
+    healthLogDetailId: z.string().uuid({ message: 'Chi tiết nhật ký sức khỏe không hợp lệ' }),
+    healthLogId: z.string().uuid({ message: 'Nhật ký sức khỏe không hợp lệ' }),
+    criteriaId: z.string().uuid({ message: 'Tiêu chí không hợp lệ' }),
     result: z.string().optional(),
 });
 

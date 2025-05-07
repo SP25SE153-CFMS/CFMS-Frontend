@@ -1,16 +1,13 @@
 import { FlockNutrition } from '@/utils/schemas/nutrition.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
-import { flockNutritions } from '@/utils/data/table.data';
 
 const PREFIX = '/api/FlockNutrition';
 
 export const getFlockNutritions = async () => {
-    /* eslint-disable no-unused-vars */
     const endpoint = PREFIX;
-    // const response = await get<Response<FlockNutrition[]>>(endpoint);
-    // return response.data.data;
-    return flockNutritions;
+    const response = await get<Response<FlockNutrition[]>>(endpoint);
+    return response.data.data;
 };
 
 export const getFlockNutritionById = async (id: string) => {

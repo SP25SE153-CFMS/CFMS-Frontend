@@ -1,6 +1,6 @@
 import { Equipment, EquipmentSchema } from '@/utils/schemas/equipment.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
@@ -8,12 +8,12 @@ import { updateEquipment } from '@/services/equipment.service';
 import toast from 'react-hot-toast';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { SubCategory } from '@/utils/schemas/sub-category.schema';
-import { getSubMaterial, getSubSize, getSubWeight } from '@/services/category.service';
 import { Button } from '../ui/button';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { Loader2 } from 'lucide-react';
 import { onError } from '@/utils/functions/form.function';
+import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { CategoryType } from '@/utils/enum/category.enum';
 interface UpdateEquipmentProps {
     equipment: Equipment;
     closeDialog: () => void;
@@ -56,24 +56,6 @@ export default function UpdateEquipmentForm({ equipment, closeDialog }: UpdateEq
         console.log('Cập nhật: ', formattedData);
         await mutation.mutateAsync(formattedData);
     };
-
-    // Gọi sub size
-    const { data: subSize = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subSize'],
-        queryFn: () => getSubSize(),
-    });
-
-    // Gọi sub weight
-    const { data: subWeight = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subWeight'],
-        queryFn: () => getSubWeight(),
-    });
-
-    // Gọi sub material
-    const { data: subMaterial = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subMaterial'],
-        queryFn: () => getSubMaterial(),
-    });
 
     const handleGenerateCode = (e: React.FocusEvent<HTMLInputElement>) => {
         const input = e.target.value;
@@ -160,14 +142,17 @@ export default function UpdateEquipmentForm({ equipment, closeDialog }: UpdateEq
                                         <SelectTrigger>
                                             <SelectValue
                                                 placeholder={
-                                                    subMaterial.find(
-                                                        (m) => m.subCategoryId === field.value,
-                                                    )?.subCategoryName || 'Chọn chất liệu'
+                                                    getSubCategoryByCategoryType(
+                                                        CategoryType.MATERIAL,
+                                                    )?.find((m) => m.subCategoryId === field.value)
+                                                        ?.subCategoryName || 'Chọn chất liệu'
                                                 }
                                             />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {subMaterial.map((m) => (
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.MATERIAL,
+                                            )?.map((m) => (
                                                 <SelectItem
                                                     key={m.subCategoryId}
                                                     value={m.subCategoryId}
@@ -276,14 +261,18 @@ export default function UpdateEquipmentForm({ equipment, closeDialog }: UpdateEq
                                         <SelectTrigger>
                                             <SelectValue
                                                 placeholder={
-                                                    subSize.find(
-                                                        (s) => s.subCategoryId === field.value,
-                                                    )?.subCategoryName || 'Chọn đơn vị kích thước'
+                                                    getSubCategoryByCategoryType(
+                                                        CategoryType.LENGTH_UNIT,
+                                                    )?.find((s) => s.subCategoryId === field.value)
+                                                        ?.subCategoryName ||
+                                                    'Chọn đơn vị kích thước'
                                                 }
                                             />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {subSize.map((s) => (
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.LENGTH_UNIT,
+                                            )?.map((s) => (
                                                 <SelectItem
                                                     key={s.subCategoryId}
                                                     value={s.subCategoryId}
@@ -337,14 +326,18 @@ export default function UpdateEquipmentForm({ equipment, closeDialog }: UpdateEq
                                         <SelectTrigger>
                                             <SelectValue
                                                 placeholder={
-                                                    subWeight.find(
-                                                        (w) => w.subCategoryId === field.value,
-                                                    )?.subCategoryName || 'Chọn đơn vị khối lượng'
+                                                    getSubCategoryByCategoryType(
+                                                        CategoryType.WEIGHT_UNIT,
+                                                    )?.find((w) => w.subCategoryId === field.value)
+                                                        ?.subCategoryName ||
+                                                    'Chọn đơn vị khối lượng'
                                                 }
                                             />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {subWeight.map((w) => (
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.WEIGHT_UNIT,
+                                            )?.map((w) => (
                                                 <SelectItem
                                                     key={w.subCategoryId}
                                                     value={w.subCategoryId}

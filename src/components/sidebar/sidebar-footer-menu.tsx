@@ -24,9 +24,9 @@ import Link from 'next/link';
 import config from '@/configs';
 import { signOutUser } from '@/utils/functions/sign-out.function';
 import { useQuery } from '@tanstack/react-query';
-import { LoadingSpinner } from '../ui/loading-spinner';
 import { convertToThumbnailUrl } from '@/utils/functions';
 import { User } from '@/utils/schemas/user.schema';
+import { Skeleton } from '../ui/skeleton';
 
 export default function SidebarFooterMenu() {
     const { isMobile } = useSidebar();
@@ -36,7 +36,17 @@ export default function SidebarFooterMenu() {
     });
 
     if (isLoading) {
-        return <LoadingSpinner className="size-8" />;
+        return (
+            <div className="flex items-center gap-2">
+                {/* Skeleton Avatar */}
+                <Skeleton className="w-8 h-8 rounded-full" />
+                {/* Skeleton Text */}
+                <div className="grid flex-1 text-left text-sm leading-tight gap-1">
+                    <Skeleton className="w-20 h-4 rounded" />
+                    <Skeleton className="w-36 h-4 rounded" />
+                </div>
+            </div>
+        );
     }
 
     if (!user) {
