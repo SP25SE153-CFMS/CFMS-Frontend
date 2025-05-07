@@ -15,7 +15,7 @@ import { VaccinationLog, Vaccine } from '../schemas/vaccine.schema';
 import { FarmEmployee } from '../schemas/farm-employee.schema';
 import { User } from '../schemas/user.schema';
 import { TaskLog } from '../schemas/task-log.schema';
-import { HarvestDetail, HarvestLog } from '../schemas/harvest-log.schema';
+import { HarvestDetail } from '../schemas/harvest-log.schema';
 import { FeedSchedule, FlockNutrition, Nutrition } from '../schemas/nutrition.schema';
 import { InventoryReceipt } from '../schemas/inventory-receipt.schema';
 import { InventoryReceiptDetail } from '../schemas/inventory-receipt-detail.schema';
@@ -1529,7 +1529,7 @@ export const taskLogs: TaskLog[] = [
     },
 ];
 
-export const harvestLogs: HarvestLog[] = [
+export const harvestLogs = [
     {
         harvestLogId: '550e8400-e29b-41d4-a716-446655440000',
         chickenCoopId: chickenCoops[0].chickenCoopId,
