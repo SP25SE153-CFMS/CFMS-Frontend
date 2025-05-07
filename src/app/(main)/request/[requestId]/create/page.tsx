@@ -61,20 +61,22 @@ export default function RequestDetail() {
         queryFn: () => getRequestById(requestId),
     });
 
+    const inventoryRequestTypeId = requestDetail?.inventoryRequests?.[0]?.inventoryRequestTypeId;
+    console.log('Id:', inventoryRequestTypeId);
+
+    const { data: subCate, isLoading: isLoadingSubCate } = useQuery({
+        queryKey: ['subCate', inventoryRequestTypeId],
+        queryFn: () => getSubBySubId(inventoryRequestTypeId as string),
+        enabled: !!inventoryRequestTypeId,
+    });
+
     const { data: receipts, isLoading: isLoadingReceipts } = useQuery({
         queryKey: ['receipts'],
         queryFn: () => getReceipts(),
     });
     console.log('Receipts:', receipts);
 
-    const { data: subCate, isLoading: isLoadingSubCate } = useQuery({
-        queryKey: ['subCate', requestDetail?.requestTypeId],
-        queryFn: () => getSubBySubId(requestDetail?.requestTypeId as string),
-        enabled: !!requestDetail?.requestTypeId,
-    });
-
     const subCategoryName = subCate?.subCategoryName;
-    const receiptType = requestDetail?.requestTypeId;
     const form = useForm<CreateInventoryReceipt>({
         resolver: zodResolver(CreateInventoryReceiptSchema),
         defaultValues: {
@@ -82,7 +84,7 @@ export default function RequestDetail() {
             inventoryRequestId: '',
             wareFromId: '',
             wareToId: '',
-            receiptTypeId: receiptType,
+            receiptTypeId: inventoryRequestTypeId,
             batchNumber: 0,
             receiptDetails:
                 requestDetail?.inventoryRequests[0]?.inventoryRequestDetails.map((d) => ({
@@ -111,7 +113,7 @@ export default function RequestDetail() {
                         ? (request?.wareToId ?? undefined)
                         : undefined,
 
-                receiptTypeId: requestDetail.requestTypeId,
+                receiptTypeId: inventoryRequestTypeId,
                 batchNumber: (request.inventoryReceipts.length || 0) + 1,
                 receiptDetails:
                     request?.inventoryRequestDetails.map((d) => ({

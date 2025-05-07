@@ -163,13 +163,7 @@ export default function StockReceiptCreate() {
                                                             value={field.value}
                                                         >
                                                             <SelectTrigger className="h-10 border-slate-300 focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500">
-                                                                <SelectValue
-                                                                    placeholder={
-                                                                        waresLoading
-                                                                            ? 'Đang tải...'
-                                                                            : 'Chọn kho'
-                                                                    }
-                                                                />
+                                                                <SelectValue placeholder="Chọn kho..." />
                                                             </SelectTrigger>
                                                             <SelectContent>
                                                                 {waresLoading ? (
