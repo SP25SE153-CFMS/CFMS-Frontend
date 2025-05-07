@@ -6,7 +6,6 @@ import Image from '@/components/fallback-image';
 import { getCookie } from 'cookies-next';
 import {
     ArrowRight,
-    Wheat,
     BriefcaseMedical,
     Wrench,
     Warehouse,
@@ -16,6 +15,7 @@ import {
     FileText,
     Package,
     Scale,
+    Egg,
 } from 'lucide-react';
 
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
@@ -120,10 +120,12 @@ export default function Ware() {
         resourceTypeName: string,
         wareId: string,
         resourceTypeId: string,
+        warehouseName: string,
     ) => {
         // Lưu vào sessionStorage
         sessionStorage.setItem('wareId', wareId);
         sessionStorage.setItem('resourceTypeId', resourceTypeId);
+        sessionStorage.setItem('warehouseName', warehouseName);
 
         // Chuyển route như cũ
         let route = '';
@@ -161,7 +163,7 @@ export default function Ware() {
             case 'Con giống':
                 return <Origami className="w-5 h-5 text-red-600" />;
             case 'Sản phẩm thu hoạch':
-                return <Wheat className="w-5 h-5 text-green-600" />;
+                return <Egg className="w-5 h-5 text-yellow-400" />;
             default:
                 return <Warehouse className="w-5 h-5 text-slate-600" />;
         }
@@ -259,6 +261,7 @@ export default function Ware() {
                                         ware.resourceTypeName,
                                         ware.wareId,
                                         ware.resourceTypeId,
+                                        ware.warehouseName,
                                     )
                                 }
                             >

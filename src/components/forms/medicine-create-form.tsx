@@ -3,28 +3,23 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
-import { Warehouse } from '@/utils/schemas/warehouse.schema';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getWareById } from '@/services/warehouse.service';
-import { SubCategory } from '@/utils/schemas/sub-category.schema';
-import { getSubDisease, getSubMedicineUnit, getSubPackage } from '@/services/category.service';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createMedicine } from '@/services/medicine.service';
 import toast from 'react-hot-toast';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Button } from '../ui/button';
-import { useEffect, useState } from 'react';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { Loader2 } from 'lucide-react';
 import { onError } from '@/utils/functions/form.function';
+import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { CategoryType } from '@/utils/enum/category.enum';
 
 interface CreateMedicineProps {
     closeDialog: () => void;
 }
 
 export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps) {
-    const [wId, setWId] = useState('');
-
     const form = useForm<CreateMedicine>({
         resolver: zodResolver(CreateMedicineSchema),
         defaultValues: {
@@ -42,43 +37,6 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
             wareId: '',
         },
         mode: 'onChange',
-    });
-
-    // Add this new useEffect to update the form value when wId changes
-    useEffect(() => {
-        if (wId) {
-            form.setValue('wareId', wId);
-        }
-    }, [wId, form]);
-
-    useEffect(() => {
-        const storedWId = sessionStorage.getItem('wareId') ?? '';
-        setWId(storedWId);
-        form.setValue('wareId', storedWId);
-    }, [form]);
-
-    // Gọi data ware để lấy id và tên kho
-    const { data: ware } = useQuery<Warehouse>({
-        queryKey: ['ware', wId],
-        queryFn: () => getWareById(wId),
-        enabled: !!wId,
-    });
-    // Gọi sub package
-    const { data: subPack = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subPack'],
-        queryFn: () => getSubPackage(),
-    });
-
-    // Gọi sub unit
-    const { data: subUnit = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subUnit'],
-        queryFn: () => getSubMedicineUnit(),
-    });
-
-    // Gọi sub unit
-    const { data: subDisease = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subDisease'],
-        queryFn: () => getSubDisease(),
     });
 
     const queryClient = useQueryClient();
@@ -180,7 +138,9 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
                                             <SelectValue placeholder="Chọn loại" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {subDisease.map((d) => (
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.DISEASE,
+                                            )?.map((d) => (
                                                 <SelectItem
                                                     key={d.subCategoryId}
                                                     value={d.subCategoryId}
@@ -317,7 +277,9 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
                                                 <SelectValue placeholder="Chọn đơn vị" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {subUnit.map((u) => (
+                                                {getSubCategoryByCategoryType(
+                                                    CategoryType.M_QUANTITY_UNIT,
+                                                )?.map((u) => (
                                                     <SelectItem
                                                         key={u.subCategoryId}
                                                         value={u.subCategoryId}
@@ -347,7 +309,9 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
                                                 <SelectValue placeholder="Chọn đơn vị đóng gói" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {subPack.map((p) => (
+                                                {getSubCategoryByCategoryType(
+                                                    CategoryType.M_PACKAGE_UNIT,
+                                                )?.map((p) => (
                                                     <SelectItem
                                                         key={p.subCategoryId}
                                                         value={p.subCategoryId}
@@ -377,7 +341,9 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
                                     <FormControl>
                                         <div>
                                             <Input
-                                                value={ware?.warehouseName || ''}
+                                                value={
+                                                    sessionStorage.getItem('warehouseName') || ''
+                                                }
                                                 disabled
                                                 className="bg-background"
                                             />

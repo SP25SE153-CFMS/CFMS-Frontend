@@ -6,16 +6,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { CreateFood, CreateFoodSchema, Food } from '@/utils/schemas/food.schema';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Warehouse } from '@/utils/schemas/warehouse.schema';
-import { getWareById } from '@/services/warehouse.service';
-import type { SubCategory } from '@/utils/schemas/sub-category.schema';
-import { getSubFoodUnit, getSubPackage } from '@/services/category.service';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { createFood } from '@/services/food.service';
 import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
-import { useEffect, useState } from 'react';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { CalendarIcon, Loader2 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
@@ -24,14 +19,14 @@ import { Calendar } from '../ui/calendar';
 import { vi } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { onError } from '@/utils/functions/form.function';
+import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { CategoryType } from '@/utils/enum/category.enum';
 
 interface CreateFoodProps {
     closeModal: () => void;
 }
 
 export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
-    const [wId, setWId] = useState('');
-
     const form = useForm<CreateFood>({
         resolver: zodResolver(CreateFoodSchema),
         defaultValues: {
@@ -46,38 +41,6 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
             expiryDate: dayjs().format('YYYY-MM-DD'),
         },
         mode: 'onChange',
-    });
-
-    // Add this new useEffect to update the form value when wId changes
-    useEffect(() => {
-        if (wId) {
-            form.setValue('wareId', wId);
-        }
-    }, [wId, form]);
-
-    useEffect(() => {
-        const storedWId = sessionStorage.getItem('wareId') ?? '';
-        setWId(storedWId);
-        form.setValue('wareId', storedWId);
-    }, [form]);
-
-    // Gọi data ware để lấy id và tên kho
-    const { data: ware } = useQuery<Warehouse>({
-        queryKey: ['ware', wId],
-        queryFn: () => getWareById(wId),
-        enabled: !!wId,
-    });
-
-    // Gọi sub package
-    const { data: subPack = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subPack'],
-        queryFn: () => getSubPackage(),
-    });
-
-    // Gọi sub unit
-    const { data: subUnit = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subUnit'],
-        queryFn: () => getSubFoodUnit(),
     });
 
     const queryClient = useQueryClient();
@@ -280,7 +243,9 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                                     <FormControl>
                                         <div>
                                             <Input
-                                                value={ware?.warehouseName || ''}
+                                                value={
+                                                    sessionStorage.getItem('warehouseName') || ''
+                                                }
                                                 className="bg-background"
                                                 disabled
                                             />
@@ -334,7 +299,9 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                                                 <SelectValue placeholder="Chọn đơn vị" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {subUnit.map((u) => (
+                                                {getSubCategoryByCategoryType(
+                                                    CategoryType.F_QUANTITY_UNIT,
+                                                )?.map((u) => (
                                                     <SelectItem
                                                         key={u.subCategoryId}
                                                         value={u.subCategoryId}
@@ -364,7 +331,9 @@ export default function CreateFoodForm({ closeModal }: CreateFoodProps) {
                                                 <SelectValue placeholder="Chọn đơn vị đóng gói" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {subPack.map((p) => (
+                                                {getSubCategoryByCategoryType(
+                                                    CategoryType.F_PACKAGE_UNIT,
+                                                )?.map((p) => (
                                                     <SelectItem
                                                         key={p.subCategoryId}
                                                         value={p.subCategoryId}

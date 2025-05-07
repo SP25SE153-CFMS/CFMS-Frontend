@@ -5,14 +5,9 @@ import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Warehouse } from '@/utils/schemas/warehouse.schema';
-import { getWareById } from '@/services/warehouse.service';
-import type { SubCategory } from '@/utils/schemas/sub-category.schema';
-import { getSubFoodUnit, getSubPackage } from '@/services/category.service';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import toast from 'react-hot-toast';
-import { useEffect, useState } from 'react';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { onError } from '@/utils/functions/form.function';
 import { Loader2 } from 'lucide-react';
@@ -22,14 +17,14 @@ import {
     CreateHarvestProductSchema,
     HarvestProduct,
 } from '@/utils/schemas/harvest-product.schema';
+import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { CategoryType } from '@/utils/enum/category.enum';
 
 interface CreateHarvestProductProps {
     closeDialog: () => void;
 }
 
 export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestProductProps) {
-    const [wId, setWId] = useState('');
-
     const form = useForm<CreateHarvestProduct>({
         resolver: zodResolver(CreateHarvestProductSchema),
         defaultValues: {
@@ -41,30 +36,6 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
             packageSize: 0,
             wareId: '',
         },
-    });
-
-    useEffect(() => {
-        const storedWId = sessionStorage.getItem('wareId') ?? '';
-        setWId(storedWId);
-        form.setValue('wareId', storedWId);
-    }, [form]);
-
-    // Fetch warehouse data
-    const { data: ware } = useQuery<Warehouse>({
-        queryKey: ['ware', wId],
-        queryFn: () => getWareById(wId),
-        enabled: !!wId,
-    });
-
-    // Fetch subcategories for package and unit
-    const { data: subPack = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subPack'],
-        queryFn: () => getSubPackage(),
-    });
-
-    const { data: subUnit = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subUnit'],
-        queryFn: () => getSubFoodUnit(),
     });
 
     const queryClient = useQueryClient();
@@ -161,7 +132,9 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
                                             <SelectValue placeholder="Chọn loại sản phẩm" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {subPack.map((type) => (
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.H_PACKAGE_UNIT,
+                                            )?.map((type) => (
                                                 <SelectItem
                                                     key={type.subCategoryId}
                                                     value={type.subCategoryId}
@@ -211,7 +184,9 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
                                             <SelectValue placeholder="Chọn đơn vị" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {subUnit.map((unit) => (
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.H_QUANTITY_UNIT,
+                                            )?.map((unit) => (
                                                 <SelectItem
                                                     key={unit.subCategoryId}
                                                     value={unit.subCategoryId}
@@ -242,7 +217,9 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
                                             <SelectValue placeholder="Chọn đơn vị đóng gói" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {subPack.map((pack) => (
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.H_PACKAGE_UNIT,
+                                            )?.map((pack) => (
                                                 <SelectItem
                                                     key={pack.subCategoryId}
                                                     value={pack.subCategoryId}
@@ -266,7 +243,7 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
                                 <FormLabel>Kho</FormLabel>
                                 <FormControl>
                                     <Input
-                                        value={ware?.warehouseName || ''}
+                                        value={sessionStorage.getItem('warehouseName') || ''}
                                         className="bg-background"
                                         disabled
                                     />

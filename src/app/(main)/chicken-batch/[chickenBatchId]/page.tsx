@@ -360,13 +360,28 @@ export default function Page() {
                     </Card>
                 </div>
                 <div className="col-span-2">
-                    {isReadyToExport && (
+                    {/* Alert for export chicken */}
+                    {isReadyToExport && remainingQuantity !== 0 && (
                         <Alert variant="default" className="border-blue-500/50 text-blue-600 mb-4">
                             <AlertCircle className="h-4 w-4 text-blue-600" color="blue" />
                             <AlertTitle className="font-bold">Thông báo xuất chuồng</AlertTitle>
                             <AlertDescription>
                                 Ngày nuôi đã đạt đến số ngày nuôi tối thiếu. Bạn có thể xuất chuồng
                                 nếu muốn.
+                            </AlertDescription>
+                        </Alert>
+                    )}
+
+                    {/* Alert for remaining quantity = 0 */}
+                    {remainingQuantity === 0 && (
+                        <Alert variant="default" className="border-blue-500/50 text-blue-600 mb-4">
+                            <AlertCircle className="h-4 w-4 text-blue-600" color="blue" />
+                            <AlertTitle className="font-bold">
+                                Không thể xuất chuồng/tách lứa nuôi
+                            </AlertTitle>
+                            <AlertDescription>
+                                Số lượng gà còn lại là 0. Bạn không thể xuất chuồng hoặc tách lứa
+                                nuôi.
                             </AlertDescription>
                         </Alert>
                     )}

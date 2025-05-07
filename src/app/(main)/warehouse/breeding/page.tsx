@@ -3,7 +3,7 @@
 import { DataTable } from '@/components/table/data-table';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plus } from 'lucide-react';
+import { ArrowLeft, Origami, Plus } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -11,7 +11,7 @@ import {
     DialogTitle,
     DialogDescription,
 } from '@/components/ui/dialog';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import ChickenForm from '@/components/forms/chicken-form';
 import { useQuery } from '@tanstack/react-query';
@@ -25,24 +25,18 @@ import { getWareStockByResourceTypeId } from '@/services/warehouse.service';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
-    const [wId, setWId] = useState('');
-    const [rId, setRId] = useState('');
 
     const openModal = () => setOpen(true);
     const onOpenChange = (val: boolean) => setOpen(val);
 
-    useEffect(() => {
-        const wId = sessionStorage.getItem('wareId') ?? '';
-        const rId = sessionStorage.getItem('resourceTypeId') ?? '';
-
-        setWId(wId);
-        setRId(rId);
-    }, []);
-
     const { data: chickens = [], isLoading } = useQuery({
-        queryKey: ['chickens', wId, rId],
-        queryFn: () => getWareStockByResourceTypeId(wId, rId),
-        enabled: !!wId && !!rId,
+        queryKey: ['chickens'],
+        queryFn: async () => {
+            const wId = sessionStorage.getItem('wareId') ?? '';
+            const rId = sessionStorage.getItem('resourceTypeId') ?? '';
+
+            return await getWareStockByResourceTypeId(wId, rId);
+        },
     });
 
     // Check if chickens is loading
@@ -91,7 +85,7 @@ export default function Page() {
             <Card className="shadow-sm border-muted">
                 <CardHeader className="pb-6 items-center justify-center">
                     <div className="flex items-center gap-2">
-                        {/* <Wheat className="h-5 w-5 text-muted-foreground" /> */}
+                        <Origami className="h-5 w-5 text-muted-foreground" />
                         <CardTitle className="text-2xl font-bold">Quản lý kho con giống</CardTitle>
                     </div>
                     <CardDescription className="text-sm">

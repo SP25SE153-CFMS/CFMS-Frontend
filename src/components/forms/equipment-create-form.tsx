@@ -1,25 +1,14 @@
 import {
-    getSubEquipmentUnit,
-    getSubMaterial,
-    getSubPackage,
-    getSubSize,
-    getSubWeight,
-} from '@/services/category.service';
-import { getWareById } from '@/services/warehouse.service';
-import {
     CreateEquipment,
     CreateEquipmentSchema,
     Equipment,
 } from '@/utils/schemas/equipment.schema';
-import { SubCategory } from '@/utils/schemas/sub-category.schema';
-import { Warehouse } from '@/utils/schemas/warehouse.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { createEquipmentInWare } from '@/services/equipment.service';
 import toast from 'react-hot-toast';
@@ -27,13 +16,14 @@ import { Button } from '../ui/button';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { Loader2 } from 'lucide-react';
 import { onError } from '@/utils/functions/form.function';
+import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { CategoryType } from '@/utils/enum/category.enum';
+
 interface CreateEquipmentProps {
     closeDialog: () => void;
 }
 
 export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProps) {
-    const [wId, setWId] = useState('');
-
     const form = useForm<CreateEquipment>({
         resolver: zodResolver(CreateEquipmentSchema),
         defaultValues: {
@@ -50,59 +40,9 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
             unitId: '',
             packageId: '',
             packageSize: 0,
-            wareId: '',
+            wareId: sessionStorage.getItem('wareId') ?? '',
         },
         mode: 'onChange',
-    });
-
-    // Add this new useEffect to update the form value when wId changes
-    useEffect(() => {
-        if (wId) {
-            form.setValue('wareId', wId);
-        }
-    }, [wId, form]);
-
-    useEffect(() => {
-        const storedWId = sessionStorage.getItem('wareId') ?? '';
-        setWId(storedWId);
-        form.setValue('wareId', storedWId);
-    }, [form]);
-
-    // Gọi data ware để lấy id và tên kho
-    const { data: ware } = useQuery<Warehouse>({
-        queryKey: ['ware', wId],
-        queryFn: () => getWareById(wId),
-        enabled: !!wId,
-    });
-
-    // Gọi sub package
-    const { data: subPack = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subPack'],
-        queryFn: () => getSubPackage(),
-    });
-
-    // Gọi sub unit
-    const { data: subUnit = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subUnit'],
-        queryFn: () => getSubEquipmentUnit(),
-    });
-
-    // Gọi sub size
-    const { data: subSize = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subSize'],
-        queryFn: () => getSubSize(),
-    });
-
-    // Gọi sub weight
-    const { data: subWeight = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subWeight'],
-        queryFn: () => getSubWeight(),
-    });
-
-    // Gọi sub material
-    const { data: subMaterial = [] } = useQuery<SubCategory[]>({
-        queryKey: ['subMaterial'],
-        queryFn: () => getSubMaterial(),
     });
 
     const queryClient = useQueryClient();
@@ -238,7 +178,9 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                                             <SelectValue placeholder="Chọn chất liệu" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {subMaterial.map((m) => (
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.MATERIAL,
+                                            )?.map((m) => (
                                                 <SelectItem
                                                     key={m.subCategoryId}
                                                     value={m.subCategoryId}
@@ -267,7 +209,9 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                                     <FormControl>
                                         <div>
                                             <Input
-                                                value={ware?.warehouseName || ''}
+                                                value={
+                                                    sessionStorage.getItem('warehouseName') || ''
+                                                }
                                                 disabled
                                                 className="bg-background"
                                             />
@@ -320,7 +264,9 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                                             <SelectValue placeholder="Chọn đơn vị độ dài" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {subSize.map((s) => (
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.LENGTH_UNIT,
+                                            )?.map((s) => (
                                                 <SelectItem
                                                     key={s.subCategoryId}
                                                     value={s.subCategoryId}
@@ -377,7 +323,9 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                                             <SelectValue placeholder="Chọn đơn vị khối lượng" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {subWeight.map((w) => (
+                                            {getSubCategoryByCategoryType(
+                                                CategoryType.WEIGHT_UNIT,
+                                            ).map((w) => (
                                                 <SelectItem
                                                     key={w.subCategoryId}
                                                     value={w.subCategoryId}
@@ -435,7 +383,9 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                                                 <SelectValue placeholder="Chọn đơn vị" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {subUnit.map((u) => (
+                                                {getSubCategoryByCategoryType(
+                                                    CategoryType.E_QUANTITY_UNIT,
+                                                )?.map((u) => (
                                                     <SelectItem
                                                         key={u.subCategoryId}
                                                         value={u.subCategoryId}
@@ -465,7 +415,9 @@ export default function CreateEquipmentForm({ closeDialog }: CreateEquipmentProp
                                                 <SelectValue placeholder="Chọn đơn vị đóng gói" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {subPack.map((p) => (
+                                                {getSubCategoryByCategoryType(
+                                                    CategoryType.E_PACKAGE_UNIT,
+                                                )?.map((p) => (
                                                     <SelectItem
                                                         key={p.subCategoryId}
                                                         value={p.subCategoryId}

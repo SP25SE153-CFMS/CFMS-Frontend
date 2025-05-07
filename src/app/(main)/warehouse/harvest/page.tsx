@@ -3,7 +3,7 @@
 import { DataTable } from '@/components/table/data-table';
 import { columns } from './columns';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plus } from 'lucide-react';
+import { ArrowLeft, Egg, Plus } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -91,7 +91,7 @@ export default function Page() {
             <Card className="shadow-sm border-muted">
                 <CardHeader className="pb-6 items-center justify-center">
                     <div className="flex items-center gap-2">
-                        {/* <Wheat className="h-5 w-5 text-muted-foreground" /> */}
+                        <Egg className="h-5 w-5 text-muted-foreground" />
                         <CardTitle className="text-2xl font-bold">
                             Quản lý kho sản phẩm thu hoạch
                         </CardTitle>

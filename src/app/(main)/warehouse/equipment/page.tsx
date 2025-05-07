@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Image from '@/components/fallback-image';
@@ -28,25 +28,19 @@ import config from '@/configs';
 export default function Page() {
     const router = useRouter();
     const [open, setOpen] = useState(false);
-    const [wId, setWId] = useState('');
-    const [rId, setRId] = useState('');
 
     const openModal = () => setOpen(true);
     const closeModal = () => setOpen(false);
     const onOpenChange = (val: boolean) => setOpen(val);
 
-    useEffect(() => {
-        const wId = sessionStorage.getItem('wareId') ?? '';
-        const rId = sessionStorage.getItem('resourceTypeId') ?? '';
-
-        setWId(wId);
-        setRId(rId);
-    }, []);
-
     const { data: equipments = [], isLoading } = useQuery<WareStockResponse[]>({
-        queryKey: ['equipments', wId, rId],
-        queryFn: () => getWareStockByResourceTypeId(wId, rId),
-        enabled: !!wId && !!rId,
+        queryKey: ['equipments'],
+        queryFn: async () => {
+            const wId = sessionStorage.getItem('wareId') ?? '';
+            const rId = sessionStorage.getItem('resourceTypeId') ?? '';
+
+            return await getWareStockByResourceTypeId(wId, rId);
+        },
     });
 
     if (isLoading) {
