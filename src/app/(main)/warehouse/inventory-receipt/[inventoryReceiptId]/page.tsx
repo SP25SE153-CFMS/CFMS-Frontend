@@ -1,15 +1,14 @@
 'use client';
 
 import SubCateDisplay from '@/components/badge/BadgeReceipt';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent,  CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { getReceiptById } from '@/services/request.service';
 import { getResources } from '@/services/resource.service';
-import type { User } from '@/utils/schemas/user.schema';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import {
     Calendar,
@@ -20,13 +19,19 @@ import {
     Stethoscope,
     Wrench,
     AlertCircle,
+    ArrowLeft,
 } from 'lucide-react';
+import { getSubBySubId } from '@/services/category.service';
+import { getWareById } from '@/services/warehouse.service';
+import { Button } from '@/components/ui/button';
+import { getUsers } from '@/services/user.service';
 
 export default function InventoryDetail() {
+    const router = useRouter();
     const { inventoryReceiptId }: { inventoryReceiptId: string } = useParams();
 
     const { data: receipt, isLoading: isLoadingReceipts } = useQuery({
-        queryKey: ['receipts'],
+        queryKey: ['receipt'],
         queryFn: () => getReceiptById(inventoryReceiptId),
     });
 
@@ -34,15 +39,36 @@ export default function InventoryDetail() {
         queryKey: ['resources'],
         queryFn: () => getResources(),
     });
+    // console.log("Resource: ",resources);
+
+    const { data: subCate } = useQuery({
+        queryKey: ['subCate', receipt?.receiptTypeId],
+        queryFn: () => getSubBySubId(receipt?.receiptTypeId as string),
+        enabled: !!receipt?.receiptTypeId,
+    });
+
+    const { data: users } = useQuery({
+        queryKey: ['users'],
+        queryFn: () => getUsers(),
+    });
+
+    const subCateName = subCate?.subCategoryName;
+
+    const warehouseId = subCateName === 'IMPORT' ? receipt?.wareToId : receipt?.wareFromId;
+
+    const { data: ware } = useQuery({
+        queryKey: ['ware', warehouseId],
+        queryFn: () => getWareById(warehouseId as string),
+        enabled: !!warehouseId,
+    });
 
     const createdByName = useMemo(() => {
         if (!receipt) return '';
 
-        const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
-        const createdBy = users.find((user) => user.userId === receipt.createdByUserId);
+        const createdBy = users?.find((user) => user.userId === receipt.userId);
 
         return createdBy?.fullName || '';
-    }, [receipt]);
+    }, [receipt, users]);
 
     if (isLoadingReceipts || isLoadingResources) {
         return (
@@ -69,14 +95,29 @@ export default function InventoryDetail() {
         );
     }
 
+    const getWareType = () => {
+        if (subCateName === 'IMPORT') return <p className="text-sm text-gray-500">Kho nhập</p>;
+        if (subCateName === 'EXPORT') return <p className="text-sm text-gray-500">Kho xuất</p>;
+    };
+
     return (
         <div className="container mx-auto max-w-5xl py-6">
             <div className="mb-8 space-y-4">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <h1 className="text-2xl font-bold tracking-tight">
-                        Chi tiết phiếu: {''}
-                        {receipt.receiptCodeNumber}
-                    </h1>
+                    <div className="flex items-center">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => router.back()}
+                            className="hover:bg-slate-100"
+                        >
+                            <ArrowLeft className="h-4 w-4" />
+                        </Button>
+                        <h1 className="text-2xl font-bold tracking-tight">
+                            Chi tiết phiếu: {''}
+                            {receipt.receiptCodeNumber}
+                        </h1>
+                    </div>
                     <Badge
                         variant="outline"
                         className="w-fit border-2 px-3 py-1.5 text-sm font-medium"
@@ -96,7 +137,6 @@ export default function InventoryDetail() {
 
                 <Separator />
             </div>
-
             <div className="mb-6">
                 <h2 className="mb-4 text-lg font-semibold">Danh sách chi tiết phiếu</h2>
 
@@ -168,6 +208,7 @@ export default function InventoryDetail() {
                                                         </div>
                                                         <Separator />
                                                         <div className="space-y-2">
+                                                            {/* Tên */}
                                                             <div className="grid grid-cols-[120px_1fr] items-center">
                                                                 <span className="text-sm text-gray-500">
                                                                     Tên:
@@ -176,6 +217,8 @@ export default function InventoryDetail() {
                                                                     {resource.food.foodName}
                                                                 </span>
                                                             </div>
+
+                                                            {/* Số lượng */}
                                                             <div className="grid grid-cols-[120px_1fr] items-center">
                                                                 <span className="text-sm text-gray-500">
                                                                     Số lượng:
@@ -184,6 +227,8 @@ export default function InventoryDetail() {
                                                                     {detail.actualQuantity}
                                                                 </span>
                                                             </div>
+
+                                                            {/* Loại phiếu */}
                                                             <div className="grid grid-cols-[120px_1fr] items-center">
                                                                 <span className="text-sm text-gray-500">
                                                                     Loại phiếu:
@@ -191,9 +236,17 @@ export default function InventoryDetail() {
                                                                 <div>
                                                                     <SubCateDisplay
                                                                         id={resource.resourceTypeId}
-                                                                        mode="badge"
+                                                                        mode="title"
                                                                     />
                                                                 </div>
+                                                            </div>
+
+                                                            {/* Kho */}
+                                                            <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                {getWareType()}
+                                                                <p className="text-sm font-medium">
+                                                                    {ware?.warehouseName}
+                                                                </p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -274,7 +327,7 @@ export default function InventoryDetail() {
                                                 <div className="rounded-lg border bg-white p-4">
                                                     <div className="flex items-center justify-between">
                                                         <h4 className="font-medium">
-                                                            Thông tin thiết bị
+                                                            Thông tin cơ bản
                                                         </h4>
                                                         <Badge
                                                             variant="outline"
@@ -285,6 +338,27 @@ export default function InventoryDetail() {
                                                     </div>
                                                     <Separator className="my-3" />
                                                     <div className="space-y-2">
+                                                        {/* Tên */}
+                                                        <div className="grid grid-cols-[120px_1fr] items-center">
+                                                            <span className="text-sm text-gray-500">
+                                                                Tên:
+                                                            </span>
+                                                            <span className="text-sm font-medium">
+                                                                {resource.equipment.equipmentName}
+                                                            </span>
+                                                        </div>
+
+                                                        {/* Số lượng */}
+                                                        <div className="grid grid-cols-[120px_1fr] items-center">
+                                                            <span className="text-sm text-gray-500">
+                                                                Số lượng:
+                                                            </span>
+                                                            <span className="text-sm">
+                                                                {detail.actualQuantity}
+                                                            </span>
+                                                        </div>
+
+                                                        {/* Loại phiếu */}
                                                         <div className="grid grid-cols-[120px_1fr] items-center">
                                                             <span className="text-sm text-gray-500">
                                                                 Loại phiếu:
@@ -296,26 +370,68 @@ export default function InventoryDetail() {
                                                                 />
                                                             </div>
                                                         </div>
-                                                        <div className="grid grid-cols-[120px_1fr] items-center">
-                                                            <span className="text-sm text-gray-500">
-                                                                Quy cách tính:
-                                                            </span>
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-sm">
-                                                                    {resource.packageSize}
-                                                                </span>
 
-                                                                <SubCateDisplay
-                                                                    id={resource.unitId}
-                                                                    mode="input"
-                                                                />
-                                                                <span className="text-sm text-gray-400">
-                                                                    /
-                                                                </span>
-                                                                <SubCateDisplay
-                                                                    id={resource.packageId}
-                                                                    mode="input"
-                                                                />
+                                                        {/* Kho */}
+                                                        <div className="grid grid-cols-[120px_1fr] items-center">
+                                                            {getWareType()}
+                                                            <p className="text-sm font-medium">
+                                                                {ware?.warehouseName}
+                                                            </p>
+                                                        </div>
+
+                                                        <div className="space-y-3 rounded-lg border bg-white p-4">
+                                                            <h4 className="font-medium">
+                                                                Thông tin chi tiết
+                                                            </h4>
+                                                            <Separator className="my-3" />
+                                                            <div className="space-y-2">
+                                                                <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                    <span className="text-sm text-gray-500">
+                                                                        Quy cách tính:
+                                                                    </span>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className="text-sm">
+                                                                            {resource.packageSize}
+                                                                        </span>
+
+                                                                        <SubCateDisplay
+                                                                            id={resource.unitId}
+                                                                            mode="input"
+                                                                        />
+                                                                        <span className="text-sm text-gray-400">
+                                                                            /
+                                                                        </span>
+                                                                        <SubCateDisplay
+                                                                            id={resource.packageId}
+                                                                            mode="input"
+                                                                        />
+                                                                    </div>
+
+                                                                    <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                        <span className="text-sm text-gray-500">
+                                                                            Ngày mua:
+                                                                        </span>
+                                                                        <span className="text-sm">
+                                                                            {dayjs(
+                                                                                resource.equipment
+                                                                                    .purchaseDate,
+                                                                            ).format('DD/MM/YYYY')}
+                                                                        </span>
+                                                                    </div>
+
+                                                                    <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                        <span className="text-sm text-gray-500 ">
+                                                                            Chất liệu:
+                                                                        </span>
+                                                                        <SubCateDisplay
+                                                                            id={
+                                                                                resource.equipment
+                                                                                    .materialId
+                                                                            }
+                                                                            mode="material"
+                                                                        />
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -335,7 +451,7 @@ export default function InventoryDetail() {
                                                 <div className="rounded-lg border bg-white p-4">
                                                     <div className="flex items-center justify-between">
                                                         <h4 className="font-medium">
-                                                            Thông tin thuốc
+                                                            Thông tin cơ bản
                                                         </h4>
                                                         <Badge
                                                             variant="outline"
@@ -346,6 +462,27 @@ export default function InventoryDetail() {
                                                     </div>
                                                     <Separator className="my-3" />
                                                     <div className="space-y-2">
+                                                        {/* Tên */}
+                                                        <div className="grid grid-cols-[120px_1fr] items-center">
+                                                            <span className="text-sm text-gray-500">
+                                                                Tên:
+                                                            </span>
+                                                            <span className="text-sm font-medium">
+                                                                {resource.medicine.medicineName}
+                                                            </span>
+                                                        </div>
+
+                                                        {/* Số lượng */}
+                                                        <div className="grid grid-cols-[120px_1fr] items-center">
+                                                            <span className="text-sm text-gray-500">
+                                                                Số lượng:
+                                                            </span>
+                                                            <span className="text-sm">
+                                                                {detail.actualQuantity}
+                                                            </span>
+                                                        </div>
+
+                                                        {/* Loại phiếu */}
                                                         <div className="grid grid-cols-[120px_1fr] items-center">
                                                             <span className="text-sm text-gray-500">
                                                                 Loại phiếu:
@@ -357,25 +494,75 @@ export default function InventoryDetail() {
                                                                 />
                                                             </div>
                                                         </div>
+
+                                                        {/* Kho */}
                                                         <div className="grid grid-cols-[120px_1fr] items-center">
-                                                            <span className="text-sm text-gray-500">
-                                                                Quy cách tính:
-                                                            </span>
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-sm">
-                                                                    {resource.packageSize}
-                                                                </span>
-                                                                <SubCateDisplay
-                                                                    id={resource.unitId}
-                                                                    mode="input"
-                                                                />
-                                                                <span className="text-sm text-gray-400">
-                                                                    /
-                                                                </span>
-                                                                <SubCateDisplay
-                                                                    id={resource.packageId}
-                                                                    mode="input"
-                                                                />
+                                                            {getWareType()}
+                                                            <p className="text-sm font-medium">
+                                                                {ware?.warehouseName}
+                                                            </p>
+                                                        </div>
+
+                                                        <div className="space-y-3 rounded-lg border bg-white p-4">
+                                                            <h4 className="font-medium">
+                                                                Thông tin chi tiết
+                                                            </h4>
+                                                            <Separator className="my-3" />
+                                                            <div className="space-y-2">
+                                                                <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                    <span className="text-sm text-gray-500">
+                                                                        Quy cách tính:
+                                                                    </span>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className="text-sm">
+                                                                            {resource.packageSize}
+                                                                        </span>
+                                                                        <SubCateDisplay
+                                                                            id={resource.unitId}
+                                                                            mode="input"
+                                                                        />
+                                                                        <span className="text-sm text-gray-400">
+                                                                            /
+                                                                        </span>
+                                                                        <SubCateDisplay
+                                                                            id={resource.packageId}
+                                                                            mode="input"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                    <span className="text-sm text-gray-500">
+                                                                        Ngày SX:
+                                                                    </span>
+                                                                    <span className="text-sm">
+                                                                        {dayjs(
+                                                                            resource.medicine
+                                                                                .productionDate,
+                                                                        ).format('DD/MM/YYYY')}
+                                                                    </span>
+                                                                </div>
+
+                                                                <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                    <span className="text-sm text-gray-500">
+                                                                        Hạn SD:
+                                                                    </span>
+                                                                    <span className="text-sm">
+                                                                        {dayjs(
+                                                                            resource.medicine
+                                                                                .expiryDate,
+                                                                        ).format('DD/MM/YYYY')}
+                                                                    </span>
+                                                                </div>
+
+                                                                <div className="grid grid-cols-[120px_1fr] items-center">
+                                                                    <span className="text-sm text-gray-500 ">
+                                                                        Cách sử dụng:
+                                                                    </span>
+                                                                    <span className="text-sm">
+                                                                        {resource.medicine.usage}
+                                                                    </span>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -389,6 +576,7 @@ export default function InventoryDetail() {
                     })}
                 </div>
             </div>
+           
         </div>
     );
 }

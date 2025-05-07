@@ -7,36 +7,16 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card } from '@/components/ui/card';
 import Image from '@/components/fallback-image';
 import { Button } from '@/components/ui/button';
-import { getReceipts } from '@/services/request.service';
-import { getUsers } from '@/services/user.service';
-import { useMemo } from 'react';
-import { User } from '@/utils/schemas/user.schema';
+import { getReceiptsByFarmId } from '@/services/request.service';
+import { getCookie } from 'cookies-next';
 
 export default function InventoryReceipt() {
+    const farmId = getCookie('farmId') ?? '';
+
     const { data: receipts, isLoading } = useQuery({
-        queryKey: ['receipts'],
-        queryFn: () => getReceipts(),
+        queryKey: ['receipts', farmId],
+        queryFn: () => getReceiptsByFarmId(farmId),
     });
-
-    useQuery({
-        queryKey: ['users'],
-        queryFn: async () => {
-            const users = await getUsers();
-            sessionStorage.setItem('users', JSON.stringify(users));
-            return users;
-        },
-    });
-
-    const filteredReceipt = useMemo(() => {
-        if (!receipts) return [];
-
-        const users: User[] = JSON.parse(sessionStorage.getItem('users') || '[]');
-
-        return receipts.filter((receipt) => {
-            const createdBy = users.find((user) => user.userId === receipt.createdByUserId);
-            return !!createdBy;
-        });
-    }, [receipts]);
 
     // console.log('Toan bo receipt: ', receipts);
 
@@ -70,7 +50,7 @@ export default function InventoryReceipt() {
                 <p className="text-muted-foreground">Danh sách tất cả phiếu nhập/xuất nội bộ</p>
             </div>
             <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-                <DataTable data={filteredReceipt} columns={columns} />
+                <DataTable data={receipts} columns={columns} />
             </div>
         </div>
     );

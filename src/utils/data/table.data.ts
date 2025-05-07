@@ -15,7 +15,7 @@ import { VaccinationLog, Vaccine } from '../schemas/vaccine.schema';
 import { FarmEmployee } from '../schemas/farm-employee.schema';
 import { User } from '../schemas/user.schema';
 import { TaskLog } from '../schemas/task-log.schema';
-import { HarvestDetail, HarvestLog } from '../schemas/harvest-log.schema';
+import { HarvestDetail } from '../schemas/harvest-log.schema';
 import { FeedSchedule, FlockNutrition, Nutrition } from '../schemas/nutrition.schema';
 import { InventoryReceipt } from '../schemas/inventory-receipt.schema';
 import { InventoryReceiptDetail } from '../schemas/inventory-receipt-detail.schema';
@@ -1529,7 +1529,7 @@ export const taskLogs: TaskLog[] = [
     },
 ];
 
-export const harvestLogs: HarvestLog[] = [
+export const harvestLogs = [
     {
         harvestLogId: '550e8400-e29b-41d4-a716-446655440000',
         chickenCoopId: chickenCoops[0].chickenCoopId,
@@ -1739,7 +1739,7 @@ export const flockNutritions: FlockNutrition[] = [
 export const inventoryReceipts: InventoryReceipt[] = [
     {
         inventoryReceiptId: '550e8400-e29b-41d4-a716-446655440000',
-        inventoryCode: 'INV1234567890',
+        receiptCodeNumber: 'INV1234567890',
         inventoryRequestId: '660e8400-e29b-41d4-a716-446655440001',
         receiptTypeId: '770e8400-e29b-41d4-a716-446655440002',
         subcategoryName: 'Nhập',
@@ -1751,7 +1751,7 @@ export const inventoryReceipts: InventoryReceipt[] = [
     },
     {
         inventoryReceiptId: '550e8400-e29b-41d4-a716-446655440088',
-        inventoryCode: 'INV1234567888',
+        receiptCodeNumber: 'INV1234567888',
         inventoryRequestId: '660e8400-e29b-41d4-a716-446655440001',
         receiptTypeId: '770e8400-e29b-41d4-a716-446655440002',
         subcategoryName: 'Nhập',
@@ -1763,7 +1763,7 @@ export const inventoryReceipts: InventoryReceipt[] = [
     },
     {
         inventoryReceiptId: '660e8400-e29b-41d4-a716-446655440006',
-        inventoryCode: 'INV0987654321',
+        receiptCodeNumber: 'INV0987654321',
         inventoryRequestId: '770e8400-e29b-41d4-a716-446655440007',
         receiptTypeId: '880e8400-e29b-41d4-a716-446655440008',
         subcategoryName: 'Xuất',

@@ -42,8 +42,14 @@ export const getWareStockByResourceTypeId = async (wareId: string, resourceTypeI
     return response.data.data;
 };
 
+export const getWareStockByReTypeId = async (wareId: string, resourceTypeId: string) => {
+    const endpoint = `${PREFIX}/warestocks/${wareId}/${resourceTypeId}`;
+    const response = await get<Response<WareStockResponse[]>>(endpoint);
+    return response.data.data;
+};
+
 export const getWareStockByResourceId = async (resourceId: string) => {
-    const endpoint = `${PREFIX}/warestocks/${resourceId}`;
+    const endpoint = `${PREFIX}/warestock/${resourceId}`;
     // const response = await get<Response<WareStockResponse[] | ResourceResponse[]>>(endpoint);
     const response = await get<Response<ResourceResponse>>(endpoint);
     return response.data.data;

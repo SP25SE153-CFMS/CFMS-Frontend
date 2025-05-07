@@ -26,12 +26,12 @@ import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { getEquipments } from '@/services/equipment.service';
 import { addCoopEquipment, updateCoopEquipment } from '@/services/chicken-coop.service';
 import { vi } from 'date-fns/locale';
 import { formatDate } from '@/utils/functions';
 import { Textarea } from '../ui/textarea';
 import { onError } from '@/utils/functions/form.function';
+import { getWarestockResourceByFarm } from '@/services/warehouse.service';
 
 interface CoopEquipmentFormProps {
     defaultValues?: Partial<CoopEquipment>;
@@ -43,7 +43,7 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
 
     const { data: equipments } = useQuery({
         queryKey: ['equipments'],
-        queryFn: () => getEquipments(),
+        queryFn: () => getWarestockResourceByFarm('equipment'),
     });
 
     // Initialize form

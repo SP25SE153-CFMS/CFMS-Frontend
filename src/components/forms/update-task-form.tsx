@@ -143,6 +143,7 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
         // );
         // return filteredResources?.map((resource) => ({
         return resources?.map((resource) => ({
+            ...resource,
             value:
                 // resource.equipmentId ||
                 // resource.medicineId ||
@@ -156,8 +157,6 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
                 resource.foodName ||
                 resource.harvestProductName ||
                 resource.chickenName,
-            specQuantity: resource.specQuantity,
-            unitSpecification: resource.unitSpecification,
         }));
     }, [resources]);
 
@@ -698,8 +697,10 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [breedingAreas, form, form.watch('taskTypeId'), getCoopName, locationType, warehouses]);
 
-    const renderResourcesSection = useMemo(
-        () => (
+    const renderResourcesSection = useMemo(() => {
+        console.log(fields);
+
+        return (
             <div className="space-y-6 pt-4">
                 <div className="flex items-center gap-2">
                     <Package className="h-5 w-5 text-primary" />
@@ -760,7 +761,23 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
                                                         Vật phẩm
                                                     </FormLabel>
                                                     <Select
-                                                        onValueChange={field.onChange}
+                                                        onValueChange={() => {
+                                                            if (
+                                                                field.value &&
+                                                                field.value.includes('|')
+                                                            ) {
+                                                                const [resourceId, supplierId] =
+                                                                    field.value.split('|');
+                                                                form.setValue(
+                                                                    `taskResources.${index}.resourceId`,
+                                                                    resourceId,
+                                                                );
+                                                                form.setValue(
+                                                                    `taskResources.${index}.supplierId`,
+                                                                    supplierId,
+                                                                );
+                                                            }
+                                                        }}
                                                         defaultValue={field.value}
                                                     >
                                                         <FormControl>
@@ -771,21 +788,30 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
                                                         <SelectContent>
                                                             {resourceOptions?.map((res) => (
                                                                 <SelectItem
-                                                                    key={res.value}
-                                                                    value={res.value}
+                                                                    key={
+                                                                        res.value +
+                                                                        '|' +
+                                                                        res.currentSupplierId
+                                                                    }
+                                                                    value={
+                                                                        res.value +
+                                                                        '|' +
+                                                                        res.currentSupplierId
+                                                                    }
                                                                 >
                                                                     <div className="flex flex-col items-start justify-between">
                                                                         {/* {getResourceName(res)} */}
                                                                         <strong>{res.label}</strong>
                                                                         <div className="text-sm text-muted-foreground mt-1">
                                                                             <p className="text-left">
-                                                                                Tồn kho:{' '}
-                                                                                {res.specQuantity}
-                                                                            </p>
-                                                                            <p className="text-left">
                                                                                 Quy cách:{' '}
                                                                                 {
                                                                                     res.unitSpecification
+                                                                                }
+                                                                            </p>
+                                                                            <p className="text-left">
+                                                                                {
+                                                                                    res.currentSupplierName
                                                                                 }
                                                                             </p>
                                                                         </div>
@@ -850,9 +876,8 @@ export function UpdateTaskForm({ defaultValues }: { defaultValues?: UpdateTask }
                     )}
                 </div>
             </div>
-        ),
-        [fields, append, form.control, resourceOptions, remove],
-    );
+        );
+    }, [fields, append, form, resourceOptions, remove]);
 
     const renderAssignmentsSection = useMemo(
         () => (

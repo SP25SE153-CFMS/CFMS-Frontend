@@ -2,13 +2,13 @@ import { Request } from '@/utils/schemas/request.schema';
 import { get, post, put, remove } from '@/utils/functions/axios.function';
 import { Response } from '@/utils/types';
 import {
-    InventoryReceiptRequest,
     ReceiptResponse,
     RequestResponse,
 } from '@/utils/types/custom.type';
 import { getCookie } from 'cookies-next';
 import config from '@/configs';
 import { RequestStatus } from '@/utils/enum/status.enum';
+import { CreateInventoryReceipt } from '@/utils/schemas/inventory-receipt.schema';
 
 const PREFIX = '/api/Request';
 
@@ -54,7 +54,7 @@ export const approveRequest = async (
     return response.data;
 };
 
-export const createInvetoryReceiptFromRequest = async (body: InventoryReceiptRequest) => {
+export const createInvetoryReceiptFromRequest = async (body: CreateInventoryReceipt) => {
     const endpoint = PREFIX + '/create-inventory-receipt';
     const response = await post<Response<string>>(endpoint, body);
     return response.data;
@@ -69,5 +69,11 @@ export const getReceipts = async () => {
 export const getReceiptById = async (id: string) => {
     const endpoint = PREFIX + '/receipt/' + id;
     const response = await get<Response<ReceiptResponse>>(endpoint);
+    return response.data.data;
+};
+
+export const getReceiptsByFarmId = async (farmId: string) => {
+    const endpoint = PREFIX + '/receipts-Farm/' + farmId;
+    const response = await get<Response<ReceiptResponse[]>>(endpoint);
     return response.data.data;
 };

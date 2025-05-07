@@ -471,7 +471,6 @@ export default function Page() {
                                                             <FormLabel>Vĩ độ</FormLabel>
                                                             <FormControl>
                                                                 <Input
-                                                                    type="number"
                                                                     step="any"
                                                                     placeholder="Nhập vĩ độ (ví dụ: 21.0278)"
                                                                     {...field}

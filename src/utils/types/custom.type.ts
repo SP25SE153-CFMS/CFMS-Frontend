@@ -40,6 +40,8 @@ import { InventoryRequest } from '../schemas/inventory-request.schema';
 import { InventoryRequestDetail } from '../schemas/inventory-request-detail.schema';
 import { Farm } from '../schemas/farm.schema';
 import { Supplier } from '../schemas/supplier.schema';
+import { StockReceiptDetail } from '../schemas/stock-receipt-detail.schema';
+import { HarvestLog } from '../schemas/harvest-log.schema';
 
 export type EntityAudit = {
     isDeleted: boolean;
@@ -56,6 +58,7 @@ export type ChickenCoopResponse = ChickenCoop & {
     chickenBatches: ChickenBatch[];
     taskLogs: TaskLog[];
     coopEquipments: CoopEquipment[];
+    harvestLogs: HarvestLog[];
 };
 
 export type ChickenResponse = Chicken & {
@@ -188,6 +191,7 @@ export type TaskResourceResponse = TaskResource & {
     resourceType: string;
     specQuantity: string;
     unitSpecification: string;
+    supplierId: string;
 };
 
 export type TaskLocationResponse = TaskLocation & {
@@ -261,10 +265,12 @@ export type WareStockResponse = Warehouse &
     Food &
     Equipment &
     Medicine &
+    Chicken &
     HarvestProduct & {
         foods?: Food;
         equipments?: Equipment;
         medicine?: Medicine;
+        breeding?: Chicken;
         specQuantity: string;
         unitSpecification: string;
         resourceTypeName: string;
@@ -286,6 +292,9 @@ export type WarestockResourceByType = Food &
         unitSpecification: string;
         supplierName: string;
         resourceId: string;
+        currentSupplierId: string;
+        currentSupplierName: string;
+        currentSupplierCode: string;
     };
 
 export type InventoryReceiptRequest = CreateInventoryReceipt & {
@@ -315,6 +324,7 @@ export type InventoryRequestResponse = InventoryRequest & {
     inventoryRequestDetails: InventoryRequestDetailResponse[];
     wareFrom: WarehouseResponse;
     wareTo: WarehouseResponse;
+    inventoryReceipts: InventoryReceipt[];
 };
 
 export type RequestResponse = EntityAudit &
@@ -350,7 +360,8 @@ export type ReceiptResponse = InventoryReceipt &
         receiptCodeNumber: string;
         wareFrom: WarehouseResponse;
         wareTo: WarehouseResponse;
-        // resourceTypeId: string;
+        batchNumber: number;
+        userId: string;
     };
 
 export type ResetPasswordRequest = {
@@ -382,3 +393,12 @@ export type ChickenBatchChart = {
     date: string;
     totalFeed: number;
 };
+
+export type StockReceipt = StockReceipt[] & StockReceiptDetail[];
+
+export type StockReceiptResponse = EntityAudit &
+    StockReceipt & {
+        stockReceiptId: string;
+        stockReceiptDetails: StockReceiptDetail[];
+        stockReceiptCode: string;
+    };

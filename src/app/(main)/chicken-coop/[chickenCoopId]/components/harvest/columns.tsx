@@ -3,9 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
-import dayjs from 'dayjs';
 import { HarvestLog } from '@/utils/schemas/harvest-log.schema';
-import { chickenCoops } from '@/utils/data/table.data';
 
 export const columns: ColumnDef<HarvestLog>[] = [
     {
@@ -33,41 +31,41 @@ export const columns: ColumnDef<HarvestLog>[] = [
         enableHiding: false,
     },
     // {
-    //     accessorKey: 'harvestLogId',
-    //     header: ({ column }) => (
-    //         <DataTableColumnHeader column={column} title="Mã nhật ký thu hoạch" />
+    //     accessorKey: 'chickenCoopId',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Mã chuồng gà" />,
+    //     cell: ({ row }) => {
+    //         const chickenCoopId = row.getValue('chickenCoopId') as string;
+    //         const chickenCoop = chickenCoops.find((coop) => coop.chickenCoopId === chickenCoopId);
+    //         return <div className="w-[150px]">{chickenCoop?.chickenCoopName}</div>;
+    //     },
+    // },
+    // {
+    //     accessorKey: 'date',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày thu hoạch" />,
+    //     cell: ({ row }) => (
+    //         <div className="w-[150px]">{dayjs(row.getValue('date')).format('DD/MM/YYYY')}</div>
     //     ),
-    //     cell: ({ row }) => <div className="w-[150px]">{row.getValue('harvestLogId')}</div>,
     // },
     {
-        accessorKey: 'chickenCoopId',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Mã chuồng gà" />,
-        cell: ({ row }) => {
-            const chickenCoopId = row.getValue('chickenCoopId') as string;
-            const chickenCoop = chickenCoops.find((coop) => coop.chickenCoopId === chickenCoopId);
-            return <div className="w-[150px]">{chickenCoop?.chickenCoopName}</div>;
-        },
+        accessorKey: 'harvestProductCode',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Mã sản phẩm" />,
+        cell: ({ row }) => <div className="w-[150px]">{row.getValue('harvestProductCode')}</div>,
     },
     {
-        accessorKey: 'date',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày thu hoạch" />,
+        accessorKey: 'harvestProductName',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Tên sản phẩm" />,
+        cell: ({ row }) => <div className="w-[150px]">{row.getValue('harvestProductName')}</div>,
+    },
+    {
+        accessorKey: 'harvestProductType',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại sản phẩm" />,
+        cell: ({ row }) => <div className="w-[150px]">{row.getValue('harvestProductType')}</div>,
+    },
+    {
+        accessorKey: 'harvestProductQuantity',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng" />,
         cell: ({ row }) => (
-            <div className="w-[150px]">{dayjs(row.getValue('date')).format('DD/MM/YYYY')}</div>
+            <div className="w-[100px]">{row.getValue('harvestProductQuantity')}</div>
         ),
     },
-    {
-        accessorKey: 'type',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Loại thu hoạch" />,
-        cell: ({ row }) => <div className="w-[150px]">{row.getValue('type')}</div>,
-    },
-    {
-        accessorKey: 'total',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tổng số lượng" />,
-        cell: ({ row }) => <div className="w-[100px]">{row.getValue('total')}</div>,
-    },
-    // {
-    //     accessorKey: 'note',
-    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Ghi chú" />,
-    //     cell: ({ row }) => <div className="w-[100px]">{row.getValue('note')}</div>,
-    // },
 ];
