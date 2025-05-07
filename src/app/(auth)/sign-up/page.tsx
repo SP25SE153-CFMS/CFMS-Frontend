@@ -6,15 +6,15 @@ import { Input } from '@/components/ui/input';
 import config from '@/configs';
 import Image from '@/components/fallback-image';
 import Link from 'next/link';
-import { FieldErrors, useForm } from 'react-hook-form';
+import { type FieldErrors, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { SignUpRequest, SignUpRequestSchema } from '@/utils/schemas/auth.schema';
+import { type SignUpRequest, SignUpRequestSchema } from '@/utils/schemas/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { useMutation } from '@tanstack/react-query';
 import { signUp } from '@/services/auth.service';
 import { setCookie, deleteCookie } from 'cookies-next';
-import { Loader2 } from 'lucide-react';
+import { Loader2, User, Phone, Mail, KeyRound, KeySquare } from 'lucide-react';
 
 export default function SignUp() {
     const router = useRouter();
@@ -83,10 +83,6 @@ export default function SignUp() {
                         Mừng quay lại !
                     </p>
 
-                    {/* <p className="text-center text-[19px] text-primary-sub-text dark:text-primary-sub-text/90 not-italic font-bold leading-[normal]">
-                        Hãy đăng ký vào tài khoản của bạn
-                    </p> */}
-
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit, onError)}
@@ -97,13 +93,16 @@ export default function SignUp() {
                                 control={form.control}
                                 name="fullname"
                                 render={({ field }) => (
-                                    <FormItem>
-                                        <Input
-                                            {...field}
-                                            type="text"
-                                            placeholder="Họ và tên"
-                                            className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl px-[19px]"
-                                        />
+                                    <FormItem className="w-full relative">
+                                        <div className="relative group">
+                                            <User className="absolute left-[19px] top-1/2 transform -translate-y-1/2 text-primary-sub-text dark:text-primary-sub-text/90 h-5 w-5 group-hover:text-primary transition-colors duration-200" />
+                                            <Input
+                                                {...field}
+                                                type="text"
+                                                placeholder="Họ và tên"
+                                                className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl pl-[50px] pr-[19px]"
+                                            />
+                                        </div>
                                     </FormItem>
                                 )}
                             />
@@ -113,13 +112,16 @@ export default function SignUp() {
                                 control={form.control}
                                 name="phoneNumber"
                                 render={({ field }) => (
-                                    <FormItem>
-                                        <Input
-                                            {...field}
-                                            type="number"
-                                            placeholder="Số điện thoại"
-                                            className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl px-[19px]"
-                                        />
+                                    <FormItem className="w-full relative">
+                                        <div className="relative group">
+                                            <Phone className="absolute left-[19px] top-1/2 transform -translate-y-1/2 text-primary-sub-text dark:text-primary-sub-text/90 h-5 w-5 group-hover:text-primary transition-colors duration-200" />
+                                            <Input
+                                                {...field}
+                                                type="number"
+                                                placeholder="Số điện thoại"
+                                                className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl pl-[50px] pr-[19px]"
+                                            />
+                                        </div>
                                     </FormItem>
                                 )}
                             />
@@ -129,14 +131,17 @@ export default function SignUp() {
                                 control={form.control}
                                 name="mail"
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem className="w-full relative">
                                         <FormControl>
-                                            <Input
-                                                {...field}
-                                                type="email"
-                                                placeholder="Email"
-                                                className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl px-[19px]"
-                                            />
+                                            <div className="relative group">
+                                                <Mail className="absolute left-[19px] top-1/2 transform -translate-y-1/2 text-primary-sub-text dark:text-primary-sub-text/90 h-5 w-5 group-hover:text-primary transition-colors duration-200" />
+                                                <Input
+                                                    {...field}
+                                                    type="email"
+                                                    placeholder="Email"
+                                                    className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl pl-[50px] pr-[19px]"
+                                                />
+                                            </div>
                                         </FormControl>
                                     </FormItem>
                                 )}
@@ -147,40 +152,42 @@ export default function SignUp() {
                                 control={form.control}
                                 name="password"
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem className="w-full relative">
                                         <FormControl>
-                                            <Input
-                                                {...field}
-                                                type="password"
-                                                placeholder="Mật khẩu"
-                                                className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl px-[19px]"
-                                            />
+                                            <div className="relative group">
+                                                <KeyRound className="absolute left-[19px] top-1/2 transform -translate-y-1/2 text-primary-sub-text dark:text-primary-sub-text/90 h-5 w-5 group-hover:text-primary transition-colors duration-200" />
+                                                <Input
+                                                    {...field}
+                                                    type="password"
+                                                    placeholder="Mật khẩu"
+                                                    className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl pl-[50px] pr-[19px]"
+                                                />
+                                            </div>
                                         </FormControl>
                                     </FormItem>
                                 )}
                             />
 
-                            {/* Password */}
+                            {/* Confirm Password */}
                             <FormField
                                 control={form.control}
                                 name="confirmPassword"
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem className="w-full relative">
                                         <FormControl>
-                                            <Input
-                                                {...field}
-                                                type="password"
-                                                placeholder="Nhập lại mật khẩu"
-                                                className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl px-[19px]"
-                                            />
+                                            <div className="relative group">
+                                                <KeySquare className="absolute left-[19px] top-1/2 transform -translate-y-1/2 text-primary-sub-text dark:text-primary-sub-text/90 h-5 w-5 group-hover:text-primary transition-colors duration-200" />
+                                                <Input
+                                                    {...field}
+                                                    type="password"
+                                                    placeholder="Nhập lại mật khẩu"
+                                                    className="w-[425px] h-[64px] bg-slate-100 dark:bg-slate-800 rounded-[13px] md:text-xl pl-[50px] pr-[19px]"
+                                                />
+                                            </div>
                                         </FormControl>
                                     </FormItem>
                                 )}
                             />
-
-                            {/* <p className="w-[425px] text-primary-sub-text dark:text-primary-sub-text/90 text-right text-[19px] not-italic font-medium leading-[normal]">
-                                Quên mật khẩu?
-                            </p> */}
 
                             <Button
                                 type="submit"
