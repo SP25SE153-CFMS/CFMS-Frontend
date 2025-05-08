@@ -356,7 +356,10 @@ export default function TaskDetail() {
                                             Chỉnh sửa
                                         </Button>
                                     </Link>
-                                    <Button variant="destructive" onClick={handleCancelTask}>
+                                    <Button
+                                        variant="destructive"
+                                        onClick={() => setOpenDelete(true)}
+                                    >
                                         <X className="h-4 w-4" />
                                         Hủy
                                     </Button>
@@ -677,17 +680,17 @@ export default function TaskDetail() {
             <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
+                        <AlertDialogTitle>Xác nhận hủy</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa giống gà này?
+                            Bạn có chắc chắn muốn hủy công việc này này?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="flex justify-end space-x-2">
                         <Button variant="outline" onClick={() => setOpenDelete(false)}>
-                            Hủy
+                            Đóng
                         </Button>
                         <Button variant="destructive" onClick={handleCancelTask}>
-                            Xóa
+                            Hủy công việc
                         </Button>
                     </div>
                 </AlertDialogContent>

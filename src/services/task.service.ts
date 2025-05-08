@@ -48,7 +48,7 @@ export const deleteTask = async (id: string) => {
 };
 
 export const cancelTask = async (taskId: string) => {
-    const endpoint = PREFIX + '/cancel';
+    const endpoint = PREFIX + '/cancel-task';
     const body = { taskId };
     const response = await put<Response<string>>(endpoint, body);
     return response.data;
