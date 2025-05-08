@@ -239,7 +239,6 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                                                 );
                                             }}
                                             initialFocus
-                                            disabled={(date) => date < new Date()}
                                             locale={vi}
                                         />
                                     </PopoverContent>

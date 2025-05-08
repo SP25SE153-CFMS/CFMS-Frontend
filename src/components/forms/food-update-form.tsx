@@ -179,7 +179,6 @@ export default function UpdateFoodForm({ food, closeModal }: UpdateFoodProps) {
                                                     field.onChange(date ? date.toISOString() : '');
                                                 }}
                                                 initialFocus
-                                                disabled={(date) => date < new Date()}
                                                 locale={vi}
                                             />
                                         </PopoverContent>
