@@ -117,6 +117,7 @@ export default function ChickenForm({
             ...values,
             id: values.chickenId,
         };
+        console.log("Form: ", newValues);
         mutation.mutate(defaultValues ? newValues : values);
     }
 

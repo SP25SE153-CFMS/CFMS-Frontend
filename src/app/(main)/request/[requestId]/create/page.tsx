@@ -62,7 +62,7 @@ export default function RequestDetail() {
     });
 
     const inventoryRequestTypeId = requestDetail?.inventoryRequests?.[0]?.inventoryRequestTypeId;
-    console.log('Id:', inventoryRequestTypeId);
+    // console.log('Id:', inventoryRequestTypeId);
 
     const { data: subCate, isLoading: isLoadingSubCate } = useQuery({
         queryKey: ['subCate', inventoryRequestTypeId],
@@ -74,7 +74,7 @@ export default function RequestDetail() {
         queryKey: ['receipts'],
         queryFn: () => getReceipts(),
     });
-    console.log('Receipts:', receipts);
+    // console.log('Receipts:', receipts);
 
     const subCategoryName = subCate?.subCategoryName;
     const form = useForm<CreateInventoryReceipt>({
@@ -259,6 +259,20 @@ export default function RequestDetail() {
                                 (r) => r.inventoryRequestId === request.inventoryRequestId,
                             ) || [];
 
+                        const isAllDetailsCompleted = request.inventoryRequestDetails.every(
+                            (detail) => {
+                                const totalActualQuantity = matchedReceipt
+                                    .flatMap((receipt) => receipt.inventoryReceiptDetails)
+                                    .filter(
+                                        (d) =>
+                                            d.resourceId === detail.resourceId &&
+                                            d.resourceSupplierId === detail.resourceSupplierId,
+                                    )
+                                    .reduce((sum, d) => sum + d.actualQuantity, 0);
+                                return totalActualQuantity >= detail.expectedQuantity;
+                            },
+                        );
+
                         return (
                             <div key={request.requestId} className="space-y-6">
                                 {(subCategoryName === 'IMPORT' || subCategoryName === 'EXPORT') && (
@@ -369,7 +383,7 @@ export default function RequestDetail() {
                                                             );
                                                         const matchedCode =
                                                             matchedId?.receiptCodeNumber;
-                                                        console.log('Code: ', matchedCode);
+                                                        // console.log('Code: ', matchedCode);
                                                         return (
                                                             <div
                                                                 key={receipt.inventoryReceiptId}
@@ -457,7 +471,11 @@ export default function RequestDetail() {
                                 {request.inventoryRequestDetails.map((detail, index) => {
                                     const totalActualQuantity = matchedReceipt
                                         .flatMap((receipt) => receipt.inventoryReceiptDetails)
-                                        .filter((d) => d.resourceId === detail.resourceId)
+                                        .filter(
+                                            (d) =>
+                                                d.resourceId === detail.resourceId &&
+                                                d.resourceSupplierId === detail.resourceSupplierId,
+                                        )
                                         .reduce((sum, d) => sum + d.actualQuantity, 0);
 
                                     const isDisabled =
@@ -585,41 +603,56 @@ export default function RequestDetail() {
                                         </div>
                                     );
                                 })}
+
+                                <Separator className="my-8" />
+
+                                <div className="flex justify-end gap-4 sticky bottom-0 bg-white p-4 rounded-b-lg shadow-lg">
+                                    {isAllDetailsCompleted && (
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() => router.back()}
+                                            className="border-slate-300 hover:bg-slate-100 hover:text-slate-900"
+                                        >
+                                            <ArrowLeft className="mr-2 h-4 w-4 text-slate-600" />
+                                            Quay lại
+                                        </Button>
+                                    )}
+                                    {!isAllDetailsCompleted && (
+                                        <>
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                onClick={() => router.back()}
+                                                disabled={isSubmitting}
+                                                className="border-slate-300 hover:bg-slate-100 hover:text-slate-900"
+                                            >
+                                                <XCircle className="mr-2 h-4 w-4 text-slate-600" />
+                                                Hủy
+                                            </Button>
+                                            <Button
+                                                type="submit"
+                                                disabled={isSubmitting}
+                                                className="bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800"
+                                            >
+                                                {isSubmitting ? (
+                                                    <>
+                                                        <Skeleton className="h-4 w-4 rounded-full mr-2" />
+                                                        Đang xử lý...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <CheckCircle2 className="mr-2 h-4 w-4" />
+                                                        Lưu
+                                                    </>
+                                                )}
+                                            </Button>
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         );
                     })}
-
-                    <Separator className="my-8" />
-
-                    <div className="flex justify-end gap-4 sticky bottom-0 bg-white p-4 rounded-b-lg shadow-lg">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => router.back()}
-                            disabled={isSubmitting}
-                            className="border-slate-300 hover:bg-slate-100 hover:text-slate-900"
-                        >
-                            <XCircle className="mr-2 h-4 w-4 text-slate-600" />
-                            Hủy
-                        </Button>
-                        <Button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className="bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800"
-                        >
-                            {isSubmitting ? (
-                                <>
-                                    <Skeleton className="h-4 w-4 rounded-full mr-2" />
-                                    Đang xử lý...
-                                </>
-                            ) : (
-                                <>
-                                    <CheckCircle2 className="mr-2 h-4 w-4" />
-                                    Lưu phiếu
-                                </>
-                            )}
-                        </Button>
-                    </div>
                 </form>
             </Form>
         </div>

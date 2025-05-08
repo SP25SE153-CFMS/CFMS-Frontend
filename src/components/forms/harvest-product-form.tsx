@@ -138,7 +138,7 @@ export default function HarvestProductForm({ closeDialog, defaultValues }: Harve
                                         </SelectTrigger>
                                         <SelectContent>
                                             {getSubCategoryByCategoryType(
-                                                CategoryType.H_PACKAGE_UNIT,
+                                                CategoryType.HARVEST_TYPE,
                                             )?.map((type) => (
                                                 <SelectItem
                                                     key={type.subCategoryId}
@@ -168,6 +168,7 @@ export default function HarvestProductForm({ closeDialog, defaultValues }: Harve
                                         min={0}
                                         placeholder="Nhập quy cách đóng gói..."
                                         {...field}
+                                        onChange={(e) => field.onChange(Number(e.target.value))}
                                     />
                                 </FormControl>
                                 <FormMessage />

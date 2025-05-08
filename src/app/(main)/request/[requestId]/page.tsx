@@ -60,6 +60,7 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { getRequestTitle } from '@/lib/helper';
+import { getSubBySubId } from '@/services/category.service';
 
 export default function RequestDetailPage() {
     const router = useRouter();
@@ -71,6 +72,12 @@ export default function RequestDetailPage() {
     const { data: requestDetail, isLoading } = useQuery({
         queryKey: ['requestDetail', requestId],
         queryFn: () => getRequestById(requestId),
+    });
+
+    const { data: subCate } = useQuery({
+        queryKey: ['subCate', requestDetail?.requestTypeId],
+        queryFn: () => getSubBySubId(requestDetail?.requestTypeId as string),
+        enabled: !!requestDetail?.requestTypeId,
     });
 
     const queryClient = useQueryClient();
@@ -829,95 +836,96 @@ export default function RequestDetailPage() {
                     </Card>
 
                     {/* Quick Actions Card */}
-                    {requestDetail.status !== RequestStatus.REJECTED && (
-                        <Card className="border-none shadow-md">
-                            <CardHeader className="bg-primary/5 pb-4">
-                                <div className="flex items-center gap-2">
-                                    <Info className="h-5 w-5 text-primary" />
-                                    <CardTitle className="text-lg font-semibold">
-                                        Thao tác nhanh
-                                    </CardTitle>
-                                </div>
-                            </CardHeader>
-                            <CardContent className="pt-6">
-                                <div className="space-y-3">
-                                    {/* <Button className="w-full justify-start" variant="outline">
+                    {requestDetail.status !== RequestStatus.REJECTED &&
+                        subCate?.subCategoryName !== 'Báo cáo, yêu cầu' && (
+                            <Card className="border-none shadow-md">
+                                <CardHeader className="bg-primary/5 pb-4">
+                                    <div className="flex items-center gap-2">
+                                        <Info className="h-5 w-5 text-primary" />
+                                        <CardTitle className="text-lg font-semibold">
+                                            Thao tác nhanh
+                                        </CardTitle>
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="pt-6">
+                                    <div className="space-y-3">
+                                        {/* <Button className="w-full justify-start" variant="outline">
                                     <Package className="h-4 w-4 mr-2" />
                                     Xem lịch sử phiếu
                                 </Button> */}
 
-                                    {requestDetail.status === RequestStatus.APPROVED && (
-                                        <Button
-                                            className="w-full justify-start"
-                                            variant="outline"
-                                            onClick={handleCreateInventoryReceipt}
-                                        >
-                                            <FileText className="h-4 w-4 mr-2" />
-                                            Tạo phiếu nhập/xuất
-                                        </Button>
-                                    )}
+                                        {requestDetail.status === RequestStatus.APPROVED && (
+                                            <Button
+                                                className="w-full justify-start"
+                                                variant="outline"
+                                                onClick={handleCreateInventoryReceipt}
+                                            >
+                                                <FileText className="h-4 w-4 mr-2" />
+                                                Tạo phiếu nhập/xuất
+                                            </Button>
+                                        )}
 
-                                    {requestDetail.status === RequestStatus.PENDING && (
-                                        <Dialog>
-                                            <DialogTrigger asChild>
-                                                <Button
-                                                    className="w-full justify-start"
-                                                    variant="outline"
-                                                    disabled={mutation.isPending}
-                                                >
-                                                    {mutation.isPending ? (
-                                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                                    ) : (
-                                                        <PackageCheck className="h-4 w-4 mr-2" />
-                                                    )}
-                                                    Duyệt/Từ chối phiếu
-                                                </Button>
-                                            </DialogTrigger>
-                                            <DialogContent>
-                                                <DialogHeader>
-                                                    <DialogTitle>Lý do</DialogTitle>
-                                                    <DialogDescription>
-                                                        Hãy nhập lý do tại sao bạn muốn duyệt hay từ
-                                                        chối
-                                                    </DialogDescription>
-                                                </DialogHeader>
-                                                <Textarea
-                                                    id="notes"
-                                                    onChange={(e) => setNotes(e.target.value)}
-                                                />
-                                                <DialogFooter>
+                                        {requestDetail.status === RequestStatus.PENDING && (
+                                            <Dialog>
+                                                <DialogTrigger asChild>
                                                     <Button
+                                                        className="w-full justify-start"
                                                         variant="outline"
-                                                        onClick={() =>
-                                                            handleApproveRequest(
-                                                                RequestStatus.APPROVED,
-                                                            )
-                                                        }
-                                                        className="text-green-500 hover:bg-green-500 hover:text-white"
+                                                        disabled={mutation.isPending}
                                                     >
-                                                        <CheckCheck className="w-4 h-4" />
-                                                        Duyệt
+                                                        {mutation.isPending ? (
+                                                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                        ) : (
+                                                            <PackageCheck className="h-4 w-4 mr-2" />
+                                                        )}
+                                                        Duyệt/Từ chối phiếu
                                                     </Button>
-                                                    <Button
-                                                        variant="outline"
-                                                        onClick={() =>
-                                                            handleApproveRequest(
-                                                                RequestStatus.REJECTED,
-                                                            )
-                                                        }
-                                                        className="text-red-500 hover:bg-red-500 hover:text-white"
-                                                    >
-                                                        <X className="w-4 h-4" />
-                                                        Từ chối
-                                                    </Button>
-                                                </DialogFooter>
-                                            </DialogContent>
-                                        </Dialog>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
-                    )}
+                                                </DialogTrigger>
+                                                <DialogContent>
+                                                    <DialogHeader>
+                                                        <DialogTitle>Lý do</DialogTitle>
+                                                        <DialogDescription>
+                                                            Hãy nhập lý do tại sao bạn muốn duyệt
+                                                            hay từ chối
+                                                        </DialogDescription>
+                                                    </DialogHeader>
+                                                    <Textarea
+                                                        id="notes"
+                                                        onChange={(e) => setNotes(e.target.value)}
+                                                    />
+                                                    <DialogFooter>
+                                                        <Button
+                                                            variant="outline"
+                                                            onClick={() =>
+                                                                handleApproveRequest(
+                                                                    RequestStatus.APPROVED,
+                                                                )
+                                                            }
+                                                            className="text-green-500 hover:bg-green-500 hover:text-white"
+                                                        >
+                                                            <CheckCheck className="w-4 h-4" />
+                                                            Duyệt
+                                                        </Button>
+                                                        <Button
+                                                            variant="outline"
+                                                            onClick={() =>
+                                                                handleApproveRequest(
+                                                                    RequestStatus.REJECTED,
+                                                                )
+                                                            }
+                                                            className="text-red-500 hover:bg-red-500 hover:text-white"
+                                                        >
+                                                            <X className="w-4 h-4" />
+                                                            Từ chối
+                                                        </Button>
+                                                    </DialogFooter>
+                                                </DialogContent>
+                                            </Dialog>
+                                        )}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
                 </div>
             </div>
         </div>

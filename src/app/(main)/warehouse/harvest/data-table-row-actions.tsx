@@ -26,10 +26,11 @@ import {
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
 import toast from 'react-hot-toast';
-import { deleteChicken } from '@/services/chicken.service';
 import { Chicken } from '@/utils/schemas/chicken.schema';
 import ChickenForm from '@/components/forms/chicken-form';
 import { useQueryClient } from '@tanstack/react-query';
+import { WareStockResponse } from '@/utils/types/custom.type';
+import { deleteResource } from '@/services/resource.service';
 
 interface Props<T> {
     row: Row<T>;
@@ -39,12 +40,16 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
+    const rowData = row.original as WareStockResponse;
+
     const queryClient = useQueryClient();
 
+    const resourceId = rowData.resourceId;
+    // console.log("Id: ", resourceId);
     const handleDelete = async () => {
-        await deleteChicken((row.original as Chicken).chickenId).then(() => {
-            toast.success('Xóa giống gà thành công');
-            queryClient.invalidateQueries({ queryKey: ['chickens'] });
+        await deleteResource(resourceId).then(() => {
+            toast.success('Xóa sản phẩm thu hoạch thành công');
+            queryClient.invalidateQueries({ queryKey: ['harvestProducts'] });
             setOpenDelete(false);
         });
     };

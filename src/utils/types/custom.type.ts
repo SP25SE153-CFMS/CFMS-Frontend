@@ -313,6 +313,7 @@ export type InventoryRequestDetailResponse = InventoryRequestDetail & {
     unit: SubCategory;
     unitId: string;
     resource: ResourceResponse;
+    resourceSupplierId: string;
 };
 
 export type WarehouseResponse = Warehouse & {
@@ -353,15 +354,20 @@ export type InviteEnrollDecisionRequest = {
     decision: number;
 };
 
+type ExtendedInventoryReceiptDetail = InventoryReceiptDetail & {
+    resourceSupplierId: string | null;
+};
+
 export type ReceiptResponse = InventoryReceipt &
     EntityAudit &
     Resource & {
-        inventoryReceiptDetails: InventoryReceiptDetail[];
+        inventoryReceiptDetails: ExtendedInventoryReceiptDetail[];
         receiptCodeNumber: string;
         wareFrom: WarehouseResponse;
         wareTo: WarehouseResponse;
         batchNumber: number;
         userId: string;
+       
     };
 
 export type ResetPasswordRequest = {
