@@ -30,7 +30,7 @@ import {
 } from '@/components/ui/table';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { cancelTask, getTaskById } from '@/services/task.service';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import Image from '@/components/fallback-image';
 import {
@@ -56,13 +56,26 @@ import {
 } from '@/components/ui/dialog';
 import AssignmentForm from '@/components/forms/assignment-form';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogDescription,
+} from '@/components/ui/alert-dialog';
 
 export default function TaskDetail() {
     const [open, setOpen] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
     const { taskId }: { taskId: string } = useParams();
     const router = useRouter();
 
-    const { data: task, isLoading } = useQuery({
+    const {
+        data: task,
+        isLoading,
+        refetch,
+    } = useQuery({
         queryKey: ['task', taskId],
         queryFn: () => getTaskById(taskId),
     });
@@ -75,6 +88,18 @@ export default function TaskDetail() {
         }
         return 'N/A';
     }, []);
+
+    const mutation = useMutation({
+        mutationFn: cancelTask,
+        onSuccess: (data) => {
+            toast.success(data.message);
+            refetch();
+        },
+        onError: (error: any) => {
+            console.error(error);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
+        },
+    });
 
     if (isLoading) {
         return (
@@ -103,20 +128,9 @@ export default function TaskDetail() {
         );
     }
 
-    async function handleCancelTask(taskId: string): Promise<void> {
-        if (!confirm('Bạn có chắc chắn muốn hủy công việc này?')) {
-            return;
-        }
-
-        try {
-            await cancelTask(taskId);
-            alert('Công việc đã được hủy thành công.');
-            router.push(config.routes.task); // Redirect to the task list page
-        } catch (error) {
-            console.error('Error cancelling task:', error);
-            alert('Đã xảy ra lỗi khi hủy công việc. Vui lòng thử lại.');
-        }
-    }
+    const handleCancelTask = () => {
+        mutation.mutate(taskId);
+    };
 
     // const getResourceName = (taskRes: TaskResourceResponse) => {
     //     if (taskRes.resource?.equipment) {
@@ -344,7 +358,7 @@ export default function TaskDetail() {
                                     </Link>
                                     <Button
                                         variant="destructive"
-                                        onClick={() => handleCancelTask(taskId)}
+                                        onClick={() => setOpenDelete(true)}
                                     >
                                         <X className="h-4 w-4" />
                                         Hủy
@@ -661,6 +675,26 @@ export default function TaskDetail() {
                     </Card> */}
                 </div>
             </div>
+
+            {/* Delete Confirmation Dialog */}
+            <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Xác nhận hủy</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Bạn có chắc chắn muốn hủy công việc này này?
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <div className="flex justify-end space-x-2">
+                        <Button variant="outline" onClick={() => setOpenDelete(false)}>
+                            Đóng
+                        </Button>
+                        <Button variant="destructive" onClick={handleCancelTask}>
+                            Hủy công việc
+                        </Button>
+                    </div>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

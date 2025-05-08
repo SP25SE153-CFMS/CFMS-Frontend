@@ -1,7 +1,9 @@
 'use client';
 
+import type React from 'react';
+
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -27,15 +29,32 @@ import { getSubCategoryByCategoryType } from '@/utils/functions/category.functio
 import { CategoryType } from '@/utils/enum/category.enum';
 import { CommonStatus } from '@/utils/enum/status.enum';
 import { generateCode } from '@/utils/functions/generate-code.function';
-import { Loader2 } from 'lucide-react';
-import { WareStockResponse } from '@/utils/types/custom.type';
+import { Loader2, Plus, Trash2 } from 'lucide-react';
 import useQueryParams from '@/hooks/use-query-params';
+import { Card, CardContent } from '@/components/ui/card';
+import { WareStockResponse } from '@/utils/types/custom.type';
+
+// interface ChickenDetail {
+//     weight: number;
+//     quantity: number;
+//     gender: number;
+// }
+
 interface ChickenFormProps {
     defaultValues?: Partial<Chicken>;
     closeDialog: () => void;
+    unitName?: string;
+    packageUnitName?: string;
 }
 
-export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormProps) {
+export default function ChickenForm({
+    defaultValues,
+    closeDialog,
+    unitName,
+    packageUnitName,
+}: ChickenFormProps) {
+    console.log(defaultValues);
+
     // Get query params
     const { w: wareId } = useQueryParams();
 
@@ -46,16 +65,31 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
             chickenId: '',
             chickenCode: '',
             chickenName: '',
-            // totalQuantity: 0,
             description: '',
             status: CommonStatus.ACTIVE,
             chickenTypeId: '',
-            unitId: getSubCategoryByCategoryType(CategoryType.CHICKEN)?.[0].subCategoryId || '',
-            packageId: '',
+            unitId:
+                getSubCategoryByCategoryType(CategoryType.C_QUANTITY_UNIT)?.find(
+                    (x) => x.subCategoryName === unitName,
+                )?.subCategoryId || '',
+            packageId:
+                getSubCategoryByCategoryType(CategoryType.C_PACKAGE_UNIT)?.find(
+                    (x) => x.subCategoryName === packageUnitName,
+                )?.subCategoryId || '',
             packageSize: 0,
             wareId: sessionStorage.getItem('wareId') || wareId || '',
+            chickenDetails: [],
             ...defaultValues,
         },
+    });
+
+    console.log(getSubCategoryByCategoryType(CategoryType.C_PACKAGE_UNIT));
+    console.log(getSubCategoryByCategoryType(CategoryType.C_QUANTITY_UNIT));
+
+    // Setup field array for chicken details
+    const { fields, append, remove } = useFieldArray({
+        control: form.control,
+        name: 'chickenDetails',
     });
 
     // Query client
@@ -149,26 +183,6 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                             </FormItem>
                         )}
                     />
-
-                    {/* Total Quantity */}
-                    {/* <FormField
-                        control={form.control}
-                        name="totalQuantity"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Tổng số lượng</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="number"
-                                        min={0}
-                                        placeholder="Nhập tổng số lượng"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    /> */}
 
                     {/* Description */}
                     <FormField
@@ -353,67 +367,125 @@ export default function ChickenForm({ defaultValues, closeDialog }: ChickenFormP
                                 <FormItem>
                                     <FormLabel>Kho</FormLabel>
                                     <FormControl>
-                                        {/* <Select
-                                            onValueChange={field.onChange}
-                                            defaultValue={field.value}
-                                            disabled
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Chọn đơn vị đóng gói" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {wares?.map((ware) => (
-                                                    <SelectItem
-                                                        key={ware.wareId}
-                                                        value={ware.wareId}
-                                                    >
-                                                        {ware.warehouseName}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select> */}
                                         <Input type="text" value={ware?.warehouseName} disabled />
                                     </FormControl>
                                 </FormItem>
                             );
                         }}
                     />
-
-                    {/* Created Date */}
-                    {/* <FormField
-                        control={form.control}
-                        name="createdDate"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Ngày tạo</FormLabel>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <FormControl>
-                                            <Button
-                                                variant={'outline'}
-                                                className={cn('w-full pl-3 text-left font-normal')}
-                                            >
-                                                {dayjs(field.value).format('DD/MM/YYYY')}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent align="start">
-                                        <Calendar
-                                            mode="single"
-                                            selected={
-                                                field.value ? new Date(field.value) : new Date()
-                                            }
-                                            onSelect={(date) => field.onChange(date?.toISOString())}
-                                            initialFocus
-                                        />
-                                    </PopoverContent>
-                                </Popover>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    /> */}
                 </div>
+
+                {/* Chicken Details Section */}
+                <div className="mt-6">
+                    <h3 className="text-lg font-medium mb-4">Chi tiết giống gà</h3>
+
+                    {fields.map((field, index) => (
+                        <Card key={field.id} className="mb-4">
+                            <CardContent className="pt-6">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    {/* Weight */}
+                                    <FormField
+                                        control={form.control}
+                                        name={`chickenDetails.${index}.weight`}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Trọng lượng</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="number"
+                                                        min={0}
+                                                        placeholder="0"
+                                                        {...field}
+                                                        onChange={(e) =>
+                                                            field.onChange(Number(e.target.value))
+                                                        }
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    {/* Quantity */}
+                                    <FormField
+                                        control={form.control}
+                                        name={`chickenDetails.${index}.quantity`}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Số lượng</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="number"
+                                                        min={0}
+                                                        placeholder="0"
+                                                        {...field}
+                                                        onChange={(e) =>
+                                                            field.onChange(Number(e.target.value))
+                                                        }
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    {/* Gender */}
+                                    <FormField
+                                        control={form.control}
+                                        name={`chickenDetails.${index}.gender`}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Giới tính</FormLabel>
+                                                <FormControl>
+                                                    <Select
+                                                        onValueChange={(value) =>
+                                                            field.onChange(Number(value))
+                                                        }
+                                                        defaultValue={field.value.toString()}
+                                                    >
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Chọn giới tính" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectItem value="0">Trống</SelectItem>
+                                                            <SelectItem value="1">Mái</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+
+                                {fields.length > 1 && (
+                                    <Button
+                                        type="button"
+                                        variant="destructive"
+                                        size="sm"
+                                        className="mt-2"
+                                        onClick={() => remove(index)}
+                                    >
+                                        <Trash2 className="h-4 w-4 mr-1" />
+                                        Xóa
+                                    </Button>
+                                )}
+                            </CardContent>
+                        </Card>
+                    ))}
+
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => append({ weight: 0, quantity: 0, gender: 0 })}
+                        className="mt-2"
+                    >
+                        <Plus className="h-4 w-4 mr-1" />
+                        Thêm chi tiết
+                    </Button>
+                </div>
+
                 <Button type="submit" className="mx-auto mt-6 w-60" disabled={mutation.isPending}>
                     {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Gửi

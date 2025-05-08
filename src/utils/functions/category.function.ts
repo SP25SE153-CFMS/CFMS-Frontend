@@ -73,3 +73,17 @@ export function getUnitIdByUnitName(unitName: string): string {
             .find((subCategory) => subCategory.subCategoryName === unitName)?.subCategoryId ?? ''
     );
 }
+
+export function getPackageUnitIdByPackageUnitName(packageUnitName: string): string {
+    const categoriesFromStorage = sessionStorage.getItem('categories');
+    if (!categoriesFromStorage) return '';
+
+    const allCategories = JSON.parse(categoriesFromStorage) as CategoryResponse[];
+    return (
+        allCategories
+            .filter((category) => category.categoryType.endsWith('PACKAGE_UNIT'))
+            .flatMap((category) => category.subCategories)
+            .find((subCategory) => subCategory.subCategoryName === packageUnitName)
+            ?.subCategoryId ?? ''
+    );
+}

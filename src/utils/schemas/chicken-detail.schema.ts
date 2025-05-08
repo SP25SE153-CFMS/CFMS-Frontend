@@ -9,7 +9,7 @@ export const ChickenDetailSchema = z.object({
         .int()
         .nonnegative({ message: 'Số lượng phải là số nguyên không âm' }),
     gender: z.nativeEnum(ChickenGender, {
-        message: 'Giới tính phải là đực (0) hoặc cái (1)',
+        message: 'Giới tính phải là đực hoặc cái',
     }),
     chickenBatchId: z.string().uuid({ message: 'Lứa nuôi không hợp lệ' }),
 });

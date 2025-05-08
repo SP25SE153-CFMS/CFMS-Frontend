@@ -48,6 +48,8 @@ export const deleteTask = async (id: string) => {
 };
 
 export const cancelTask = async (taskId: string) => {
-    // TODO: Implement cancel task
-    console.log('Cancel task ' + taskId);
+    const endpoint = PREFIX + '/cancel-task';
+    const body = { taskId };
+    const response = await put<Response<string>>(endpoint, body);
+    return response.data;
 };

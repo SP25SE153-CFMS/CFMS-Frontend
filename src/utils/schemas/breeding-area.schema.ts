@@ -20,7 +20,7 @@ export const BreedingAreaSchema = z.object({
 
     areaUnitId: z.string().uuid({ message: 'Đơn vị diện tích không hợp lệ' }),
 
-    imageUrl: z.string().trim().url({ message: 'Hình ảnh phải là URL hợp lệ' }),
+    imageUrl: z.string().trim().optional(),
 
     notes: z.string().max(500, { message: 'Ghi chú không được vượt quá 500 ký tự' }).optional(),
 

@@ -17,10 +17,10 @@ export const FarmSchema = z.object({
         .max(300, { message: 'Địa chỉ không được dài quá 300 ký tự' }),
     area: z.coerce
         .number()
-        .positive({ message: 'Diện tích phải là số dương' })
+        .min(0, { message: 'Diện tích phải lớn hơn hoặc bằng 0' })
         .max(1_000_000, { message: 'Diện tích không được vượt quá 1,000,000 m²' }),
     areaUnitId: z.string().uuid({ message: 'Đơn vị diện tích không hợp lệ' }),
-    scale: z.coerce.number().positive({ message: 'Quy mô phải là số nguyên dương' }),
+    scale: z.coerce.number().min(0, { message: 'Quy mô không hợp lệ' }),
     phoneNumber: z
         .string()
         .trim()
@@ -28,7 +28,7 @@ export const FarmSchema = z.object({
         .optional(),
 
     website: z.string().trim().url({ message: 'Địa chỉ website không hợp lệ' }).or(z.literal('')),
-    imageUrl: z.string().trim().url({ message: 'URL hình ảnh không hợp lệ' }).optional(),
+    imageUrl: z.string().trim().optional(),
     latitude: z.coerce.number().min(-90).max(90),
     longitude: z.coerce.number().min(-180).max(180),
 });

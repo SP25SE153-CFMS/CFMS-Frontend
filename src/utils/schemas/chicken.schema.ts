@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { CommonStatus } from '../enum/status.enum';
+import { ChickenGender } from '../enum/gender.enum';
 
 export const ChickenSchema = z.object({
     chickenId: z.string().uuid({ message: 'Giống gà không hợp lệ' }),
@@ -25,6 +26,17 @@ export const ChickenSchema = z.object({
     packageSize: z.number().positive('Phải lớn hơn 0.'),
     wareId: z.string(),
     unitId: z.string(),
+    chickenDetails: z
+        .array(
+            z.object({
+                weight: z.coerce.number().positive('Phải lớn hơn 0.'),
+                quantity: z.coerce.number().positive('Phải lớn hơn 0.'),
+                gender: z.nativeEnum(ChickenGender, {
+                    message: 'Giới tính phải là đực hoặc cái',
+                }),
+            }),
+        )
+        .optional(),
 });
 
 export type Chicken = z.infer<typeof ChickenSchema>;

@@ -42,6 +42,7 @@ import { Farm } from '../schemas/farm.schema';
 import { Supplier } from '../schemas/supplier.schema';
 import { StockReceiptDetail } from '../schemas/stock-receipt-detail.schema';
 import { HarvestLog } from '../schemas/harvest-log.schema';
+import { TaskHarvest } from '../schemas/task-harvest.schema';
 
 export type EntityAudit = {
     isDeleted: boolean;
@@ -56,7 +57,7 @@ export type EntityAudit = {
 
 export type ChickenCoopResponse = ChickenCoop & {
     chickenBatches: ChickenBatch[];
-    taskLogs: TaskLog[];
+    taskLogs: TaskLogResponse[];
     coopEquipments: CoopEquipment[];
     harvestLogs: HarvestLog[];
 };
@@ -234,6 +235,7 @@ export type TaskResponse = Task & {
     taskType: SubCategory;
     taskLocation: TaskLocationResponse;
     feedLogs: FeedLogFromTask[];
+    taskHarvests: TaskHarvest[];
 };
 
 export type ChickenDetailRequest = {
@@ -281,6 +283,7 @@ export type WareStockResponse = Warehouse &
         currentSupplierCode: string;
         supplierName: string;
         suppliersName: Supplier[];
+        chickenTypeName?: string;
     };
 
 export type WarestockResourceByType = Food &
@@ -366,7 +369,6 @@ export type ReceiptResponse = InventoryReceipt &
         wareTo: WarehouseResponse;
         batchNumber: number;
         userId: string;
-       
     };
 
 export type ResetPasswordRequest = {

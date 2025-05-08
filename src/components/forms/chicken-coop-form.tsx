@@ -236,7 +236,6 @@ export default function ChickenCoopForm({ defaultValues, closeDialog }: ChickenC
                                                 <Input
                                                     type="text"
                                                     placeholder="Mã chuồng gà"
-                                                    readOnly
                                                     {...field}
                                                     className="h-10 bg-muted/50"
                                                 />

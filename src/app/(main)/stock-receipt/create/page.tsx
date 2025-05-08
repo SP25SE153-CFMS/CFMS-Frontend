@@ -79,8 +79,8 @@ export default function StockReceiptCreate() {
         mutationFn: createStockReceipt,
         onSuccess: () => {
             toast.success('Tạo phiếu nhập thành công!');
-            router.push(config.routes.stockReceipt);
             form.reset();
+            router.push(config.routes.stockReceipt);
         },
         onError: (error: any) => {
             toast.error('Tạo phiếu nhập thất bại. Vui lòng thử lại!');

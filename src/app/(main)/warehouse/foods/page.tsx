@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Image from '@/components/fallback-image';
@@ -21,32 +21,25 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import CreateFoodForm from '@/components/forms/food-create-form';
-import type { WareStockResponse } from '@/utils/types/custom.type';
 import { getWareStockByResourceTypeId } from '@/services/warehouse.service';
 import config from '@/configs';
 
 export default function Foods() {
     const router = useRouter();
     const [open, setOpen] = useState(false);
-    const [wId, setWId] = useState('');
-    const [rId, setRId] = useState('');
 
     const openModal = () => setOpen(true);
     const closeModal = () => setOpen(false);
     const onOpenChange = (val: boolean) => setOpen(val);
 
-    useEffect(() => {
-        const wId = sessionStorage.getItem('wareId') ?? '';
-        const rId = sessionStorage.getItem('resourceTypeId') ?? '';
+    const { data: foods = [], isLoading } = useQuery({
+        queryKey: ['foods'],
+        queryFn: async () => {
+            const wId = sessionStorage.getItem('wareId') ?? '';
+            const rId = sessionStorage.getItem('resourceTypeId') ?? '';
 
-        setWId(wId);
-        setRId(rId);
-    }, []);
-
-    const { data: foods = [], isLoading } = useQuery<WareStockResponse[]>({
-        queryKey: ['foods', wId, rId],
-        queryFn: () => getWareStockByResourceTypeId(wId, rId),
-        enabled: !!wId && !!rId,
+            return await getWareStockByResourceTypeId(wId, rId);
+        },
     });
 
     if (isLoading) {

@@ -170,11 +170,7 @@ export default function BreedingAreaForm({ defaultValues, closeDialog }: Breedin
                                         <FormItem>
                                             <FormLabel>Mã khu nuôi</FormLabel>
                                             <FormControl>
-                                                <Input
-                                                    placeholder="Nhập mã khu nuôi"
-                                                    {...field}
-                                                    readOnly
-                                                />
+                                                <Input placeholder="Nhập mã khu nuôi" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
