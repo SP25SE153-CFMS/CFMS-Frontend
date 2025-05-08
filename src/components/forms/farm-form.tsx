@@ -2,7 +2,7 @@
 
 import type React from 'react';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import {
     CardContent,
@@ -100,6 +100,14 @@ const FarmForm = ({ defaultValues }: FarmFormProps) => {
             ...defaultValues,
         },
     });
+
+    useEffect(() => {
+        if (areaUnits) {
+            // Set default area unit if not provided
+            form.setValue('areaUnitId', areaUnits?.[0]?.subCategoryId || '');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [areaUnits]);
 
     const queryClient = useQueryClient();
 

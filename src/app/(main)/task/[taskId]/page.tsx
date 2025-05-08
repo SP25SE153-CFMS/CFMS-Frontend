@@ -89,6 +89,18 @@ export default function TaskDetail() {
         return 'N/A';
     }, []);
 
+    const mutation = useMutation({
+        mutationFn: cancelTask,
+        onSuccess: (data) => {
+            toast.success(data.message);
+            refetch();
+        },
+        onError: (error: any) => {
+            console.error(error);
+            toast(error?.response?.data?.message, { icon: '⚠️' });
+        },
+    });
+
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center h-[75vh] gap-4">
@@ -115,18 +127,6 @@ export default function TaskDetail() {
             </div>
         );
     }
-
-    const mutation = useMutation({
-        mutationFn: cancelTask,
-        onSuccess: (data) => {
-            toast.success(data.message);
-            refetch();
-        },
-        onError: (error: any) => {
-            console.error(error);
-            toast(error?.response?.data?.message, { icon: '⚠️' });
-        },
-    });
 
     const handleCancelTask = () => {
         mutation.mutate(taskId);
