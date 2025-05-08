@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { CalendarIcon, Loader2 } from 'lucide-react';
+import { CalendarIcon, Loader2, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -32,6 +32,8 @@ import { formatDate } from '@/utils/functions';
 import { Textarea } from '../ui/textarea';
 import { onError } from '@/utils/functions/form.function';
 import { getWarestockResourceByFarm } from '@/services/warehouse.service';
+import Link from 'next/link';
+import config from '@/configs';
 
 interface CoopEquipmentFormProps {
     defaultValues?: Partial<CoopEquipment>;
@@ -150,6 +152,17 @@ export default function CoopEquipmentForm({ defaultValues, closeDialog }: CoopEq
                                                     {equipment.equipmentName}
                                                 </SelectItem>
                                             ))}
+                                            {equipments?.length === 0 && (
+                                                <div className="p-2">
+                                                    <Link
+                                                        href={config.routes.ware}
+                                                        className="text-sm font-medium flex items-center p-2 rounded-md hover:bg-muted"
+                                                    >
+                                                        <Plus className="w-4 h-4 mr-2" />
+                                                        Tạo trang thiết bị
+                                                    </Link>
+                                                </div>
+                                            )}
                                         </SelectContent>
                                     </Select>
                                 </FormControl>

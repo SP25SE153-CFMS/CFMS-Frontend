@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -11,45 +11,48 @@ import toast from 'react-hot-toast';
 import { generateCode } from '@/utils/functions/generate-code.function';
 import { onError } from '@/utils/functions/form.function';
 import { Loader2 } from 'lucide-react';
-import { createHarvestProduct } from '@/services/harvest-product.service';
+import { createHarvestProduct, updateHarvestProduct } from '@/services/harvest-product.service';
 import {
-    CreateHarvestProduct,
     CreateHarvestProductSchema,
     HarvestProduct,
+    HarvestProductSchema,
+    CreateHarvestProduct,
 } from '@/utils/schemas/harvest-product.schema';
 import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
 import { CategoryType } from '@/utils/enum/category.enum';
 
-interface CreateHarvestProductProps {
+interface HarvestProductProps {
     closeDialog: () => void;
+    defaultValues?: Partial<HarvestProduct>;
 }
 
-export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestProductProps) {
+export default function HarvestProductForm({ closeDialog, defaultValues }: HarvestProductProps) {
     const form = useForm<CreateHarvestProduct>({
-        resolver: zodResolver(CreateHarvestProductSchema),
+        resolver: zodResolver(defaultValues ? HarvestProductSchema : CreateHarvestProductSchema),
         defaultValues: {
             harvestProductCode: '',
             harvestProductName: '',
             harvestProductTypeId: '',
-            unitId: '',
+            wareId: sessionStorage.getItem('wareId') || '',
             packageId: '',
+            unitId: '',
             packageSize: 0,
-            wareId: '',
+            ...defaultValues,
         },
     });
 
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: createHarvestProduct,
-        onSuccess: () => {
+        mutationFn: defaultValues ? updateHarvestProduct : createHarvestProduct,
+        onSuccess: (res) => {
             closeDialog();
-            queryClient.invalidateQueries({ queryKey: ['harvestProducts'] });
-            toast.success('Tạo sản phẩm thu hoạch thành công');
+            queryClient.invalidateQueries({ queryKey: ['harvests'] });
+            toast.success(res.message);
         },
         onError: (error: any) => {
             console.error(error);
-            toast(error?.response?.data?.message || 'Có lỗi xảy ra', { icon: '⚠️' });
+            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra', { icon: '⚠️' });
         },
     });
 
@@ -94,6 +97,7 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
                                         onBlur={handleGenerateCode}
                                     />
                                 </FormControl>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -112,6 +116,7 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
                                         readOnly
                                     />
                                 </FormControl>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -145,6 +150,7 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
                                         </SelectContent>
                                     </Select>
                                 </FormControl>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -164,6 +170,7 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
                                         {...field}
                                     />
                                 </FormControl>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -197,6 +204,7 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
                                         </SelectContent>
                                     </Select>
                                 </FormControl>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -230,6 +238,7 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
                                         </SelectContent>
                                     </Select>
                                 </FormControl>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -248,6 +257,7 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
                                         disabled
                                     />
                                 </FormControl>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -259,7 +269,7 @@ export default function CreateHarvestProductForm({ closeDialog }: CreateHarvestP
                     disabled={mutation.isPending}
                 >
                     {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                    Tạo
+                    {defaultValues ? 'Cập nhật' : 'Tạo'}
                 </Button>
             </form>
         </Form>

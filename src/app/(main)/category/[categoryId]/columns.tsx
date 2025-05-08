@@ -12,6 +12,7 @@ import {
     categoryStatusVariant,
 } from '@/utils/enum/status.enum';
 import { DataType, dataTypeLabels } from '@/utils/enum';
+import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<SubCategory>[] = [
     {
@@ -82,8 +83,8 @@ export const columns: ColumnDef<SubCategory>[] = [
             </div>
         ),
     },
-    // {
-    //     id: 'actions',
-    //     cell: ({ row }) => <DataTableRowActions row={row} />,
-    // },
+    {
+        id: 'actions',
+        cell: ({ row }) => <DataTableRowActions row={row} />,
+    },
 ];

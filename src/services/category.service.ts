@@ -40,14 +40,21 @@ export const deleteCategory = async (id: string) => {
 };
 
 export const addSubCategory = async (body: SubCategory) => {
-    const endpoint = PREFIX + '/addSub';
+    const endpoint = PREFIX + '/add-sub';
     const response = await post<Response<string>>(endpoint, body);
     return response.data;
 };
 
 export const updateSubCategory = async (body: SubCategory) => {
-    const endpoint = PREFIX + '/updateSub';
+    const endpoint = PREFIX + '/update-sub';
     const response = await put<Response<string>>(endpoint, body);
+    return response.data;
+};
+
+export const deleteSubCategory = async (subCategoryId: string) => {
+    const endpoint = PREFIX + '/delete-sub';
+    const body = { categoryId: subCategoryId };
+    const response = await remove<Response<string>>(endpoint, body);
     return response.data;
 };
 

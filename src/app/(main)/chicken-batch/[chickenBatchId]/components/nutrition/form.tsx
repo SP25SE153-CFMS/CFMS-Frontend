@@ -167,7 +167,6 @@ export default function AddEquipmentForm({ defaultValues, closeDialog }: AddEqui
                                                 field.onChange(date ? date.toISOString() : '');
                                             }}
                                             initialFocus
-                                            disabled={(date) => date < new Date()}
                                             locale={vi}
                                         />
                                     </PopoverContent>

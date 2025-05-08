@@ -26,23 +26,33 @@ import {
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
 import toast from 'react-hot-toast';
-import { deleteChicken } from '@/services/chicken.service';
 import { Chicken } from '@/utils/schemas/chicken.schema';
 import ChickenForm from '@/components/forms/chicken-form';
 import { useQueryClient } from '@tanstack/react-query';
+import { deleteResource } from '@/services/resource.service';
+import { WareStockResponse } from '@/utils/types/custom.type';
+import { getSubCategoryByCategoryType } from '@/utils/functions/category.function';
+import { CategoryType } from '@/utils/enum/category.enum';
 
 interface Props<T> {
     row: Row<T>;
 }
 
 export function DataTableRowActions<T>({ row }: Props<T>) {
+    // Lấy dữ liệu từ row
+    const rowData = row.original as WareStockResponse;
+    const eData = rowData.breeding || (rowData as unknown as Chicken);
+    const chickenId = eData.chickenId;
+
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
     const queryClient = useQueryClient();
 
+    const resourceId = rowData.resourceId;
+
     const handleDelete = async () => {
-        await deleteChicken((row.original as Chicken).chickenId).then(() => {
+        await deleteResource(resourceId).then(() => {
             toast.success('Xóa giống gà thành công');
             queryClient.invalidateQueries({ queryKey: ['chickens'] });
             setOpenDelete(false);
@@ -79,7 +89,23 @@ export function DataTableRowActions<T>({ row }: Props<T>) {
                     <ScrollArea className="max-h-[600px]">
                         <ChickenForm
                             closeDialog={() => setOpenUpdate(false)}
-                            defaultValues={row.original as Chicken}
+                            defaultValues={{
+                                ...rowData,
+                                chickenId,
+                                chickenTypeId: getSubCategoryByCategoryType(
+                                    CategoryType.CHICKEN,
+                                )?.find((item) => item.subCategoryName === rowData.chickenTypeName)
+                                    ?.subCategoryId,
+                                // unitId: getUnitIdByUnitName(
+                                //     rowData.unitSpecification.split('/')[0]?.split(' ')[1],
+                                // ),
+                                packageSize: Number(rowData.unitSpecification.split(' ')[0]),
+                                // packageId: getPackageUnitIdByPackageUnitName(
+                                //     rowData.specQuantity.split(' ')[1],
+                                // ),
+                            }}
+                            unitName={rowData.unitSpecification.split('/')[0]?.split(' ')[1] ?? ''}
+                            packageUnitName={rowData.specQuantity.split(' ')[1] ?? ''}
                         />
                     </ScrollArea>
                 </DialogContent>

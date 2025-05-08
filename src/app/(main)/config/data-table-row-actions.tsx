@@ -6,7 +6,6 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
@@ -16,16 +15,16 @@ import {
     DialogTitle,
     DialogDescription,
 } from '@/components/ui/dialog';
-import {
-    AlertDialog,
-    AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogDescription,
-} from '@/components/ui/alert-dialog';
-import { useQueryClient } from '@tanstack/react-query';
-import { deleteConfig } from '@/services/config.service';
-import { toast } from 'react-hot-toast';
+// import {
+//     AlertDialog,
+//     AlertDialogContent,
+//     AlertDialogHeader,
+//     AlertDialogTitle,
+//     AlertDialogDescription,
+// } from '@/components/ui/alert-dialog';
+// import { useQueryClient } from '@tanstack/react-query';
+// import { deleteConfig } from '@/services/config.service';
+// import { toast } from 'react-hot-toast';
 import { ConfigForm } from '@/components/forms/config-form';
 import { SystemConfig } from '@/utils/schemas/config.schema';
 interface Props {
@@ -35,21 +34,21 @@ interface Props {
 export function DataTableRowActions({ row }: Props) {
     // const [openDetail, setOpenDetail] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
-    const [openDelete, setOpenDelete] = useState(false);
+    // const [openDelete, setOpenDelete] = useState(false);
 
-    const queryClient = useQueryClient();
+    // const queryClient = useQueryClient();
     const config = row.original;
 
-    const handleDelete = async () => {
-        try {
-            await deleteConfig(config.systemConfigId);
-            toast.success('Xóa cấu hình thành công');
-            queryClient.invalidateQueries({ queryKey: ['configs'] });
-            setOpenDelete(false);
-        } catch (error: any) {
-            toast(error?.response?.data?.message, { icon: '⚠️' });
-        }
-    };
+    // const handleDelete = async () => {
+    //     try {
+    //         await deleteConfig(config.systemConfigId);
+    //         toast.success('Xóa cấu hình thành công');
+    //         queryClient.invalidateQueries({ queryKey: ['configs'] });
+    //         setOpenDelete(false);
+    //     } catch (error: any) {
+    //         toast(error?.response?.data?.message, { icon: '⚠️' });
+    //     }
+    // };
 
     return (
         <>
@@ -67,10 +66,10 @@ export function DataTableRowActions({ row }: Props) {
                     <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                         Cập nhật
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
+                    {/* <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setOpenDelete(true)} className="text-red-600">
                         Xóa
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                 </DropdownMenuContent>
             </DropdownMenu>
 
@@ -120,7 +119,7 @@ export function DataTableRowActions({ row }: Props) {
             </Dialog>
 
             {/* Delete Confirmation Dialog */}
-            <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
+            {/* <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
@@ -137,7 +136,7 @@ export function DataTableRowActions({ row }: Props) {
                         </Button>
                     </div>
                 </AlertDialogContent>
-            </AlertDialog>
+            </AlertDialog> */}
         </>
     );
 }

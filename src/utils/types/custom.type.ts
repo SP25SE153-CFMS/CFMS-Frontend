@@ -281,6 +281,7 @@ export type WareStockResponse = Warehouse &
         currentSupplierCode: string;
         supplierName: string;
         suppliersName: Supplier[];
+        chickenTypeName?: string;
     };
 
 export type WarestockResourceByType = Food &
