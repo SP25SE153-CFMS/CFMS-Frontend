@@ -39,8 +39,8 @@ export default function Page() {
         setRId(rId);
     }, []);
 
-    const { data: harvests = [], isLoading } = useQuery({
-        queryKey: ['harvests', wId, rId],
+    const { data: harvestProducts = [], isLoading } = useQuery({
+        queryKey: ['harvestProducts', wId, rId],
         queryFn: () => getWareStockByResourceTypeId(wId, rId),
         enabled: !!wId && !!rId,
     });
@@ -55,7 +55,7 @@ export default function Page() {
     }
 
     // Check if harvests is not null, undefined
-    if (!harvests) {
+    if (!harvestProducts) {
         return (
             <div className="w-full h-full flex items-center justify-center">
                 <Card className="px-36 py-8">
@@ -102,7 +102,7 @@ export default function Page() {
                 </CardHeader>
                 <Separator />
                 <CardContent className="pt-6">
-                    <DataTable data={harvests} columns={columns} />
+                    <DataTable data={harvestProducts} columns={columns} />
                 </CardContent>
             </Card>
 

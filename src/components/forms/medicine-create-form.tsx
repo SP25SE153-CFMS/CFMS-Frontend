@@ -34,7 +34,7 @@ export default function CreateMedicineForm({ closeDialog }: CreateMedicineProps)
             unitId: '',
             packageId: '',
             packageSize: 0,
-            wareId: '',
+            wareId: sessionStorage.getItem('wareId') ?? '',
         },
         mode: 'onChange',
     });
