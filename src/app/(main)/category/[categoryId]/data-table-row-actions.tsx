@@ -25,13 +25,13 @@ import {
     AlertDialogTitle,
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
-import { deleteSubCategory } from '@/services/sub-category.service';
 import { SubCategory } from '@/utils/schemas/sub-category.schema';
 import SubCategoryForm from '@/components/forms/sub-category-form';
 import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import { Separator } from '@/components/ui/separator';
 import { Trash } from 'lucide-react';
+import { deleteSubCategory } from '@/services/category.service';
 
 interface Props<T> {
     row: Row<T>;

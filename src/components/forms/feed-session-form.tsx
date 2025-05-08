@@ -45,7 +45,7 @@ export default function FeedSessionForm({ defaultValues, closeDialog }: FeedSess
             startTime: '',
             endTime: '',
             feedAmount: 0,
-            unitId: '',
+            unitId: getSubCategoryByCategoryType(CategoryType.WEIGHT_UNIT)[0]?.subCategoryId || '',
             note: '',
             ...defaultValues,
         },
