@@ -73,13 +73,13 @@ export const columns: ColumnDef<ChickenCoop>[] = [
     //     header: ({ column }) => <DataTableColumnHeader column={column} title="Sức chứa" />,
     //     cell: ({ row }) => <div className="w-[80px]">{row.getValue('maxQuantity') ?? '0'} con</div>,
     // },
-    {
-        accessorKey: 'currentQuantity',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng hiện tại" />,
-        cell: ({ row }) => (
-            <div className="w-[80px]">{row.getValue('currentQuantity') ?? '0'} con</div>
-        ),
-    },
+    // {
+    //     accessorKey: 'currentQuantity',
+    //     header: ({ column }) => <DataTableColumnHeader column={column} title="Số lượng hiện tại" />,
+    //     cell: ({ row }) => (
+    //         <div className="w-[80px]">{row.getValue('currentQuantity') ?? '0'} con</div>
+    //     ),
+    // },
     {
         accessorKey: 'areaUnitId', // Ensure the data exists in the row
         header: () => null, // No header

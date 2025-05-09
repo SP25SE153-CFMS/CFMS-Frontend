@@ -105,7 +105,7 @@ export const deleteHealthLog = async (chickenBatchId: string, healthLogId: strin
 };
 
 export const getChickenBatchChart = async (chickenBatchId: string) => {
-    const endpoint = `/chicken-batch/${chickenBatchId}/chart-data`;
+    const endpoint = `${PREFIX}/${chickenBatchId}/chart-data`;
     const response = await get<Response<ChickenBatchChart[]>>(endpoint);
     return response.data.data;
 };
